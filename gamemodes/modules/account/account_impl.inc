@@ -28,7 +28,20 @@ stock Account_Init()
         "`register_ip` VARCHAR(16) NOT NULL DEFAULT ''," \
         "`last_ip` VARCHAR(16) NOT NULL DEFAULT ''," \
         "`registered_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," \
-        "`last_login` DATETIME NULL" \
+        "`last_login` DATETIME NULL," \
+        "`locked_until` DATETIME NULL" \
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `locked_until` DATETIME NULL");
+
+    mysql_tquery(g_SQL,
+        "CREATE TABLE IF NOT EXISTS `login_attempts` (" \
+        "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY," \
+        "`account_id` INT UNSIGNED NOT NULL," \
+        "`ip` VARCHAR(16) NOT NULL," \
+        "`success` TINYINT(1) NOT NULL," \
+        "`attempted_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," \
+        "INDEX `account_time` (`account_id`, `attempted_at`)" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
     mysql_tquery(g_SQL,
@@ -57,10 +70,15 @@ stock Account_OnPlayerConnect(playerid)
 {
     static const empty[E_PLAYER_DATA];
     g_Player[playerid] = empty;
-    g_RegisterPassword[playerid][0] = '\0';
+    g_PendingPassword[playerid][0] = '\0';
     g_AccountRace[playerid]++;
 
     GetPlayerName(playerid, g_Player[playerid][pName], MAX_PLAYER_NAME + 1);
+
+    for (new i = 0; i < 20; i++)
+    {
+        SendClientMessage(playerid, COLOR_WHITE, " ");
+    }
 
     if (Account_IsOwnerName(g_Player[playerid][pName]) || Account_IsValidRpName(g_Player[playerid][pName]))
     {
@@ -83,7 +101,7 @@ stock Account_OnPlayerDisconnect(playerid)
     }
 
     g_Player[playerid][pState] = ACCOUNT_STATE_NONE;
-    g_RegisterPassword[playerid][0] = '\0';
+    g_PendingPassword[playerid][0] = '\0';
     g_AccountRace[playerid]++;
 }
 
@@ -92,8 +110,27 @@ stock Account_OnPlayerRequestClass(playerid)
     if (g_Player[playerid][pState] != ACCOUNT_STATE_LOGGED_IN)
     {
         TogglePlayerSpectating(playerid, true);
-        SetPlayerCameraPos(playerid, LOGIN_CAMERA_X, LOGIN_CAMERA_Y, LOGIN_CAMERA_Z);
-        SetPlayerCameraLookAt(playerid, LOGIN_LOOKAT_X, LOGIN_LOOKAT_Y, LOGIN_LOOKAT_Z);
+        InterpolateCameraPos(playerid,
+            LOGIN_CAMERA_FROM_X, LOGIN_CAMERA_FROM_Y, LOGIN_CAMERA_Z,
+            LOGIN_CAMERA_TO_X, LOGIN_CAMERA_TO_Y, LOGIN_CAMERA_Z,
+            LOGIN_CAMERA_TIME_MS, CAMERA_MOVE);
+        InterpolateCameraLookAt(playerid,
+            LOGIN_LOOKAT_FROM_X, LOGIN_LOOKAT_Y, LOGIN_LOOKAT_Z,
+            LOGIN_LOOKAT_TO_X, LOGIN_LOOKAT_Y, LOGIN_LOOKAT_Z,
+            LOGIN_CAMERA_TIME_MS, CAMERA_MOVE);
+    }
+}
+
+// Underscore replaced by a space, as names are shown in chat.
+stock Account_GetDisplayName(playerid, dest[], size = sizeof(dest))
+{
+    strcopy(dest, g_Player[playerid][pName], size);
+    for (new i = 0; dest[i] != '\0'; i++)
+    {
+        if (dest[i] == '_')
+        {
+            dest[i] = ' ';
+        }
     }
 }
 
@@ -200,8 +237,12 @@ public OnAccountExemptionCheck(playerid, race)
 
 stock Account_Lookup(playerid)
 {
-    new query[128];
-    mysql_format(g_SQL, query, sizeof(query), "SELECT * FROM `accounts` WHERE `name` = '%e' LIMIT 1", g_Player[playerid][pName]);
+    new query[384];
+    mysql_format(g_SQL, query, sizeof(query),
+        "SELECT *, IFNULL(DATE_FORMAT(`last_login`, '%%d.%%m.%%Y. u %%H:%%i'), '') AS `last_login_text`, " \
+        "IFNULL(CEIL(TIMESTAMPDIFF(SECOND, NOW(), `locked_until`) / 60), 0) AS `lock_minutes` " \
+        "FROM `accounts` WHERE `name` = '%e' LIMIT 1",
+        g_Player[playerid][pName]);
     mysql_tquery(g_SQL, query, "OnAccountLookup", "dd", playerid, g_AccountRace[playerid]);
 }
 
@@ -221,6 +262,20 @@ public OnAccountLookup(playerid, race)
         return 1;
     }
 
+    new lock_minutes;
+    cache_get_value_name_int(0, "lock_minutes", lock_minutes);
+    if (lock_minutes > 0)
+    {
+        new message[144];
+        format(message, sizeof(message),
+            "Ovaj nalog je privremeno zakljucan zbog previse pogresnih lozinki. Pokusajte ponovo za %d min.", lock_minutes);
+        SendClientMessage(playerid, COLOR_RED, message);
+        KickWithDelay(playerid);
+        return 1;
+    }
+
+    cache_get_value_name(0, "last_login_text", g_Player[playerid][pLastLoginText], 24);
+    cache_get_value_name(0, "last_ip", g_Player[playerid][pLastIp], 16);
     cache_get_value_name_int(0, "id", g_Player[playerid][pDbId]);
     cache_get_value_name(0, "password", g_Player[playerid][pPasswordHash], BCRYPT_HASH_LENGTH);
     cache_get_value_name_int(0, "admin_level", g_Player[playerid][pAdminLevel]);
@@ -348,20 +403,20 @@ stock bool:Account_OnDialogResponse(playerid, dialogid, response, listitem, cons
                 return true;
             }
 
-            strcopy(g_RegisterPassword[playerid], inputtext);
+            strcopy(g_PendingPassword[playerid], inputtext);
             Account_ShowRegisterConfirm(playerid);
         }
         case DIALOG_REGISTER_CONFIRM:
         {
             if (!response)
             {
-                g_RegisterPassword[playerid][0] = '\0';
+                g_PendingPassword[playerid][0] = '\0';
                 Account_ShowRegisterPassword(playerid, "");
                 return true;
             }
-            if (strcmp(inputtext, g_RegisterPassword[playerid]) != 0 || !inputtext[0])
+            if (strcmp(inputtext, g_PendingPassword[playerid]) != 0 || !inputtext[0])
             {
-                g_RegisterPassword[playerid][0] = '\0';
+                g_PendingPassword[playerid][0] = '\0';
                 Account_ShowRegisterPassword(playerid, "Lozinke se ne poklapaju, pokusajte ponovo.");
                 return true;
             }
@@ -371,8 +426,8 @@ stock bool:Account_OnDialogResponse(playerid, dialogid, response, listitem, cons
             }
 
             g_Player[playerid][pAwaitingBcrypt] = true;
-            bcrypt_hash(playerid, "OnAccountPasswordHashed", g_RegisterPassword[playerid], BCRYPT_COST);
-            g_RegisterPassword[playerid][0] = '\0';
+            bcrypt_hash(playerid, "OnAccountPasswordHashed", g_PendingPassword[playerid], BCRYPT_COST);
+            g_PendingPassword[playerid][0] = '\0';
         }
         case DIALOG_REGISTER_GENDER:
         {
@@ -414,6 +469,63 @@ stock bool:Account_OnDialogResponse(playerid, dialogid, response, listitem, cons
 
             Account_Create(playerid);
         }
+        case DIALOG_CHANGEPASS_OLD:
+        {
+            if (!response || g_Player[playerid][pState] != ACCOUNT_STATE_LOGGED_IN || g_Player[playerid][pAwaitingBcrypt])
+            {
+                return true;
+            }
+            if (!inputtext[0])
+            {
+                Account_ShowChangePassOld(playerid, "Niste uneli lozinku.");
+                return true;
+            }
+
+            g_Player[playerid][pAwaitingBcrypt] = true;
+            bcrypt_verify(playerid, "OnAccountChangePassVerify", inputtext, g_Player[playerid][pPasswordHash]);
+        }
+        case DIALOG_CHANGEPASS_NEW:
+        {
+            if (!response || !g_Player[playerid][pOldPasswordVerified])
+            {
+                g_Player[playerid][pOldPasswordVerified] = false;
+                return true;
+            }
+
+            new len = strlen(inputtext);
+            if (len < PASSWORD_MIN_LENGTH || len > PASSWORD_MAX_LENGTH)
+            {
+                Account_ShowChangePassNew(playerid, "Lozinka nije odgovarajuce duzine.");
+                return true;
+            }
+
+            strcopy(g_PendingPassword[playerid], inputtext);
+            ShowPlayerDialog(playerid, DIALOG_CHANGEPASS_CONFIRM, DIALOG_STYLE_PASSWORD, SERVER_NAME " - Promena lozinke (3/3)",
+                C_WHITE "Ponovo unesite novu lozinku kao potvrdu.", "Promeni", "Nazad");
+        }
+        case DIALOG_CHANGEPASS_CONFIRM:
+        {
+            if (!g_Player[playerid][pOldPasswordVerified] || g_Player[playerid][pAwaitingBcrypt])
+            {
+                return true;
+            }
+            if (!response)
+            {
+                g_PendingPassword[playerid][0] = '\0';
+                Account_ShowChangePassNew(playerid, "");
+                return true;
+            }
+            if (strcmp(inputtext, g_PendingPassword[playerid]) != 0 || !inputtext[0])
+            {
+                g_PendingPassword[playerid][0] = '\0';
+                Account_ShowChangePassNew(playerid, "Lozinke se ne poklapaju, pokusajte ponovo.");
+                return true;
+            }
+
+            g_Player[playerid][pAwaitingBcrypt] = true;
+            bcrypt_hash(playerid, "OnAccountNewPasswordHashed", g_PendingPassword[playerid], BCRYPT_COST);
+            g_PendingPassword[playerid][0] = '\0';
+        }
         default:
         {
             return false;
@@ -431,9 +543,57 @@ public OnAccountPasswordVerify(playerid, bool:success)
     }
     g_Player[playerid][pAwaitingBcrypt] = false;
 
+    Account_LogAttempt(playerid, success);
+
     if (success)
     {
         Account_CompleteLogin(playerid, false);
+        return 1;
+    }
+
+    new query[192];
+    mysql_format(g_SQL, query, sizeof(query),
+        "SELECT COUNT(*) AS `failures` FROM `login_attempts` " \
+        "WHERE `account_id` = %d AND `success` = 0 AND `attempted_at` > NOW() - INTERVAL %d MINUTE",
+        g_Player[playerid][pDbId], LOCKOUT_WINDOW_MINUTES);
+    mysql_tquery(g_SQL, query, "OnAccountFailedLogin", "dd", playerid, g_AccountRace[playerid]);
+    return 1;
+}
+
+stock Account_LogAttempt(playerid, bool:success)
+{
+    new ip[16], query[160];
+    GetPlayerIp(playerid, ip, sizeof(ip));
+    mysql_format(g_SQL, query, sizeof(query),
+        "INSERT INTO `login_attempts` (`account_id`, `ip`, `success`) VALUES (%d, '%e', %d)",
+        g_Player[playerid][pDbId], ip, success ? 1 : 0);
+    mysql_tquery(g_SQL, query);
+}
+
+forward OnAccountFailedLogin(playerid, race);
+public OnAccountFailedLogin(playerid, race)
+{
+    if (race != g_AccountRace[playerid])
+    {
+        return 1;
+    }
+
+    new failures;
+    cache_get_value_name_int(0, "failures", failures);
+
+    if (failures >= LOCKOUT_MAX_FAILURES)
+    {
+        new query[128];
+        mysql_format(g_SQL, query, sizeof(query),
+            "UPDATE `accounts` SET `locked_until` = NOW() + INTERVAL %d MINUTE WHERE `id` = %d",
+            LOCKOUT_MINUTES, g_Player[playerid][pDbId]);
+        mysql_tquery(g_SQL, query);
+
+        new message[144];
+        format(message, sizeof(message),
+            "Previse pogresnih lozinki. Nalog je zakljucan na %d minuta.", LOCKOUT_MINUTES);
+        SendClientMessage(playerid, COLOR_RED, message);
+        KickWithDelay(playerid);
         return 1;
     }
 
@@ -461,6 +621,63 @@ public OnAccountPasswordHashed(playerid, hashid)
 
     bcrypt_get_hash(g_Player[playerid][pPasswordHash], BCRYPT_HASH_LENGTH);
     Account_ShowRegisterGender(playerid);
+    return 1;
+}
+
+stock Account_ShowChangePassOld(playerid, const error[])
+{
+    new body[192];
+    format(body, sizeof(body), C_WHITE "Unesite svoju trenutnu lozinku.%s%s", error[0] ? ("\n\n" C_RED) : (""), error);
+    ShowPlayerDialog(playerid, DIALOG_CHANGEPASS_OLD, DIALOG_STYLE_PASSWORD, SERVER_NAME " - Promena lozinke (1/3)", body, "Dalje", "Odustani");
+}
+
+stock Account_ShowChangePassNew(playerid, const error[])
+{
+    new body[192];
+    format(body, sizeof(body),
+        C_WHITE "Unesite novu lozinku.\nLozinka mora imati od %d do %d karaktera.%s%s",
+        PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH, error[0] ? ("\n\n" C_RED) : (""), error);
+    ShowPlayerDialog(playerid, DIALOG_CHANGEPASS_NEW, DIALOG_STYLE_PASSWORD, SERVER_NAME " - Promena lozinke (2/3)", body, "Dalje", "Odustani");
+}
+
+forward OnAccountChangePassVerify(playerid, bool:success);
+public OnAccountChangePassVerify(playerid, bool:success)
+{
+    if (g_Player[playerid][pState] != ACCOUNT_STATE_LOGGED_IN || !g_Player[playerid][pAwaitingBcrypt])
+    {
+        return 1;
+    }
+    g_Player[playerid][pAwaitingBcrypt] = false;
+
+    if (!success)
+    {
+        Account_ShowChangePassOld(playerid, "Pogresna lozinka.");
+        return 1;
+    }
+
+    g_Player[playerid][pOldPasswordVerified] = true;
+    Account_ShowChangePassNew(playerid, "");
+    return 1;
+}
+
+forward OnAccountNewPasswordHashed(playerid, hashid);
+public OnAccountNewPasswordHashed(playerid, hashid)
+{
+    if (g_Player[playerid][pState] != ACCOUNT_STATE_LOGGED_IN || !g_Player[playerid][pAwaitingBcrypt])
+    {
+        return 1;
+    }
+    g_Player[playerid][pAwaitingBcrypt] = false;
+    g_Player[playerid][pOldPasswordVerified] = false;
+
+    bcrypt_get_hash(g_Player[playerid][pPasswordHash], BCRYPT_HASH_LENGTH);
+
+    new query[160];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `password` = '%e' WHERE `id` = %d",
+        g_Player[playerid][pPasswordHash], g_Player[playerid][pDbId]);
+    mysql_tquery(g_SQL, query);
+
+    SendClientMessage(playerid, COLOR_GREEN, "Lozinka je uspesno promenjena.");
     return 1;
 }
 
@@ -550,6 +767,13 @@ stock Account_CompleteLogin(playerid, bool:is_new)
         mysql_tquery(g_SQL, query);
 
         SendClientMessage(playerid, COLOR_SERVER, "Uspesno ste se prijavili. Dobro dosli nazad!");
+
+        if (g_Player[playerid][pLastLoginText][0])
+        {
+            new message[144];
+            format(message, sizeof(message), "Poslednja prijava: %s sa IP %s", g_Player[playerid][pLastLoginText], g_Player[playerid][pLastIp]);
+            SendClientMessage(playerid, COLOR_GREY, message);
+        }
     }
 
     SetSpawnInfo(playerid, NO_TEAM, g_Player[playerid][pSkin],

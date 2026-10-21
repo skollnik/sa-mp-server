@@ -24,7 +24,8 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] ADM-7: izuzeci od Ime_Prezime formata (samo vlasnik)
 - [x] ACC-4, ACC-5: kreiranje karaktera (pol, godine, nasumičan skin), prvi spawn na aerodromu
 - [x] ACC-6: čuvanje podataka (izlazak + na 10 min)
-- [ ] CHAT-1, CHAT-2, CHAT-3: osnovni RP chat
+- [x] CHAT-1, CHAT-2, CHAT-3: osnovni RP chat i `/pomoc`
+- [x] Dopune logina: poslednja prijava, zaključavanje posle 5 pogrešnih lozinki, `/promenilozinku`, kamera na loginu
 - [ ] ADM-1 – ADM-4, ADM-6: osnovni admin sistem, report, kazne, logovi
 - [ ] AC-1, AC-3, AC-4: serverski novac/HP, zaštita dijaloga, flood zaštita
 
@@ -117,7 +118,8 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] ADM-7: exemptions from the Firstname_Lastname format (owner only)
 - [x] ACC-4, ACC-5: character creation (gender, age, random skin), first spawn at the airport
 - [x] ACC-6: data saving (on quit + every 10 min)
-- [ ] CHAT-1, CHAT-2, CHAT-3: basic RP chat
+- [x] CHAT-1, CHAT-2, CHAT-3: basic RP chat and `/pomoc`
+- [x] Login additions: last login, lockout after 5 wrong passwords, `/promenilozinku`, login camera
 - [ ] ADM-1 – ADM-4, ADM-6: basic admin system, reports, punishments, logs
 - [ ] AC-1, AC-3, AC-4: server-side money/HP, dialog protection, flood protection
 

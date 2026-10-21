@@ -5,6 +5,11 @@
 #define COLOR_YELLOW        (0xFFFF00FF)
 #define COLOR_PURPLE        (0xC2A2DAFF)
 #define COLOR_SERVER        (0x3C9DD0FF)
+#define COLOR_OOC_LOCAL     (0xC8C8C8FF)
+#define COLOR_OOC_GLOBAL    (0xB1C8FBFF)
+#define COLOR_PM            (0xFFDC64FF)
+#define COLOR_WHISPER       (0xFFFF91FF)
+#define COLOR_SHOUT         (0xFFFFFFFF)
 
 #define C_WHITE             "{FFFFFF}"
 #define C_GREY              "{AFAFAF}"

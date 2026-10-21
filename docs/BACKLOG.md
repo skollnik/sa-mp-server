@@ -16,6 +16,18 @@ Stvari koje su dogovorene ili predložene, a čekaju da se završi neki drugi si
 | Email i povratak lozinke | Web panel (Faza 8) |
 | Spawn posle smrti u bolnici umesto na poslednjoj poziciji | Povrede i smrt (Faza 5) |
 
+Sve stavke iznad vlasnik je odobrio 21.10.2026.
+
+### Chat
+| Stavka | Čeka |
+|--------|------|
+| Admin komanda za uključivanje i isključivanje globalnog OOC-a (`/o`) | Admin sistem (Faza 1) |
+| Mute: igrač sa mute-om ne može da piše | Admin sistem (Faza 1) |
+| Isključivanje PM-ova (`/togpm`) i ostala podešavanja | ACC-9 (Faza 2) |
+| Akcenti (`/accent`) | CHAT-6 (Faza 7) |
+| Chat kroz prozor vozila (`/cw`) | Vozila (Faza 3) |
+| Radio, frakcijski chat, megafon | Frakcije (Faza 5) |
+
 ### Ostalo
 | Stavka | Čeka |
 |--------|------|
@@ -38,6 +50,18 @@ Things that were agreed on or proposed but are waiting for another system to be 
 | Character appearance description (`/examine`) | RP chat (Phase 1) |
 | Email and password recovery | Web panel (Phase 8) |
 | Respawn at the hospital after death instead of the last position | Injuries and death (Phase 5) |
+
+All items above were approved by the owner on 2026-10-21.
+
+### Chat
+| Item | Waiting for |
+|------|-------------|
+| Admin command to toggle global OOC (`/o`) | Admin system (Phase 1) |
+| Mute: a muted player cannot talk | Admin system (Phase 1) |
+| Toggle PMs (`/togpm`) and other settings | ACC-9 (Phase 2) |
+| Accents (`/accent`) | CHAT-6 (Phase 7) |
+| Talking through a vehicle window (`/cw`) | Vehicles (Phase 3) |
+| Radio, faction chat, megaphone | Factions (Phase 5) |
 
 ### Other
 | Item | Waiting for |

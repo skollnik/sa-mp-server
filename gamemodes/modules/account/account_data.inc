@@ -30,8 +30,11 @@ enum E_PLAYER_DATA
     pPlayedSeconds,
 
     // Runtime only, never saved
+    pLastLoginText[24],
+    pLastIp[16],
     E_ACCOUNT_STATE:pState,
     bool:pAwaitingBcrypt,
+    bool:pOldPasswordVerified,
     bool:pFirstSpawn,
     pLoginAttempts,
     pLoginTimer,
@@ -45,7 +48,7 @@ new g_Player[MAX_PLAYERS][E_PLAYER_DATA];
 new g_AccountRace[MAX_PLAYERS];
 
 // Plain password kept only between the "password" and "confirm" dialogs, wiped right after hashing.
-new g_RegisterPassword[MAX_PLAYERS][PASSWORD_MAX_LENGTH + 1];
+new g_PendingPassword[MAX_PLAYERS][PASSWORD_MAX_LENGTH + 1];
 
 #define GENDER_MALE     (0)
 #define GENDER_FEMALE   (1)

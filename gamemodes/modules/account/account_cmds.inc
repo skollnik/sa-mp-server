@@ -1,3 +1,15 @@
+cmd:promenilozinku(playerid, params[])
+{
+    if (g_Player[playerid][pAwaitingBcrypt])
+    {
+        return 1;
+    }
+
+    g_Player[playerid][pOldPasswordVerified] = false;
+    Account_ShowChangePassOld(playerid, "");
+    return 1;
+}
+
 // Owner only: allow a name that is not in the Firstname_Lastname format.
 cmd:dozvoliime(playerid, params[])
 {

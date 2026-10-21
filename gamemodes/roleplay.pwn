@@ -19,6 +19,11 @@
 #include "modules/account/account_impl.inc"
 #include "modules/account/account_cmds.inc"
 
+#include "modules/chat/chat_impl.inc"
+#include "modules/chat/chat_cmds.inc"
+
+#include "modules/help/help_cmds.inc"
+
 main() {}
 
 public OnGameModeInit()
@@ -81,11 +86,11 @@ public OnPlayerSpawn(playerid)
 
 public OnPlayerText(playerid, text[])
 {
-    if (!Account_IsLoggedIn(playerid))
+    if (Account_IsLoggedIn(playerid))
     {
-        return 0;
+        Chat_OnPlayerText(playerid, text);
     }
-    return 1;
+    return 0;
 }
 
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
