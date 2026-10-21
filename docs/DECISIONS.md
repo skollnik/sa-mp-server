@@ -28,6 +28,11 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 20 | 2026-10-21 | Realna ekonomija: start $5.000 ($2.000 keš + $3.000 banka), cene vezane za stvarni život. Cene su u `ECONOMY.md` | Novac i vozila treba da budu retki i vredni |
 | 21 | 2026-10-21 | Novi igrači dobijaju nasumičan skin (3 muška: 7, 47, 60; 3 ženska: 40, 56, 93) i pojavljuju se ispred aerodroma u Los Santosu | Zahtev vlasnika |
 | 22 | 2026-10-21 | Email se za sada ne traži pri registraciji | Nije potreban dok ne postoji web panel |
+| 23 | 2026-10-21 | Dve odvojene lestvice tima: Helper 1–3 i Admin 1–5 + Vlasnik (6). Viši nivo ima sve komande nižeg | Usvojen predlog |
+| 24 | 2026-10-21 | Admin komande rade samo na dužnosti (`/aduty`), osim admin chata. Vlasnik je izuzet | Na dužnosti je jasno ko je admin, a van nje admin igra kao igrač |
+| 25 | 2026-10-21 | Helperi ne kažnjavaju (nema kick/ban). Odgovaraju na pitanja, a prekršaje prijavljuju adminima. Od nivoa 2 mogu da daju mute u newbie chatu | Uobičajena uloga helpera |
+| 26 | 2026-10-21 | 3 upozorenja (`/warn`) = automatski ban 3 dana | Usvojen predlog |
+| 27 | 2026-10-21 | Admini od nivoa 4 mogu da prate PM-ove (`/pmspy`) | Usvojen predlog |
 
 ### Arhitektura koda (predlog)
 ```
@@ -77,6 +82,11 @@ This file records every important decision so it does not get re-discussed. Newe
 | 20 | 2026-10-21 | Realistic economy: start with $5,000 ($2,000 cash + $3,000 bank), prices anchored to real life. Prices are in `ECONOMY.md` | Money and vehicles should be scarce and valuable |
 | 21 | 2026-10-21 | New players get a random skin (3 male: 7, 47, 60; 3 female: 40, 56, 93) and spawn in front of Los Santos airport | Owner's request |
 | 22 | 2026-10-21 | No email asked at registration for now | Not needed until there is a web panel |
+| 23 | 2026-10-21 | Two separate staff ladders: Helper 1–3 and Admin 1–5 + Owner (6). A higher level has every command of the lower ones | Proposal accepted |
+| 24 | 2026-10-21 | Admin commands work only on duty (`/aduty`), except admin chat. The owner is exempt | On duty it is clear who is an admin, off duty the admin plays as a player |
+| 25 | 2026-10-21 | Helpers do not punish (no kick/ban). They answer questions and report violations to admins. From level 2 they can mute in newbie chat | Usual helper role |
+| 26 | 2026-10-21 | 3 warnings (`/warn`) = automatic 3-day ban | Proposal accepted |
+| 27 | 2026-10-21 | Admins level 4+ can watch PMs (`/pmspy`) | Proposal accepted |
 
 ### Code architecture (proposal)
 ```
