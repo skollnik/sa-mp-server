@@ -1,6 +1,3 @@
-// Roleplay gamemode entry point.
-// Only includes and the main callbacks live here; each callback forwards to the modules.
-
 #include <open.mp>
 
 #undef MAX_PLAYERS

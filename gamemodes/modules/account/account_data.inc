@@ -1,5 +1,3 @@
-// Account module data: the persistent per-player record and login state.
-
 enum E_ACCOUNT_STATE
 {
     ACCOUNT_STATE_NONE,         // just connected, waiting for the DB lookup

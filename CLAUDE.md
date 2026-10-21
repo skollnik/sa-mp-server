@@ -13,6 +13,7 @@
 - `docs/FEATURES.md`: katalog sistema sa oznakama (ACC-1, VEH-3...) / feature catalog with IDs
 - `docs/DECISIONS.md`: odluke i arhitektura koda / decisions and code architecture
 - `docs/ECONOMY.md`: cene, plate, nivoi / prices, wages, levels
+- `docs/BACKLOG.md`: podsetnik za stvari koje čekaju drugi sistem / reminders for things waiting on another system
 - `docs/SETUP_MYSQL.md`: instalacija baze / database setup
 
 ## Struktura / Layout

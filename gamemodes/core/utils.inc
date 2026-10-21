@@ -1,5 +1,3 @@
-// Small helpers shared by all modules.
-
 // Kick after a short delay so the last message/dialog actually reaches the client.
 stock KickWithDelay(playerid, delay_ms = 500)
 {

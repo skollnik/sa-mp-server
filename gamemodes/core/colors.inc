@@ -1,5 +1,3 @@
-// Chat colors (RRGGBBAA) and their embedded {RRGGBB} variants for dialogs and inline text.
-
 #define COLOR_WHITE         (0xFFFFFFFF)
 #define COLOR_GREY          (0xAFAFAFFF)
 #define COLOR_RED           (0xFF6347FF)

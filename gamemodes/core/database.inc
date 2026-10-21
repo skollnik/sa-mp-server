@@ -1,5 +1,3 @@
-// MySQL connection handling. Credentials are read from mysql.ini (never committed).
-
 new MySQL:g_SQL = MYSQL_INVALID_HANDLE;
 
 stock bool:Database_Connect()

@@ -4,7 +4,6 @@ enum
 {
     DIALOG_NONE,
 
-    // Account
     DIALOG_INVALID_NAME,
     DIALOG_LOGIN,
     DIALOG_REGISTER_PASSWORD,

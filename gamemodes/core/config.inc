@@ -1,5 +1,3 @@
-// Global server settings. Gameplay numbers (prices, wages) will get their own file.
-
 #define SERVER_NAME         "Test Server"
 #define SERVER_MODE_TEXT    "Roleplay"
 

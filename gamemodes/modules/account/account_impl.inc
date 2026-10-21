@@ -1,11 +1,5 @@
-// Account module: name rules, register/login flow, spawning and saving.
-
 forward bool:Account_IsOwnerName(const name[]);
 forward bool:Account_IsValidRpName(const name[]);
-
-// ---------------------------------------------------------------------------
-// Lifecycle
-// ---------------------------------------------------------------------------
 
 stock Account_Init()
 {
@@ -130,10 +124,6 @@ stock bool:Account_IsLoggedIn(playerid)
     return g_Player[playerid][pState] == ACCOUNT_STATE_LOGGED_IN;
 }
 
-// ---------------------------------------------------------------------------
-// Name rules
-// ---------------------------------------------------------------------------
-
 stock bool:Account_IsOwnerName(const name[])
 {
     return strcmp(name, OWNER_NAME, true) == 0;
@@ -208,10 +198,6 @@ public OnAccountExemptionCheck(playerid, race)
     return 1;
 }
 
-// ---------------------------------------------------------------------------
-// Lookup, login and register
-// ---------------------------------------------------------------------------
-
 stock Account_Lookup(playerid)
 {
     new query[128];
@@ -265,7 +251,7 @@ stock Account_ShowLogin(playerid, const error[])
 {
     new body[256];
     format(body, sizeof(body),
-        C_WHITE "Dobrodosli nazad, " C_SERVER "%s" C_WHITE "!\n\n" \
+        C_WHITE "Dobro dosli nazad, " C_SERVER "%s" C_WHITE "!\n\n" \
         "Ovaj nalog je registrovan. Unesite lozinku da biste se prijavili.%s%s",
         g_Player[playerid][pName], error[0] ? ("\n\n" C_RED) : (""), error);
     ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_PASSWORD, SERVER_NAME " - Prijava", body, "Prijavi se", "Izlaz");
@@ -275,7 +261,7 @@ stock Account_ShowRegisterPassword(playerid, const error[])
 {
     new body[384];
     format(body, sizeof(body),
-        C_WHITE "Dobrodosli na " C_SERVER SERVER_NAME C_WHITE ", " C_SERVER "%s" C_WHITE "!\n\n" \
+        C_WHITE "Dobro dosli na " C_SERVER SERVER_NAME C_WHITE ", " C_SERVER "%s" C_WHITE "!\n\n" \
         "Ovaj nalog nije registrovan. Izaberite lozinku za svoj nalog.\n" \
         "Lozinka mora imati od %d do %d karaktera.%s%s",
         g_Player[playerid][pName], PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH, error[0] ? ("\n\n" C_RED) : (""), error);
@@ -554,7 +540,7 @@ stock Account_CompleteLogin(playerid, bool:is_new)
 
     if (is_new)
     {
-        SendClientMessage(playerid, COLOR_SERVER, "Uspesno ste se registrovali! Dobrodosli u Los Santos.");
+        SendClientMessage(playerid, COLOR_SERVER, "Uspesno ste se registrovali! Dobro dosli u Los Santos.");
     }
     else
     {
@@ -563,17 +549,13 @@ stock Account_CompleteLogin(playerid, bool:is_new)
         mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `last_login` = NOW(), `last_ip` = '%e' WHERE `id` = %d", ip, g_Player[playerid][pDbId]);
         mysql_tquery(g_SQL, query);
 
-        SendClientMessage(playerid, COLOR_SERVER, "Uspesno ste se prijavili. Dobrodosli nazad!");
+        SendClientMessage(playerid, COLOR_SERVER, "Uspesno ste se prijavili. Dobro dosli nazad!");
     }
 
     SetSpawnInfo(playerid, NO_TEAM, g_Player[playerid][pSkin],
         g_Player[playerid][pPosX], g_Player[playerid][pPosY], g_Player[playerid][pPosZ], g_Player[playerid][pPosA]);
     TogglePlayerSpectating(playerid, false);
 }
-
-// ---------------------------------------------------------------------------
-// Timeout
-// ---------------------------------------------------------------------------
 
 stock Account_StartTimeout(playerid, time_ms)
 {
@@ -597,10 +579,6 @@ public Account_OnTimeout(playerid, race)
     KickWithDelay(playerid);
     return 1;
 }
-
-// ---------------------------------------------------------------------------
-// Saving
-// ---------------------------------------------------------------------------
 
 stock Account_Save(playerid, bool:sync = false)
 {

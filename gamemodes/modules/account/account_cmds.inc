@@ -1,5 +1,3 @@
-// Account module commands.
-
 // Owner only: allow a name that is not in the Firstname_Lastname format.
 cmd:dozvoliime(playerid, params[])
 {
