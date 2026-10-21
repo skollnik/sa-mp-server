@@ -8,7 +8,8 @@
 // SA-MP drops client messages longer than 144 characters, so long lines are split in two.
 #define CHAT_SPLIT_AT       (110)
 
-new bool:g_GlobalOocEnabled = true;
+// Off by default as on most heavy RP servers; admins turn it on for events and announcements.
+new bool:g_GlobalOocEnabled = false;
 
 // The farther the listener, the darker the text.
 stock Chat_FadeColor(Float:distance, Float:radius)

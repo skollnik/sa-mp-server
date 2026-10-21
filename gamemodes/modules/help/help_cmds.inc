@@ -9,7 +9,8 @@ cmd:pomoc(playerid, params[])
         "/do - opis okoline ili stanja\n" \
         "/ame - radnja koja se vidi iznad glave\n\n" \
         C_SERVER "OOC (van uloge)\n" \
-        C_WHITE "/b - lokalni OOC    /o - globalni OOC    /pm - privatna poruka\n\n" \
+        C_WHITE "/b - lokalni OOC    /pm - privatna poruka\n" \
+        "/o - globalni OOC (radi samo kad ga admin ukljuci)\n\n" \
         C_SERVER "Nalog\n" \
         C_WHITE "/promenilozinku - promena lozinke",
         "Zatvori", "");
