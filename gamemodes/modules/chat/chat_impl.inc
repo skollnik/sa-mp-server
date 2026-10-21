@@ -35,12 +35,13 @@ stock Chat_FadeColor(Float:distance, Float:radius)
     return 0x6E6E6EFF;
 }
 
+// Player text always goes in as a "%s" argument: open.mp formats every message and a stray % can crash it.
 stock Chat_Send(playerid, color, const message[])
 {
     new len = strlen(message);
     if (len <= CHAT_SPLIT_AT)
     {
-        SendClientMessage(playerid, color, message);
+        SendClientMessage(playerid, color, "%s", message);
         return;
     }
 
@@ -57,11 +58,11 @@ stock Chat_Send(playerid, color, const message[])
     new part[160];
     strmid(part, message, 0, cut);
     strcat(part, " ...");
-    SendClientMessage(playerid, color, part);
+    SendClientMessage(playerid, color, "%s", part);
 
     strcopy(part, "... ");
     strcat(part, message[(message[cut] == ' ') ? cut + 1 : cut]);
-    SendClientMessage(playerid, color, part);
+    SendClientMessage(playerid, color, "%s", part);
 }
 
 stock Chat_SendNearby(playerid, Float:radius, color, const message[], bool:fade = false)

@@ -15,14 +15,14 @@ cmd:dozvoliime(playerid, params[])
 {
     if (g_Player[playerid][pAdminLevel] < ADMIN_LEVEL_OWNER)
     {
-        SendClientMessage(playerid, COLOR_GREY, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
         return 1;
     }
 
     new name[MAX_PLAYER_NAME + 1];
     if (sscanf(params, "s[25]", name) || strlen(name) < 3)
     {
-        SendClientMessage(playerid, COLOR_GREY, "KORISCENJE: /dozvoliime [ime]");
+        Msg_Usage(playerid, "/dozvoliime [ime]");
         return 1;
     }
 
@@ -31,8 +31,6 @@ cmd:dozvoliime(playerid, params[])
         name, g_Player[playerid][pName]);
     mysql_tquery(g_SQL, query);
 
-    new message[96];
-    format(message, sizeof(message), "Ime '%s' sada moze da se koristi na serveru.", name);
-    SendClientMessage(playerid, COLOR_GREEN, message);
+    Msg_Success(playerid, "Ime '%s' sada moze da se koristi na serveru.", name);
     return 1;
 }

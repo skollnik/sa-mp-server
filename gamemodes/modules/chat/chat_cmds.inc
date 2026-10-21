@@ -2,7 +2,7 @@ cmd:s(playerid, params[])
 {
     if (isnull(params))
     {
-        SendClientMessage(playerid, COLOR_GREY, "KORISCENJE: /s [tekst] (vika)");
+        Msg_Usage(playerid, "/s [tekst] (vika)");
         return 1;
     }
 
@@ -17,7 +17,7 @@ cmd:l(playerid, params[])
 {
     if (isnull(params))
     {
-        SendClientMessage(playerid, COLOR_GREY, "KORISCENJE: /l [tekst] (tihi govor)");
+        Msg_Usage(playerid, "/l [tekst] (tihi govor)");
         return 1;
     }
 
@@ -33,17 +33,17 @@ cmd:w(playerid, params[])
     new targetid, text[128];
     if (sscanf(params, "us[128]", targetid, text))
     {
-        SendClientMessage(playerid, COLOR_GREY, "KORISCENJE: /w [id ili ime] [tekst] (sapat)");
+        Msg_Usage(playerid, "/w [id ili ime] [tekst] (sapat)");
         return 1;
     }
     if (targetid == INVALID_PLAYER_ID || !Account_IsLoggedIn(targetid) || targetid == playerid)
     {
-        SendClientMessage(playerid, COLOR_GREY, "Taj igrac nije pronadjen.");
+        Msg_Error(playerid, "Taj igrac nije pronadjen.");
         return 1;
     }
     if (!Chat_IsInRange(playerid, targetid, CHAT_RADIUS_WHISPER))
     {
-        SendClientMessage(playerid, COLOR_GREY, "Morate biti blizu igraca da biste mu sapnuli.");
+        Msg_Error(playerid, "Morate biti blizu igraca da biste mu sapnuli.");
         return 1;
     }
 
@@ -62,7 +62,7 @@ cmd:me(playerid, params[])
 {
     if (isnull(params))
     {
-        SendClientMessage(playerid, COLOR_GREY, "KORISCENJE: /me [radnja]");
+        Msg_Usage(playerid, "/me [radnja]");
         return 1;
     }
 
@@ -77,7 +77,7 @@ cmd:do(playerid, params[])
 {
     if (isnull(params))
     {
-        SendClientMessage(playerid, COLOR_GREY, "KORISCENJE: /do [opis okoline ili stanja]");
+        Msg_Usage(playerid, "/do [opis okoline ili stanja]");
         return 1;
     }
 
@@ -92,14 +92,14 @@ cmd:ame(playerid, params[])
 {
     if (isnull(params))
     {
-        SendClientMessage(playerid, COLOR_GREY, "KORISCENJE: /ame [radnja] (tekst iznad glave)");
+        Msg_Usage(playerid, "/ame [radnja] (tekst iznad glave)");
         return 1;
     }
 
     new name[MAX_PLAYER_NAME + 1], message[192];
     Account_GetDisplayName(playerid, name);
     format(message, sizeof(message), "* %s %s", name, params);
-    SetPlayerChatBubble(playerid, message, COLOR_PURPLE, CHAT_RADIUS_ACTION, 8000);
+    SetPlayerChatBubble(playerid, "%s", COLOR_PURPLE, CHAT_RADIUS_ACTION, 8000, message);
 
     format(message, sizeof(message), "> %s", params);
     Chat_Send(playerid, COLOR_PURPLE, message);
@@ -110,7 +110,7 @@ cmd:b(playerid, params[])
 {
     if (isnull(params))
     {
-        SendClientMessage(playerid, COLOR_GREY, "KORISCENJE: /b [tekst] (lokalni OOC)");
+        Msg_Usage(playerid, "/b [tekst] (lokalni OOC)");
         return 1;
     }
 
@@ -125,12 +125,12 @@ cmd:o(playerid, params[])
 {
     if (isnull(params))
     {
-        SendClientMessage(playerid, COLOR_GREY, "KORISCENJE: /o [tekst] (globalni OOC)");
+        Msg_Usage(playerid, "/o [tekst] (globalni OOC)");
         return 1;
     }
     if (!g_GlobalOocEnabled)
     {
-        SendClientMessage(playerid, COLOR_GREY, "Globalni OOC chat je trenutno iskljucen.");
+        Msg_Error(playerid, "Globalni OOC chat je trenutno iskljucen.");
         return 1;
     }
 
@@ -146,17 +146,17 @@ cmd:pm(playerid, params[])
     new targetid, text[128];
     if (sscanf(params, "us[128]", targetid, text))
     {
-        SendClientMessage(playerid, COLOR_GREY, "KORISCENJE: /pm [id ili ime] [tekst]");
+        Msg_Usage(playerid, "/pm [id ili ime] [tekst]");
         return 1;
     }
     if (targetid == INVALID_PLAYER_ID || !Account_IsLoggedIn(targetid))
     {
-        SendClientMessage(playerid, COLOR_GREY, "Taj igrac nije pronadjen.");
+        Msg_Error(playerid, "Taj igrac nije pronadjen.");
         return 1;
     }
     if (targetid == playerid)
     {
-        SendClientMessage(playerid, COLOR_GREY, "Ne mozete poslati poruku sebi.");
+        Msg_Error(playerid, "Ne mozete poslati poruku sebi.");
         return 1;
     }
 

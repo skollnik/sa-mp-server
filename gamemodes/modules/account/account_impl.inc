@@ -266,10 +266,7 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_int(0, "lock_minutes", lock_minutes);
     if (lock_minutes > 0)
     {
-        new message[144];
-        format(message, sizeof(message),
-            "Ovaj nalog je privremeno zakljucan zbog previse pogresnih lozinki. Pokusajte ponovo za %d min.", lock_minutes);
-        SendClientMessage(playerid, COLOR_RED, message);
+        Msg_Error(playerid, "Ovaj nalog je privremeno zakljucan zbog previse pogresnih lozinki. Pokusajte ponovo za %d min.", lock_minutes);
         KickWithDelay(playerid);
         return 1;
     }
@@ -462,7 +459,7 @@ stock bool:Account_OnDialogResponse(playerid, dialogid, response, listitem, cons
         {
             if (!response)
             {
-                SendClientMessage(playerid, COLOR_RED, "Morate prihvatiti pravila da biste igrali na serveru.");
+                Msg_Error(playerid, "Morate prihvatiti pravila da biste igrali na serveru.");
                 KickWithDelay(playerid);
                 return true;
             }
@@ -589,17 +586,14 @@ public OnAccountFailedLogin(playerid, race)
             LOCKOUT_MINUTES, g_Player[playerid][pDbId]);
         mysql_tquery(g_SQL, query);
 
-        new message[144];
-        format(message, sizeof(message),
-            "Previse pogresnih lozinki. Nalog je zakljucan na %d minuta.", LOCKOUT_MINUTES);
-        SendClientMessage(playerid, COLOR_RED, message);
+        Msg_Error(playerid, "Previse pogresnih lozinki. Nalog je zakljucan na %d minuta.", LOCKOUT_MINUTES);
         KickWithDelay(playerid);
         return 1;
     }
 
     if (++g_Player[playerid][pLoginAttempts] >= MAX_LOGIN_ATTEMPTS)
     {
-        SendClientMessage(playerid, COLOR_RED, "Previse pogresnih pokusaja. Izbaceni ste sa servera.");
+        Msg_Error(playerid, "Previse pogresnih pokusaja. Izbaceni ste sa servera.");
         KickWithDelay(playerid);
         return 1;
     }
@@ -677,7 +671,7 @@ public OnAccountNewPasswordHashed(playerid, hashid)
         g_Player[playerid][pPasswordHash], g_Player[playerid][pDbId]);
     mysql_tquery(g_SQL, query);
 
-    SendClientMessage(playerid, COLOR_GREEN, "Lozinka je uspesno promenjena.");
+    Msg_Success(playerid, "Lozinka je uspesno promenjena.");
     return 1;
 }
 
@@ -757,7 +751,7 @@ stock Account_CompleteLogin(playerid, bool:is_new)
 
     if (is_new)
     {
-        SendClientMessage(playerid, COLOR_SERVER, "Uspesno ste se registrovali! Dobro dosli u Los Santos.");
+        Msg_Server(playerid, "Uspesno ste se registrovali! Dobro dosli u Los Santos.");
     }
     else
     {
@@ -766,13 +760,11 @@ stock Account_CompleteLogin(playerid, bool:is_new)
         mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `last_login` = NOW(), `last_ip` = '%e' WHERE `id` = %d", ip, g_Player[playerid][pDbId]);
         mysql_tquery(g_SQL, query);
 
-        SendClientMessage(playerid, COLOR_SERVER, "Uspesno ste se prijavili. Dobro dosli nazad!");
+        Msg_Server(playerid, "Uspesno ste se prijavili. Dobro dosli nazad!");
 
         if (g_Player[playerid][pLastLoginText][0])
         {
-            new message[144];
-            format(message, sizeof(message), "Poslednja prijava: %s sa IP %s", g_Player[playerid][pLastLoginText], g_Player[playerid][pLastIp]);
-            SendClientMessage(playerid, COLOR_GREY, message);
+            Msg_Info(playerid, "Poslednja prijava: %s sa IP %s", g_Player[playerid][pLastLoginText], g_Player[playerid][pLastIp]);
         }
     }
 
@@ -799,7 +791,7 @@ public Account_OnTimeout(playerid, race)
     }
 
     g_Player[playerid][pLoginTimer] = 0;
-    SendClientMessage(playerid, COLOR_RED, "Isteklo je vreme za prijavu. Izbaceni ste sa servera.");
+    Msg_Error(playerid, "Isteklo je vreme za prijavu. Izbaceni ste sa servera.");
     KickWithDelay(playerid);
     return 1;
 }

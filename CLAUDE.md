@@ -8,6 +8,11 @@
 - Sve što nije jasno pitati vlasnika, ne pretpostavljati. / Ask the owner about anything unclear, don't assume.
 - Posle svakog koraka ažurirati `docs/PLAN.md`, a nove odluke upisati u `docs/DECISIONS.md`. / Update `docs/PLAN.md` after each step, record new decisions in `docs/DECISIONS.md`.
 
+## Pravila koda / Code rules
+- Sistemske poruke idu kroz `Msg_Usage/Msg_Error/Msg_Success/Msg_Server/Msg_Info` iz `core/messages.inc`. / System messages go through the `Msg_*` helpers in `core/messages.inc`.
+- Tekst koji je uneo igrač nikad ne ide kao format string (`SendClientMessage`, `SetPlayerChatBubble`...), uvek kao `"%s"` argument, jer `%` može da sruši server. / Player-entered text is never a format string, always a `"%s"` argument, since a stray `%` can crash the server.
+- Svi SQL upiti kroz `mysql_format` sa `%e` za stringove. / All SQL goes through `mysql_format` with `%e` for strings.
+
 ## Dokumentacija / Docs
 - `docs/PLAN.md`: faze, status, otvorena pitanja / phases, status, open questions
 - `docs/FEATURES.md`: katalog sistema sa oznakama (ACC-1, VEH-3...) / feature catalog with IDs

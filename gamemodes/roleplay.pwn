@@ -11,6 +11,7 @@
 
 #include "core/config.inc"
 #include "core/colors.inc"
+#include "core/messages.inc"
 #include "core/dialogs.inc"
 #include "core/utils.inc"
 #include "core/database.inc"
@@ -115,7 +116,7 @@ public OnPlayerCommandPerformed(playerid, cmd[], params[], result, flags)
 {
     if (result == -1)
     {
-        SendClientMessage(playerid, COLOR_GREY, "Nepoznata komanda.");
+        Msg_Error(playerid, "Nepoznata komanda. Spisak komandi: /pomoc");
         return 0;
     }
     return 1;
