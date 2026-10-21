@@ -14,7 +14,13 @@
 
 #include "core/config.inc"
 #include "core/colors.inc"
+#include "core/dialogs.inc"
+#include "core/utils.inc"
 #include "core/database.inc"
+
+#include "modules/account/account_data.inc"
+#include "modules/account/account_impl.inc"
+#include "modules/account/account_cmds.inc"
 
 main() {}
 
@@ -34,37 +40,72 @@ public OnGameModeInit()
     ShowPlayerMarkers(PLAYER_MARKERS_MODE_OFF);
     ManualVehicleEngineAndLights();
 
+    Account_Init();
+
     printf("[SERVER] %s gamemode loaded.", SERVER_NAME);
     return 1;
 }
 
 public OnGameModeExit()
 {
+    Account_Exit();
     Database_Disconnect();
     return 1;
 }
 
 public OnPlayerConnect(playerid)
 {
-    SendClientMessage(playerid, COLOR_SERVER, "Dobrodosli na " SERVER_NAME "!");
+    Account_OnPlayerConnect(playerid);
     return 1;
 }
 
 public OnPlayerDisconnect(playerid, reason)
 {
+    Account_OnPlayerDisconnect(playerid);
     return 1;
 }
 
 public OnPlayerRequestClass(playerid, classid)
 {
-    // Temporary until the account system takes over spawning.
-    SetSpawnInfo(playerid, NO_TEAM, DEFAULT_SKIN, DEFAULT_SPAWN_X, DEFAULT_SPAWN_Y, DEFAULT_SPAWN_Z, DEFAULT_SPAWN_A);
-    SpawnPlayer(playerid);
+    Account_OnPlayerRequestClass(playerid);
     return 1;
+}
+
+public OnPlayerRequestSpawn(playerid)
+{
+    return Account_IsLoggedIn(playerid) ? 1 : 0;
 }
 
 public OnPlayerSpawn(playerid)
 {
+    Account_OnPlayerSpawn(playerid);
+    return 1;
+}
+
+public OnPlayerText(playerid, text[])
+{
+    if (!Account_IsLoggedIn(playerid))
+    {
+        return 0;
+    }
+    return 1;
+}
+
+public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
+{
+    if (Account_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    return 0;
+}
+
+public OnPlayerCommandReceived(playerid, cmd[], params[], flags)
+{
+    if (!Account_IsLoggedIn(playerid))
+    {
+        return 0;
+    }
     return 1;
 }
 

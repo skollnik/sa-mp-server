@@ -20,12 +20,14 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 12 | 2026-10-21 | Heavy (pravi) RP, sa punim spektrom frakcija | Zahtev vlasnika |
 | 13 | 2026-10-21 | Git: prate se izvorni kod, include-ovi, kompajler, server binarni fajlovi i pluginovi. Ignorišu se `.amx`, logovi i lozinke za bazu | Kada se repo klonira, server se odmah pokreće. Tajne podatke ne guramo na GitHub |
 | 14 | 2026-10-21 | Pristupni podaci za bazu idu u `mysql.ini` (ignorisan u gitu). U repou je samo `mysql.ini.example` | Bezbednost |
-| 15 | 2026-10-21 | Šema baze se vodi kroz numerisane SQL migracije u `database/migrations/` | Šema može da se rekreira i ima istoriju promena |
+| 15 | 2026-10-21 | Server sam pravi tabele pri pokretanju (`CREATE TABLE IF NOT EXISTS`), svaki modul svoje | Vlasnik ne mora ništa ručno da importuje |
 | 16 | 2026-10-21 | Jedan nalog = jedan karakter, ime obavezno `Ime_Prezime`. Kratko ime ima samo vlasnik (`skollnik`) i oni kojima ga on dodeli | Zahtev vlasnika |
 | 17 | 2026-10-21 | Nema kviza pri registraciji, pravila se samo prikazuju | Zahtev vlasnika |
 | 18 | 2026-10-21 | Postoje nivoi (respect poeni na payday) | Zahtev vlasnika |
 | 19 | 2026-10-21 | Nema stalnog auto salona. Vozila se kupuju samo na povremenim auto pijacama (admin event) ili od igrača | Vozila treba da budu retka |
 | 20 | 2026-10-21 | Realna ekonomija: start $5.000 ($2.000 keš + $3.000 banka), cene vezane za stvarni život. Cene su u `ECONOMY.md` | Novac i vozila treba da budu retki i vredni |
+| 21 | 2026-10-21 | Novi igrači dobijaju nasumičan skin (3 muška: 7, 47, 60; 3 ženska: 40, 56, 93) i pojavljuju se ispred aerodroma u Los Santosu | Zahtev vlasnika |
+| 22 | 2026-10-21 | Email se za sada ne traži pri registraciji | Nije potreban dok ne postoji web panel |
 
 ### Arhitektura koda (predlog)
 ```
@@ -36,7 +38,7 @@ gamemodes/
       <modul>_data.inc    ← enumi, nizovi, konstante
       <modul>_impl.inc    ← logika i funkcije
       <modul>_cmds.inc    ← komande
-database/migrations/      ← 001_accounts.sql, 002_characters.sql ...
+                          (tabele pravi svaki modul u svom Module_Init)
 ```
 - Imenovanje: `Module_Action()` (npr. `Account_Load`, `Vehicle_SetFuel`), globalne promenljive `g_`, konstante `UPPER_CASE`.
 - Svaki modul ima funkcije `Module_OnPlayerConnect`, `Module_OnPlayerDisconnect` itd. i one se pozivaju iz `roleplay.pwn`.
@@ -67,12 +69,14 @@ This file records every important decision so it does not get re-discussed. Newe
 | 12 | 2026-10-21 | Heavy (serious) RP with a full range of factions | Owner's request |
 | 13 | 2026-10-21 | Git tracks source, includes, compiler, server binaries and plugins. It ignores `.amx`, logs and DB credentials | A clone runs immediately. Secrets stay off GitHub |
 | 14 | 2026-10-21 | DB credentials live in `mysql.ini` (git-ignored). The repo only has `mysql.ini.example` | Security |
-| 15 | 2026-10-21 | DB schema is managed through numbered SQL migrations in `database/migrations/` | The schema can be recreated and has a change history |
+| 15 | 2026-10-21 | The server creates its tables on startup (`CREATE TABLE IF NOT EXISTS`), each module its own | The owner never has to import anything by hand |
 | 16 | 2026-10-21 | One account = one character, name must be `Firstname_Lastname`. Only the owner (`skollnik`) and those they grant it to get a short name | Owner's request |
 | 17 | 2026-10-21 | No quiz at registration, rules are only shown | Owner's request |
 | 18 | 2026-10-21 | Levels exist (respect points on payday) | Owner's request |
 | 19 | 2026-10-21 | No permanent dealership. Vehicles are bought only at occasional car markets (admin event) or from players | Vehicles should be rare |
 | 20 | 2026-10-21 | Realistic economy: start with $5,000 ($2,000 cash + $3,000 bank), prices anchored to real life. Prices are in `ECONOMY.md` | Money and vehicles should be scarce and valuable |
+| 21 | 2026-10-21 | New players get a random skin (3 male: 7, 47, 60; 3 female: 40, 56, 93) and spawn in front of Los Santos airport | Owner's request |
+| 22 | 2026-10-21 | No email asked at registration for now | Not needed until there is a web panel |
 
 ### Code architecture (proposal)
 ```
@@ -83,7 +87,7 @@ gamemodes/
       <module>_data.inc   ← enums, arrays, constants
       <module>_impl.inc   ← logic and functions
       <module>_cmds.inc   ← commands
-database/migrations/      ← 001_accounts.sql, 002_characters.sql ...
+                          (tabele pravi svaki modul u svom Module_Init)
 ```
 - Naming: `Module_Action()` (e.g. `Account_Load`, `Vehicle_SetFuel`), globals prefixed `g_`, constants `UPPER_CASE`.
 - Each module exposes `Module_OnPlayerConnect`, `Module_OnPlayerDisconnect` etc., which are called from `roleplay.pwn`.

@@ -1,0 +1,15 @@
+// Every dialog ID used by the gamemode lives here so IDs never collide between modules.
+
+enum
+{
+    DIALOG_NONE,
+
+    // Account
+    DIALOG_INVALID_NAME,
+    DIALOG_LOGIN,
+    DIALOG_REGISTER_PASSWORD,
+    DIALOG_REGISTER_CONFIRM,
+    DIALOG_REGISTER_GENDER,
+    DIALOG_REGISTER_AGE,
+    DIALOG_REGISTER_RULES
+}

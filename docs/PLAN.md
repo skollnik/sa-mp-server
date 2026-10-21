@@ -18,12 +18,12 @@ Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preska�
 
 ### Faza 1: Jezgro
 Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se čuva.
-- [ ] Sloj za bazu i sistem migracija
-- [ ] ACC-1, ACC-2: registracija i login
-- [ ] ACC-3: pravila servera (bez kviza)
-- [ ] ADM-7: izuzeci od Ime_Prezime formata (samo vlasnik)
-- [ ] ACC-4, ACC-5: kreiranje karaktera, prvi spawn
-- [ ] ACC-6: čuvanje podataka
+- [x] Sloj za bazu (tabele se prave automatski)
+- [x] ACC-1, ACC-2: registracija i login
+- [x] ACC-3: pravila servera (bez kviza)
+- [x] ADM-7: izuzeci od Ime_Prezime formata (samo vlasnik)
+- [x] ACC-4, ACC-5: kreiranje karaktera (pol, godine, nasumičan skin), prvi spawn na aerodromu
+- [x] ACC-6: čuvanje podataka (izlazak + na 10 min)
 - [ ] CHAT-1, CHAT-2, CHAT-3: osnovni RP chat
 - [ ] ADM-1 – ADM-4, ADM-6: osnovni admin sistem, report, kazne, logovi
 - [ ] AC-1, AC-3, AC-4: serverski novac/HP, zaštita dijaloga, flood zaštita
@@ -111,12 +111,12 @@ The order is set so that each phase builds on the previous one. Nothing gets ski
 
 ### Phase 1: Core
 Goal: a player can register, create a character, play and quit, and everything is saved.
-- [ ] Database layer and migration system
-- [ ] ACC-1, ACC-2: register and login
-- [ ] ACC-3: server rules (no quiz)
-- [ ] ADM-7: exemptions from the Firstname_Lastname format (owner only)
-- [ ] ACC-4, ACC-5: character creation, first spawn
-- [ ] ACC-6: data saving
+- [x] Database layer (tables are created automatically)
+- [x] ACC-1, ACC-2: register and login
+- [x] ACC-3: server rules (no quiz)
+- [x] ADM-7: exemptions from the Firstname_Lastname format (owner only)
+- [x] ACC-4, ACC-5: character creation (gender, age, random skin), first spawn at the airport
+- [x] ACC-6: data saving (on quit + every 10 min)
 - [ ] CHAT-1, CHAT-2, CHAT-3: basic RP chat
 - [ ] ADM-1 – ADM-4, ADM-6: basic admin system, reports, punishments, logs
 - [ ] AC-1, AC-3, AC-4: server-side money/HP, dialog protection, flood protection

@@ -1,0 +1,657 @@
+// Account module: name rules, register/login flow, spawning and saving.
+
+forward bool:Account_IsOwnerName(const name[]);
+forward bool:Account_IsValidRpName(const name[]);
+
+// ---------------------------------------------------------------------------
+// Lifecycle
+// ---------------------------------------------------------------------------
+
+stock Account_Init()
+{
+    mysql_tquery(g_SQL,
+        "CREATE TABLE IF NOT EXISTS `accounts` (" \
+        "`id` INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY," \
+        "`name` VARCHAR(24) NOT NULL UNIQUE," \
+        "`password` CHAR(60) NOT NULL," \
+        "`admin_level` TINYINT UNSIGNED NOT NULL DEFAULT 0," \
+        "`gender` TINYINT UNSIGNED NOT NULL DEFAULT 0," \
+        "`age` TINYINT UNSIGNED NOT NULL DEFAULT 18," \
+        "`skin` SMALLINT UNSIGNED NOT NULL DEFAULT 0," \
+        "`level` INT UNSIGNED NOT NULL DEFAULT 1," \
+        "`respect` INT UNSIGNED NOT NULL DEFAULT 0," \
+        "`cash` INT NOT NULL DEFAULT 0," \
+        "`bank` INT NOT NULL DEFAULT 0," \
+        "`pos_x` FLOAT NOT NULL DEFAULT 0," \
+        "`pos_y` FLOAT NOT NULL DEFAULT 0," \
+        "`pos_z` FLOAT NOT NULL DEFAULT 0," \
+        "`pos_a` FLOAT NOT NULL DEFAULT 0," \
+        "`interior` INT NOT NULL DEFAULT 0," \
+        "`virtual_world` INT NOT NULL DEFAULT 0," \
+        "`health` FLOAT NOT NULL DEFAULT 100," \
+        "`armour` FLOAT NOT NULL DEFAULT 0," \
+        "`played_seconds` INT UNSIGNED NOT NULL DEFAULT 0," \
+        "`register_ip` VARCHAR(16) NOT NULL DEFAULT ''," \
+        "`last_ip` VARCHAR(16) NOT NULL DEFAULT ''," \
+        "`registered_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," \
+        "`last_login` DATETIME NULL" \
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    mysql_tquery(g_SQL,
+        "CREATE TABLE IF NOT EXISTS `name_exemptions` (" \
+        "`name` VARCHAR(24) NOT NULL PRIMARY KEY," \
+        "`granted_by` VARCHAR(24) NOT NULL," \
+        "`granted_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" \
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    g_AutosaveTimer = SetTimer("Account_Autosave", AUTOSAVE_INTERVAL_MS, true);
+}
+
+stock Account_Exit()
+{
+    KillTimer(g_AutosaveTimer);
+
+    // Saved synchronously because the DB connection is closed right after this.
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        Account_Save(i, true);
+        g_Player[i][pState] = ACCOUNT_STATE_NONE;
+    }
+}
+
+stock Account_OnPlayerConnect(playerid)
+{
+    static const empty[E_PLAYER_DATA];
+    g_Player[playerid] = empty;
+    g_RegisterPassword[playerid][0] = '\0';
+    g_AccountRace[playerid]++;
+
+    GetPlayerName(playerid, g_Player[playerid][pName], MAX_PLAYER_NAME + 1);
+
+    if (Account_IsOwnerName(g_Player[playerid][pName]) || Account_IsValidRpName(g_Player[playerid][pName]))
+    {
+        Account_Lookup(playerid);
+        return;
+    }
+
+    new query[128];
+    mysql_format(g_SQL, query, sizeof(query), "SELECT 1 FROM `name_exemptions` WHERE `name` = '%e' LIMIT 1", g_Player[playerid][pName]);
+    mysql_tquery(g_SQL, query, "OnAccountExemptionCheck", "dd", playerid, g_AccountRace[playerid]);
+}
+
+stock Account_OnPlayerDisconnect(playerid)
+{
+    Account_Save(playerid);
+
+    if (g_Player[playerid][pLoginTimer])
+    {
+        KillTimer(g_Player[playerid][pLoginTimer]);
+    }
+
+    g_Player[playerid][pState] = ACCOUNT_STATE_NONE;
+    g_RegisterPassword[playerid][0] = '\0';
+    g_AccountRace[playerid]++;
+}
+
+stock Account_OnPlayerRequestClass(playerid)
+{
+    if (g_Player[playerid][pState] != ACCOUNT_STATE_LOGGED_IN)
+    {
+        TogglePlayerSpectating(playerid, true);
+        SetPlayerCameraPos(playerid, LOGIN_CAMERA_X, LOGIN_CAMERA_Y, LOGIN_CAMERA_Z);
+        SetPlayerCameraLookAt(playerid, LOGIN_LOOKAT_X, LOGIN_LOOKAT_Y, LOGIN_LOOKAT_Z);
+    }
+}
+
+stock Account_OnPlayerSpawn(playerid)
+{
+    if (g_Player[playerid][pState] != ACCOUNT_STATE_LOGGED_IN)
+    {
+        Kick(playerid);
+        return;
+    }
+
+    SetPlayerSkin(playerid, g_Player[playerid][pSkin]);
+    ResetPlayerMoney(playerid);
+    GivePlayerMoney(playerid, g_Player[playerid][pCash]);
+
+    if (g_Player[playerid][pFirstSpawn])
+    {
+        g_Player[playerid][pFirstSpawn] = false;
+        SetPlayerInterior(playerid, g_Player[playerid][pInterior]);
+        SetPlayerVirtualWorld(playerid, g_Player[playerid][pVirtualWorld]);
+        SetPlayerHealth(playerid, g_Player[playerid][pHealth]);
+        SetPlayerArmour(playerid, g_Player[playerid][pArmour]);
+    }
+}
+
+stock bool:Account_IsLoggedIn(playerid)
+{
+    return g_Player[playerid][pState] == ACCOUNT_STATE_LOGGED_IN;
+}
+
+// ---------------------------------------------------------------------------
+// Name rules
+// ---------------------------------------------------------------------------
+
+stock bool:Account_IsOwnerName(const name[])
+{
+    return strcmp(name, OWNER_NAME, true) == 0;
+}
+
+// Firstname_Lastname: exactly one underscore, each part at least 2 letters,
+// first letter of each part uppercase, the rest lowercase.
+stock bool:Account_IsValidRpName(const name[])
+{
+    new len = strlen(name),
+        underscore = -1;
+
+    if (len < 5 || len > MAX_PLAYER_NAME)
+    {
+        return false;
+    }
+
+    for (new i = 0; i < len; i++)
+    {
+        new c = name[i];
+
+        if (c == '_')
+        {
+            if (underscore != -1)
+            {
+                return false;
+            }
+            underscore = i;
+            continue;
+        }
+
+        new bool:part_start = (i == 0 || i == underscore + 1);
+
+        if (part_start)
+        {
+            if (c < 'A' || c > 'Z')
+            {
+                return false;
+            }
+        }
+        else if (c < 'a' || c > 'z')
+        {
+            return false;
+        }
+    }
+
+    return underscore >= 2 && (len - underscore - 1) >= 2;
+}
+
+forward OnAccountExemptionCheck(playerid, race);
+public OnAccountExemptionCheck(playerid, race)
+{
+    if (race != g_AccountRace[playerid])
+    {
+        return 1;
+    }
+
+    if (cache_num_rows() > 0)
+    {
+        Account_Lookup(playerid);
+        return 1;
+    }
+
+    ShowPlayerDialog(playerid, DIALOG_INVALID_NAME, DIALOG_STYLE_MSGBOX, SERVER_NAME " - Neispravno ime",
+        C_WHITE "Vase ime nije u ispravnom formatu.\n\n" \
+        "Na ovom serveru ime mora biti u formatu " C_SERVER "Ime_Prezime" C_WHITE ", na primer " C_SERVER "Marko_Petrovic" C_WHITE ".\n" \
+        "- samo slova i jedna donja crta izmedju imena i prezimena\n" \
+        "- ime i prezime pocinju velikim slovom\n\n" \
+        "Promenite ime u SA-MP klijentu i ponovo se povezite.",
+        "U redu", "");
+    Account_StartTimeout(playerid, LOGIN_TIMEOUT_MS);
+    return 1;
+}
+
+// ---------------------------------------------------------------------------
+// Lookup, login and register
+// ---------------------------------------------------------------------------
+
+stock Account_Lookup(playerid)
+{
+    new query[128];
+    mysql_format(g_SQL, query, sizeof(query), "SELECT * FROM `accounts` WHERE `name` = '%e' LIMIT 1", g_Player[playerid][pName]);
+    mysql_tquery(g_SQL, query, "OnAccountLookup", "dd", playerid, g_AccountRace[playerid]);
+}
+
+forward OnAccountLookup(playerid, race);
+public OnAccountLookup(playerid, race)
+{
+    if (race != g_AccountRace[playerid])
+    {
+        return 1;
+    }
+
+    if (cache_num_rows() == 0)
+    {
+        g_Player[playerid][pState] = ACCOUNT_STATE_REGISTER;
+        Account_ShowRegisterPassword(playerid, "");
+        Account_StartTimeout(playerid, REGISTER_TIMEOUT_MS);
+        return 1;
+    }
+
+    cache_get_value_name_int(0, "id", g_Player[playerid][pDbId]);
+    cache_get_value_name(0, "password", g_Player[playerid][pPasswordHash], BCRYPT_HASH_LENGTH);
+    cache_get_value_name_int(0, "admin_level", g_Player[playerid][pAdminLevel]);
+    cache_get_value_name_int(0, "gender", g_Player[playerid][pGender]);
+    cache_get_value_name_int(0, "age", g_Player[playerid][pAge]);
+    cache_get_value_name_int(0, "skin", g_Player[playerid][pSkin]);
+    cache_get_value_name_int(0, "level", g_Player[playerid][pLevel]);
+    cache_get_value_name_int(0, "respect", g_Player[playerid][pRespect]);
+    cache_get_value_name_int(0, "cash", g_Player[playerid][pCash]);
+    cache_get_value_name_int(0, "bank", g_Player[playerid][pBank]);
+    cache_get_value_name_float(0, "pos_x", g_Player[playerid][pPosX]);
+    cache_get_value_name_float(0, "pos_y", g_Player[playerid][pPosY]);
+    cache_get_value_name_float(0, "pos_z", g_Player[playerid][pPosZ]);
+    cache_get_value_name_float(0, "pos_a", g_Player[playerid][pPosA]);
+    cache_get_value_name_int(0, "interior", g_Player[playerid][pInterior]);
+    cache_get_value_name_int(0, "virtual_world", g_Player[playerid][pVirtualWorld]);
+    cache_get_value_name_float(0, "health", g_Player[playerid][pHealth]);
+    cache_get_value_name_float(0, "armour", g_Player[playerid][pArmour]);
+    cache_get_value_name_int(0, "played_seconds", g_Player[playerid][pPlayedSeconds]);
+
+    g_Player[playerid][pState] = ACCOUNT_STATE_LOGIN;
+    Account_ShowLogin(playerid, "");
+    Account_StartTimeout(playerid, LOGIN_TIMEOUT_MS);
+    return 1;
+}
+
+stock Account_ShowLogin(playerid, const error[])
+{
+    new body[256];
+    format(body, sizeof(body),
+        C_WHITE "Dobrodosli nazad, " C_SERVER "%s" C_WHITE "!\n\n" \
+        "Ovaj nalog je registrovan. Unesite lozinku da biste se prijavili.%s%s",
+        g_Player[playerid][pName], error[0] ? ("\n\n" C_RED) : (""), error);
+    ShowPlayerDialog(playerid, DIALOG_LOGIN, DIALOG_STYLE_PASSWORD, SERVER_NAME " - Prijava", body, "Prijavi se", "Izlaz");
+}
+
+stock Account_ShowRegisterPassword(playerid, const error[])
+{
+    new body[384];
+    format(body, sizeof(body),
+        C_WHITE "Dobrodosli na " C_SERVER SERVER_NAME C_WHITE ", " C_SERVER "%s" C_WHITE "!\n\n" \
+        "Ovaj nalog nije registrovan. Izaberite lozinku za svoj nalog.\n" \
+        "Lozinka mora imati od %d do %d karaktera.%s%s",
+        g_Player[playerid][pName], PASSWORD_MIN_LENGTH, PASSWORD_MAX_LENGTH, error[0] ? ("\n\n" C_RED) : (""), error);
+    ShowPlayerDialog(playerid, DIALOG_REGISTER_PASSWORD, DIALOG_STYLE_PASSWORD, SERVER_NAME " - Registracija (1/5)", body, "Dalje", "Izlaz");
+}
+
+stock Account_ShowRegisterConfirm(playerid)
+{
+    ShowPlayerDialog(playerid, DIALOG_REGISTER_CONFIRM, DIALOG_STYLE_PASSWORD, SERVER_NAME " - Registracija (2/5)",
+        C_WHITE "Ponovo unesite istu lozinku kao potvrdu.", "Dalje", "Nazad");
+}
+
+stock Account_ShowRegisterGender(playerid)
+{
+    ShowPlayerDialog(playerid, DIALOG_REGISTER_GENDER, DIALOG_STYLE_LIST, SERVER_NAME " - Registracija (3/5): Pol",
+        "Musko\nZensko", "Dalje", "Izlaz");
+}
+
+stock Account_ShowRegisterAge(playerid, const error[])
+{
+    new body[192];
+    format(body, sizeof(body),
+        C_WHITE "Koliko godina ima vas karakter?\n" \
+        "Unesite broj od %d do %d.%s%s",
+        CHARACTER_MIN_AGE, CHARACTER_MAX_AGE, error[0] ? ("\n\n" C_RED) : (""), error);
+    ShowPlayerDialog(playerid, DIALOG_REGISTER_AGE, DIALOG_STYLE_INPUT, SERVER_NAME " - Registracija (4/5): Godine", body, "Dalje", "Nazad");
+}
+
+stock Account_ShowRegisterRules(playerid)
+{
+    ShowPlayerDialog(playerid, DIALOG_REGISTER_RULES, DIALOG_STYLE_MSGBOX, SERVER_NAME " - Registracija (5/5): Pravila",
+        C_WHITE "1. Uvek ostanite u ulozi (IC). OOC razgovor samo preko /b.\n" \
+        "2. Zabranjen je Metagaming (MG): koriscenje OOC informacija u igri.\n" \
+        "3. Zabranjen je Powergaming (PG): nerealne ili nametnute akcije.\n" \
+        "4. Zabranjen je Deathmatch (DM): napad ili ubistvo bez RP razloga.\n" \
+        "5. Zabranjen je Revenge Kill (RK) i povratak na mesto smrti (NLR).\n" \
+        "6. Zabranjeno je koriscenje cheatova, bugova i modova koji daju prednost.\n" \
+        "7. Postujte sve igrace i administraciju.\n\n" \
+        "Krsenje pravila se kaznjava kick-om, zatvorom ili banom.\n\n" \
+        C_SERVER "Klikom na \"Prihvatam\" potvrdjujete da ste procitali i prihvatili pravila.",
+        "Prihvatam", "Odbijam");
+}
+
+stock bool:Account_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[])
+{
+    switch (dialogid)
+    {
+        case DIALOG_INVALID_NAME:
+        {
+            Kick(playerid);
+        }
+        case DIALOG_LOGIN:
+        {
+            if (g_Player[playerid][pState] != ACCOUNT_STATE_LOGIN || g_Player[playerid][pAwaitingBcrypt])
+            {
+                return true;
+            }
+            if (!response)
+            {
+                Kick(playerid);
+                return true;
+            }
+            if (!inputtext[0])
+            {
+                Account_ShowLogin(playerid, "Niste uneli lozinku.");
+                return true;
+            }
+
+            g_Player[playerid][pAwaitingBcrypt] = true;
+            bcrypt_verify(playerid, "OnAccountPasswordVerify", inputtext, g_Player[playerid][pPasswordHash]);
+        }
+        case DIALOG_REGISTER_PASSWORD:
+        {
+            if (!response)
+            {
+                Kick(playerid);
+                return true;
+            }
+
+            new len = strlen(inputtext);
+            if (len < PASSWORD_MIN_LENGTH || len > PASSWORD_MAX_LENGTH)
+            {
+                Account_ShowRegisterPassword(playerid, "Lozinka nije odgovarajuce duzine.");
+                return true;
+            }
+
+            strcopy(g_RegisterPassword[playerid], inputtext);
+            Account_ShowRegisterConfirm(playerid);
+        }
+        case DIALOG_REGISTER_CONFIRM:
+        {
+            if (!response)
+            {
+                g_RegisterPassword[playerid][0] = '\0';
+                Account_ShowRegisterPassword(playerid, "");
+                return true;
+            }
+            if (strcmp(inputtext, g_RegisterPassword[playerid]) != 0 || !inputtext[0])
+            {
+                g_RegisterPassword[playerid][0] = '\0';
+                Account_ShowRegisterPassword(playerid, "Lozinke se ne poklapaju, pokusajte ponovo.");
+                return true;
+            }
+            if (g_Player[playerid][pAwaitingBcrypt])
+            {
+                return true;
+            }
+
+            g_Player[playerid][pAwaitingBcrypt] = true;
+            bcrypt_hash(playerid, "OnAccountPasswordHashed", g_RegisterPassword[playerid], BCRYPT_COST);
+            g_RegisterPassword[playerid][0] = '\0';
+        }
+        case DIALOG_REGISTER_GENDER:
+        {
+            if (!response)
+            {
+                Kick(playerid);
+                return true;
+            }
+
+            g_Player[playerid][pGender] = (listitem == 1) ? GENDER_FEMALE : GENDER_MALE;
+            Account_ShowRegisterAge(playerid, "");
+        }
+        case DIALOG_REGISTER_AGE:
+        {
+            if (!response)
+            {
+                Account_ShowRegisterGender(playerid);
+                return true;
+            }
+
+            new age;
+            if (sscanf(inputtext, "d", age) || age < CHARACTER_MIN_AGE || age > CHARACTER_MAX_AGE)
+            {
+                Account_ShowRegisterAge(playerid, "Unesite ispravan broj godina.");
+                return true;
+            }
+
+            g_Player[playerid][pAge] = age;
+            Account_ShowRegisterRules(playerid);
+        }
+        case DIALOG_REGISTER_RULES:
+        {
+            if (!response)
+            {
+                SendClientMessage(playerid, COLOR_RED, "Morate prihvatiti pravila da biste igrali na serveru.");
+                KickWithDelay(playerid);
+                return true;
+            }
+
+            Account_Create(playerid);
+        }
+        default:
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+forward OnAccountPasswordVerify(playerid, bool:success);
+public OnAccountPasswordVerify(playerid, bool:success)
+{
+    if (g_Player[playerid][pState] != ACCOUNT_STATE_LOGIN || !g_Player[playerid][pAwaitingBcrypt])
+    {
+        return 1;
+    }
+    g_Player[playerid][pAwaitingBcrypt] = false;
+
+    if (success)
+    {
+        Account_CompleteLogin(playerid, false);
+        return 1;
+    }
+
+    if (++g_Player[playerid][pLoginAttempts] >= MAX_LOGIN_ATTEMPTS)
+    {
+        SendClientMessage(playerid, COLOR_RED, "Previse pogresnih pokusaja. Izbaceni ste sa servera.");
+        KickWithDelay(playerid);
+        return 1;
+    }
+
+    new error[64];
+    format(error, sizeof(error), "Pogresna lozinka! Preostalo pokusaja: %d", MAX_LOGIN_ATTEMPTS - g_Player[playerid][pLoginAttempts]);
+    Account_ShowLogin(playerid, error);
+    return 1;
+}
+
+forward OnAccountPasswordHashed(playerid, hashid);
+public OnAccountPasswordHashed(playerid, hashid)
+{
+    if (g_Player[playerid][pState] != ACCOUNT_STATE_REGISTER || !g_Player[playerid][pAwaitingBcrypt])
+    {
+        return 1;
+    }
+    g_Player[playerid][pAwaitingBcrypt] = false;
+
+    bcrypt_get_hash(g_Player[playerid][pPasswordHash], BCRYPT_HASH_LENGTH);
+    Account_ShowRegisterGender(playerid);
+    return 1;
+}
+
+stock Account_Create(playerid)
+{
+    if (g_Player[playerid][pGender] == GENDER_FEMALE)
+    {
+        g_Player[playerid][pSkin] = g_StarterSkinsFemale[random(sizeof(g_StarterSkinsFemale))];
+    }
+    else
+    {
+        g_Player[playerid][pSkin] = g_StarterSkinsMale[random(sizeof(g_StarterSkinsMale))];
+    }
+
+    g_Player[playerid][pAdminLevel] = Account_IsOwnerName(g_Player[playerid][pName]) ? ADMIN_LEVEL_OWNER : 0;
+    g_Player[playerid][pLevel] = 1;
+    g_Player[playerid][pRespect] = 0;
+    g_Player[playerid][pCash] = STARTER_CASH;
+    g_Player[playerid][pBank] = STARTER_BANK;
+    g_Player[playerid][pPosX] = NEW_SPAWN_X;
+    g_Player[playerid][pPosY] = NEW_SPAWN_Y;
+    g_Player[playerid][pPosZ] = NEW_SPAWN_Z;
+    g_Player[playerid][pPosA] = NEW_SPAWN_A;
+    g_Player[playerid][pInterior] = 0;
+    g_Player[playerid][pVirtualWorld] = 0;
+    g_Player[playerid][pHealth] = 100.0;
+    g_Player[playerid][pArmour] = 0.0;
+
+    new ip[16], query[640];
+    GetPlayerIp(playerid, ip, sizeof(ip));
+    mysql_format(g_SQL, query, sizeof(query),
+        "INSERT INTO `accounts` (`name`, `password`, `admin_level`, `gender`, `age`, `skin`, `level`, `cash`, `bank`, " \
+        "`pos_x`, `pos_y`, `pos_z`, `pos_a`, `register_ip`, `last_ip`, `last_login`) " \
+        "VALUES ('%e', '%e', %d, %d, %d, %d, %d, %d, %d, %f, %f, %f, %f, '%e', '%e', NOW())",
+        g_Player[playerid][pName], g_Player[playerid][pPasswordHash], g_Player[playerid][pAdminLevel],
+        g_Player[playerid][pGender], g_Player[playerid][pAge], g_Player[playerid][pSkin], g_Player[playerid][pLevel],
+        g_Player[playerid][pCash], g_Player[playerid][pBank],
+        g_Player[playerid][pPosX], g_Player[playerid][pPosY], g_Player[playerid][pPosZ], g_Player[playerid][pPosA],
+        ip, ip);
+    mysql_tquery(g_SQL, query, "OnAccountCreated", "dd", playerid, g_AccountRace[playerid]);
+}
+
+forward OnAccountCreated(playerid, race);
+public OnAccountCreated(playerid, race)
+{
+    if (race != g_AccountRace[playerid])
+    {
+        return 1;
+    }
+
+    g_Player[playerid][pDbId] = cache_insert_id();
+    Account_CompleteLogin(playerid, true);
+    return 1;
+}
+
+stock Account_CompleteLogin(playerid, bool:is_new)
+{
+    if (g_Player[playerid][pLoginTimer])
+    {
+        KillTimer(g_Player[playerid][pLoginTimer]);
+        g_Player[playerid][pLoginTimer] = 0;
+    }
+
+    g_Player[playerid][pState] = ACCOUNT_STATE_LOGGED_IN;
+    g_Player[playerid][pFirstSpawn] = true;
+    g_Player[playerid][pSessionStart] = gettime();
+
+    if (Account_IsOwnerName(g_Player[playerid][pName]))
+    {
+        g_Player[playerid][pAdminLevel] = ADMIN_LEVEL_OWNER;
+    }
+
+    if (g_Player[playerid][pHealth] < 1.0)
+    {
+        g_Player[playerid][pHealth] = 100.0;
+    }
+
+    if (is_new)
+    {
+        SendClientMessage(playerid, COLOR_SERVER, "Uspesno ste se registrovali! Dobrodosli u Los Santos.");
+    }
+    else
+    {
+        new ip[16], query[160];
+        GetPlayerIp(playerid, ip, sizeof(ip));
+        mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `last_login` = NOW(), `last_ip` = '%e' WHERE `id` = %d", ip, g_Player[playerid][pDbId]);
+        mysql_tquery(g_SQL, query);
+
+        SendClientMessage(playerid, COLOR_SERVER, "Uspesno ste se prijavili. Dobrodosli nazad!");
+    }
+
+    SetSpawnInfo(playerid, NO_TEAM, g_Player[playerid][pSkin],
+        g_Player[playerid][pPosX], g_Player[playerid][pPosY], g_Player[playerid][pPosZ], g_Player[playerid][pPosA]);
+    TogglePlayerSpectating(playerid, false);
+}
+
+// ---------------------------------------------------------------------------
+// Timeout
+// ---------------------------------------------------------------------------
+
+stock Account_StartTimeout(playerid, time_ms)
+{
+    if (g_Player[playerid][pLoginTimer])
+    {
+        KillTimer(g_Player[playerid][pLoginTimer]);
+    }
+    g_Player[playerid][pLoginTimer] = SetTimerEx("Account_OnTimeout", time_ms, false, "dd", playerid, g_AccountRace[playerid]);
+}
+
+forward Account_OnTimeout(playerid, race);
+public Account_OnTimeout(playerid, race)
+{
+    if (race != g_AccountRace[playerid] || g_Player[playerid][pState] == ACCOUNT_STATE_LOGGED_IN)
+    {
+        return 1;
+    }
+
+    g_Player[playerid][pLoginTimer] = 0;
+    SendClientMessage(playerid, COLOR_RED, "Isteklo je vreme za prijavu. Izbaceni ste sa servera.");
+    KickWithDelay(playerid);
+    return 1;
+}
+
+// ---------------------------------------------------------------------------
+// Saving
+// ---------------------------------------------------------------------------
+
+stock Account_Save(playerid, bool:sync = false)
+{
+    if (g_Player[playerid][pState] != ACCOUNT_STATE_LOGGED_IN)
+    {
+        return;
+    }
+
+    new PLAYER_STATE:player_state = GetPlayerState(playerid);
+    if (player_state != PLAYER_STATE_NONE && player_state != PLAYER_STATE_WASTED && player_state != PLAYER_STATE_SPECTATING)
+    {
+        GetPlayerPos(playerid, g_Player[playerid][pPosX], g_Player[playerid][pPosY], g_Player[playerid][pPosZ]);
+        GetPlayerFacingAngle(playerid, g_Player[playerid][pPosA]);
+        g_Player[playerid][pInterior] = GetPlayerInterior(playerid);
+        g_Player[playerid][pVirtualWorld] = GetPlayerVirtualWorld(playerid);
+        GetPlayerHealth(playerid, g_Player[playerid][pHealth]);
+        GetPlayerArmour(playerid, g_Player[playerid][pArmour]);
+    }
+
+    new now = gettime();
+    g_Player[playerid][pPlayedSeconds] += now - g_Player[playerid][pSessionStart];
+    g_Player[playerid][pSessionStart] = now;
+
+    new query[640];
+    mysql_format(g_SQL, query, sizeof(query),
+        "UPDATE `accounts` SET `admin_level` = %d, `skin` = %d, `level` = %d, `respect` = %d, `cash` = %d, `bank` = %d, " \
+        "`pos_x` = %f, `pos_y` = %f, `pos_z` = %f, `pos_a` = %f, `interior` = %d, `virtual_world` = %d, " \
+        "`health` = %f, `armour` = %f, `played_seconds` = %d WHERE `id` = %d",
+        g_Player[playerid][pAdminLevel], g_Player[playerid][pSkin], g_Player[playerid][pLevel], g_Player[playerid][pRespect],
+        g_Player[playerid][pCash], g_Player[playerid][pBank],
+        g_Player[playerid][pPosX], g_Player[playerid][pPosY], g_Player[playerid][pPosZ], g_Player[playerid][pPosA],
+        g_Player[playerid][pInterior], g_Player[playerid][pVirtualWorld],
+        g_Player[playerid][pHealth], g_Player[playerid][pArmour], g_Player[playerid][pPlayedSeconds],
+        g_Player[playerid][pDbId]);
+
+    if (sync)
+    {
+        mysql_query(g_SQL, query, false);
+    }
+    else
+    {
+        mysql_tquery(g_SQL, query);
+    }
+}
+
+forward Account_Autosave();
+public Account_Autosave()
+{
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        Account_Save(i);
+    }
+    return 1;
+}
