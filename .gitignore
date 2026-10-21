@@ -1,0 +1,22 @@
+# Build output
+*.amx
+
+# Logs and crash dumps
+log.txt
+*.log
+crashinfo.txt
+*.dmp
+
+# Secrets
+scriptfiles/mysql.ini
+
+# Debug symbols
+*.pdb
+
+# Editor / OS
+.vscode/*
+!.vscode/tasks.json
+!.vscode/settings.json
+!.vscode/extensions.json
+Thumbs.db
+desktop.ini
