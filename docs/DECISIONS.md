@@ -87,7 +87,7 @@ gamemodes/
       <module>_data.inc   ← enums, arrays, constants
       <module>_impl.inc   ← logic and functions
       <module>_cmds.inc   ← commands
-                          (tabele pravi svaki modul u svom Module_Init)
+                          (each module creates its tables in Module_Init)
 ```
 - Naming: `Module_Action()` (e.g. `Account_Load`, `Vehicle_SetFuel`), globals prefixed `g_`, constants `UPPER_CASE`.
 - Each module exposes `Module_OnPlayerConnect`, `Module_OnPlayerDisconnect` etc., which are called from `roleplay.pwn`.
