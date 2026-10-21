@@ -19,7 +19,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 11 | 2026-10-21 | Radnja se odvija uglavnom u Los Santosu | Kao na većini RP servera |
 | 12 | 2026-10-21 | Heavy (pravi) RP, sa punim spektrom frakcija | Zahtev vlasnika |
 | 13 | 2026-10-21 | Git: prate se izvorni kod, include-ovi, kompajler, server binarni fajlovi i pluginovi. Ignorišu se `.amx`, logovi i lozinke za bazu | Kada se repo klonira, server se odmah pokreće. Tajne podatke ne guramo na GitHub |
-| 14 | 2026-10-21 | Pristupni podaci za bazu idu u `scriptfiles/mysql.ini` (ignorisan u gitu). U repou je samo `mysql.ini.example` | Bezbednost |
+| 14 | 2026-10-21 | Pristupni podaci za bazu idu u `mysql.ini` (ignorisan u gitu). U repou je samo `mysql.ini.example` | Bezbednost |
 | 15 | 2026-10-21 | Šema baze se vodi kroz numerisane SQL migracije u `database/migrations/` | Šema može da se rekreira i ima istoriju promena |
 | 16 | 2026-10-21 | Jedan nalog = jedan karakter, ime obavezno `Ime_Prezime`. Kratko ime ima samo vlasnik (`skollnik`) i oni kojima ga on dodeli | Zahtev vlasnika |
 | 17 | 2026-10-21 | Nema kviza pri registraciji, pravila se samo prikazuju | Zahtev vlasnika |
@@ -66,7 +66,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 11 | 2026-10-21 | Setting is mostly Los Santos | Like most RP servers |
 | 12 | 2026-10-21 | Heavy (serious) RP with a full range of factions | Owner's request |
 | 13 | 2026-10-21 | Git tracks source, includes, compiler, server binaries and plugins. It ignores `.amx`, logs and DB credentials | A clone runs immediately. Secrets stay off GitHub |
-| 14 | 2026-10-21 | DB credentials live in `scriptfiles/mysql.ini` (git-ignored). The repo only has `mysql.ini.example` | Security |
+| 14 | 2026-10-21 | DB credentials live in `mysql.ini` (git-ignored). The repo only has `mysql.ini.example` | Security |
 | 15 | 2026-10-21 | DB schema is managed through numbered SQL migrations in `database/migrations/` | The schema can be recreated and has a change history |
 | 16 | 2026-10-21 | One account = one character, name must be `Firstname_Lastname`. Only the owner (`skollnik`) and those they grant it to get a short name | Owner's request |
 | 17 | 2026-10-21 | No quiz at registration, rules are only shown | Owner's request |

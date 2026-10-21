@@ -8,7 +8,7 @@ crashinfo.txt
 *.dmp
 
 # Secrets
-scriptfiles/mysql.ini
+mysql.ini
 
 # Debug symbols
 *.pdb

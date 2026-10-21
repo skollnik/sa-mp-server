@@ -1,4 +1,4 @@
-// MySQL connection handling. Credentials are read from scriptfiles/mysql.ini (never committed).
+// MySQL connection handling. Credentials are read from mysql.ini (never committed).
 
 new MySQL:g_SQL = MYSQL_INVALID_HANDLE;
 
@@ -9,14 +9,14 @@ stock bool:Database_Connect()
     g_SQL = mysql_connect_file("mysql.ini");
     if (g_SQL == MYSQL_INVALID_HANDLE)
     {
-        print("[DB] scriptfiles/mysql.ini is missing or invalid (see scriptfiles/mysql.ini.example).");
+        print("[DB] mysql.ini is missing or invalid (see mysql.ini.example).");
         return false;
     }
 
     new errno = mysql_errno(g_SQL);
     if (errno != 0)
     {
-        printf("[DB] Connection failed (error %d). Check the password in scriptfiles/mysql.ini and that MySQL is running in XAMPP.", errno);
+        printf("[DB] Connection failed (error %d). Check the password in mysql.ini and that MySQL is running in XAMPP.", errno);
         return false;
     }
 

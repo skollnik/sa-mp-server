@@ -14,7 +14,7 @@ Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preska�
 - [x] Instalacija XAMPP-a (MariaDB + phpMyAdmin), vidi [SETUP_MYSQL.md](SETUP_MYSQL.md)
 - [x] Preuzimanje pluginova (mysql, sscanf, Pawn.CMD, streamer, bcrypt, crashdetect) i podešavanje `config.json`
 - [x] VS Code: build task (Ctrl+Shift+B kompajlira gamemode) i ekstenzija za Pawn
-- [ ] Kostur gamemode-a (`roleplay.pwn` + `core/`) koji se kompajlira, pokreće i povezuje na bazu
+- [x] Kostur gamemode-a (`roleplay.pwn` + `core/`) koji se kompajlira, pokreće i povezuje na bazu
 
 ### Faza 1: Jezgro
 Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se čuva.
@@ -107,7 +107,7 @@ The order is set so that each phase builds on the previous one. Nothing gets ski
 - [x] Install XAMPP (MariaDB + phpMyAdmin), see [SETUP_MYSQL.md](SETUP_MYSQL.md)
 - [x] Download plugins (mysql, sscanf, Pawn.CMD, streamer, bcrypt, crashdetect) and configure `config.json`
 - [x] VS Code: build task (Ctrl+Shift+B compiles the gamemode) and a Pawn extension
-- [ ] Gamemode skeleton (`roleplay.pwn` + `core/`) that compiles, runs and connects to the DB
+- [x] Gamemode skeleton (`roleplay.pwn` + `core/`) that compiles, runs and connects to the DB
 
 ### Phase 1: Core
 Goal: a player can register, create a character, play and quit, and everything is saved.
