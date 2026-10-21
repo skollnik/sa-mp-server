@@ -1,0 +1,6 @@
+hostname = 127.0.0.1
+username = samp
+password = OVDE_TVOJA_LOZINKA
+database = samp_rp
+server_port = 3306
+auto_reconnect = true

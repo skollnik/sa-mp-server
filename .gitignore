@@ -20,3 +20,6 @@ scriptfiles/mysql.ini
 !.vscode/extensions.json
 Thumbs.db
 desktop.ini
+
+# Plugin logs
+logs/

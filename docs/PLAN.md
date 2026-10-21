@@ -12,8 +12,8 @@ Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preska�
 - [x] Osnovne odluke (baza, biblioteke, jezik, editor)
 - [x] Git + GitHub repo, `.gitignore`
 - [x] Instalacija XAMPP-a (MariaDB + phpMyAdmin), vidi [SETUP_MYSQL.md](SETUP_MYSQL.md)
-- [ ] Preuzimanje pluginova (mysql, sscanf, Pawn.CMD, streamer, bcrypt, crashdetect) i podešavanje `config.json`
-- [ ] VS Code: build task (Ctrl+Shift+B kompajlira gamemode) i ekstenzija za Pawn
+- [x] Preuzimanje pluginova (mysql, sscanf, Pawn.CMD, streamer, bcrypt, crashdetect) i podešavanje `config.json`
+- [x] VS Code: build task (Ctrl+Shift+B kompajlira gamemode) i ekstenzija za Pawn
 - [ ] Kostur gamemode-a (`roleplay.pwn` + `core/`) koji se kompajlira, pokreće i povezuje na bazu
 
 ### Faza 1: Jezgro
@@ -105,8 +105,8 @@ The order is set so that each phase builds on the previous one. Nothing gets ski
 - [x] Core decisions (database, libraries, language, editor)
 - [x] Git + GitHub repo, `.gitignore`
 - [x] Install XAMPP (MariaDB + phpMyAdmin), see [SETUP_MYSQL.md](SETUP_MYSQL.md)
-- [ ] Download plugins (mysql, sscanf, Pawn.CMD, streamer, bcrypt, crashdetect) and configure `config.json`
-- [ ] VS Code: build task (Ctrl+Shift+B compiles the gamemode) and a Pawn extension
+- [x] Download plugins (mysql, sscanf, Pawn.CMD, streamer, bcrypt, crashdetect) and configure `config.json`
+- [x] VS Code: build task (Ctrl+Shift+B compiles the gamemode) and a Pawn extension
 - [ ] Gamemode skeleton (`roleplay.pwn` + `core/`) that compiles, runs and connects to the DB
 
 ### Phase 1: Core

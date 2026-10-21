@@ -11,7 +11,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 3 | 2026-10-21 | Kod, komentari i imena fajlova na engleskom | Standard |
 | 4 | 2026-10-21 | `.md` dokumentacija dvojezična: srpski, pa engleski ispod | Zahtev vlasnika |
 | 5 | 2026-10-21 | Baza: **MySQL (MariaDB preko XAMPP-a)** + plugin **mysql R41-4** | R41-4 je industrijski standard za SA-MP i pouzdan je. MariaDB izbegava problem sa MySQL 8 autentifikacijom (`caching_sha2_password`) koji R41-4 ima |
-| 6 | 2026-10-21 | Biblioteke: `sscanf 2.13.8`, `Pawn.CMD 3.4.0-omp`, `streamer 2.9.6`, `samp-bcrypt 0.4.1`, `crashdetect` (za debug) | Najčešće korišćene i proverene biblioteke, sve rade na open.mp |
+| 6 | 2026-10-21 | Biblioteke: `sscanf 2.13.8`, `Pawn.CMD 3.4.0-omp`, `streamer 2.9.6`, `samp-bcrypt 0.4.1`, `crashdetect 4.22` (za debug) | Najčešće korišćene i proverene biblioteke, sve rade na open.mp |
 | 7 | 2026-10-21 | Bez YSI biblioteke. Moduli se povezuju ručnim pozivima iz glavnih callback-ova | Jednostavniji i čitljiviji kod, brže kompajliranje, nema "magije" |
 | 8 | 2026-10-21 | Editor: VS Code (qawno editor obrisan, kompajler `pawncc` ostaje) | Vlasnik koristi VS Code |
 | 9 | 2026-10-21 | Server je za sada lokalni (Windows) | Hosting se rešava kasnije |
@@ -58,7 +58,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 3 | 2026-10-21 | Code, comments and file names in English | Standard |
 | 4 | 2026-10-21 | `.md` docs bilingual: Serbian first, English below | Owner's request |
 | 5 | 2026-10-21 | Database: **MySQL (MariaDB via XAMPP)** + **mysql R41-4** plugin | R41-4 is the de-facto SA-MP standard and is reliable. MariaDB avoids R41-4's MySQL 8 auth problem (`caching_sha2_password`) |
-| 6 | 2026-10-21 | Libraries: `sscanf 2.13.8`, `Pawn.CMD 3.4.0-omp`, `streamer 2.9.6`, `samp-bcrypt 0.4.1`, `crashdetect` (debug) | Most widely used and proven libraries, all work on open.mp |
+| 6 | 2026-10-21 | Libraries: `sscanf 2.13.8`, `Pawn.CMD 3.4.0-omp`, `streamer 2.9.6`, `samp-bcrypt 0.4.1`, `crashdetect 4.22` (debug) | Most widely used and proven libraries, all work on open.mp |
 | 7 | 2026-10-21 | No YSI. Modules are wired up by explicit calls from the main callbacks | Simpler, readable code, faster compiles, no "magic" |
 | 8 | 2026-10-21 | Editor: VS Code (qawno editor removed, `pawncc` compiler kept) | Owner uses VS Code |
 | 9 | 2026-10-21 | Server is local (Windows) for now | Hosting decided later |

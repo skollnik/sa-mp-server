@@ -102,8 +102,15 @@
     },
     "password": "",
     "pawn": {
-        "legacy_plugins": [],
-        "main_scripts": [],
+        "legacy_plugins": [
+            "crashdetect",
+            "mysql",
+            "streamer",
+            "samp_bcrypt"
+        ],
+        "main_scripts": [
+            "roleplay"
+        ],
         "side_scripts": []
     },
     "rcon": {

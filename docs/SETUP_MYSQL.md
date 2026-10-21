@@ -39,8 +39,10 @@ Koristimo **XAMPP**. On sadrži **MariaDB** (verzija MySQL-a koja radi sa našim
    ```
 4. Klikni **Go**. Levo treba da se pojavi baza `samp_rp`.
 
-### 5. Javi mi
-Kada završiš, javi mi. Ja ću napraviti fajl `scriptfiles/mysql.ini.example`, a ti ćeš ga kopirati u `scriptfiles/mysql.ini` i tamo upisati lozinku. Lozinku **ne moraš da mi šalješ**, a taj fajl se nikad ne šalje na GitHub.
+### 5. Lozinka za server
+1. Otvori fajl `scriptfiles/mysql.ini`. Ako ne postoji, kopiraj `scriptfiles/mysql.ini.example` i preimenuj kopiju u `mysql.ini`.
+2. U redu `password = OVDE_TVOJA_LOZINKA` upiši lozinku iz koraka 4 i sačuvaj fajl.
+3. Ovaj fajl se **nikad ne šalje na GitHub** (nalazi se u `.gitignore`), a lozinku ne moraš nikome da šalješ.
 
 ---
 
@@ -83,5 +85,7 @@ We use **XAMPP**. It ships **MariaDB** (a MySQL variant that works with our plug
    ```
 4. Click **Go**. The `samp_rp` database should appear on the left.
 
-### 5. Let me know
-Once you're done, tell me. I'll create `scriptfiles/mysql.ini.example`, and you'll copy it to `scriptfiles/mysql.ini` and put the password there. You **don't need to send me the password**, and that file never goes to GitHub.
+### 5. Password for the server
+1. Open `scriptfiles/mysql.ini`. If it doesn't exist, copy `scriptfiles/mysql.ini.example` and rename the copy to `mysql.ini`.
+2. On the line `password = OVDE_TVOJA_LOZINKA` put the password from step 4 and save the file.
+3. This file **never goes to GitHub** (it is in `.gitignore`), and you don't have to send the password to anyone.

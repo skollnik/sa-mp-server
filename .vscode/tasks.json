@@ -1,0 +1,50 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Compile gamemode",
+            "type": "process",
+            "command": "${workspaceFolder}/qawno/pawncc.exe",
+            "args": [
+                "roleplay.pwn",
+                "-i${workspaceFolder}/qawno/include",
+                "-o${workspaceFolder}/gamemodes/roleplay.amx",
+                "-d3",
+                "-;+",
+                "-(+"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/gamemodes"
+            },
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "clear": true
+            },
+            "problemMatcher": {
+                "owner": "pawn",
+                "fileLocation": ["autoDetect", "${workspaceFolder}/gamemodes"],
+                "pattern": {
+                    "regexp": "^(.+?)\\((\\d+)(?:\\s--\\s\\d+)?\\)\\s:\\s(warning|error|fatal error)\\s\\d+:\\s(.*)$",
+                    "file": 1,
+                    "line": 2,
+                    "severity": 3,
+                    "message": 4
+                }
+            }
+        },
+        {
+            "label": "Start server",
+            "type": "process",
+            "command": "${workspaceFolder}/omp-server.exe",
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "dependsOn": "Compile gamemode",
+            "problemMatcher": []
+        }
+    ]
+}
