@@ -11,10 +11,12 @@ Viši nivo uvek ima sve komande nižeg nivoa.
 - **Helper komande rade na helper dužnosti** (`/hduty`), osim helper chata `/hc`. Svaki admin može da koristi helper komande.
 - **Helperi ne kažnjavaju.** Odgovaraju na pitanja, a prekršaje prijavljuju adminima.
 - Igrač je **ili admin ili helper**, ne oba. Kad se helper postavi za admina, helper status se automatski skida. Admina ne možete postaviti za helpera dok mu ne skinete admin status.
-- Admin vozila (`/veh`) može da vozi samo admin. Ostali mogu da se voze kao putnici.
+- Admin vozila (`/veh`) može da vozi samo admin, ostali mogu da se voze kao putnici. Brišu se kad admin koji ih je napravio izađe sa servera.
+- Bez dozvole za komandu igrač dobija poruku „Nemate dozvolu za ovu komandu.“ Admin bez dužnosti dobija poruku da uključi `/aduty`.
 - `/ahelp` prikazuje komande do vašeg nivoa.
 - Admin ne može da kazni, zamrzne ili preimenuje admina **istog ili višeg** nivoa.
-- Imena igrača su uvek bela. Na dužnosti iznad imena stoji oznaka: crveno **[ADMIN]** (vlasnik **[VLASNIK]**), a žuto **[HELPER]**. Igrač ne vidi oznaku iznad svoje glave, vide je drugi.
+- Imena igrača su uvek bela. Na dužnosti iznad imena stoji oznaka: crno **[ADMIN]** (vlasnik **[VLASNIK]**), a žuto **[HELPER]**. Igrač ne vidi oznaku iznad svoje glave, vide je drugi.
+- Admin na dužnosti nosi skin osoblja (217 muški, 211 ženski). Kad izađe sa dužnosti, vraća mu se njegov skin. Helperi zadržavaju svoj skin.
 - Svaka admin akcija se upisuje u tabelu `admin_logs` (ko, šta, kome, detalji, vreme).
 
 ### Komande za sve igrače
@@ -37,8 +39,8 @@ Viši nivo uvek ima sve komande nižeg nivoa.
 | Nivo | Naziv | Komande |
 |------|-------|---------|
 | 1 | Admin pocetnik | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap` |
-| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport lokacije), `/ooc` (uključuje/isključuje globalni OOC) |
-| 3 | Visi admin | `/setskin`, `/setint`, `/setvw`, `/veh [model]`, `/dveh`, `/dveh sva` |
+| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport lokacije), `/ooc` (globalni OOC), `/cc` (briše chat svima), `/ao` (admin obaveštenje u chatu), `/fixveh`, `/flip`, `/disarm` |
+| 3 | Visi admin | `/setskin`, `/setint` (enterijer), `/setvw` (virtuelni svet), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (tekst na sredini ekrana), `/settime`, `/setweather`, `/gotopos`, `/mypos` |
 | 4 | Glavni admin | `/makehelper` (svi nivoi), `/setlevel`, `/setrespect`, `/setname` |
 | 5 | Menadzment | `/makeadmin` (do nivoa 4), `/gmx` (restart servera) |
 | 6 | Vlasnik | `/makeadmin` (do nivoa 5), `/givemoney`, `/dozvoliime`, `/zabraniime` |
@@ -59,10 +61,12 @@ A higher level always has every command of the lower levels.
 - **Helper commands work on helper duty** (`/hduty`), except helper chat `/hc`. Every admin can use helper commands.
 - **Helpers do not punish.** They answer questions and report violations to admins.
 - A player is **either an admin or a helper**, not both. Promoting a helper to admin removes the helper rank automatically. An admin cannot be made a helper until the admin rank is removed.
-- Admin vehicles (`/veh`) can only be driven by admins. Others may ride as passengers.
+- Admin vehicles (`/veh`) can only be driven by admins, others may ride as passengers. They are deleted when the admin who spawned them leaves.
+- Without permission a player gets "Nemate dozvolu za ovu komandu." An admin off duty is told to turn on `/aduty`.
 - `/ahelp` shows the commands up to your own level.
 - An admin cannot punish, freeze or rename an admin of the **same or higher** level.
-- Player names are always white. On duty a tag floats above the name: red **[ADMIN]** (owner **[VLASNIK]**), yellow **[HELPER]**. Players do not see the tag above their own head, others do.
+- Player names are always white. On duty a tag floats above the name: black **[ADMIN]** (owner **[VLASNIK]**), yellow **[HELPER]**. Players do not see the tag above their own head, others do.
+- An admin on duty wears the staff skin (217 male, 211 female). Going off duty restores their own skin. Helpers keep their own skin.
 - Every admin action is written to the `admin_logs` table (who, what, to whom, details, time).
 
 ### Commands for every player
@@ -85,8 +89,8 @@ A higher level always has every command of the lower levels.
 | Level | Name | Commands |
 |-------|------|----------|
 | 1 | Trial admin | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap` |
-| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport locations), `/ooc` (toggles global OOC) |
-| 3 | Senior admin | `/setskin`, `/setint`, `/setvw`, `/veh [model]`, `/dveh`, `/dveh sva` |
+| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport locations), `/ooc` (global OOC), `/cc` (clears everyone's chat), `/ao` (admin notice in chat), `/fixveh`, `/flip`, `/disarm` |
+| 3 | Senior admin | `/setskin`, `/setint` (interior), `/setvw` (virtual world), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (text in the middle of the screen), `/settime`, `/setweather`, `/gotopos`, `/mypos` |
 | 4 | Head admin | `/makehelper` (all levels), `/setlevel`, `/setrespect`, `/setname` |
 | 5 | Management | `/makeadmin` (up to level 4), `/gmx` (server restart) |
 | 6 | Owner | `/makeadmin` (up to level 5), `/givemoney`, `/dozvoliime`, `/zabraniime` |

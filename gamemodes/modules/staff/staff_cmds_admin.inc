@@ -2,12 +2,12 @@ cmd:aduty(playerid, params[])
 {
     if (!Staff_IsAdmin(playerid))
     {
-        Msg_Error(playerid, "Ova komanda je samo za admine.");
+        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
         return 1;
     }
 
     g_Staff[playerid][sAdminDuty] = !g_Staff[playerid][sAdminDuty];
-    Staff_UpdateDutyTag(playerid);
+    Staff_UpdateDutyLook(playerid);
 
     new name[MAX_PLAYER_NAME + 1], rank[24], message[128];
     Account_GetDisplayName(playerid, name);
@@ -22,7 +22,7 @@ cmd:a(playerid, params[])
 {
     if (!Staff_IsAdmin(playerid))
     {
-        Msg_Error(playerid, "Ova komanda je samo za admine.");
+        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
         return 1;
     }
     if (isnull(params))
@@ -467,6 +467,242 @@ cmd:ooc(playerid, params[])
     return 1;
 }
 
+cmd:cc(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_ADMIN))
+    {
+        return 1;
+    }
+
+    new name[MAX_PLAYER_NAME + 1];
+    Account_GetDisplayName(playerid, name);
+
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (!Account_IsLoggedIn(i))
+        {
+            continue;
+        }
+        for (new line = 0; line < 50; line++)
+        {
+            SendClientMessage(i, COLOR_WHITE, " ");
+        }
+        Msg_Admin(i, "Admin %s je obrisao chat.", name);
+    }
+    Staff_Log(playerid, "clear_chat", INVALID_PLAYER_ID, "");
+    return 1;
+}
+
+cmd:ao(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_ADMIN))
+    {
+        return 1;
+    }
+    if (isnull(params))
+    {
+        Msg_Usage(playerid, "/ao [tekst] (admin obavestenje svima u chatu)");
+        return 1;
+    }
+
+    new name[MAX_PLAYER_NAME + 1], message[192];
+    Account_GetDisplayName(playerid, name);
+    format(message, sizeof(message), "[ADMIN] %s: %s", name, params);
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (Account_IsLoggedIn(i))
+        {
+            Chat_Send(i, COLOR_ADMIN, message);
+        }
+    }
+    Staff_Log(playerid, "announce_chat", INVALID_PLAYER_ID, params);
+    return 1;
+}
+
+cmd:fixveh(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_ADMIN))
+    {
+        return 1;
+    }
+
+    new vehicleid = GetPlayerVehicleID(playerid);
+    if (vehicleid == 0)
+    {
+        Msg_Error(playerid, "Morate biti u vozilu.");
+        return 1;
+    }
+
+    RepairVehicle(vehicleid);
+    Msg_Admin(playerid, "Vozilo je popravljeno.");
+    Staff_Log(playerid, "fixveh", INVALID_PLAYER_ID, "");
+    return 1;
+}
+
+cmd:flip(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_ADMIN))
+    {
+        return 1;
+    }
+
+    new vehicleid = GetPlayerVehicleID(playerid);
+    if (vehicleid == 0)
+    {
+        Msg_Error(playerid, "Morate biti u vozilu.");
+        return 1;
+    }
+
+    // Setting the Z angle also resets the X/Y rotation, which puts the vehicle back on its wheels.
+    new Float:angle;
+    GetVehicleZAngle(vehicleid, angle);
+    SetVehicleZAngle(vehicleid, angle);
+    Msg_Admin(playerid, "Vozilo je ispravljeno.");
+    return 1;
+}
+
+cmd:disarm(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_ADMIN))
+    {
+        return 1;
+    }
+
+    new targetid;
+    if (sscanf(params, "u", targetid))
+    {
+        Msg_Usage(playerid, "/disarm [id ili ime] (oduzima svo oruzje)");
+        return 1;
+    }
+    if (!Staff_CheckTarget(playerid, targetid) || !Staff_CheckOutranks(playerid, targetid))
+    {
+        return 1;
+    }
+
+    ResetPlayerWeapons(targetid);
+
+    new target_name[MAX_PLAYER_NAME + 1];
+    Account_GetDisplayName(targetid, target_name);
+    Msg_Admin(playerid, "Oduzeli ste svo oruzje igracu %s.", target_name);
+    Staff_NotifyTarget(playerid, targetid, "vam je oduzeo svo oruzje.");
+    Staff_Log(playerid, "disarm", targetid, "");
+    return 1;
+}
+
+cmd:ann(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_SENIOR))
+    {
+        return 1;
+    }
+    if (isnull(params) || strlen(params) > 100)
+    {
+        Msg_Usage(playerid, "/ann [tekst do 100 karaktera] (veliko obavestenje na sredini ekrana)");
+        return 1;
+    }
+
+    // A stray ~ is a broken game text colour code and can crash clients, so the admin's text never carries any.
+    new text[101];
+    strcopy(text, params);
+    for (new i = 0; text[i] != '\0'; i++)
+    {
+        if (text[i] == '~')
+        {
+            text[i] = '-';
+        }
+    }
+
+    GameTextForAll("~w~%s", 6000, 3, text);
+    Staff_Log(playerid, "announce_screen", INVALID_PLAYER_ID, params);
+    return 1;
+}
+
+cmd:settime(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_SENIOR))
+    {
+        return 1;
+    }
+
+    new hour;
+    if (sscanf(params, "d", hour) || hour < 0 || hour > 23)
+    {
+        Msg_Usage(playerid, "/settime [sat 0-23]");
+        return 1;
+    }
+
+    SetWorldTime(hour);
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (Account_IsLoggedIn(i))
+        {
+            SetPlayerTime(i, hour, 0);
+        }
+    }
+
+    new details[16];
+    format(details, sizeof(details), "%d", hour);
+    Msg_Admin(playerid, "Vreme na serveru je postavljeno na %02d:00.", hour);
+    Staff_Log(playerid, "settime", INVALID_PLAYER_ID, details);
+    return 1;
+}
+
+cmd:setweather(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_SENIOR))
+    {
+        return 1;
+    }
+
+    new weather;
+    if (sscanf(params, "d", weather) || weather < 0 || weather > 45)
+    {
+        Msg_Usage(playerid, "/setweather [id 0-45] (npr. 1 suncano, 8 kisa, 9 magla, 16 oluja)");
+        return 1;
+    }
+
+    SetWeather(weather);
+
+    new details[16];
+    format(details, sizeof(details), "%d", weather);
+    Msg_Admin(playerid, "Vremenske prilike su postavljene na %d.", weather);
+    Staff_Log(playerid, "setweather", INVALID_PLAYER_ID, details);
+    return 1;
+}
+
+cmd:gotopos(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_SENIOR))
+    {
+        return 1;
+    }
+
+    new Float:x, Float:y, Float:z, interior;
+    if (sscanf(params, "fffD(0)", x, y, z, interior))
+    {
+        Msg_Usage(playerid, "/gotopos [x] [y] [z] [enterijer, opciono]");
+        return 1;
+    }
+
+    Staff_TeleportTo(playerid, x, y, z, interior, GetPlayerVirtualWorld(playerid));
+    Msg_Admin(playerid, "Teleportovani ste na %.2f, %.2f, %.2f (enterijer %d).", x, y, z, interior);
+    return 1;
+}
+
+cmd:mypos(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_SENIOR))
+    {
+        return 1;
+    }
+
+    new Float:x, Float:y, Float:z, Float:angle;
+    GetPlayerPos(playerid, x, y, z);
+    GetPlayerFacingAngle(playerid, angle);
+    Msg_Admin(playerid, "Pozicija: %.2f, %.2f, %.2f  ugao: %.1f  enterijer: %d  svet: %d", x, y, z, angle, GetPlayerInterior(playerid), GetPlayerVirtualWorld(playerid));
+    return 1;
+}
+
 cmd:setskin(playerid, params[])
 {
     if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_SENIOR))
@@ -584,6 +820,7 @@ cmd:veh(playerid, params[])
     }
 
     g_IsAdminVehicle[vehicleid] = true;
+    g_AdminVehicleOwner[vehicleid] = playerid;
     LinkVehicleToInterior(vehicleid, GetPlayerInterior(playerid));
     SetVehicleVirtualWorld(vehicleid, GetPlayerVirtualWorld(playerid));
     SetVehicleParamsEx(vehicleid, 1, 1, 0, 0, 0, 0, 0);
@@ -677,7 +914,7 @@ cmd:makehelper(playerid, params[])
     if (level == 0)
     {
         g_Staff[targetid][sHelperDuty] = false;
-        Staff_UpdateDutyTag(targetid);
+        Staff_UpdateDutyLook(targetid);
     }
     Account_Save(targetid);
 
@@ -864,7 +1101,7 @@ cmd:makeadmin(playerid, params[])
     {
         g_Staff[targetid][sAdminDuty] = false;
     }
-    Staff_UpdateDutyTag(targetid);
+    Staff_UpdateDutyLook(targetid);
     Account_Save(targetid);
 
     if (removed_helper)
@@ -946,7 +1183,7 @@ cmd:ahelp(playerid, params[])
 {
     if (!Staff_IsAdmin(playerid))
     {
-        Msg_Error(playerid, "Ova komanda je samo za admine.");
+        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
         return 1;
     }
 
@@ -955,11 +1192,11 @@ cmd:ahelp(playerid, params[])
     strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n\n");
     if (level >= ADMIN_LEVEL_ADMIN)
     {
-        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /ooc\n\n");
+        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /ooc /cc /ao /fixveh /flip /disarm\n\n");
     }
     if (level >= ADMIN_LEVEL_SENIOR)
     {
-        strcat(body, C_ADMIN "3 - Visi admin\n" C_WHITE "/setskin /setint /setvw /veh /dveh\n\n");
+        strcat(body, C_ADMIN "3 - Visi admin\n" C_WHITE "/setskin /setint /setvw /veh /dveh /ann /settime /setweather /gotopos /mypos\n\n");
     }
     if (level >= ADMIN_LEVEL_HEAD)
     {
@@ -987,7 +1224,7 @@ cmd:hhelp(playerid, params[])
 {
     if (!Staff_IsStaff(playerid))
     {
-        Msg_Error(playerid, "Ova komanda je samo za clanove tima (helpere i admine).");
+        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
         return 1;
     }
 

@@ -35,6 +35,8 @@
 
 #include "modules/help/help_cmds.inc"
 
+#include "maps/maps.inc"
+
 main() {}
 
 public OnGameModeInit()
@@ -56,6 +58,7 @@ public OnGameModeInit()
 
     Account_Init();
     Staff_Init();
+    Maps_Init();
 
     printf("[SERVER] %s gamemode loaded.", SERVER_NAME);
     return 1;

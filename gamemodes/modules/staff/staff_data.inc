@@ -20,6 +20,10 @@ forward bool:Staff_CheckOutranks(playerid, targetid);
 #define STAFF_TAG_OFFSET_Z      (0.45)
 #define STAFF_TAG_DRAW_DISTANCE (20.0)
 
+// The usual staff outfit while on admin duty (clothes shop staff models).
+#define ADMIN_DUTY_SKIN_MALE    (217)
+#define ADMIN_DUTY_SKIN_FEMALE  (211)
+
 new const g_AdminRankNames[][] =
 {
     "Igrac", "Admin pocetnik", "Admin", "Visi admin", "Glavni admin", "Menadzment", "Vlasnik"
@@ -71,6 +75,7 @@ enum E_STAFF_STATE
 new g_Staff[MAX_PLAYERS][E_STAFF_STATE];
 
 new bool:g_IsAdminVehicle[MAX_VEHICLES];
+new g_AdminVehicleOwner[MAX_VEHICLES];
 
 enum E_TELEPORT
 {

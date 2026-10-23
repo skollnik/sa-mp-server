@@ -28,6 +28,16 @@ stock Staff_OnPlayerDisconnect(playerid)
         DestroyDynamic3DTextLabel(g_Staff[playerid][sDutyTag]);
     }
 
+    // Admin vehicles are temporary and leave together with the admin who spawned them.
+    for (new v = 1; v < MAX_VEHICLES; v++)
+    {
+        if (g_IsAdminVehicle[v] && g_AdminVehicleOwner[v] == playerid)
+        {
+            DestroyVehicle(v);
+            g_IsAdminVehicle[v] = false;
+        }
+    }
+
     for (new i = 0; i < MAX_REPORTS; i++)
     {
         if (g_Reports[i][rUsed] && (g_Reports[i][rReporter] == playerid || g_Reports[i][rTarget] == playerid))
@@ -54,7 +64,7 @@ stock Staff_OnPlayerSpawn(playerid)
         SetPlayerInterior(playerid, g_Staff[playerid][sSpecInterior]);
         SetPlayerVirtualWorld(playerid, g_Staff[playerid][sSpecWorld]);
     }
-    Staff_UpdateDutyTag(playerid);
+    Staff_UpdateDutyLook(playerid);
 }
 
 stock Staff_OnPlayerStateChange(playerid, PLAYER_STATE:newstate)
@@ -119,16 +129,9 @@ stock bool:Staff_IsAdminOnDuty(playerid)
 // Admin commands need the level and, except for the owner, admin duty.
 stock bool:Staff_CheckAdmin(playerid, level)
 {
-    new own_level = g_Player[playerid][pAdminLevel];
-
-    if (own_level == 0)
+    if (g_Player[playerid][pAdminLevel] < level)
     {
-        Msg_Error(playerid, "Ova komanda je samo za admine.");
-        return false;
-    }
-    if (own_level < level)
-    {
-        Msg_Error(playerid, "Ova komanda zahteva admin nivo %d (%s). Vas nivo je %d (%s).", level, g_AdminRankNames[level], own_level, g_AdminRankNames[own_level]);
+        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
         return false;
     }
     if (!Staff_IsAdminOnDuty(playerid))
@@ -147,16 +150,9 @@ stock bool:Staff_CheckHelper(playerid, level)
         return true;
     }
 
-    new own_level = g_Player[playerid][pHelperLevel];
-
-    if (own_level == 0)
+    if (g_Player[playerid][pHelperLevel] < level)
     {
-        Msg_Error(playerid, "Ova komanda je samo za helpere i admine.");
-        return false;
-    }
-    if (own_level < level)
-    {
-        Msg_Error(playerid, "Ova komanda zahteva helper nivo %d (%s). Vas nivo je %d (%s).", level, g_HelperRankNames[level], own_level, g_HelperRankNames[own_level]);
+        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
         return false;
     }
     if (!g_Staff[playerid][sHelperDuty])
@@ -205,9 +201,19 @@ stock Staff_GetHelperRank(playerid, dest[], size = sizeof(dest))
 }
 
 // Names stay white; staff on duty are recognised by a tag floating above the name instead.
-stock Staff_UpdateDutyTag(playerid)
+// Admins on duty also wear the staff outfit; the character's own skin (pSkin) is never overwritten.
+stock Staff_UpdateDutyLook(playerid)
 {
     SetPlayerColor(playerid, COLOR_PLAYER_NAME);
+
+    if (g_Staff[playerid][sAdminDuty])
+    {
+        SetPlayerSkin(playerid, (g_Player[playerid][pGender] == GENDER_FEMALE) ? ADMIN_DUTY_SKIN_FEMALE : ADMIN_DUTY_SKIN_MALE);
+    }
+    else if (GetPlayerSkin(playerid) != g_Player[playerid][pSkin])
+    {
+        SetPlayerSkin(playerid, g_Player[playerid][pSkin]);
+    }
 
     if (IsValidDynamic3DTextLabel(g_Staff[playerid][sDutyTag]))
     {

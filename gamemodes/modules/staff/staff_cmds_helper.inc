@@ -2,12 +2,12 @@ cmd:hduty(playerid, params[])
 {
     if (!Staff_IsHelper(playerid))
     {
-        Msg_Error(playerid, "Ova komanda je samo za helpere. Admini koriste /aduty.");
+        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
         return 1;
     }
 
     g_Staff[playerid][sHelperDuty] = !g_Staff[playerid][sHelperDuty];
-    Staff_UpdateDutyTag(playerid);
+    Staff_UpdateDutyLook(playerid);
 
     new name[MAX_PLAYER_NAME + 1], message[128];
     Account_GetDisplayName(playerid, name);
@@ -20,7 +20,7 @@ cmd:hc(playerid, params[])
 {
     if (!Staff_IsStaff(playerid))
     {
-        Msg_Error(playerid, "Ova komanda je samo za clanove tima (helpere i admine).");
+        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
         return 1;
     }
     if (isnull(params))
