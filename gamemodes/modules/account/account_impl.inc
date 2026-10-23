@@ -29,10 +29,19 @@ stock Account_Init()
         "`last_ip` VARCHAR(16) NOT NULL DEFAULT ''," \
         "`registered_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," \
         "`last_login` DATETIME NULL," \
-        "`locked_until` DATETIME NULL" \
+        "`locked_until` DATETIME NULL," \
+        "`helper_level` TINYINT UNSIGNED NOT NULL DEFAULT 0," \
+        "`tog_ooc` TINYINT(1) NOT NULL DEFAULT 0," \
+        "`tog_pm` TINYINT(1) NOT NULL DEFAULT 0," \
+        "`tog_newbie` TINYINT(1) NOT NULL DEFAULT 0" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
+    // Columns added after the table first shipped; existing databases get them here.
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `locked_until` DATETIME NULL");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `helper_level` TINYINT UNSIGNED NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `tog_ooc` TINYINT(1) NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `tog_pm` TINYINT(1) NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `tog_newbie` TINYINT(1) NOT NULL DEFAULT 0");
 
     mysql_tquery(g_SQL,
         "CREATE TABLE IF NOT EXISTS `login_attempts` (" \
@@ -143,6 +152,7 @@ stock Account_OnPlayerSpawn(playerid)
     }
 
     SetPlayerSkin(playerid, g_Player[playerid][pSkin]);
+    SetPlayerScore(playerid, g_Player[playerid][pLevel]);
     ResetPlayerMoney(playerid);
     GivePlayerMoney(playerid, g_Player[playerid][pCash]);
 
@@ -159,6 +169,14 @@ stock Account_OnPlayerSpawn(playerid)
 stock bool:Account_IsLoggedIn(playerid)
 {
     return g_Player[playerid][pState] == ACCOUNT_STATE_LOGGED_IN;
+}
+
+// Cash lives on the server; the client's money display is only a mirror of it.
+stock Account_GiveCash(playerid, amount)
+{
+    g_Player[playerid][pCash] += amount;
+    ResetPlayerMoney(playerid);
+    GivePlayerMoney(playerid, g_Player[playerid][pCash]);
 }
 
 stock bool:Account_IsOwnerName(const name[])
@@ -276,6 +294,10 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_int(0, "id", g_Player[playerid][pDbId]);
     cache_get_value_name(0, "password", g_Player[playerid][pPasswordHash], BCRYPT_HASH_LENGTH);
     cache_get_value_name_int(0, "admin_level", g_Player[playerid][pAdminLevel]);
+    cache_get_value_name_int(0, "helper_level", g_Player[playerid][pHelperLevel]);
+    cache_get_value_name_int(0, "tog_ooc", g_Player[playerid][pTogOoc]);
+    cache_get_value_name_int(0, "tog_pm", g_Player[playerid][pTogPm]);
+    cache_get_value_name_int(0, "tog_newbie", g_Player[playerid][pTogNewbie]);
     cache_get_value_name_int(0, "gender", g_Player[playerid][pGender]);
     cache_get_value_name_int(0, "age", g_Player[playerid][pAge]);
     cache_get_value_name_int(0, "skin", g_Player[playerid][pSkin]);
@@ -818,16 +840,18 @@ stock Account_Save(playerid, bool:sync = false)
     g_Player[playerid][pPlayedSeconds] += now - g_Player[playerid][pSessionStart];
     g_Player[playerid][pSessionStart] = now;
 
-    new query[640];
+    new query[768];
     mysql_format(g_SQL, query, sizeof(query),
-        "UPDATE `accounts` SET `admin_level` = %d, `skin` = %d, `level` = %d, `respect` = %d, `cash` = %d, `bank` = %d, " \
+        "UPDATE `accounts` SET `admin_level` = %d, `helper_level` = %d, `skin` = %d, `level` = %d, `respect` = %d, `cash` = %d, `bank` = %d, " \
         "`pos_x` = %f, `pos_y` = %f, `pos_z` = %f, `pos_a` = %f, `interior` = %d, `virtual_world` = %d, " \
-        "`health` = %f, `armour` = %f, `played_seconds` = %d WHERE `id` = %d",
-        g_Player[playerid][pAdminLevel], g_Player[playerid][pSkin], g_Player[playerid][pLevel], g_Player[playerid][pRespect],
+        "`health` = %f, `armour` = %f, `played_seconds` = %d, `tog_ooc` = %d, `tog_pm` = %d, `tog_newbie` = %d WHERE `id` = %d",
+        g_Player[playerid][pAdminLevel], g_Player[playerid][pHelperLevel], g_Player[playerid][pSkin],
+        g_Player[playerid][pLevel], g_Player[playerid][pRespect],
         g_Player[playerid][pCash], g_Player[playerid][pBank],
         g_Player[playerid][pPosX], g_Player[playerid][pPosY], g_Player[playerid][pPosZ], g_Player[playerid][pPosA],
         g_Player[playerid][pInterior], g_Player[playerid][pVirtualWorld],
         g_Player[playerid][pHealth], g_Player[playerid][pArmour], g_Player[playerid][pPlayedSeconds],
+        g_Player[playerid][pTogOoc], g_Player[playerid][pTogPm], g_Player[playerid][pTogNewbie],
         g_Player[playerid][pDbId]);
 
     if (sync)

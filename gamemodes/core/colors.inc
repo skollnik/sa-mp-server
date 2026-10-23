@@ -10,6 +10,10 @@
 #define COLOR_PM            (0xFFDC64FF)
 #define COLOR_WHISPER       (0xFFFF91FF)
 #define COLOR_SHOUT         (0xFFFFFFFF)
+#define COLOR_ADMIN         (0xFF9900FF)
+#define COLOR_HELPER        (0x00C8C8FF)
+#define COLOR_NEWBIE        (0xA0E0A0FF)
+#define COLOR_PLAYER_NAME   (0xFFFFFFFF)
 
 #define C_WHITE             "{FFFFFF}"
 #define C_GREY              "{AFAFAF}"
@@ -17,3 +21,6 @@
 #define C_GREEN             "{33AA33}"
 #define C_YELLOW            "{FFFF00}"
 #define C_SERVER            "{3C9DD0}"
+#define C_ADMIN             "{FF9900}"
+#define C_HELPER            "{00C8C8}"
+#define C_NEWBIE            "{A0E0A0}"

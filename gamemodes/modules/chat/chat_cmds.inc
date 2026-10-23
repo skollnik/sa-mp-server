@@ -133,16 +133,73 @@ cmd:o(playerid, params[])
         Msg_Usage(playerid, "/o [tekst] (globalni OOC)");
         return 1;
     }
-    if (!g_GlobalOocEnabled)
+    if (!g_GlobalOocEnabled && !Staff_IsAdminOnDuty(playerid))
     {
         Msg_Error(playerid, "Globalni OOC chat je trenutno iskljucen.");
+        return 1;
+    }
+    if (g_Player[playerid][pTogOoc])
+    {
+        Msg_Error(playerid, "Iskljucili ste globalni OOC. Ukljucite ga sa /togooc.");
         return 1;
     }
 
     new name[MAX_PLAYER_NAME + 1], message[192];
     Account_GetDisplayName(playerid, name);
     format(message, sizeof(message), "(( [OOC] %s: %s ))", name, params);
-    Chat_SendToAll(COLOR_OOC_GLOBAL, message);
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (Account_IsLoggedIn(i) && !g_Player[i][pTogOoc])
+        {
+            Chat_Send(i, COLOR_OOC_GLOBAL, message);
+        }
+    }
+    return 1;
+}
+
+cmd:togooc(playerid, params[])
+{
+    g_Player[playerid][pTogOoc] = !g_Player[playerid][pTogOoc];
+    if (g_Player[playerid][pTogOoc])
+    {
+        Msg_Info(playerid, "Globalni OOC chat je iskljucen za vas. Ponovo ga ukljucite sa /togooc.");
+    }
+    else
+    {
+        Msg_Info(playerid, "Globalni OOC chat je ukljucen za vas.");
+    }
+    return 1;
+}
+
+cmd:togpm(playerid, params[])
+{
+    g_Player[playerid][pTogPm] = !g_Player[playerid][pTogPm];
+    if (g_Player[playerid][pTogPm])
+    {
+        Msg_Info(playerid, "Privatne poruke su iskljucene. Admini i dalje mogu da vam pisu.");
+    }
+    else
+    {
+        Msg_Info(playerid, "Privatne poruke su ukljucene.");
+    }
+    return 1;
+}
+
+cmd:ado(playerid, params[])
+{
+    if (isnull(params))
+    {
+        Msg_Usage(playerid, "/ado [opis] (opis iznad glave)");
+        return 1;
+    }
+
+    new name[MAX_PLAYER_NAME + 1], message[192];
+    Account_GetDisplayName(playerid, name);
+    format(message, sizeof(message), "* %s (( %s ))", params, name);
+    SetPlayerChatBubble(playerid, "%s", COLOR_PURPLE, CHAT_RADIUS_ACTION, 8000, message);
+
+    format(message, sizeof(message), "> %s", params);
+    Chat_Send(playerid, COLOR_PURPLE, message);
     return 1;
 }
 
@@ -162,6 +219,11 @@ cmd:pm(playerid, params[])
     if (targetid == playerid)
     {
         Msg_Error(playerid, "Ne mozete poslati poruku sebi.");
+        return 1;
+    }
+    if (g_Player[targetid][pTogPm] && !Staff_IsAdmin(playerid))
+    {
+        Msg_Error(playerid, "Taj igrac je iskljucio privatne poruke.");
         return 1;
     }
 

@@ -3,6 +3,9 @@
 #undef MAX_PLAYERS
 #define MAX_PLAYERS (50)
 
+// Dialog bodies are built in local arrays; the default stack (4096 cells) gets tight as systems grow.
+#pragma dynamic 16384
+
 #include <a_mysql>
 #include <sscanf2>
 #include <streamer>
@@ -17,11 +20,18 @@
 #include "core/database.inc"
 
 #include "modules/account/account_data.inc"
+#include "modules/staff/staff_data.inc"
+
 #include "modules/account/account_impl.inc"
 #include "modules/account/account_cmds.inc"
 
 #include "modules/chat/chat_impl.inc"
 #include "modules/chat/chat_cmds.inc"
+
+#include "modules/staff/staff_impl.inc"
+#include "modules/staff/staff_cmds_player.inc"
+#include "modules/staff/staff_cmds_helper.inc"
+#include "modules/staff/staff_cmds_admin.inc"
 
 #include "modules/help/help_cmds.inc"
 
@@ -45,6 +55,7 @@ public OnGameModeInit()
     ManualVehicleEngineAndLights();
 
     Account_Init();
+    Staff_Init();
 
     printf("[SERVER] %s gamemode loaded.", SERVER_NAME);
     return 1;
@@ -59,12 +70,14 @@ public OnGameModeExit()
 
 public OnPlayerConnect(playerid)
 {
+    Staff_OnPlayerConnect(playerid);
     Account_OnPlayerConnect(playerid);
     return 1;
 }
 
 public OnPlayerDisconnect(playerid, reason)
 {
+    Staff_OnPlayerDisconnect(playerid);
     Account_OnPlayerDisconnect(playerid);
     return 1;
 }
@@ -83,6 +96,19 @@ public OnPlayerRequestSpawn(playerid)
 public OnPlayerSpawn(playerid)
 {
     Account_OnPlayerSpawn(playerid);
+    Staff_OnPlayerSpawn(playerid);
+    return 1;
+}
+
+public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate)
+{
+    Staff_OnPlayerStateChange(playerid, newstate);
+    return 1;
+}
+
+public OnPlayerInteriorChange(playerid, newinteriorid, oldinteriorid)
+{
+    Staff_OnPlayerInteriorChange(playerid, newinteriorid);
     return 1;
 }
 
@@ -98,6 +124,10 @@ public OnPlayerText(playerid, text[])
 public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 {
     if (Account_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Staff_OnDialogResponse(playerid, dialogid, response, listitem))
     {
         return 1;
     }
