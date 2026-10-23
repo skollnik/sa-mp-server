@@ -1,4 +1,7 @@
+// The only place the server name lives: in-game messages use SERVER_NAME,
+// the server browser shows SERVER_HOSTNAME (set on startup, overriding config.json).
 #define SERVER_NAME         "Test Server"
+#define SERVER_HOSTNAME     "SA-MP Test Server"
 #define SERVER_MODE_TEXT    "Roleplay"
 
 // The owner always gets the highest admin level and may use a non Firstname_Lastname name.

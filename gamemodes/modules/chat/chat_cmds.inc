@@ -36,9 +36,14 @@ cmd:w(playerid, params[])
         Msg_Usage(playerid, "/w [id ili ime] [tekst] (sapat)");
         return 1;
     }
-    if (targetid == INVALID_PLAYER_ID || !Account_IsLoggedIn(targetid) || targetid == playerid)
+    if (targetid == INVALID_PLAYER_ID || !Account_IsLoggedIn(targetid))
     {
         Msg_Error(playerid, "Taj igrac nije pronadjen.");
+        return 1;
+    }
+    if (targetid == playerid)
+    {
+        Msg_Error(playerid, "Ne mozete sapnuti samom sebi.");
         return 1;
     }
     if (!Chat_IsInRange(playerid, targetid, CHAT_RADIUS_WHISPER))

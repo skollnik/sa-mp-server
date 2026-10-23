@@ -29,6 +29,7 @@ main() {}
 
 public OnGameModeInit()
 {
+    SendRconCommand("name " SERVER_HOSTNAME);
     SetGameModeText(SERVER_MODE_TEXT);
 
     if (!Database_Connect())
