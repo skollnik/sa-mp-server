@@ -1,8 +1,11 @@
-// Every map file is included here and loaded once on startup. Objects go through the streamer,
-// so only those near a player are actually sent to them.
-#include "maps/airport.inc"
+// Every map file is included here. Objects are created once on startup through the streamer,
+// so only those near a player are sent to them. Removed GTA buildings must be removed per player on connect.
 
 stock Maps_Init()
 {
-    Map_Airport();
+}
+
+stock Maps_OnPlayerConnect(playerid)
+{
+    #pragma unused playerid
 }

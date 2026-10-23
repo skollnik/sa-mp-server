@@ -33,7 +33,11 @@ stock Account_Init()
         "`helper_level` TINYINT UNSIGNED NOT NULL DEFAULT 0," \
         "`tog_ooc` TINYINT(1) NOT NULL DEFAULT 0," \
         "`tog_pm` TINYINT(1) NOT NULL DEFAULT 0," \
-        "`tog_newbie` TINYINT(1) NOT NULL DEFAULT 0" \
+        "`tog_newbie` TINYINT(1) NOT NULL DEFAULT 0," \
+        "`mute_until` INT NOT NULL DEFAULT 0," \
+        "`newbie_mute_until` INT NOT NULL DEFAULT 0," \
+        "`jail_seconds` INT NOT NULL DEFAULT 0," \
+        "`jail_reason` VARCHAR(96) NOT NULL DEFAULT ''" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
     // Columns added after the table first shipped; existing databases get them here.
@@ -42,6 +46,10 @@ stock Account_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `tog_ooc` TINYINT(1) NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `tog_pm` TINYINT(1) NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `tog_newbie` TINYINT(1) NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `mute_until` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `newbie_mute_until` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `jail_seconds` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `jail_reason` VARCHAR(96) NOT NULL DEFAULT ''");
 
     mysql_tquery(g_SQL,
         "CREATE TABLE IF NOT EXISTS `login_attempts` (" \
@@ -89,6 +97,12 @@ stock Account_OnPlayerConnect(playerid)
         SendClientMessage(playerid, COLOR_WHITE, " ");
     }
 
+    // The ban check runs first; it calls Account_CheckName when the player is allowed in.
+    Staff_CheckBan(playerid);
+}
+
+stock Account_CheckName(playerid)
+{
     if (Account_IsOwnerName(g_Player[playerid][pName]) || Account_IsValidRpName(g_Player[playerid][pName]))
     {
         Account_Lookup(playerid);
@@ -298,6 +312,10 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_int(0, "tog_ooc", g_Player[playerid][pTogOoc]);
     cache_get_value_name_int(0, "tog_pm", g_Player[playerid][pTogPm]);
     cache_get_value_name_int(0, "tog_newbie", g_Player[playerid][pTogNewbie]);
+    cache_get_value_name_int(0, "mute_until", g_Player[playerid][pMuteUntil]);
+    cache_get_value_name_int(0, "newbie_mute_until", g_Player[playerid][pNewbieMuteUntil]);
+    cache_get_value_name_int(0, "jail_seconds", g_Player[playerid][pJailSeconds]);
+    cache_get_value_name(0, "jail_reason", g_Player[playerid][pJailReason], 96);
     cache_get_value_name_int(0, "gender", g_Player[playerid][pGender]);
     cache_get_value_name_int(0, "age", g_Player[playerid][pAge]);
     cache_get_value_name_int(0, "skin", g_Player[playerid][pSkin]);
@@ -840,11 +858,12 @@ stock Account_Save(playerid, bool:sync = false)
     g_Player[playerid][pPlayedSeconds] += now - g_Player[playerid][pSessionStart];
     g_Player[playerid][pSessionStart] = now;
 
-    new query[768];
+    new query[1024];
     mysql_format(g_SQL, query, sizeof(query),
         "UPDATE `accounts` SET `admin_level` = %d, `helper_level` = %d, `skin` = %d, `level` = %d, `respect` = %d, `cash` = %d, `bank` = %d, " \
         "`pos_x` = %f, `pos_y` = %f, `pos_z` = %f, `pos_a` = %f, `interior` = %d, `virtual_world` = %d, " \
-        "`health` = %f, `armour` = %f, `played_seconds` = %d, `tog_ooc` = %d, `tog_pm` = %d, `tog_newbie` = %d WHERE `id` = %d",
+        "`health` = %f, `armour` = %f, `played_seconds` = %d, `tog_ooc` = %d, `tog_pm` = %d, `tog_newbie` = %d, " \
+        "`mute_until` = %d, `newbie_mute_until` = %d, `jail_seconds` = %d, `jail_reason` = '%e' WHERE `id` = %d",
         g_Player[playerid][pAdminLevel], g_Player[playerid][pHelperLevel], g_Player[playerid][pSkin],
         g_Player[playerid][pLevel], g_Player[playerid][pRespect],
         g_Player[playerid][pCash], g_Player[playerid][pBank],
@@ -852,6 +871,8 @@ stock Account_Save(playerid, bool:sync = false)
         g_Player[playerid][pInterior], g_Player[playerid][pVirtualWorld],
         g_Player[playerid][pHealth], g_Player[playerid][pArmour], g_Player[playerid][pPlayedSeconds],
         g_Player[playerid][pTogOoc], g_Player[playerid][pTogPm], g_Player[playerid][pTogNewbie],
+        g_Player[playerid][pMuteUntil], g_Player[playerid][pNewbieMuteUntil],
+        g_Player[playerid][pJailSeconds], g_Player[playerid][pJailReason],
         g_Player[playerid][pDbId]);
 
     if (sync)

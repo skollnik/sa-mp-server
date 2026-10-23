@@ -24,6 +24,20 @@ forward bool:Staff_CheckOutranks(playerid, targetid);
 #define ADMIN_DUTY_SKIN_MALE    (217)
 #define ADMIN_DUTY_SKIN_FEMALE  (211)
 
+// Admin jail: the cell in the LSPD interior, in its own virtual world so jailed players only see each other.
+#define JAIL_X                  (264.63)
+#define JAIL_Y                  (77.57)
+#define JAIL_Z                  (1001.04)
+#define JAIL_INTERIOR           (6)
+#define JAIL_WORLD              (9999)
+#define JAIL_ESCAPE_RADIUS      (15.0)
+
+#define MAX_WARNINGS            (3)
+#define WARNING_BAN_DAYS        (3)
+#define TRIAL_MAX_JAIL_MINUTES  (30)
+#define ADMIN_MAX_BAN_DAYS      (7)
+#define MAX_PUNISH_MINUTES      (1440)
+
 new const g_AdminRankNames[][] =
 {
     "Igrac", "Admin pocetnik", "Admin", "Visi admin", "Glavni admin", "Menadzment", "Vlasnik"
@@ -69,7 +83,8 @@ enum E_STAFF_STATE
     sLastAsk,
     sLastNewbie,
     bool:sHasOpenQuestion,
-    STREAMER_TAG_3D_TEXT_LABEL:sDutyTag
+    STREAMER_TAG_3D_TEXT_LABEL:sDutyTag,
+    bool:sPmSpy
 }
 
 new g_Staff[MAX_PLAYERS][E_STAFF_STATE];

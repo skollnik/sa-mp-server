@@ -32,6 +32,7 @@
 #include "modules/staff/staff_cmds_player.inc"
 #include "modules/staff/staff_cmds_helper.inc"
 #include "modules/staff/staff_cmds_admin.inc"
+#include "modules/staff/staff_punish.inc"
 
 #include "modules/help/help_cmds.inc"
 
@@ -58,6 +59,7 @@ public OnGameModeInit()
 
     Account_Init();
     Staff_Init();
+    Punish_Init();
     Maps_Init();
 
     printf("[SERVER] %s gamemode loaded.", SERVER_NAME);
@@ -66,6 +68,7 @@ public OnGameModeInit()
 
 public OnGameModeExit()
 {
+    Punish_Exit();
     Account_Exit();
     Database_Disconnect();
     return 1;
@@ -74,6 +77,7 @@ public OnGameModeExit()
 public OnPlayerConnect(playerid)
 {
     Staff_OnPlayerConnect(playerid);
+    Maps_OnPlayerConnect(playerid);
     Account_OnPlayerConnect(playerid);
     return 1;
 }
@@ -100,6 +104,7 @@ public OnPlayerSpawn(playerid)
 {
     Account_OnPlayerSpawn(playerid);
     Staff_OnPlayerSpawn(playerid);
+    Punish_OnPlayerSpawn(playerid);
     return 1;
 }
 
@@ -117,10 +122,17 @@ public OnPlayerInteriorChange(playerid, newinteriorid, oldinteriorid)
 
 public OnPlayerText(playerid, text[])
 {
-    if (Account_IsLoggedIn(playerid))
+    if (!Account_IsLoggedIn(playerid))
     {
-        Chat_OnPlayerText(playerid, text);
+        return 0;
     }
+    if (Punish_IsMuted(playerid))
+    {
+        Msg_Error(playerid, "Imate mute jos %d min.", Punish_MinutesLeft(g_Player[playerid][pMuteUntil]));
+        return 0;
+    }
+
+    Chat_OnPlayerText(playerid, text);
     return 0;
 }
 
@@ -141,6 +153,11 @@ public OnPlayerCommandReceived(playerid, cmd[], params[], flags)
 {
     if (!Account_IsLoggedIn(playerid))
     {
+        return 0;
+    }
+    if ((flags & CMD_FLAG_CHAT) && Punish_IsMuted(playerid))
+    {
+        Msg_Error(playerid, "Imate mute jos %d min.", Punish_MinutesLeft(g_Player[playerid][pMuteUntil]));
         return 0;
     }
     return 1;

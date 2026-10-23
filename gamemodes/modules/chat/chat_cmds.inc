@@ -235,5 +235,26 @@ cmd:pm(playerid, params[])
     Chat_Send(targetid, COLOR_PM, message);
     format(message, sizeof(message), "(( PM za %s [%d]: %s ))", target_name, targetid, text);
     Chat_Send(playerid, COLOR_PM, message);
+
+    format(message, sizeof(message), "[PM SPY] %s [%d] -> %s [%d]: %s", name, playerid, target_name, targetid, text);
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (i != playerid && i != targetid && Account_IsLoggedIn(i) && g_Staff[i][sPmSpy])
+        {
+            Chat_Send(i, COLOR_GREY, message);
+        }
+    }
     return 1;
 }
+
+// Commands marked as chat are blocked while the player is muted (checked in OnPlayerCommandReceived).
+flags:s(CMD_FLAG_CHAT)
+flags:l(CMD_FLAG_CHAT)
+flags:w(CMD_FLAG_CHAT)
+flags:me(CMD_FLAG_CHAT)
+flags:do(CMD_FLAG_CHAT)
+flags:ame(CMD_FLAG_CHAT)
+flags:ado(CMD_FLAG_CHAT)
+flags:b(CMD_FLAG_CHAT)
+flags:o(CMD_FLAG_CHAT)
+flags:pm(CMD_FLAG_CHAT)

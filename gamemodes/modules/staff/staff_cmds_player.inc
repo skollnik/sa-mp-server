@@ -98,6 +98,11 @@ cmd:n(playerid, params[])
         Msg_Error(playerid, "Iskljucili ste newbie chat. Ukljucite ga sa /tognewbie.");
         return 1;
     }
+    if (g_Player[playerid][pNewbieMuteUntil] > gettime())
+    {
+        Msg_Error(playerid, "Zabranjeno vam je pisanje u newbie chat jos %d min.", Punish_MinutesLeft(g_Player[playerid][pNewbieMuteUntil]));
+        return 1;
+    }
 
     if (!Staff_IsStaff(playerid))
     {
@@ -202,3 +207,4 @@ cmd:helpers(playerid, params[])
     ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_MSGBOX, SERVER_NAME " - Helperi online", body, "Zatvori", "");
     return 1;
 }
+flags:n(CMD_FLAG_CHAT)

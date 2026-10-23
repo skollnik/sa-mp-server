@@ -786,7 +786,7 @@ cmd:setvw(playerid, params[])
 
     new target_name[MAX_PLAYER_NAME + 1], details[48];
     Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Postavili ste virtuelni svet %d igracu %s.", world, target_name);
+    Msg_Admin(playerid, "Postavili ste virtuelni svet %d igracu %s. Vi ste u svetu %d.", world, target_name, GetPlayerVirtualWorld(playerid));
     format(details, sizeof(details), "vam je postavio virtuelni svet %d.", world);
     Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%d", world);
@@ -1189,18 +1189,18 @@ cmd:ahelp(playerid, params[])
 
     new level = g_Player[playerid][pAdminLevel], body[2048];
 
-    strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n\n");
+    strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns\n\n");
     if (level >= ADMIN_LEVEL_ADMIN)
     {
-        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /ooc /cc /ao /fixveh /flip /disarm\n\n");
+        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\n\n");
     }
     if (level >= ADMIN_LEVEL_SENIOR)
     {
-        strcat(body, C_ADMIN "3 - Visi admin\n" C_WHITE "/setskin /setint /setvw /veh /dveh /ann /settime /setweather /gotopos /mypos\n\n");
+        strcat(body, C_ADMIN "3 - Visi admin\n" C_WHITE "/setskin /setint /setvw /veh /dveh /ann /settime /setweather /gotopos /mypos\n/ban (i trajno) /oban /banip /unban /unwarn\n\n");
     }
     if (level >= ADMIN_LEVEL_HEAD)
     {
-        strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setname\n\n");
+        strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setname /pmspy\n\n");
     }
     if (level >= ADMIN_LEVEL_MANAGEMENT)
     {
@@ -1230,7 +1230,7 @@ cmd:hhelp(playerid, params[])
 
     ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_MSGBOX, SERVER_NAME " - Helper komande",
         C_HELPER "1 - Helper\n" C_WHITE "/hduty /hc /odg\n\n" \
-        C_HELPER "2 - Iskusni helper\n" C_WHITE "/goto\n\n" \
+        C_HELPER "2 - Iskusni helper\n" C_WHITE "/goto /nmute /unnmute\n\n" \
         C_HELPER "3 - Glavni helper\n" C_WHITE "/makehelper (postavlja helpere nivoa 1-2)\n\n" \
         C_GREY "Komande rade na helper duznosti (/hduty), osim /hc.\n" \
         "Helperi ne kaznjavaju: prekrsaje prijavite adminima preko /report.",

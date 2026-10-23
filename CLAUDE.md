@@ -21,6 +21,7 @@
 - `docs/DECISIONS.md`: odluke i arhitektura koda / decisions and code architecture
 - `docs/ECONOMY.md`: cene, plate, nivoi / prices, wages, levels
 - `docs/ADMIN.md`: tim, nivoi i komande / staff, levels and commands
+- `docs/MAPPING.md`: Texture Studio i gotove mape / Texture Studio and ready-made maps
 - `docs/BACKLOG.md`: podsetnik za stvari koje čekaju drugi sistem / reminders for things waiting on another system
 - `docs/SETUP_MYSQL.md`: instalacija baze / database setup
 

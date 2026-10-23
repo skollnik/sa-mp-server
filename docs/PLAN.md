@@ -27,7 +27,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] CHAT-1, CHAT-2, CHAT-3: osnovni RP chat i `/pomoc`
 - [x] Dopune logina: poslednja prijava, zaključavanje posle 5 pogrešnih lozinki, `/promenilozinku`, kamera na loginu
 - [x] ADM-1, ADM-2, ADM-4, ADM-6 (deo 1): tim (Helper 1–3, Admin 1–6), duty, report, ask, newbie chat, alati, logovi. Vidi [ADMIN.md](ADMIN.md)
-- [ ] ADM-3 (deo 2): kazne (kick, ban, warn, mute, admin zatvor), provera bana, `/pmspy`
+- [x] ADM-3 (deo 2): kazne (kick, ban, warn, mute, admin zatvor), provera bana, `/pmspy`
 - [ ] AC-1, AC-3, AC-4: serverski novac/HP, zaštita dijaloga, flood zaštita
 
 ### Faza 2: Svet i ekonomija
@@ -122,7 +122,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] CHAT-1, CHAT-2, CHAT-3: basic RP chat and `/pomoc`
 - [x] Login additions: last login, lockout after 5 wrong passwords, `/promenilozinku`, login camera
 - [x] ADM-1, ADM-2, ADM-4, ADM-6 (part 1): staff (Helper 1–3, Admin 1–6), duty, reports, ask, newbie chat, tools, logs. See [ADMIN.md](ADMIN.md)
-- [ ] ADM-3 (part 2): punishments (kick, ban, warn, mute, admin jail), ban check, `/pmspy`
+- [x] ADM-3 (part 2): punishments (kick, ban, warn, mute, admin jail), ban check, `/pmspy`
 - [ ] AC-1, AC-3, AC-4: server-side money/HP, dialog protection, flood protection
 
 ### Phase 2: World and economy

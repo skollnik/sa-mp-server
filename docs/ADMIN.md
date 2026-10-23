@@ -6,7 +6,7 @@ Kompletan spisak ko šta može. Svaki novi sistem dodaje svoje komande ovde.
 Viši nivo uvek ima sve komande nižeg nivoa.
 
 ### Pravila
-- Postoje dve odvojene lestvice: **Helper 1–3** i **Admin 1–5 + Vlasnik (6)**. Ista osoba može imati obe.
+- Postoje dve odvojene lestvice: **Helper 1–3** i **Admin 1–5 + Vlasnik (6)**. Igrač je na jednoj od njih, ne na obe.
 - **Admin komande rade samo na dužnosti** (`/aduty`), osim admin chata `/a`. Vlasnik je izuzet.
 - **Helper komande rade na helper dužnosti** (`/hduty`), osim helper chata `/hc`. Svaki admin može da koristi helper komande.
 - **Helperi ne kažnjavaju.** Odgovaraju na pitanja, a prekršaje prijavljuju adminima.
@@ -32,21 +32,28 @@ Viši nivo uvek ima sve komande nižeg nivoa.
 | Nivo | Naziv | Komande |
 |------|-------|---------|
 | 1 | Helper | `/hduty`, `/hc`, `/odg [id] [odgovor]`, `/hhelp` |
-| 2 | Iskusni helper | `/goto` |
+| 2 | Iskusni helper | `/goto`, `/nmute [id] [min]` i `/unnmute` (zabrana pisanja u newbie chat) |
 | 3 | Glavni helper | `/makehelper` (postavlja i skida helpere nivoa 1–2) |
 
 ### Admini
 | Nivo | Naziv | Komande |
 |------|-------|---------|
-| 1 | Admin pocetnik | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap` |
-| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport lokacije), `/ooc` (globalni OOC), `/cc` (briše chat svima), `/ao` (admin obaveštenje u chatu), `/fixveh`, `/flip`, `/disarm` |
-| 3 | Visi admin | `/setskin`, `/setint` (enterijer), `/setvw` (virtuelni svet), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (tekst na sredini ekrana), `/settime`, `/setweather`, `/gotopos`, `/mypos` |
-| 4 | Glavni admin | `/makehelper` (svi nivoi), `/setlevel`, `/setrespect`, `/setname` |
+| 1 | Admin pocetnik | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (do 30 min), `/unjail`, `/warns` |
+| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport lokacije), `/ooc` (globalni OOC), `/cc` (briše chat svima), `/ao` (admin obaveštenje u chatu), `/fixveh`, `/flip`, `/disarm`, `/ban` (do 7 dana), `/warn`, `/ajail` (do 24 h) |
+| 3 | Visi admin | `/setskin`, `/setint` (enterijer), `/setvw` (virtuelni svet), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (tekst na sredini ekrana), `/settime`, `/setweather`, `/gotopos`, `/mypos`, `/ban` (i trajni), `/oban`, `/banip`, `/unban`, `/unwarn` |
+| 4 | Glavni admin | `/makehelper` (svi nivoi), `/setlevel`, `/setrespect`, `/setname`, `/pmspy` |
 | 5 | Menadzment | `/makeadmin` (do nivoa 4), `/gmx` (restart servera) |
 | 6 | Vlasnik | `/makeadmin` (do nivoa 5), `/givemoney`, `/dozvoliime`, `/zabraniime` |
 
-### Uskoro (deo 2: kazne)
-`/kick`, `/ban`, `/unban`, ban po IP-u i serijskom broju, ban igrača koji nije online, `/warn` (3 upozorenja = ban 3 dana), `/mute`, `/nmute` (newbie mute, helperi od nivoa 2), `/ajail`, `/pmspy` (admin 4+), provera bana pri konekciji.
+### Kazne
+- Svaka kazna (kick, ban, warn, mute, admin zatvor) se objavljuje svim igračima crvenom porukom i upisuje u `admin_logs`.
+- **Ban** pamti ime, IP adresu i serijski broj klijenta. Pri ulasku igrač je blokiran ako se poklapa bilo šta od toga. Vlasnik se ne može banovati. Lokalna adresa `127.0.0.1` se ne pamti i ne proverava, jer je na test računaru zajednička svim klijentima.
+- **Ban bez igrača:** `/oban` banuje nalog koji nije online, a `/banip` samo IP adresu. `/unban` prima ime naloga ili IP adresu.
+- **Upozorenja:** 3 aktivna upozorenja = automatski ban 3 dana, a upozorenja se tada brišu. Spisak upozorenja daje `/warns`.
+- **Mute, newbie mute i admin zatvor** se čuvaju u bazi, pa se ne mogu izbeći izlaskom sa servera. Mute blokira govor i sve chat komande. Newbie mute blokira samo `/n`.
+- **Admin zatvor** je ćelija u LSPD enterijeru, u posebnom virtuelnom svetu. Vreme teče samo dok je igrač u igri. Ko pobegne, vraća se nazad. Posle kazne igrač se pojavljuje na aerodromu.
+- Pri ulasku sa iste IP adrese kao neko ko je već na serveru, admini dobijaju upozorenje.
+- `/pmspy` (admin 4+) prikazuje kopije svih privatnih poruka.
 
 ---
 
@@ -56,7 +63,7 @@ The full list of who can do what. Every new system adds its commands here.
 A higher level always has every command of the lower levels.
 
 ### Rules
-- Two separate ladders: **Helper 1–3** and **Admin 1–5 + Owner (6)**. One person can hold both.
+- Two separate ladders: **Helper 1–3** and **Admin 1–5 + Owner (6)**. A player is on one of them, not both.
 - **Admin commands work only on duty** (`/aduty`), except admin chat `/a`. The owner is exempt.
 - **Helper commands work on helper duty** (`/hduty`), except helper chat `/hc`. Every admin can use helper commands.
 - **Helpers do not punish.** They answer questions and report violations to admins.
@@ -82,18 +89,25 @@ A higher level always has every command of the lower levels.
 | Level | Name | Commands |
 |-------|------|----------|
 | 1 | Helper | `/hduty`, `/hc`, `/odg [id] [answer]`, `/hhelp` |
-| 2 | Senior helper | `/goto` |
+| 2 | Senior helper | `/goto`, `/nmute [id] [min]` and `/unnmute` (newbie chat ban) |
 | 3 | Head helper | `/makehelper` (sets and removes helper levels 1–2) |
 
 ### Admins
 | Level | Name | Commands |
 |-------|------|----------|
-| 1 | Trial admin | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap` |
-| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport locations), `/ooc` (global OOC), `/cc` (clears everyone's chat), `/ao` (admin notice in chat), `/fixveh`, `/flip`, `/disarm` |
-| 3 | Senior admin | `/setskin`, `/setint` (interior), `/setvw` (virtual world), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (text in the middle of the screen), `/settime`, `/setweather`, `/gotopos`, `/mypos` |
-| 4 | Head admin | `/makehelper` (all levels), `/setlevel`, `/setrespect`, `/setname` |
+| 1 | Trial admin | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (do 30 min), `/unjail`, `/warns` |
+| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport locations), `/ooc` (global OOC), `/cc` (clears everyone's chat), `/ao` (admin notice in chat), `/fixveh`, `/flip`, `/disarm`, `/ban` (do 7 dana), `/warn`, `/ajail` (do 24 h) |
+| 3 | Senior admin | `/setskin`, `/setint` (interior), `/setvw` (virtual world), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (text in the middle of the screen), `/settime`, `/setweather`, `/gotopos`, `/mypos`, `/ban` (i trajni), `/oban`, `/banip`, `/unban`, `/unwarn` |
+| 4 | Head admin | `/makehelper` (all levels), `/setlevel`, `/setrespect`, `/setname`, `/pmspy` |
 | 5 | Management | `/makeadmin` (up to level 4), `/gmx` (server restart) |
 | 6 | Owner | `/makeadmin` (up to level 5), `/givemoney`, `/dozvoliime`, `/zabraniime` |
 
-### Coming next (part 2: punishments)
-`/kick`, `/ban`, `/unban`, IP and client-serial bans, offline ban, `/warn` (3 warnings = 3-day ban), `/mute`, `/nmute` (newbie mute, helpers level 2+), `/ajail`, `/pmspy` (admin 4+), ban check on connect.
+### Punishments
+- Every punishment (kick, ban, warn, mute, admin jail) is announced to all players in red and written to `admin_logs`.
+- A **ban** stores the name, IP address and client serial. On connect the player is blocked if any of them match. The owner cannot be banned. The loopback address `127.0.0.1` is never stored or checked, since all clients on the test machine share it.
+- **Bans without the player:** `/oban` bans an offline account, `/banip` only an IP address. `/unban` takes an account name or an IP address.
+- **Warnings:** 3 active warnings = automatic 3-day ban, and the warnings are cleared. `/warns` lists them.
+- **Mute, newbie mute and admin jail** are stored in the database, so leaving the server does not avoid them. Mute blocks talking and every chat command. Newbie mute blocks only `/n`.
+- **Admin jail** is a cell in the LSPD interior, in its own virtual world. Time only runs while the player is in-game. Escapees are put back. After serving, the player appears at the airport.
+- When someone connects from the same IP as a player already online, admins get a warning.
+- `/pmspy` (admin 4+) shows copies of every private message.

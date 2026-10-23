@@ -6,21 +6,13 @@
 
 ### Čeka
 
-**Posle admin sistema, deo 2 (kazne)**
-| Stavka |
-|--------|
-| Provera bana pri konekciji (ime, IP, serijski broj klijenta) |
-| Obaveštenje adminima kad se dva igrača povežu sa iste IP adrese |
-| Mute: igrač sa mute-om ne može da piše. Newbie mute (`/nmute`) za helpere od nivoa 2 |
-| `/pmspy` za admine od nivoa 4 |
-| Mesto za admin zatvor (posebna lokacija ili baza tima) |
-
 **Posle odluke o mapama** (Texture Studio ili gotove mape)
 | Stavka |
 |--------|
 | Baza za admine i helpere (`/abaza`, `/hbaza`) |
 | Baze bandi, mafija i frakcija |
-| Dorada uređenja aerodroma prema povratnoj informaciji iz igre |
+| Uređenje spawna na aerodromu (prva verzija iz koda je obrisana, radi se ponovo u Texture Studio-u) |
+| Prebaciti admin zatvor u bazu tima, kad baza bude napravljena |
 
 **Posle sistema vozila (Faza 3)**
 | Stavka |
@@ -74,7 +66,10 @@
 | 23.10.2026. | Igrač sam isključuje chatove: `/togooc`, `/togpm`, `/tognewbie` |
 | 23.10.2026. | Oznaka iznad imena za tim na dužnosti i admin skin na dužnosti |
 | 23.10.2026. | Dodatne admin komande: `/cc`, `/ao`, `/fixveh`, `/flip`, `/disarm`, `/ann`, `/settime`, `/setweather`, `/gotopos`, `/mypos` |
-| 23.10.2026. | Sistem mapa (`gamemodes/maps/`) i prva verzija uređenja aerodroma |
+| 23.10.2026. | Sistem mapa (`gamemodes/maps/`). Prva verzija uređenja aerodroma je obrisana na zahtev vlasnika |
+| 23.10.2026. | Admin sistem, deo 2: kick, ban (privremeni, trajni, offline, IP), warn, mute, newbie mute, admin zatvor, `/pmspy` |
+| 23.10.2026. | Provera bana pri ulasku i upozorenje adminima za istu IP adresu |
+| 23.10.2026. | Uputstvo za mapiranje (`docs/MAPPING.md`) |
 
 ---
 
@@ -84,21 +79,13 @@ What must be added **after** a system or **once** another system exists. When an
 
 ### Waiting
 
-**After the admin system, part 2 (punishments)**
-| Item |
-|------|
-| Ban check on connect (name, IP, client serial) |
-| Alert admins when two players connect from the same IP |
-| Mute: a muted player cannot talk. Newbie mute (`/nmute`) for helpers level 2+ |
-| `/pmspy` for admins level 4+ |
-| A place for admin jail (separate location or the staff base) |
-
 **After the decision on maps** (Texture Studio or ready-made maps)
 | Item |
 |------|
 | Staff base for admins and helpers (`/abaza`, `/hbaza`) |
 | Bases for gangs, mafias and factions |
-| Polish the airport decoration based on in-game feedback |
+| Decorate the airport spawn (the first code-only version was deleted, redo it in Texture Studio) |
+| Move admin jail into the staff base once the base exists |
 
 **After the vehicle system (Phase 3)**
 | Item |
@@ -152,4 +139,7 @@ What must be added **after** a system or **once** another system exists. When an
 | 2026-10-23 | Players toggle chats themselves: `/togooc`, `/togpm`, `/tognewbie` |
 | 2026-10-23 | Tag above the name for staff on duty and admin duty skin |
 | 2026-10-23 | Extra admin commands: `/cc`, `/ao`, `/fixveh`, `/flip`, `/disarm`, `/ann`, `/settime`, `/setweather`, `/gotopos`, `/mypos` |
-| 2026-10-23 | Map system (`gamemodes/maps/`) and first version of the airport decoration |
+| 2026-10-23 | Map system (`gamemodes/maps/`). The first airport decoration was deleted at the owner's request |
+| 2026-10-23 | Admin system part 2: kick, ban (temporary, permanent, offline, IP), warn, mute, newbie mute, admin jail, `/pmspy` |
+| 2026-10-23 | Ban check on connect and admin alert for a shared IP |
+| 2026-10-23 | Mapping guide (`docs/MAPPING.md`) |
