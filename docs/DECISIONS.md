@@ -33,6 +33,9 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 25 | 2026-10-21 | Helperi ne kažnjavaju (nema kick/ban). Odgovaraju na pitanja, a prekršaje prijavljuju adminima. Od nivoa 2 mogu da daju mute u newbie chatu | Uobičajena uloga helpera |
 | 26 | 2026-10-21 | 3 upozorenja (`/warn`) = automatski ban 3 dana | Usvojen predlog |
 | 27 | 2026-10-21 | Admini od nivoa 4 mogu da prate PM-ove (`/pmspy`) | Usvojen predlog |
+| 28 | 2026-10-23 | Imena su uvek bela. Tim na dužnosti ima oznaku iznad imena: crveno [ADMIN]/[VLASNIK], žuto [HELPER] | Zahtev vlasnika |
+| 29 | 2026-10-23 | Igrač je ili admin ili helper, ne oba | Admini već imaju sve helper komande |
+| 30 | 2026-10-23 | `/ahelp` prikazuje samo komande do sopstvenog nivoa | Uobičajeno: igrač vidi samo ono što može da koristi |
 
 ### Arhitektura koda (predlog)
 ```
@@ -87,6 +90,9 @@ This file records every important decision so it does not get re-discussed. Newe
 | 25 | 2026-10-21 | Helpers do not punish (no kick/ban). They answer questions and report violations to admins. From level 2 they can mute in newbie chat | Usual helper role |
 | 26 | 2026-10-21 | 3 warnings (`/warn`) = automatic 3-day ban | Proposal accepted |
 | 27 | 2026-10-21 | Admins level 4+ can watch PMs (`/pmspy`) | Proposal accepted |
+| 28 | 2026-10-23 | Names are always white. Staff on duty get a tag above the name: red [ADMIN]/[VLASNIK], yellow [HELPER] | Owner's request |
+| 29 | 2026-10-23 | A player is either an admin or a helper, not both | Admins already have every helper command |
+| 30 | 2026-10-23 | `/ahelp` shows only the commands up to your own level | Common practice: you only see what you can use |
 
 ### Code architecture (proposal)
 ```

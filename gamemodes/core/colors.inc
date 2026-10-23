@@ -14,6 +14,8 @@
 #define COLOR_HELPER        (0x00C8C8FF)
 #define COLOR_NEWBIE        (0xA0E0A0FF)
 #define COLOR_PLAYER_NAME   (0xFFFFFFFF)
+#define COLOR_ADMIN_TAG     (0xFF3333FF)
+#define COLOR_HELPER_TAG    (0xFFD700FF)
 
 #define C_WHITE             "{FFFFFF}"
 #define C_GREY              "{AFAFAF}"

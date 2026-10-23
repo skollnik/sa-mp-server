@@ -15,7 +15,7 @@ cmd:dozvoliime(playerid, params[])
 {
     if (g_Player[playerid][pAdminLevel] < ADMIN_LEVEL_OWNER)
     {
-        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Ova komanda je samo za vlasnika servera.");
         return 1;
     }
 
@@ -40,7 +40,7 @@ cmd:zabraniime(playerid, params[])
 {
     if (g_Player[playerid][pAdminLevel] < ADMIN_LEVEL_OWNER)
     {
-        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Ova komanda je samo za vlasnika servera.");
         return 1;
     }
 

@@ -11,6 +11,8 @@
 ## Pravila koda / Code rules
 - Sistemske poruke idu kroz `Msg_Usage/Msg_Error/Msg_Success/Msg_Server/Msg_Info` iz `core/messages.inc`. / System messages go through the `Msg_*` helpers in `core/messages.inc`.
 - Tekst koji je uneo igrač nikad ne ide kao format string (`SendClientMessage`, `SetPlayerChatBubble`...), uvek kao `"%s"` argument, jer `%` može da sruši server. / Player-entered text is never a format string, always a `"%s"` argument, since a stray `%` can crash the server.
+- `Msg_*` su makroi: poziv mora biti u jednom redu (bez preloma unutar zagrada). / `Msg_*` are macros: the call must stay on one line.
+- Komande nad igračem imaju posebnu poruku za nepostojećeg igrača i posebnu za sebe (`Staff_CheckTarget` sa porukom za sebe). / Commands on a player have separate messages for a missing player and for targeting yourself.
 - Svi SQL upiti kroz `mysql_format` sa `%e` za stringove. / All SQL goes through `mysql_format` with `%e` for strings.
 
 ## Dokumentacija / Docs

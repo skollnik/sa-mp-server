@@ -6,7 +6,7 @@ cmd:report(playerid, params[])
         Msg_Usage(playerid, "/report [id ili ime] [razlog]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid))
+    if (!Staff_CheckTarget(playerid, targetid, "Ne mozete prijaviti samog sebe."))
     {
         return 1;
     }
@@ -164,7 +164,7 @@ cmd:admins(playerid, params[])
 
         Account_GetDisplayName(i, name);
         format(line, sizeof(line), C_ADMIN "%s " C_WHITE "%s [%d]%s\n",
-            g_AdminRankNames[g_Player[i][pAdminLevel]], name, i, g_Staff[i][sAdminDuty] ? (C_GREEN " - na duznosti") : (""));
+            g_AdminRankNames[g_Player[i][pAdminLevel]], name, i, g_Staff[i][sAdminDuty] ? (C_GREEN " - na duznosti") : (C_GREY " - nije na duznosti"));
         strcat(body, line);
         count++;
     }
@@ -190,7 +190,7 @@ cmd:helpers(playerid, params[])
 
         Account_GetDisplayName(i, name);
         format(line, sizeof(line), C_HELPER "%s " C_WHITE "%s [%d]%s\n",
-            g_HelperRankNames[g_Player[i][pHelperLevel]], name, i, g_Staff[i][sHelperDuty] ? (C_GREEN " - na duznosti") : (""));
+            g_HelperRankNames[g_Player[i][pHelperLevel]], name, i, g_Staff[i][sHelperDuty] ? (C_GREEN " - na duznosti") : (C_GREY " - nije na duznosti"));
         strcat(body, line);
         count++;
     }

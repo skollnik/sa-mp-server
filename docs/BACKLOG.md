@@ -29,6 +29,7 @@ Sve stavke iznad vlasnik je odobrio 21.10.2026.
 | Stavka | Čeka |
 |--------|------|
 | Sve cene i plate iz `ECONOMY.md` prebaciti u jedan config fajl u kodu | Prvi sistem sa novcem (Faza 2) |
+| Teleport lokacije (`/tp`): kad napravimo opštinu, policiju, banku, bolnicu i ostala mesta, generičke lokacije se zamenjuju pravim | Ta mesta (Faza 2 i dalje) |
 | Mape (mapiranja) i baze: baza za admine i helpere, kasnije za bande, mafije i frakcije | Odluka vlasnika o načinu pravljenja mapa (predlog poslat 23.10.2026.) |
 
 ---
@@ -62,4 +63,5 @@ All items above were approved by the owner on 2026-10-21.
 | Item | Waiting for |
 |------|-------------|
 | Move all prices and wages from `ECONOMY.md` into one config file in the code | First system that uses money (Phase 2) |
+| Teleport locations (`/tp`): once city hall, police, bank, hospital and other places exist, the generic spots get replaced by the real ones | Those places (Phase 2 onward) |
 | Maps (mappings) and bases: a staff base for admins and helpers, later for gangs, mafias and factions | Owner's decision on how maps are made (proposal sent 2026-10-23) |

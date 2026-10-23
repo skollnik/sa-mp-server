@@ -2,12 +2,12 @@ cmd:aduty(playerid, params[])
 {
     if (!Staff_IsAdmin(playerid))
     {
-        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Ova komanda je samo za admine.");
         return 1;
     }
 
     g_Staff[playerid][sAdminDuty] = !g_Staff[playerid][sAdminDuty];
-    Staff_UpdateNameColor(playerid);
+    Staff_UpdateDutyTag(playerid);
 
     new name[MAX_PLAYER_NAME + 1], rank[24], message[128];
     Account_GetDisplayName(playerid, name);
@@ -22,7 +22,7 @@ cmd:a(playerid, params[])
 {
     if (!Staff_IsAdmin(playerid))
     {
-        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Ova komanda je samo za admine.");
         return 1;
     }
     if (isnull(params))
@@ -157,7 +157,7 @@ cmd:gethere(playerid, params[])
         Msg_Usage(playerid, "/gethere [id ili ime]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid))
+    if (!Staff_CheckTarget(playerid, targetid, "Ne mozete teleportovati samog sebe."))
     {
         return 1;
     }
@@ -188,7 +188,7 @@ cmd:spec(playerid, params[])
         Msg_Usage(playerid, "/spec [id ili ime]    Prekid: /specoff");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid))
+    if (!Staff_CheckTarget(playerid, targetid, "Ne mozete posmatrati samog sebe."))
     {
         return 1;
     }
@@ -232,7 +232,7 @@ cmd:check(playerid, params[])
         Msg_Usage(playerid, "/check [id ili ime]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true))
+    if (!Staff_CheckTarget(playerid, targetid))
     {
         return 1;
     }
@@ -244,25 +244,35 @@ cmd:check(playerid, params[])
 
     new played = g_Player[targetid][pPlayedSeconds] + gettime() - g_Player[targetid][pSessionStart];
 
-    new body[768];
+    new body[1024], title[64];
     format(body, sizeof(body),
-        C_WHITE "Ime: " C_SERVER "%s" C_WHITE " [ID %d, nalog #%d]\n" \
-        "Pol: %s    Godine: %d    Skin: %d\n" \
-        "Nivo: %d    Respect: %d    Sati igre: %d\n" \
-        "Novac: $%d    Banka: $%d\n" \
-        "HP: %.0f    Armor: %.0f\n" \
-        "Enterijer: %d    Virtuelni svet: %d\n" \
-        "Admin: %s    Helper: %s\n" \
-        "IP: %s",
-        g_Player[targetid][pName], targetid, g_Player[targetid][pDbId],
-        g_Player[targetid][pGender] == GENDER_FEMALE ? ("Zensko") : ("Musko"), g_Player[targetid][pAge], GetPlayerSkin(targetid),
-        g_Player[targetid][pLevel], g_Player[targetid][pRespect], played / 3600,
+        C_SERVER "Podatak\t" C_SERVER "Vrednost\n" \
+        C_GREY "Ime\t" C_WHITE "%s\n" \
+        C_GREY "ID na serveru / broj naloga\t" C_WHITE "%d / #%d\n" \
+        C_GREY "Pol i godine\t" C_WHITE "%s, %d god.\n" \
+        C_GREY "Skin\t" C_WHITE "%d\n" \
+        C_GREY "Nivo / respect\t" C_WHITE "%d / %d\n" \
+        C_GREY "Sati igre\t" C_WHITE "%d h\n" \
+        C_GREY "Novac / banka\t" C_GREEN "$%d " C_WHITE "/ " C_GREEN "$%d\n" \
+        C_GREY "HP / armor\t" C_WHITE "%.0f / %.0f\n" \
+        C_GREY "Enterijer / virtuelni svet\t" C_WHITE "%d / %d\n" \
+        C_GREY "Admin\t" C_ADMIN "%s\n" \
+        C_GREY "Helper\t" C_HELPER "%s\n" \
+        C_GREY "IP adresa\t" C_WHITE "%s",
+        g_Player[targetid][pName],
+        targetid, g_Player[targetid][pDbId],
+        g_Player[targetid][pGender] == GENDER_FEMALE ? ("Zensko") : ("Musko"), g_Player[targetid][pAge],
+        GetPlayerSkin(targetid),
+        g_Player[targetid][pLevel], g_Player[targetid][pRespect],
+        played / 3600,
         g_Player[targetid][pCash], g_Player[targetid][pBank],
         health, armour,
         GetPlayerInterior(targetid), GetPlayerVirtualWorld(targetid),
-        g_AdminRankNames[g_Player[targetid][pAdminLevel]], g_HelperRankNames[g_Player[targetid][pHelperLevel]],
+        g_AdminRankNames[g_Player[targetid][pAdminLevel]],
+        g_HelperRankNames[g_Player[targetid][pHelperLevel]],
         ip);
-    ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_MSGBOX, SERVER_NAME " - Provera igraca", body, "Zatvori", "");
+    format(title, sizeof(title), SERVER_NAME " - Provera: %s", g_Player[targetid][pName]);
+    ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_TABLIST_HEADERS, title, body, "Zatvori", "");
     return 1;
 }
 
@@ -279,7 +289,7 @@ cmd:freeze(playerid, params[])
         Msg_Usage(playerid, "/freeze [id ili ime]    Odmrzavanje: /unfreeze");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid) || !Staff_CheckOutranks(playerid, targetid))
+    if (!Staff_CheckTarget(playerid, targetid, "Ne mozete zamrznuti samog sebe.") || !Staff_CheckOutranks(playerid, targetid))
     {
         return 1;
     }
@@ -309,7 +319,7 @@ cmd:unfreeze(playerid, params[])
         Msg_Usage(playerid, "/unfreeze [id ili ime]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true))
+    if (!Staff_CheckTarget(playerid, targetid))
     {
         return 1;
     }
@@ -339,7 +349,7 @@ cmd:slap(playerid, params[])
         Msg_Usage(playerid, "/slap [id ili ime]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true) || !Staff_CheckOutranks(playerid, targetid))
+    if (!Staff_CheckTarget(playerid, targetid) || !Staff_CheckOutranks(playerid, targetid))
     {
         return 1;
     }
@@ -371,16 +381,18 @@ cmd:sethp(playerid, params[])
         Msg_Usage(playerid, "/sethp [id ili ime] [0-100]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true))
+    if (!Staff_CheckTarget(playerid, targetid))
     {
         return 1;
     }
 
     SetPlayerHealth(targetid, amount);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[32];
+    new target_name[MAX_PLAYER_NAME + 1], details[48];
     Account_GetDisplayName(targetid, target_name);
     Msg_Admin(playerid, "Postavili ste HP igraca %s na %.0f.", target_name, amount);
+    format(details, sizeof(details), "vam je postavio HP na %.0f.", amount);
+    Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%.0f", amount);
     Staff_Log(playerid, "sethp", targetid, details);
     return 1;
@@ -399,16 +411,18 @@ cmd:setarmour(playerid, params[])
         Msg_Usage(playerid, "/setarmour [id ili ime] [0-100]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true))
+    if (!Staff_CheckTarget(playerid, targetid))
     {
         return 1;
     }
 
     SetPlayerArmour(targetid, amount);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[32];
+    new target_name[MAX_PLAYER_NAME + 1], details[48];
     Account_GetDisplayName(targetid, target_name);
     Msg_Admin(playerid, "Postavili ste armor igraca %s na %.0f.", target_name, amount);
+    format(details, sizeof(details), "vam je postavio armor na %.0f.", amount);
+    Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%.0f", amount);
     Staff_Log(playerid, "setarmour", targetid, details);
     return 1;
@@ -466,7 +480,7 @@ cmd:setskin(playerid, params[])
         Msg_Usage(playerid, "/setskin [id ili ime] [skin 0-311]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true))
+    if (!Staff_CheckTarget(playerid, targetid))
     {
         return 1;
     }
@@ -474,9 +488,11 @@ cmd:setskin(playerid, params[])
     g_Player[targetid][pSkin] = skin;
     SetPlayerSkin(targetid, skin);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[16];
+    new target_name[MAX_PLAYER_NAME + 1], details[48];
     Account_GetDisplayName(targetid, target_name);
     Msg_Admin(playerid, "Postavili ste skin %d igracu %s.", skin, target_name);
+    format(details, sizeof(details), "vam je postavio skin %d.", skin);
+    Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%d", skin);
     Staff_Log(playerid, "setskin", targetid, details);
     return 1;
@@ -495,16 +511,18 @@ cmd:setint(playerid, params[])
         Msg_Usage(playerid, "/setint [id ili ime] [enterijer 0-255]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true))
+    if (!Staff_CheckTarget(playerid, targetid))
     {
         return 1;
     }
 
     SetPlayerInterior(targetid, interior);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[16];
+    new target_name[MAX_PLAYER_NAME + 1], details[48];
     Account_GetDisplayName(targetid, target_name);
     Msg_Admin(playerid, "Postavili ste enterijer %d igracu %s.", interior, target_name);
+    format(details, sizeof(details), "vam je postavio enterijer %d.", interior);
+    Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%d", interior);
     Staff_Log(playerid, "setint", targetid, details);
     return 1;
@@ -523,16 +541,18 @@ cmd:setvw(playerid, params[])
         Msg_Usage(playerid, "/setvw [id ili ime] [virtuelni svet]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true))
+    if (!Staff_CheckTarget(playerid, targetid))
     {
         return 1;
     }
 
     SetPlayerVirtualWorld(targetid, world);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[16];
+    new target_name[MAX_PLAYER_NAME + 1], details[48];
     Account_GetDisplayName(targetid, target_name);
     Msg_Admin(playerid, "Postavili ste virtuelni svet %d igracu %s.", world, target_name);
+    format(details, sizeof(details), "vam je postavio virtuelni svet %d.", world);
+    Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%d", world);
     Staff_Log(playerid, "setvw", targetid, details);
     return 1;
@@ -637,7 +657,7 @@ cmd:makehelper(playerid, params[])
         Msg_Usage(playerid, "/makehelper [id ili ime] [0-%d] (0 = skidanje)", max_level);
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, !as_head_helper))
+    if (!Staff_CheckTarget(playerid, targetid, as_head_helper ? ("Ne mozete menjati sopstveni helper nivo.") : ("")))
     {
         return 1;
     }
@@ -646,12 +666,18 @@ cmd:makehelper(playerid, params[])
         Msg_Error(playerid, "Ne mozete menjati status ovom clanu tima.");
         return 1;
     }
+    // A player is either an admin or a helper; admins already have every helper command.
+    if (level > 0 && Staff_IsAdmin(targetid))
+    {
+        Msg_Error(playerid, "Taj igrac je %s i vec ima sve helper komande. Da bi bio helper, prvo mu skinite admin (/makeadmin %d 0).", g_AdminRankNames[g_Player[targetid][pAdminLevel]], targetid);
+        return 1;
+    }
 
     g_Player[targetid][pHelperLevel] = level;
     if (level == 0)
     {
         g_Staff[targetid][sHelperDuty] = false;
-        Staff_UpdateNameColor(targetid);
+        Staff_UpdateDutyTag(targetid);
     }
     Account_Save(targetid);
 
@@ -688,7 +714,7 @@ cmd:setlevel(playerid, params[])
         Msg_Usage(playerid, "/setlevel [id ili ime] [nivo 1-100]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true))
+    if (!Staff_CheckTarget(playerid, targetid))
     {
         return 1;
     }
@@ -720,7 +746,7 @@ cmd:setrespect(playerid, params[])
         Msg_Usage(playerid, "/setrespect [id ili ime] [respect]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true))
+    if (!Staff_CheckTarget(playerid, targetid))
     {
         return 1;
     }
@@ -728,9 +754,11 @@ cmd:setrespect(playerid, params[])
     g_Player[targetid][pRespect] = respect;
     Account_Save(targetid);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[16];
+    new target_name[MAX_PLAYER_NAME + 1], details[48];
     Account_GetDisplayName(targetid, target_name);
     Msg_Admin(playerid, "Postavili ste respect %d igracu %s.", respect, target_name);
+    format(details, sizeof(details), "vam je postavio respect na %d.", respect);
+    Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%d", respect);
     Staff_Log(playerid, "setrespect", targetid, details);
     return 1;
@@ -749,7 +777,7 @@ cmd:setname(playerid, params[])
         Msg_Usage(playerid, "/setname [id ili ime] [Novo_Ime]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true) || !Staff_CheckOutranks(playerid, targetid))
+    if (!Staff_CheckTarget(playerid, targetid) || !Staff_CheckOutranks(playerid, targetid))
     {
         return 1;
     }
@@ -818,18 +846,31 @@ cmd:makeadmin(playerid, params[])
         Msg_Usage(playerid, "/makeadmin [id ili ime] [0-%d] (0 = skidanje)", max_level);
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid) || !Staff_CheckOutranks(playerid, targetid))
+    if (!Staff_CheckTarget(playerid, targetid, "Ne mozete menjati sopstveni admin nivo.") || !Staff_CheckOutranks(playerid, targetid))
     {
         return 1;
+    }
+
+    // Promoting a helper to admin replaces the helper rank, since admins have every helper command.
+    new bool:removed_helper = (level > 0 && g_Player[targetid][pHelperLevel] > 0);
+    if (removed_helper)
+    {
+        g_Player[targetid][pHelperLevel] = 0;
+        g_Staff[targetid][sHelperDuty] = false;
     }
 
     g_Player[targetid][pAdminLevel] = level;
     if (level == 0)
     {
         g_Staff[targetid][sAdminDuty] = false;
-        Staff_UpdateNameColor(targetid);
     }
+    Staff_UpdateDutyTag(targetid);
     Account_Save(targetid);
+
+    if (removed_helper)
+    {
+        Msg_Info(playerid, "Helper status igraca je uklonjen, jer admin vec ima sve helper komande.");
+    }
 
     new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[160], details[16];
     Account_GetDisplayName(playerid, name);
@@ -883,7 +924,7 @@ cmd:givemoney(playerid, params[])
         Msg_Usage(playerid, "/givemoney [id ili ime] [iznos] (negativan iznos oduzima)");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid, true))
+    if (!Staff_CheckTarget(playerid, targetid))
     {
         return 1;
     }
@@ -891,9 +932,11 @@ cmd:givemoney(playerid, params[])
     Account_GiveCash(targetid, amount);
     Account_Save(targetid);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[32];
+    new target_name[MAX_PLAYER_NAME + 1], details[48];
     Account_GetDisplayName(targetid, target_name);
     Msg_Admin(playerid, "Dali ste $%d igracu %s. Sada ima $%d.", amount, target_name, g_Player[targetid][pCash]);
+    format(details, sizeof(details), "vam je %s $%d.", amount > 0 ? ("dao") : ("oduzeo"), amount > 0 ? amount : -amount);
+    Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%d", amount);
     Staff_Log(playerid, "givemoney", targetid, details);
     return 1;
@@ -903,7 +946,7 @@ cmd:ahelp(playerid, params[])
 {
     if (!Staff_IsAdmin(playerid))
     {
-        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Ova komanda je samo za admine.");
         return 1;
     }
 
@@ -930,6 +973,10 @@ cmd:ahelp(playerid, params[])
     {
         strcat(body, C_ADMIN "6 - Vlasnik\n" C_WHITE "/givemoney /dozvoliime /zabraniime\n\n");
     }
+    if (level < ADMIN_LEVEL_OWNER)
+    {
+        strcat(body, C_GREY "Prikazane su komande do vaseg nivoa. Visi nivoi dobijaju jos komandi.\n");
+    }
     strcat(body, C_GREY "Komande rade samo na admin duznosti (/aduty), osim /a.");
 
     ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_MSGBOX, SERVER_NAME " - Admin komande", body, "Zatvori", "");
@@ -940,7 +987,7 @@ cmd:hhelp(playerid, params[])
 {
     if (!Staff_IsStaff(playerid))
     {
-        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Ova komanda je samo za clanove tima (helpere i admine).");
         return 1;
     }
 

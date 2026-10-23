@@ -10,8 +10,11 @@ Viši nivo uvek ima sve komande nižeg nivoa.
 - **Admin komande rade samo na dužnosti** (`/aduty`), osim admin chata `/a`. Vlasnik je izuzet.
 - **Helper komande rade na helper dužnosti** (`/hduty`), osim helper chata `/hc`. Svaki admin može da koristi helper komande.
 - **Helperi ne kažnjavaju.** Odgovaraju na pitanja, a prekršaje prijavljuju adminima.
+- Igrač je **ili admin ili helper**, ne oba. Kad se helper postavi za admina, helper status se automatski skida. Admina ne možete postaviti za helpera dok mu ne skinete admin status.
+- Admin vozila (`/veh`) može da vozi samo admin. Ostali mogu da se voze kao putnici.
+- `/ahelp` prikazuje komande do vašeg nivoa.
 - Admin ne može da kazni, zamrzne ili preimenuje admina **istog ili višeg** nivoa.
-- Na dužnosti je ime admina narandžasto, a helpera tirkizno (u TAB listi).
+- Imena igrača su uvek bela. Na dužnosti iznad imena stoji oznaka: crveno **[ADMIN]** (vlasnik **[VLASNIK]**), a žuto **[HELPER]**. Igrač ne vidi oznaku iznad svoje glave, vide je drugi.
 - Svaka admin akcija se upisuje u tabelu `admin_logs` (ko, šta, kome, detalji, vreme).
 
 ### Komande za sve igrače
@@ -55,8 +58,11 @@ A higher level always has every command of the lower levels.
 - **Admin commands work only on duty** (`/aduty`), except admin chat `/a`. The owner is exempt.
 - **Helper commands work on helper duty** (`/hduty`), except helper chat `/hc`. Every admin can use helper commands.
 - **Helpers do not punish.** They answer questions and report violations to admins.
+- A player is **either an admin or a helper**, not both. Promoting a helper to admin removes the helper rank automatically. An admin cannot be made a helper until the admin rank is removed.
+- Admin vehicles (`/veh`) can only be driven by admins. Others may ride as passengers.
+- `/ahelp` shows the commands up to your own level.
 - An admin cannot punish, freeze or rename an admin of the **same or higher** level.
-- On duty, an admin's name is orange and a helper's is teal (in the TAB list).
+- Player names are always white. On duty a tag floats above the name: red **[ADMIN]** (owner **[VLASNIK]**), yellow **[HELPER]**. Players do not see the tag above their own head, others do.
 - Every admin action is written to the `admin_logs` table (who, what, to whom, details, time).
 
 ### Commands for every player

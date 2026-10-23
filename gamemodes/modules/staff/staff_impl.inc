@@ -23,6 +23,11 @@ stock Staff_OnPlayerConnect(playerid)
 
 stock Staff_OnPlayerDisconnect(playerid)
 {
+    if (IsValidDynamic3DTextLabel(g_Staff[playerid][sDutyTag]))
+    {
+        DestroyDynamic3DTextLabel(g_Staff[playerid][sDutyTag]);
+    }
+
     for (new i = 0; i < MAX_REPORTS; i++)
     {
         if (g_Reports[i][rUsed] && (g_Reports[i][rReporter] == playerid || g_Reports[i][rTarget] == playerid))
@@ -49,11 +54,18 @@ stock Staff_OnPlayerSpawn(playerid)
         SetPlayerInterior(playerid, g_Staff[playerid][sSpecInterior]);
         SetPlayerVirtualWorld(playerid, g_Staff[playerid][sSpecWorld]);
     }
-    Staff_UpdateNameColor(playerid);
+    Staff_UpdateDutyTag(playerid);
 }
 
 stock Staff_OnPlayerStateChange(playerid, PLAYER_STATE:newstate)
 {
+    // Admin vehicles are tools: anyone may ride along, only admins may drive.
+    if (newstate == PLAYER_STATE_DRIVER && g_IsAdminVehicle[GetPlayerVehicleID(playerid)] && !Staff_IsAdmin(playerid))
+    {
+        RemovePlayerFromVehicle(playerid);
+        Msg_Error(playerid, "Ovo je admin vozilo. Mozete se voziti kao putnik, ali ga ne mozete voziti.");
+    }
+
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
         if (!g_Staff[i][sSpectating] || g_Staff[i][sSpecTarget] != playerid)
@@ -107,14 +119,21 @@ stock bool:Staff_IsAdminOnDuty(playerid)
 // Admin commands need the level and, except for the owner, admin duty.
 stock bool:Staff_CheckAdmin(playerid, level)
 {
-    if (g_Player[playerid][pAdminLevel] < level)
+    new own_level = g_Player[playerid][pAdminLevel];
+
+    if (own_level == 0)
     {
-        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Ova komanda je samo za admine.");
+        return false;
+    }
+    if (own_level < level)
+    {
+        Msg_Error(playerid, "Ova komanda zahteva admin nivo %d (%s). Vas nivo je %d (%s).", level, g_AdminRankNames[level], own_level, g_AdminRankNames[own_level]);
         return false;
     }
     if (!Staff_IsAdminOnDuty(playerid))
     {
-        Msg_Error(playerid, "Morate biti na admin duznosti (/aduty).");
+        Msg_Error(playerid, "Admin komande rade samo na duznosti. Ukljucite je sa /aduty.");
         return false;
     }
     return true;
@@ -127,29 +146,38 @@ stock bool:Staff_CheckHelper(playerid, level)
     {
         return true;
     }
-    if (g_Player[playerid][pHelperLevel] < level)
+
+    new own_level = g_Player[playerid][pHelperLevel];
+
+    if (own_level == 0)
     {
-        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Ova komanda je samo za helpere i admine.");
+        return false;
+    }
+    if (own_level < level)
+    {
+        Msg_Error(playerid, "Ova komanda zahteva helper nivo %d (%s). Vas nivo je %d (%s).", level, g_HelperRankNames[level], own_level, g_HelperRankNames[own_level]);
         return false;
     }
     if (!g_Staff[playerid][sHelperDuty])
     {
-        Msg_Error(playerid, "Morate biti na helper duznosti (/hduty).");
+        Msg_Error(playerid, "Helper komande rade samo na duznosti. Ukljucite je sa /hduty.");
         return false;
     }
     return true;
 }
 
-stock bool:Staff_CheckTarget(playerid, targetid, bool:allow_self = false)
+// self_error is the message shown when the command targets the caller; empty means targeting yourself is allowed.
+stock bool:Staff_CheckTarget(playerid, targetid, const self_error[] = "")
 {
     if (targetid == INVALID_PLAYER_ID || !Account_IsLoggedIn(targetid))
     {
         Msg_Error(playerid, "Taj igrac nije pronadjen.");
         return false;
     }
-    if (!allow_self && targetid == playerid)
+    if (self_error[0] && targetid == playerid)
     {
-        Msg_Error(playerid, "Ne mozete ovo uraditi sami sebi.");
+        Msg_Error(playerid, "%s", self_error);
         return false;
     }
     return true;
@@ -176,20 +204,41 @@ stock Staff_GetHelperRank(playerid, dest[], size = sizeof(dest))
     strcopy(dest, g_HelperRankNames[g_Player[playerid][pHelperLevel]], size);
 }
 
-stock Staff_UpdateNameColor(playerid)
+// Names stay white; staff on duty are recognised by a tag floating above the name instead.
+stock Staff_UpdateDutyTag(playerid)
 {
+    SetPlayerColor(playerid, COLOR_PLAYER_NAME);
+
+    if (IsValidDynamic3DTextLabel(g_Staff[playerid][sDutyTag]))
+    {
+        DestroyDynamic3DTextLabel(g_Staff[playerid][sDutyTag]);
+    }
+    g_Staff[playerid][sDutyTag] = STREAMER_TAG_3D_TEXT_LABEL:INVALID_STREAMER_ID;
+
     if (g_Staff[playerid][sAdminDuty])
     {
-        SetPlayerColor(playerid, COLOR_ADMIN);
+        g_Staff[playerid][sDutyTag] = CreateDynamic3DTextLabel(
+            (g_Player[playerid][pAdminLevel] >= ADMIN_LEVEL_OWNER) ? ("[VLASNIK]") : ("[ADMIN]"),
+            COLOR_ADMIN_TAG, 0.0, 0.0, STAFF_TAG_OFFSET_Z, STAFF_TAG_DRAW_DISTANCE, playerid, INVALID_VEHICLE_ID, 1);
     }
     else if (g_Staff[playerid][sHelperDuty])
     {
-        SetPlayerColor(playerid, COLOR_HELPER);
+        g_Staff[playerid][sDutyTag] = CreateDynamic3DTextLabel("[HELPER]",
+            COLOR_HELPER_TAG, 0.0, 0.0, STAFF_TAG_OFFSET_Z, STAFF_TAG_DRAW_DISTANCE, playerid, INVALID_VEHICLE_ID, 1);
     }
-    else
+}
+
+// Tells the affected player which admin did what; skipped when admins use a command on themselves.
+stock Staff_NotifyTarget(adminid, targetid, const action[])
+{
+    if (adminid == targetid)
     {
-        SetPlayerColor(playerid, COLOR_PLAYER_NAME);
+        return;
     }
+
+    new name[MAX_PLAYER_NAME + 1];
+    Account_GetDisplayName(adminid, name);
+    Msg_Admin(targetid, "Admin %s %s", name, action);
 }
 
 stock Staff_SendToAdmins(const message[])

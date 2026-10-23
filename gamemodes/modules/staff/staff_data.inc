@@ -4,7 +4,7 @@ forward bool:Staff_IsStaff(playerid);
 forward bool:Staff_IsAdminOnDuty(playerid);
 forward bool:Staff_CheckAdmin(playerid, level);
 forward bool:Staff_CheckHelper(playerid, level);
-forward bool:Staff_CheckTarget(playerid, targetid, bool:allow_self = false);
+forward bool:Staff_CheckTarget(playerid, targetid, const self_error[] = "");
 forward bool:Staff_CheckOutranks(playerid, targetid);
 
 #define ADMIN_LEVEL_TRIAL       (1)
@@ -16,6 +16,9 @@ forward bool:Staff_CheckOutranks(playerid, targetid);
 #define HELPER_LEVEL_HELPER     (1)
 #define HELPER_LEVEL_SENIOR     (2)
 #define HELPER_LEVEL_HEAD       (3)
+
+#define STAFF_TAG_OFFSET_Z      (0.45)
+#define STAFF_TAG_DRAW_DISTANCE (20.0)
 
 new const g_AdminRankNames[][] =
 {
@@ -61,7 +64,8 @@ enum E_STAFF_STATE
     sLastReport,
     sLastAsk,
     sLastNewbie,
-    bool:sHasOpenQuestion
+    bool:sHasOpenQuestion,
+    STREAMER_TAG_3D_TEXT_LABEL:sDutyTag
 }
 
 new g_Staff[MAX_PLAYERS][E_STAFF_STATE];

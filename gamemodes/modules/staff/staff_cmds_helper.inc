@@ -2,12 +2,12 @@ cmd:hduty(playerid, params[])
 {
     if (!Staff_IsHelper(playerid))
     {
-        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Ova komanda je samo za helpere. Admini koriste /aduty.");
         return 1;
     }
 
     g_Staff[playerid][sHelperDuty] = !g_Staff[playerid][sHelperDuty];
-    Staff_UpdateNameColor(playerid);
+    Staff_UpdateDutyTag(playerid);
 
     new name[MAX_PLAYER_NAME + 1], message[128];
     Account_GetDisplayName(playerid, name);
@@ -20,7 +20,7 @@ cmd:hc(playerid, params[])
 {
     if (!Staff_IsStaff(playerid))
     {
-        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Ova komanda je samo za clanove tima (helpere i admine).");
         return 1;
     }
     if (isnull(params))
@@ -58,7 +58,7 @@ cmd:odg(playerid, params[])
         Msg_Usage(playerid, "/odg [id ili ime] [odgovor]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid))
+    if (!Staff_CheckTarget(playerid, targetid, "Ne mozete odgovoriti samom sebi."))
     {
         return 1;
     }
@@ -95,7 +95,7 @@ cmd:goto(playerid, params[])
         Msg_Usage(playerid, "/goto [id ili ime]");
         return 1;
     }
-    if (!Staff_CheckTarget(playerid, targetid))
+    if (!Staff_CheckTarget(playerid, targetid, "Ne mozete se teleportovati do samog sebe."))
     {
         return 1;
     }
