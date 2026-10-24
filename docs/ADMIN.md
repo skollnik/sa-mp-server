@@ -38,7 +38,7 @@ Viši nivo uvek ima sve komande nižeg nivoa.
 ### Admini
 | Nivo | Naziv | Komande |
 |------|-------|---------|
-| 1 | Admin pocetnik | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (do 30 min), `/unjail`, `/warns` |
+| 1 | Admin pocetnik | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (do 30 min), `/unjail`, `/warns`, `/aclog` |
 | 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport lokacije), `/ooc` (globalni OOC), `/cc` (briše chat svima), `/ao` (admin obaveštenje u chatu), `/fixveh`, `/flip`, `/disarm`, `/ban` (do 7 dana), `/warn`, `/ajail` (do 24 h) |
 | 3 | Visi admin | `/setskin`, `/setint` (enterijer), `/setvw` (virtuelni svet), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (tekst na sredini ekrana), `/settime`, `/setweather`, `/gotopos`, `/mypos`, `/ban` (i trajni), `/oban`, `/banip`, `/unban`, `/unwarn` |
 | 4 | Glavni admin | `/makehelper` (svi nivoi), `/setlevel`, `/setrespect`, `/setname`, `/pmspy` |
@@ -54,6 +54,14 @@ Viši nivo uvek ima sve komande nižeg nivoa.
 - **Admin zatvor** je ćelija u LSPD enterijeru, u posebnom virtuelnom svetu. Vreme teče samo dok je igrač u igri. Ko pobegne, vraća se nazad. Posle kazne igrač se pojavljuje na aerodromu.
 - Pri ulasku sa iste IP adrese kao neko ko je već na serveru, admini dobijaju upozorenje.
 - `/pmspy` (admin 4+) prikazuje kopije svih privatnih poruka.
+
+### Anti-cheat
+- **Automatski kick:** oružje koje server nije dao i jetpack.
+- **Upozorenje adminima** („[AC] Ime [id]: sumnja na …“): HP iznad 100, armor koji server nije dao, teleport, prevelika brzina peške ili u vozilu. Admin proverava sa `/spec`, gde vidi HP, armor, oružje, brzinu i ping igrača.
+- **Novac** je samo na serveru: ako ga cheat promeni na ekranu, server ga vraća bez upozorenja.
+- **Flood:** više od 3 poruke u 3 sekunde se blokira uz upozorenje, a posle 3 upozorenja u minuti dolazi automatski mute od 2 minuta. Ista poruka više od 2 puta zaredom se ne šalje. Komande imaju limit od 5 u 3 sekunde.
+- Kodovi boja (`{FF0000}`) se uklanjaju iz teksta igrača.
+- Sva upozorenja i kickovi se čuvaju u tabeli `ac_logs`, a `/aclog [id]` prikazuje poslednjih 15.
 
 ---
 
@@ -95,9 +103,9 @@ A higher level always has every command of the lower levels.
 ### Admins
 | Level | Name | Commands |
 |-------|------|----------|
-| 1 | Trial admin | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (do 30 min), `/unjail`, `/warns` |
-| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport locations), `/ooc` (global OOC), `/cc` (clears everyone's chat), `/ao` (admin notice in chat), `/fixveh`, `/flip`, `/disarm`, `/ban` (do 7 dana), `/warn`, `/ajail` (do 24 h) |
-| 3 | Senior admin | `/setskin`, `/setint` (interior), `/setvw` (virtual world), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (text in the middle of the screen), `/settime`, `/setweather`, `/gotopos`, `/mypos`, `/ban` (i trajni), `/oban`, `/banip`, `/unban`, `/unwarn` |
+| 1 | Trial admin | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (up to 30 min), `/unjail`, `/warns`, `/aclog` |
+| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport locations), `/ooc` (global OOC), `/cc` (clears everyone's chat), `/ao` (admin notice in chat), `/fixveh`, `/flip`, `/disarm`, `/ban` (up to 7 days), `/warn`, `/ajail` (up to 24 h) |
+| 3 | Senior admin | `/setskin`, `/setint` (interior), `/setvw` (virtual world), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (text in the middle of the screen), `/settime`, `/setweather`, `/gotopos`, `/mypos`, `/ban` (also permanent), `/oban`, `/banip`, `/unban`, `/unwarn` |
 | 4 | Head admin | `/makehelper` (all levels), `/setlevel`, `/setrespect`, `/setname`, `/pmspy` |
 | 5 | Management | `/makeadmin` (up to level 4), `/gmx` (server restart) |
 | 6 | Owner | `/makeadmin` (up to level 5), `/givemoney`, `/dozvoliime`, `/zabraniime` |
@@ -111,3 +119,11 @@ A higher level always has every command of the lower levels.
 - **Admin jail** is a cell in the LSPD interior, in its own virtual world. Time only runs while the player is in-game. Escapees are put back. After serving, the player appears at the airport.
 - When someone connects from the same IP as a player already online, admins get a warning.
 - `/pmspy` (admin 4+) shows copies of every private message.
+
+### Anti-cheat
+- **Automatic kick:** a weapon the server never gave, and jetpack.
+- **Admin alert** ("[AC] Name [id]: suspected …"): HP above 100, armour the server never gave, teleport, too much speed on foot or in a vehicle. Admins check with `/spec`, which shows the player's HP, armour, weapon, speed and ping.
+- **Money** lives on the server only: if a cheat changes the on-screen value, the server puts it back silently.
+- **Flood:** more than 3 messages in 3 seconds is blocked with a warning, and 3 warnings within a minute give an automatic 2-minute mute. The same message more than twice in a row is not sent. Commands are limited to 5 per 3 seconds.
+- Colour codes (`{FF0000}`) are stripped from player text.
+- Every alert and kick is stored in `ac_logs`; `/aclog [id]` shows the last 15.

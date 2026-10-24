@@ -36,6 +36,9 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 28 | 2026-10-23 | Imena su uvek bela. Tim na dužnosti ima oznaku iznad imena: crno [ADMIN]/[VLASNIK], žuto [HELPER]. Admin na dužnosti nosi skin osoblja (217/211) | Zahtev vlasnika |
 | 29 | 2026-10-23 | Igrač je ili admin ili helper, ne oba | Admini već imaju sve helper komande |
 | 30 | 2026-10-23 | `/ahelp` prikazuje samo komande do sopstvenog nivoa | Uobičajeno: igrač vidi samo ono što može da koristi |
+| 31 | 2026-10-24 | Newbie chat čitaju svi, a pišu samo igrači do nivoa 3 i tim | Iskusni igrači mogu da pozovu helpera |
+| 32 | 2026-10-24 | Anti-cheat: automatski kick za oružje i jetpack; za teleport, brzinu, HP i armor samo upozorenje adminima | Prvo su sigurni cheatovi, a drugo ima lažnih uzbuna (lag, padovi) |
+| 33 | 2026-10-24 | Flood: blokada i upozorenje, a posle 3 upozorenja u minuti automatski mute od 2 minuta | Uobičajeno na RP serverima |
 
 ### Arhitektura koda (predlog)
 ```
@@ -93,6 +96,9 @@ This file records every important decision so it does not get re-discussed. Newe
 | 28 | 2026-10-23 | Names are always white. Staff on duty get a tag above the name: black [ADMIN]/[VLASNIK], yellow [HELPER]. Admins on duty wear the staff skin (217/211) | Owner's request |
 | 29 | 2026-10-23 | A player is either an admin or a helper, not both | Admins already have every helper command |
 | 30 | 2026-10-23 | `/ahelp` shows only the commands up to your own level | Common practice: you only see what you can use |
+| 31 | 2026-10-24 | Everyone reads newbie chat; only players up to level 3 and staff write | Experienced players can call a helper |
+| 32 | 2026-10-24 | Anti-cheat: automatic kick for weapons and jetpack; teleport, speed, HP and armour only alert admins | The first are certain cheats, the second have false alarms (lag, falls) |
+| 33 | 2026-10-24 | Flood: block and warn, then an automatic 2-minute mute after 3 warnings in a minute | Common on RP servers |
 
 ### Code architecture (proposal)
 ```

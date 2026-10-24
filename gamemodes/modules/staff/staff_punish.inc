@@ -39,13 +39,7 @@ stock Punish_Exit()
 // Every punishment is announced to the whole server in one consistent line.
 stock Punish_Announce(const message[])
 {
-    for (new i = 0; i < MAX_PLAYERS; i++)
-    {
-        if (Account_IsLoggedIn(i))
-        {
-            Chat_Send(i, COLOR_RED, message);
-        }
-    }
+    Chat_SendToAll(COLOR_RED, message);
 }
 
 // Loopback is shared by every client on the test machine, so it is never stored or matched in bans.
@@ -201,8 +195,8 @@ stock Punish_PutInJail(playerid)
 {
     SetPlayerInterior(playerid, JAIL_INTERIOR);
     SetPlayerVirtualWorld(playerid, JAIL_WORLD);
-    SetPlayerPos(playerid, JAIL_X, JAIL_Y, JAIL_Z);
-    ResetPlayerWeapons(playerid);
+    AC_SetPlayerPos(playerid, JAIL_X, JAIL_Y, JAIL_Z);
+    AC_ResetPlayerWeapons(playerid);
 }
 
 stock Punish_Release(playerid)
@@ -212,7 +206,7 @@ stock Punish_Release(playerid)
 
     SetPlayerInterior(playerid, 0);
     SetPlayerVirtualWorld(playerid, 0);
-    SetPlayerPos(playerid, NEW_SPAWN_X, NEW_SPAWN_Y, NEW_SPAWN_Z);
+    AC_SetPlayerPos(playerid, NEW_SPAWN_X, NEW_SPAWN_Y, NEW_SPAWN_Z);
     SetPlayerFacingAngle(playerid, NEW_SPAWN_A);
     Account_Save(playerid);
 }

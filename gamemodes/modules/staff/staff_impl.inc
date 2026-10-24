@@ -321,13 +321,14 @@ stock Staff_TeleportTo(playerid, Float:x, Float:y, Float:z, interior, world)
     if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
     {
         new vehicleid = GetPlayerVehicleID(playerid);
+        AC_GraceMovement(playerid);
         SetVehiclePos(vehicleid, x, y, z);
         LinkVehicleToInterior(vehicleid, interior);
         SetVehicleVirtualWorld(vehicleid, world);
     }
     else
     {
-        SetPlayerPos(playerid, x, y, z);
+        AC_SetPlayerPos(playerid, x, y, z);
     }
     SetPlayerInterior(playerid, interior);
     SetPlayerVirtualWorld(playerid, world);
@@ -355,6 +356,7 @@ stock Staff_StartSpectating(playerid, targetid)
     g_Staff[playerid][sSpecTarget] = targetid;
 
     TogglePlayerSpectating(playerid, true);
+    AC_ShowSpecInfo(playerid);
     SetPlayerInterior(playerid, GetPlayerInterior(targetid));
     SetPlayerVirtualWorld(playerid, GetPlayerVirtualWorld(targetid));
 
@@ -375,6 +377,7 @@ stock Staff_StopSpectating(playerid)
 
     SetSpawnInfo(playerid, NO_TEAM, g_Player[playerid][pSkin],
         g_Staff[playerid][sSpecX], g_Staff[playerid][sSpecY], g_Staff[playerid][sSpecZ], g_Staff[playerid][sSpecA]);
+    AC_HideSpecInfo(playerid);
     TogglePlayerSpectating(playerid, false);
 }
 

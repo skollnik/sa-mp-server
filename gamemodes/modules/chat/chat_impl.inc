@@ -40,17 +40,21 @@ stock Chat_FadeColor(Float:distance, Float:radius)
 // Player text always goes in as a "%s" argument: open.mp formats every message and a stray % can crash it.
 stock Chat_Send(playerid, color, const message[])
 {
-    new len = strlen(message);
+    new text[256];
+    strcopy(text, message);
+    Chat_StripColors(text);
+
+    new len = strlen(text);
     if (len <= CHAT_SPLIT_AT)
     {
-        SendClientMessage(playerid, color, "%s", message);
+        SendClientMessage(playerid, color, "%s", text);
         return;
     }
 
     new cut = CHAT_SPLIT_AT;
     for (new i = CHAT_SPLIT_AT; i > CHAT_SPLIT_AT - 40; i--)
     {
-        if (message[i] == ' ')
+        if (text[i] == ' ')
         {
             cut = i;
             break;
@@ -58,12 +62,12 @@ stock Chat_Send(playerid, color, const message[])
     }
 
     new part[160];
-    strmid(part, message, 0, cut);
+    strmid(part, text, 0, cut);
     strcat(part, " ...");
     SendClientMessage(playerid, color, "%s", part);
 
     strcopy(part, "... ");
-    strcat(part, message[(message[cut] == ' ') ? cut + 1 : cut]);
+    strcat(part, text[(text[cut] == ' ') ? cut + 1 : cut]);
     SendClientMessage(playerid, color, "%s", part);
 }
 
@@ -90,6 +94,43 @@ stock Chat_SendNearby(playerid, Float:radius, color, const message[], bool:fade 
 
         Chat_Send(i, fade ? Chat_FadeColor(distance, radius) : color, message);
     }
+}
+
+stock Chat_Clear(playerid, lines = 50)
+{
+    for (new i = 0; i < lines; i++)
+    {
+        SendClientMessage(playerid, COLOR_WHITE, " ");
+    }
+}
+
+// Removes {RRGGBB} colour codes so players cannot dress their text up as a system or admin message.
+stock Chat_StripColors(text[])
+{
+    new read, write;
+    while (text[read] != '\0')
+    {
+        if (text[read] == '{' && strlen(text[read]) >= 8 && text[read + 7] == '}')
+        {
+            new bool:is_code = true;
+            for (new i = 1; i <= 6; i++)
+            {
+                new c = text[read + i];
+                if (!((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f') || (c >= 'A' && c <= 'F')))
+                {
+                    is_code = false;
+                    break;
+                }
+            }
+            if (is_code)
+            {
+                read += 8;
+                continue;
+            }
+        }
+        text[write++] = text[read++];
+    }
+    text[write] = '\0';
 }
 
 stock Chat_SendToAll(color, const message[])
@@ -121,4 +162,12 @@ stock bool:Chat_IsInRange(playerid, targetid, Float:radius)
     new Float:x, Float:y, Float:z;
     GetPlayerPos(targetid, x, y, z);
     return GetPlayerDistanceFromPoint(playerid, x, y, z) <= radius;
+}
+
+stock Chat_ShowBubble(playerid, const message[])
+{
+    new text[192];
+    strcopy(text, message);
+    Chat_StripColors(text);
+    SetPlayerChatBubble(playerid, "%s", COLOR_PURPLE, CHAT_RADIUS_ACTION, 8000, text);
 }

@@ -356,7 +356,7 @@ cmd:slap(playerid, params[])
 
     new Float:x, Float:y, Float:z;
     GetPlayerPos(targetid, x, y, z);
-    SetPlayerPos(targetid, x, y, z + 5.0);
+    AC_SetPlayerPos(targetid, x, y, z + 5.0);
     PlayerPlaySound(targetid, 1190, x, y, z);
 
     new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1];
@@ -416,7 +416,7 @@ cmd:setarmour(playerid, params[])
         return 1;
     }
 
-    SetPlayerArmour(targetid, amount);
+    AC_SetPlayerArmour(targetid, amount);
 
     new target_name[MAX_PLAYER_NAME + 1], details[48];
     Account_GetDisplayName(targetid, target_name);
@@ -483,10 +483,7 @@ cmd:cc(playerid, params[])
         {
             continue;
         }
-        for (new line = 0; line < 50; line++)
-        {
-            SendClientMessage(i, COLOR_WHITE, " ");
-        }
+        Chat_Clear(i);
         Msg_Admin(i, "Admin %s je obrisao chat.", name);
     }
     Staff_Log(playerid, "clear_chat", INVALID_PLAYER_ID, "");
@@ -508,13 +505,7 @@ cmd:ao(playerid, params[])
     new name[MAX_PLAYER_NAME + 1], message[192];
     Account_GetDisplayName(playerid, name);
     format(message, sizeof(message), "[ADMIN] %s: %s", name, params);
-    for (new i = 0; i < MAX_PLAYERS; i++)
-    {
-        if (Account_IsLoggedIn(i))
-        {
-            Chat_Send(i, COLOR_ADMIN, message);
-        }
-    }
+    Chat_SendToAll(COLOR_ADMIN, message);
     Staff_Log(playerid, "announce_chat", INVALID_PLAYER_ID, params);
     return 1;
 }
@@ -579,7 +570,7 @@ cmd:disarm(playerid, params[])
         return 1;
     }
 
-    ResetPlayerWeapons(targetid);
+    AC_ResetPlayerWeapons(targetid);
 
     new target_name[MAX_PLAYER_NAME + 1];
     Account_GetDisplayName(targetid, target_name);

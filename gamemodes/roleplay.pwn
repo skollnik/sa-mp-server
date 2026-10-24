@@ -21,6 +21,7 @@
 
 #include "modules/account/account_data.inc"
 #include "modules/staff/staff_data.inc"
+#include "modules/anticheat/ac_data.inc"
 
 #include "modules/account/account_impl.inc"
 #include "modules/account/account_cmds.inc"
@@ -33,6 +34,9 @@
 #include "modules/staff/staff_cmds_helper.inc"
 #include "modules/staff/staff_cmds_admin.inc"
 #include "modules/staff/staff_punish.inc"
+
+#include "modules/anticheat/ac_impl.inc"
+#include "modules/anticheat/ac_cmds.inc"
 
 #include "modules/help/help_cmds.inc"
 
@@ -60,6 +64,7 @@ public OnGameModeInit()
     Account_Init();
     Staff_Init();
     Punish_Init();
+    AC_Init();
     Maps_Init();
 
     printf("[SERVER] %s gamemode loaded.", SERVER_NAME);
@@ -68,6 +73,7 @@ public OnGameModeInit()
 
 public OnGameModeExit()
 {
+    AC_Exit();
     Punish_Exit();
     Account_Exit();
     Database_Disconnect();
@@ -76,6 +82,7 @@ public OnGameModeExit()
 
 public OnPlayerConnect(playerid)
 {
+    AC_OnPlayerConnect(playerid);
     Staff_OnPlayerConnect(playerid);
     Maps_OnPlayerConnect(playerid);
     Account_OnPlayerConnect(playerid);
@@ -102,6 +109,7 @@ public OnPlayerRequestSpawn(playerid)
 
 public OnPlayerSpawn(playerid)
 {
+    AC_OnPlayerSpawn(playerid);
     Account_OnPlayerSpawn(playerid);
     Staff_OnPlayerSpawn(playerid);
     Punish_OnPlayerSpawn(playerid);
@@ -131,6 +139,10 @@ public OnPlayerText(playerid, text[])
         Msg_Error(playerid, "Imate mute jos %d min.", Punish_MinutesLeft(g_Player[playerid][pMuteUntil]));
         return 0;
     }
+    if (!AC_CheckChat(playerid, text))
+    {
+        return 0;
+    }
 
     Chat_OnPlayerText(playerid, text);
     return 0;
@@ -155,10 +167,21 @@ public OnPlayerCommandReceived(playerid, cmd[], params[], flags)
     {
         return 0;
     }
-    if ((flags & CMD_FLAG_CHAT) && Punish_IsMuted(playerid))
+    if (!AC_CheckCommand(playerid))
     {
-        Msg_Error(playerid, "Imate mute jos %d min.", Punish_MinutesLeft(g_Player[playerid][pMuteUntil]));
         return 0;
+    }
+    if (flags & CMD_FLAG_CHAT)
+    {
+        if (Punish_IsMuted(playerid))
+        {
+            Msg_Error(playerid, "Imate mute jos %d min.", Punish_MinutesLeft(g_Player[playerid][pMuteUntil]));
+            return 0;
+        }
+        if (!isnull(params) && !AC_CheckChat(playerid, params))
+        {
+            return 0;
+        }
     }
     return 1;
 }

@@ -19,6 +19,7 @@
 |--------|
 | `/respawnveh` – vraća napuštena vozila na mesto |
 | Chat kroz prozor vozila (`/cw`) |
+| Anti-cheat za vozila: HP vozila (repair hack), ulazak u zaključano vozilo |
 
 **Posle opštine, banke i ostalih mesta (Faza 2 i dalje)**
 | Stavka |
@@ -38,11 +39,13 @@
 |--------|
 | Spawn posle smrti u bolnici umesto na poslednjoj poziciji |
 | Admin komanda za podizanje ranjenog igrača |
+| Oružje se daje samo preko `AC_GivePlayerWeapon`, inače ga anti-cheat smatra cheatom |
 
-**Posle anti-cheata**
+**Napredni anti-cheat (Faza 7)**
 | Stavka |
 |--------|
-| Prikaz HP-a, armora, oružja i brzine dok admin posmatra igrača (`/spec`) |
+| Lažna smrt (fake kill), spam konekcija i botovi |
+| Automatske kazne za teleport i brzinu kad se pragovi provere u praksi (sada samo upozorenje) |
 
 **Može bilo kada**
 | Stavka |
@@ -71,6 +74,9 @@
 | 23.10.2026. | Admin sistem, deo 2: kick, ban (privremeni, trajni, offline, IP), warn, mute, newbie mute, admin zatvor, `/pmspy` |
 | 23.10.2026. | Provera bana pri ulasku i upozorenje adminima za istu IP adresu |
 | 23.10.2026. | Uputstvo za mapiranje (`docs/MAPPING.md`) |
+| 24.10.2026. | Osnovni anti-cheat: oružje, jetpack, HP, armor, novac, teleport, brzina, flood, boje u chatu, `/aclog` |
+| 24.10.2026. | Prikaz HP-a, armora, oružja, brzine i pinga dok admin posmatra igrača (`/spec`) |
+| 24.10.2026. | Oznaka poruke prati ko je uradio akciju ([ADMIN] ili [HELPER]) |
 
 ---
 
@@ -93,6 +99,7 @@ What must be added **after** a system or **once** another system exists. When an
 |------|
 | `/respawnveh` – returns abandoned vehicles to their spot |
 | Talking through a vehicle window (`/cw`) |
+| Vehicle anti-cheat: vehicle HP (repair hack), entering a locked vehicle |
 
 **After city hall, bank and other places (Phase 2 onward)**
 | Item |
@@ -112,11 +119,13 @@ What must be added **after** a system or **once** another system exists. When an
 |------|
 | Respawn at the hospital after death instead of the last position |
 | Admin command to revive a wounded player |
+| Weapons are only given through `AC_GivePlayerWeapon`, otherwise anti-cheat treats them as cheats |
 
-**After anti-cheat**
+**Advanced anti-cheat (Phase 7)**
 | Item |
 |------|
-| Show HP, armour, weapon and speed while an admin spectates a player (`/spec`) |
+| Fake kill, connection spam and bots |
+| Automatic punishment for teleport and speed once the thresholds are proven in practice (alert only for now) |
 
 **Any time**
 | Item |
@@ -145,3 +154,6 @@ What must be added **after** a system or **once** another system exists. When an
 | 2026-10-23 | Admin system part 2: kick, ban (temporary, permanent, offline, IP), warn, mute, newbie mute, admin jail, `/pmspy` |
 | 2026-10-23 | Ban check on connect and admin alert for a shared IP |
 | 2026-10-23 | Mapping guide (`docs/MAPPING.md`) |
+| 2026-10-24 | Basic anti-cheat: weapons, jetpack, HP, armour, money, teleport, speed, flood, chat colours, `/aclog` |
+| 2026-10-24 | HP, armour, weapon, speed and ping shown while an admin spectates (`/spec`) |
+| 2026-10-24 | Message tag follows who acted ([ADMIN] or [HELPER]) |

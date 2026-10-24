@@ -104,7 +104,7 @@ cmd:ame(playerid, params[])
     new name[MAX_PLAYER_NAME + 1], message[192];
     Account_GetDisplayName(playerid, name);
     format(message, sizeof(message), "* %s %s", name, params);
-    SetPlayerChatBubble(playerid, "%s", COLOR_PURPLE, CHAT_RADIUS_ACTION, 8000, message);
+    Chat_ShowBubble(playerid, message);
 
     format(message, sizeof(message), "> %s", params);
     Chat_Send(playerid, COLOR_PURPLE, message);
@@ -196,7 +196,7 @@ cmd:ado(playerid, params[])
     new name[MAX_PLAYER_NAME + 1], message[192];
     Account_GetDisplayName(playerid, name);
     format(message, sizeof(message), "* %s (( %s ))", params, name);
-    SetPlayerChatBubble(playerid, "%s", COLOR_PURPLE, CHAT_RADIUS_ACTION, 8000, message);
+    Chat_ShowBubble(playerid, message);
 
     format(message, sizeof(message), "> %s", params);
     Chat_Send(playerid, COLOR_PURPLE, message);

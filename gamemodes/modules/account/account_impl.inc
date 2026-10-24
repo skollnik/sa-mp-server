@@ -92,10 +92,7 @@ stock Account_OnPlayerConnect(playerid)
 
     GetPlayerName(playerid, g_Player[playerid][pName], MAX_PLAYER_NAME + 1);
 
-    for (new i = 0; i < 20; i++)
-    {
-        SendClientMessage(playerid, COLOR_WHITE, " ");
-    }
+    Chat_Clear(playerid, 20);
 
     // The ban check runs first; it calls Account_CheckName when the player is allowed in.
     Staff_CheckBan(playerid);
@@ -176,7 +173,7 @@ stock Account_OnPlayerSpawn(playerid)
         SetPlayerInterior(playerid, g_Player[playerid][pInterior]);
         SetPlayerVirtualWorld(playerid, g_Player[playerid][pVirtualWorld]);
         SetPlayerHealth(playerid, g_Player[playerid][pHealth]);
-        SetPlayerArmour(playerid, g_Player[playerid][pArmour]);
+        AC_SetPlayerArmour(playerid, g_Player[playerid][pArmour]);
     }
 }
 
