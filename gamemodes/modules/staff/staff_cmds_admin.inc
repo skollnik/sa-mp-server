@@ -924,12 +924,14 @@ cmd:makehelper(playerid, params[])
 
     if (level == 0)
     {
-        Msg_Helper(targetid, "%s vam je oduzeo helper status.", name);
+        format(message, sizeof(message), "%s vam je oduzeo helper status.", name);
+        Staff_MessageAs(playerid, targetid, message);
         format(message, sizeof(message), "[H] %s je oduzeo helper status igracu %s.", name, target_name);
     }
     else
     {
-        Msg_Helper(targetid, "%s vas je postavio za: %s. Komande: /hhelp", name, g_HelperRankNames[level]);
+        format(message, sizeof(message), "%s vas je postavio za: %s. Komande: /hhelp", name, g_HelperRankNames[level]);
+        Staff_MessageAs(playerid, targetid, message);
         format(message, sizeof(message), "[H] %s je postavio %s za: %s.", name, target_name, g_HelperRankNames[level]);
     }
     Staff_SendToHelpers(message);

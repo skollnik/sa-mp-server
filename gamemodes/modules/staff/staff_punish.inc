@@ -724,7 +724,8 @@ cmd:nmute(playerid, params[])
     new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[160];
     Account_GetDisplayName(playerid, name);
     Account_GetDisplayName(targetid, target_name);
-    Msg_Helper(targetid, "%s vam je zabranio pisanje u newbie chat na %d min.", name, minutes);
+    format(message, sizeof(message), "%s vam je zabranio pisanje u newbie chat na %d min.", name, minutes);
+    Staff_MessageAs(playerid, targetid, message);
     format(message, sizeof(message), "[H] %s je dao newbie mute igracu %s na %d min.", name, target_name, minutes);
     Staff_SendToHelpers(message);
     return 1;
@@ -751,10 +752,14 @@ cmd:unnmute(playerid, params[])
     g_Player[targetid][pNewbieMuteUntil] = 0;
     Account_Save(targetid);
 
-    new target_name[MAX_PLAYER_NAME + 1];
+    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[144];
+    Account_GetDisplayName(playerid, name);
     Account_GetDisplayName(targetid, target_name);
-    Msg_Helper(playerid, "Skinuli ste newbie mute igracu %s.", target_name);
-    Msg_Helper(targetid, "Ponovo mozete pisati u newbie chat.");
+
+    format(message, sizeof(message), "Skinuli ste newbie mute igracu %s.", target_name);
+    Staff_MessageAs(playerid, playerid, message);
+    format(message, sizeof(message), "%s vam je skinuo newbie mute. Ponovo mozete pisati u newbie chat.", name);
+    Staff_MessageAs(playerid, targetid, message);
     return 1;
 }
 

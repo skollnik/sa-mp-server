@@ -47,6 +47,7 @@
 **Može bilo kada**
 | Stavka |
 |--------|
+| Posle `/unjail` ili isteka kazne vratiti igrača na mesto gde je bio pre zatvora (sada ide na aerodrom). Treba sačuvati poziciju pre zatvora |
 | Opis izgleda karaktera (`/examine`) |
 | Akcenti (`/accent`) |
 | Report bez igrača, npr. `/report zaglavio sam` (čeka odgovor vlasnika) |
@@ -120,6 +121,7 @@ What must be added **after** a system or **once** another system exists. When an
 **Any time**
 | Item |
 |------|
+| After `/unjail` or when the sentence ends, return the player to where they were before jail (now they go to the airport). The pre-jail position must be saved |
 | Character appearance description (`/examine`) |
 | Accents (`/accent`) |
 | Report without a player, e.g. `/report I'm stuck` (waiting for the owner's answer) |

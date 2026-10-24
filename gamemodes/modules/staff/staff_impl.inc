@@ -247,6 +247,19 @@ stock Staff_NotifyTarget(adminid, targetid, const action[])
     Msg_Admin(targetid, "Admin %s %s", name, action);
 }
 
+// The tag follows whoever acted: an admin's action reads [ADMIN], a helper's reads [HELPER].
+stock Staff_MessageAs(actorid, targetid, const message[])
+{
+    if (Staff_IsAdmin(actorid))
+    {
+        Msg_Admin(targetid, "%s", message);
+    }
+    else
+    {
+        Msg_Helper(targetid, "%s", message);
+    }
+}
+
 stock Staff_SendToAdmins(const message[])
 {
     for (new i = 0; i < MAX_PLAYERS; i++)
