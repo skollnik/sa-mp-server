@@ -47,3 +47,7 @@ new const g_StarterSkinsFemale[] = { 40, 56, 93 };
 #define LOGIN_TIMEOUT_MS    (60 * 1000)
 #define REGISTER_TIMEOUT_MS (5 * 60 * 1000)
 #define AUTOSAVE_INTERVAL_MS (10 * 60 * 1000)
+
+// Pawn.CMD flags. Chat commands are blocked by mute; only chat and JAIL_OK commands work in admin jail.
+#define CMD_FLAG_CHAT       (1)
+#define CMD_FLAG_JAIL_OK    (2)

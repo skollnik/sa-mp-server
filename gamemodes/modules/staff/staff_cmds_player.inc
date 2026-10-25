@@ -208,3 +208,8 @@ cmd:helpers(playerid, params[])
     return 1;
 }
 flags:n(CMD_FLAG_CHAT)
+flags:report(CMD_FLAG_JAIL_OK)
+flags:ask(CMD_FLAG_JAIL_OK)
+flags:tognewbie(CMD_FLAG_JAIL_OK)
+flags:admins(CMD_FLAG_JAIL_OK)
+flags:helpers(CMD_FLAG_JAIL_OK)

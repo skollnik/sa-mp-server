@@ -11,13 +11,16 @@ forward bool:AC_CheckCommand(playerid);
 #define AC_TELEPORT_DISTANCE        (80.0)
 #define AC_MAX_VEHICLE_KMH          (280.0)
 
-#define AC_CHAT_LIMIT               (3)
-#define AC_CHAT_WINDOW_S            (3)
+// Flood: each message sent sooner than the minimum gap after the previous one adds a strike;
+// a calm gap removes one. Reaching the strike limit blocks the message and counts as a warning.
+#define AC_CHAT_MIN_GAP_MS          (1000)
+#define AC_CHAT_CALM_GAP_MS         (3000)
+#define AC_CHAT_STRIKES             (3)
 #define AC_REPEAT_LIMIT             (2)
-#define AC_CMD_LIMIT                (5)
-#define AC_CMD_WINDOW_S             (3)
+#define AC_CMD_MIN_GAP_MS           (700)
+#define AC_CMD_STRIKES              (3)
 #define AC_FLOOD_WARNINGS_TO_MUTE   (3)
-#define AC_FLOOD_WARNING_WINDOW_S   (60)
+#define AC_FLOOD_WARNING_RESET_S    (60)
 #define AC_FLOOD_MUTE_MINUTES       (2)
 
 enum E_AC_TYPE
@@ -28,12 +31,13 @@ enum E_AC_TYPE
     AC_TYPE_ARMOUR,
     AC_TYPE_FOOT_SPEED,
     AC_TYPE_VEHICLE_SPEED,
-    AC_TYPE_TELEPORT
+    AC_TYPE_TELEPORT,
+    AC_TYPE_FLOOD
 }
 
 new const g_AcTypeNames[E_AC_TYPE][] =
 {
-    "oruzje", "jetpack", "HP", "armor", "brzina peske", "brzina vozila", "teleport"
+    "oruzje", "jetpack", "HP", "armor", "brzina peske", "brzina vozila", "teleport", "spam"
 };
 
 enum E_AC_STATE
@@ -46,14 +50,14 @@ enum E_AC_STATE
     bool:acHasLastPos,
     acGraceUntil,
     acLastAlert[E_AC_TYPE],
-    acChatWindowStart,
-    acChatCount,
+    acLastChatTick,
+    acChatStrikes,
     acRepeatCount,
     acLastMessage[128],
     acFloodWarnings,
-    acFloodWarningStart,
-    acCmdWindowStart,
-    acCmdCount,
+    acLastFloodWarning,
+    acLastCmdTick,
+    acCmdStrikes,
     PlayerText:acSpecText
 }
 

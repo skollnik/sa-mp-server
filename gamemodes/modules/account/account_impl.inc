@@ -29,7 +29,6 @@ stock Account_Init()
         "`last_ip` VARCHAR(16) NOT NULL DEFAULT ''," \
         "`registered_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," \
         "`last_login` DATETIME NULL," \
-        "`locked_until` DATETIME NULL," \
         "`helper_level` TINYINT UNSIGNED NOT NULL DEFAULT 0," \
         "`tog_ooc` TINYINT(1) NOT NULL DEFAULT 0," \
         "`tog_pm` TINYINT(1) NOT NULL DEFAULT 0," \
@@ -41,7 +40,6 @@ stock Account_Init()
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
     // Columns added after the table first shipped; existing databases get them here.
-    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `locked_until` DATETIME NULL");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `helper_level` TINYINT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `tog_ooc` TINYINT(1) NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `tog_pm` TINYINT(1) NOT NULL DEFAULT 0");
@@ -266,12 +264,16 @@ public OnAccountExemptionCheck(playerid, race)
 
 stock Account_Lookup(playerid)
 {
-    new query[384];
+    // The lockout is per account AND per IP, so someone guessing a password cannot lock the real owner out.
+    new ip[16], query[768];
+    GetPlayerIp(playerid, ip, sizeof(ip));
     mysql_format(g_SQL, query, sizeof(query),
-        "SELECT *, IFNULL(DATE_FORMAT(`last_login`, '%%d.%%m.%%Y. u %%H:%%i'), '') AS `last_login_text`, " \
-        "IFNULL(CEIL(TIMESTAMPDIFF(SECOND, NOW(), `locked_until`) / 60), 0) AS `lock_minutes` " \
-        "FROM `accounts` WHERE `name` = '%e' LIMIT 1",
-        g_Player[playerid][pName]);
+        "SELECT a.*, IFNULL(DATE_FORMAT(a.`last_login`, '%%d.%%m.%%Y. u %%H:%%i'), '') AS `last_login_text`, " \
+        "IFNULL((SELECT CEIL(TIMESTAMPDIFF(SECOND, NOW(), MAX(l.`attempted_at`) + INTERVAL %d MINUTE) / 60) " \
+        "FROM `login_attempts` l WHERE l.`account_id` = a.`id` AND l.`ip` = '%e' AND l.`success` = 0 " \
+        "AND l.`attempted_at` > NOW() - INTERVAL %d MINUTE HAVING COUNT(*) >= %d), 0) AS `lock_minutes` " \
+        "FROM `accounts` a WHERE a.`name` = '%e' LIMIT 1",
+        LOCKOUT_MINUTES, ip, LOCKOUT_WINDOW_MINUTES, LOCKOUT_MAX_FAILURES, g_Player[playerid][pName]);
     mysql_tquery(g_SQL, query, "OnAccountLookup", "dd", playerid, g_AccountRace[playerid]);
 }
 
@@ -295,7 +297,7 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_int(0, "lock_minutes", lock_minutes);
     if (lock_minutes > 0)
     {
-        Msg_Error(playerid, "Ovaj nalog je privremeno zakljucan zbog previse pogresnih lozinki. Pokusajte ponovo za %d min.", lock_minutes);
+        Msg_Error(playerid, "Previse pogresnih lozinki sa vase adrese. Pokusajte ponovo za %d min.", lock_minutes);
         KickWithDelay(playerid);
         return 1;
     }
@@ -585,11 +587,12 @@ public OnAccountPasswordVerify(playerid, bool:success)
         return 1;
     }
 
-    new query[192];
+    new ip[16], query[256];
+    GetPlayerIp(playerid, ip, sizeof(ip));
     mysql_format(g_SQL, query, sizeof(query),
         "SELECT COUNT(*) AS `failures` FROM `login_attempts` " \
-        "WHERE `account_id` = %d AND `success` = 0 AND `attempted_at` > NOW() - INTERVAL %d MINUTE",
-        g_Player[playerid][pDbId], LOCKOUT_WINDOW_MINUTES);
+        "WHERE `account_id` = %d AND `ip` = '%e' AND `success` = 0 AND `attempted_at` > NOW() - INTERVAL %d MINUTE",
+        g_Player[playerid][pDbId], ip, LOCKOUT_WINDOW_MINUTES);
     mysql_tquery(g_SQL, query, "OnAccountFailedLogin", "dd", playerid, g_AccountRace[playerid]);
     return 1;
 }
@@ -617,13 +620,7 @@ public OnAccountFailedLogin(playerid, race)
 
     if (failures >= LOCKOUT_MAX_FAILURES)
     {
-        new query[128];
-        mysql_format(g_SQL, query, sizeof(query),
-            "UPDATE `accounts` SET `locked_until` = NOW() + INTERVAL %d MINUTE WHERE `id` = %d",
-            LOCKOUT_MINUTES, g_Player[playerid][pDbId]);
-        mysql_tquery(g_SQL, query);
-
-        Msg_Error(playerid, "Previse pogresnih lozinki. Nalog je zakljucan na %d minuta.", LOCKOUT_MINUTES);
+        Msg_Error(playerid, "Previse pogresnih lozinki. Prijava sa vase adrese je zakljucana na %d minuta.", LOCKOUT_MINUTES);
         KickWithDelay(playerid);
         return 1;
     }

@@ -82,6 +82,7 @@ public OnGameModeExit()
 
 public OnPlayerConnect(playerid)
 {
+    Utils_OnPlayerConnect(playerid);
     AC_OnPlayerConnect(playerid);
     Staff_OnPlayerConnect(playerid);
     Maps_OnPlayerConnect(playerid);
@@ -113,6 +114,12 @@ public OnPlayerSpawn(playerid)
     Account_OnPlayerSpawn(playerid);
     Staff_OnPlayerSpawn(playerid);
     Punish_OnPlayerSpawn(playerid);
+    return 1;
+}
+
+public OnPlayerDeath(playerid, killerid, WEAPON:reason)
+{
+    AC_OnPlayerDeath(playerid);
     return 1;
 }
 
@@ -169,6 +176,11 @@ public OnPlayerCommandReceived(playerid, cmd[], params[], flags)
     }
     if (!AC_CheckCommand(playerid))
     {
+        return 0;
+    }
+    if (g_Player[playerid][pJailSeconds] > 0 && !(flags & (CMD_FLAG_CHAT | CMD_FLAG_JAIL_OK)))
+    {
+        Msg_Error(playerid, "Ova komanda se ne moze koristiti u admin zatvoru.");
         return 0;
     }
     if (flags & CMD_FLAG_CHAT)

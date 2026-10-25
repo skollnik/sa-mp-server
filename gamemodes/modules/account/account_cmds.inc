@@ -58,3 +58,5 @@ cmd:zabraniime(playerid, params[])
     Msg_Success(playerid, "Ime '%s' je uklonjeno sa liste dozvoljenih imena.", name);
     return 1;
 }
+
+flags:promenilozinku(CMD_FLAG_JAIL_OK)

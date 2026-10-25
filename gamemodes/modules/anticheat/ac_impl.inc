@@ -275,15 +275,61 @@ public AC_Tick()
     return 1;
 }
 
-stock bool:AC_CheckChat(playerid, const text[])
+// Adds or removes a strike depending on how soon this action follows the previous one.
+stock AC_UpdateStrikes(&last_tick, &strikes, min_gap_ms, calm_gap_ms)
+{
+    new now = GetTickCount(), gap = now - last_tick;
+    last_tick = now;
+
+    if (gap < min_gap_ms)
+    {
+        strikes++;
+    }
+    else if (gap >= calm_gap_ms)
+    {
+        strikes = 0;
+    }
+    else if (strikes > 0)
+    {
+        strikes--;
+    }
+    return strikes;
+}
+
+// One flood warning; the third within a minute turns into an automatic mute.
+stock AC_FloodWarning(playerid)
 {
     new now = gettime();
+    if (now - g_Ac[playerid][acLastFloodWarning] >= AC_FLOOD_WARNING_RESET_S)
+    {
+        g_Ac[playerid][acFloodWarnings] = 0;
+    }
+    g_Ac[playerid][acLastFloodWarning] = now;
 
-    if (!strcmp(text, g_Ac[playerid][acLastMessage], true) && text[0])
+    if (++g_Ac[playerid][acFloodWarnings] < AC_FLOOD_WARNINGS_TO_MUTE)
+    {
+        Msg_Error(playerid, "Ne spamujte chat (upozorenje %d/%d, posle toga automatski mute).", g_Ac[playerid][acFloodWarnings], AC_FLOOD_WARNINGS_TO_MUTE);
+        return;
+    }
+
+    g_Ac[playerid][acFloodWarnings] = 0;
+    g_Ac[playerid][acChatStrikes] = 0;
+    g_Player[playerid][pMuteUntil] = now + AC_FLOOD_MUTE_MINUTES * 60;
+    Account_Save(playerid);
+
+    new message[144];
+    format(message, sizeof(message), "[AC] %s je automatski dobio mute na %d min zbog spama.", g_Player[playerid][pName], AC_FLOOD_MUTE_MINUTES);
+    Punish_Announce(message);
+    AC_Log(playerid, AC_TYPE_FLOOD, "automatski mute", "mute");
+}
+
+stock bool:AC_CheckChat(playerid, const text[])
+{
+    if (text[0] && !strcmp(text, g_Ac[playerid][acLastMessage], true))
     {
         if (++g_Ac[playerid][acRepeatCount] >= AC_REPEAT_LIMIT)
         {
-            Msg_Error(playerid, "Ne ponavljajte istu poruku.");
+            AC_FloodWarning(playerid);
             return false;
         }
     }
@@ -293,49 +339,17 @@ stock bool:AC_CheckChat(playerid, const text[])
         strcopy(g_Ac[playerid][acLastMessage], text, 128);
     }
 
-    if (now - g_Ac[playerid][acChatWindowStart] >= AC_CHAT_WINDOW_S)
+    if (AC_UpdateStrikes(g_Ac[playerid][acLastChatTick], g_Ac[playerid][acChatStrikes], AC_CHAT_MIN_GAP_MS, AC_CHAT_CALM_GAP_MS) >= AC_CHAT_STRIKES)
     {
-        g_Ac[playerid][acChatWindowStart] = now;
-        g_Ac[playerid][acChatCount] = 0;
-    }
-
-    if (++g_Ac[playerid][acChatCount] <= AC_CHAT_LIMIT)
-    {
-        return true;
-    }
-
-    if (now - g_Ac[playerid][acFloodWarningStart] >= AC_FLOOD_WARNING_WINDOW_S)
-    {
-        g_Ac[playerid][acFloodWarningStart] = now;
-        g_Ac[playerid][acFloodWarnings] = 0;
-    }
-
-    if (++g_Ac[playerid][acFloodWarnings] >= AC_FLOOD_WARNINGS_TO_MUTE)
-    {
-        g_Ac[playerid][acFloodWarnings] = 0;
-        g_Player[playerid][pMuteUntil] = now + AC_FLOOD_MUTE_MINUTES * 60;
-        Account_Save(playerid);
-
-        new message[144];
-        format(message, sizeof(message), "[AC] %s je automatski dobio mute na %d min zbog spama.", g_Player[playerid][pName], AC_FLOOD_MUTE_MINUTES);
-        Punish_Announce(message);
+        AC_FloodWarning(playerid);
         return false;
     }
-
-    Msg_Error(playerid, "Ne spamujte chat. Posle jos nekoliko upozorenja dobicete automatski mute.");
-    return false;
+    return true;
 }
 
 stock bool:AC_CheckCommand(playerid)
 {
-    new now = gettime();
-    if (now - g_Ac[playerid][acCmdWindowStart] >= AC_CMD_WINDOW_S)
-    {
-        g_Ac[playerid][acCmdWindowStart] = now;
-        g_Ac[playerid][acCmdCount] = 0;
-    }
-
-    if (++g_Ac[playerid][acCmdCount] > AC_CMD_LIMIT)
+    if (AC_UpdateStrikes(g_Ac[playerid][acLastCmdTick], g_Ac[playerid][acCmdStrikes], AC_CMD_MIN_GAP_MS, AC_CHAT_CALM_GAP_MS) >= AC_CMD_STRIKES)
     {
         Msg_Error(playerid, "Previse komandi za kratko vreme, sacekajte malo.");
         return false;
@@ -405,4 +419,14 @@ stock AC_UpdateSpecInfo(adminid)
         "~w~%s [%d]~n~HP ~r~%.0f ~w~Armor ~b~%.0f ~w~Oruzje ~y~%s (%d) ~w~Brzina ~g~%.0f km/h ~w~Ping %d",
         g_Player[targetid][pName], targetid, health, armour, weapon_name, GetPlayerAmmo(targetid),
         VectorSize(vx, vy, vz) * 180.0, GetPlayerPing(targetid));
+}
+
+// GTA strips weapons and armour on death, so the server-side allowance is cleared with them.
+stock AC_OnPlayerDeath(playerid)
+{
+    for (new i = 0; i < AC_WEAPON_SLOTS; i++)
+    {
+        g_Ac[playerid][acWeapon][i] = WEAPON_FIST;
+    }
+    g_Ac[playerid][acArmour] = 0.0;
 }

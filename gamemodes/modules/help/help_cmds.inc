@@ -21,3 +21,4 @@ cmd:pomoc(playerid, params[])
 }
 
 alias:pomoc("help", "komande")
+flags:pomoc(CMD_FLAG_JAIL_OK)

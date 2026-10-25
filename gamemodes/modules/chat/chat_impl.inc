@@ -1,5 +1,3 @@
-#define CMD_FLAG_CHAT       (1)
-
 #define CHAT_RADIUS_TALK    (20.0)
 #define CHAT_RADIUS_SHOUT   (40.0)
 #define CHAT_RADIUS_LOW     (5.0)
