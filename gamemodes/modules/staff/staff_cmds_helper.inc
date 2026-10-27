@@ -9,9 +9,8 @@ cmd:hduty(playerid, params[])
     g_Staff[playerid][sHelperDuty] = !g_Staff[playerid][sHelperDuty];
     Staff_UpdateDutyLook(playerid);
 
-    new name[MAX_PLAYER_NAME + 1], message[128];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "[H] %s je %s helper duznosti.", name, g_Staff[playerid][sHelperDuty] ? ("sada na") : ("napustio"));
+    new message[128];
+    format(message, sizeof(message), "[H] %s je %s helper duznosti.", Account_Name(playerid), g_Staff[playerid][sHelperDuty] ? ("sada na") : ("napustio"));
     Staff_SendToHelpers(message);
     return 1;
 }
@@ -29,8 +28,7 @@ cmd:hc(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], rank[24], message[192];
-    Account_GetDisplayName(playerid, name);
+    new rank[24], message[192];
     if (Staff_IsAdmin(playerid))
     {
         Staff_GetAdminRank(playerid, rank);
@@ -40,7 +38,7 @@ cmd:hc(playerid, params[])
         Staff_GetHelperRank(playerid, rank);
     }
 
-    format(message, sizeof(message), "[H] %s %s: %s", rank, name, params);
+    format(message, sizeof(message), "[H] %s %s: %s", rank, Account_Name(playerid), params);
     Staff_SendToHelpers(message);
     return 1;
 }
@@ -63,15 +61,13 @@ cmd:odg(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
+    new message[192];
 
-    format(message, sizeof(message), "[ODGOVOR] %s: %s", name, text);
+    format(message, sizeof(message), "[ODGOVOR] %s: %s", Account_Name(playerid), text);
     Chat_Send(targetid, COLOR_HELPER, message);
 
     // The rest of the team sees the answer so nobody answers the same question twice.
-    format(message, sizeof(message), "[H] %s je odgovorio igracu %s [%d]: %s", name, target_name, targetid, text);
+    format(message, sizeof(message), "[H] %s je odgovorio igracu %s [%d]: %s", Account_Name(playerid), Account_Name(targetid), targetid, text);
     Staff_SendToHelpers(message);
 
     g_Staff[targetid][sHasOpenQuestion] = false;
@@ -89,13 +85,8 @@ cmd:goto(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/goto [id ili ime]");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid, "Ne mozete se teleportovati do samog sebe."))
+    new targetid = Staff_ParseTarget(playerid, params, "/goto [id ili ime]", "Ne mozete se teleportovati do samog sebe.");
+    if (targetid == INVALID_PLAYER_ID)
     {
         return 1;
     }
@@ -104,15 +95,13 @@ cmd:goto(playerid, params[])
     GetPlayerPos(targetid, x, y, z);
     Staff_TeleportTo(playerid, x + 1.0, y, z, GetPlayerInterior(targetid), GetPlayerVirtualWorld(targetid));
 
-    new target_name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(targetid, target_name);
     if (Staff_IsAdmin(playerid))
     {
-        Msg_Admin(playerid, "Teleportovali ste se do igraca %s.", target_name);
+        Msg_Admin(playerid, "Teleportovali ste se do igraca %s.", Account_Name(targetid));
     }
     else
     {
-        Msg_Helper(playerid, "Teleportovali ste se do igraca %s.", target_name);
+        Msg_Helper(playerid, "Teleportovali ste se do igraca %s.", Account_Name(targetid));
     }
     return 1;
 }

@@ -152,6 +152,14 @@ stock Account_GetDisplayName(playerid, dest[], size = sizeof(dest))
     }
 }
 
+// Same display name, returned by value so it can go straight into format arguments.
+stock Account_Name(playerid)
+{
+    new name[MAX_PLAYER_NAME + 1];
+    Account_GetDisplayName(playerid, name);
+    return name;
+}
+
 stock Account_OnPlayerSpawn(playerid)
 {
     if (g_Player[playerid][pState] != ACCOUNT_STATE_LOGGED_IN)

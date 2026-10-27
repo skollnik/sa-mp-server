@@ -9,10 +9,9 @@ cmd:aduty(playerid, params[])
     g_Staff[playerid][sAdminDuty] = !g_Staff[playerid][sAdminDuty];
     Staff_UpdateDutyLook(playerid);
 
-    new name[MAX_PLAYER_NAME + 1], rank[24], message[128];
-    Account_GetDisplayName(playerid, name);
+    new rank[24], message[128];
     Staff_GetAdminRank(playerid, rank);
-    format(message, sizeof(message), "[A] %s %s je %s admin duznosti.", rank, name, g_Staff[playerid][sAdminDuty] ? ("sada na") : ("napustio"));
+    format(message, sizeof(message), "[A] %s %s je %s admin duznosti.", rank, Account_Name(playerid), g_Staff[playerid][sAdminDuty] ? ("sada na") : ("napustio"));
     Staff_SendToAdmins(message);
     Staff_Log(playerid, g_Staff[playerid][sAdminDuty] ? ("duty_on") : ("duty_off"), INVALID_PLAYER_ID, "");
     return 1;
@@ -31,10 +30,9 @@ cmd:a(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], rank[24], message[192];
-    Account_GetDisplayName(playerid, name);
+    new rank[24], message[192];
     Staff_GetAdminRank(playerid, rank);
-    format(message, sizeof(message), "[A] %s %s: %s", rank, name, params);
+    format(message, sizeof(message), "[A] %s %s: %s", rank, Account_Name(playerid), params);
     Staff_SendToAdmins(message);
     return 1;
 }
@@ -46,7 +44,7 @@ cmd:reports(playerid, params[])
         return 1;
     }
 
-    new body[2048], line[192], name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], count;
+    new body[2048], line[192], count;
     for (new i = 0; i < MAX_REPORTS; i++)
     {
         if (!g_Reports[i][rUsed])
@@ -54,10 +52,8 @@ cmd:reports(playerid, params[])
             continue;
         }
 
-        Account_GetDisplayName(g_Reports[i][rReporter], name);
-        Account_GetDisplayName(g_Reports[i][rTarget], target_name);
         format(line, sizeof(line), C_ADMIN "#%d " C_WHITE "%s [%d] -> %s [%d]: %s " C_GREY "(pre %d min)\n",
-            i + 1, name, g_Reports[i][rReporter], target_name, g_Reports[i][rTarget], g_Reports[i][rReason],
+            i + 1, Account_Name(g_Reports[i][rReporter]), g_Reports[i][rReporter], Account_Name(g_Reports[i][rTarget]), g_Reports[i][rTarget], g_Reports[i][rReason],
             (gettime() - g_Reports[i][rCreatedAt]) / 60);
         strcat(body, line);
         count++;
@@ -99,12 +95,11 @@ cmd:ar(playerid, params[])
     new reporter = g_Reports[slot][rReporter];
     g_Reports[slot][rUsed] = false;
 
-    new name[MAX_PLAYER_NAME + 1], rank[24], message[160];
-    Account_GetDisplayName(playerid, name);
+    new rank[24], message[160];
     Staff_GetAdminRank(playerid, rank);
 
-    Msg_Admin(reporter, "%s %s je preuzeo vas report i resava ga.", rank, name);
-    format(message, sizeof(message), "[A] %s je preuzeo report #%d.", name, number);
+    Msg_Admin(reporter, "%s %s je preuzeo vas report i resava ga.", rank, Account_Name(playerid));
+    format(message, sizeof(message), "[A] %s je preuzeo report #%d.", Account_Name(playerid), number);
     Staff_SendToAdmins(message);
     Staff_Log(playerid, "report_accept", reporter, g_Reports[slot][rReason]);
     return 1;
@@ -134,11 +129,10 @@ cmd:rr(playerid, params[])
     new reporter = g_Reports[slot][rReporter];
     g_Reports[slot][rUsed] = false;
 
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
+    new message[192];
 
     Msg_Admin(reporter, "Vas report je odbijen. Razlog: %s", reason);
-    format(message, sizeof(message), "[A] %s je odbio report #%d. Razlog: %s", name, number, reason);
+    format(message, sizeof(message), "[A] %s je odbio report #%d. Razlog: %s", Account_Name(playerid), number, reason);
     Staff_SendToAdmins(message);
     Staff_Log(playerid, "report_reject", reporter, reason);
     return 1;
@@ -151,13 +145,8 @@ cmd:gethere(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/gethere [id ili ime]");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid, "Ne mozete teleportovati samog sebe."))
+    new targetid = Staff_ParseTarget(playerid, params, "/gethere [id ili ime]", "Ne mozete teleportovati samog sebe.");
+    if (targetid == INVALID_PLAYER_ID)
     {
         return 1;
     }
@@ -166,11 +155,8 @@ cmd:gethere(playerid, params[])
     GetPlayerPos(playerid, x, y, z);
     Staff_TeleportTo(targetid, x + 1.0, y, z, GetPlayerInterior(playerid), GetPlayerVirtualWorld(playerid));
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(targetid, "Admin %s vas je teleportovao do sebe.", name);
-    Msg_Admin(playerid, "Teleportovali ste igraca %s do sebe.", target_name);
+    Msg_Admin(targetid, "Admin %s vas je teleportovao do sebe.", Account_Name(playerid));
+    Msg_Admin(playerid, "Teleportovali ste igraca %s do sebe.", Account_Name(targetid));
     Staff_Log(playerid, "gethere", targetid, "");
     return 1;
 }
@@ -182,13 +168,8 @@ cmd:spec(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/spec [id ili ime]    Prekid: /specoff");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid, "Ne mozete posmatrati samog sebe."))
+    new targetid = Staff_ParseTarget(playerid, params, "/spec [id ili ime]    Prekid: /specoff", "Ne mozete posmatrati samog sebe.");
+    if (targetid == INVALID_PLAYER_ID)
     {
         return 1;
     }
@@ -200,9 +181,7 @@ cmd:spec(playerid, params[])
 
     Staff_StartSpectating(playerid, targetid);
 
-    new target_name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Posmatrate igraca %s [%d]. Prekid: /specoff", target_name, targetid);
+    Msg_Admin(playerid, "Posmatrate igraca %s [%d]. Prekid: /specoff", Account_Name(targetid), targetid);
     return 1;
 }
 
@@ -226,13 +205,8 @@ cmd:check(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/check [id ili ime]");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid))
+    new targetid = Staff_ParseTarget(playerid, params, "/check [id ili ime]");
+    if (targetid == INVALID_PLAYER_ID)
     {
         return 1;
     }
@@ -283,13 +257,8 @@ cmd:freeze(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/freeze [id ili ime]    Odmrzavanje: /unfreeze");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid, "Ne mozete zamrznuti samog sebe.") || !Staff_CheckOutranks(playerid, targetid))
+    new targetid = Staff_ParseTarget(playerid, params, "/freeze [id ili ime]    Odmrzavanje: /unfreeze", "Ne mozete zamrznuti samog sebe.");
+    if (targetid == INVALID_PLAYER_ID || !Staff_CheckOutranks(playerid, targetid))
     {
         return 1;
     }
@@ -297,11 +266,8 @@ cmd:freeze(playerid, params[])
     TogglePlayerControllable(targetid, false);
     g_Staff[targetid][sFrozen] = true;
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(targetid, "Admin %s vas je zamrznuo.", name);
-    Msg_Admin(playerid, "Zamrzli ste igraca %s.", target_name);
+    Msg_Admin(targetid, "Admin %s vas je zamrznuo.", Account_Name(playerid));
+    Msg_Admin(playerid, "Zamrzli ste igraca %s.", Account_Name(targetid));
     Staff_Log(playerid, "freeze", targetid, "");
     return 1;
 }
@@ -313,13 +279,8 @@ cmd:unfreeze(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/unfreeze [id ili ime]");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid))
+    new targetid = Staff_ParseTarget(playerid, params, "/unfreeze [id ili ime]");
+    if (targetid == INVALID_PLAYER_ID)
     {
         return 1;
     }
@@ -327,11 +288,8 @@ cmd:unfreeze(playerid, params[])
     TogglePlayerControllable(targetid, true);
     g_Staff[targetid][sFrozen] = false;
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(targetid, "Admin %s vas je odmrznuo.", name);
-    Msg_Admin(playerid, "Odmrzli ste igraca %s.", target_name);
+    Msg_Admin(targetid, "Admin %s vas je odmrznuo.", Account_Name(playerid));
+    Msg_Admin(playerid, "Odmrzli ste igraca %s.", Account_Name(targetid));
     Staff_Log(playerid, "unfreeze", targetid, "");
     return 1;
 }
@@ -343,13 +301,8 @@ cmd:slap(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/slap [id ili ime]");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid) || !Staff_CheckOutranks(playerid, targetid))
+    new targetid = Staff_ParseTarget(playerid, params, "/slap [id ili ime]");
+    if (targetid == INVALID_PLAYER_ID || !Staff_CheckOutranks(playerid, targetid))
     {
         return 1;
     }
@@ -359,11 +312,8 @@ cmd:slap(playerid, params[])
     AC_SetPlayerPos(targetid, x, y, z + 5.0);
     PlayerPlaySound(targetid, 1190, x, y, z);
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(targetid, "Admin %s vas je osamario.", name);
-    Msg_Admin(playerid, "Osamarili ste igraca %s.", target_name);
+    Msg_Admin(targetid, "Admin %s vas je osamario.", Account_Name(playerid));
+    Msg_Admin(playerid, "Osamarili ste igraca %s.", Account_Name(targetid));
     Staff_Log(playerid, "slap", targetid, "");
     return 1;
 }
@@ -388,9 +338,8 @@ cmd:sethp(playerid, params[])
 
     SetPlayerHealth(targetid, amount);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[48];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Postavili ste HP igraca %s na %.0f.", target_name, amount);
+    new details[48];
+    Msg_Admin(playerid, "Postavili ste HP igraca %s na %.0f.", Account_Name(targetid), amount);
     format(details, sizeof(details), "vam je postavio HP na %.0f.", amount);
     Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%.0f", amount);
@@ -418,9 +367,8 @@ cmd:setarmour(playerid, params[])
 
     AC_SetPlayerArmour(targetid, amount);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[48];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Postavili ste armor igraca %s na %.0f.", target_name, amount);
+    new details[48];
+    Msg_Admin(playerid, "Postavili ste armor igraca %s na %.0f.", Account_Name(targetid), amount);
     format(details, sizeof(details), "vam je postavio armor na %.0f.", amount);
     Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%.0f", amount);
@@ -454,13 +402,11 @@ cmd:ooc(playerid, params[])
 
     g_GlobalOocEnabled = !g_GlobalOocEnabled;
 
-    new name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(playerid, name);
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
         if (Account_IsLoggedIn(i))
         {
-            Msg_Server(i, "Admin %s je %s globalni OOC chat (/o).", name, g_GlobalOocEnabled ? ("ukljucio") : ("iskljucio"));
+            Msg_Server(i, "Admin %s je %s globalni OOC chat (/o).", Account_Name(playerid), g_GlobalOocEnabled ? ("ukljucio") : ("iskljucio"));
         }
     }
     Staff_Log(playerid, g_GlobalOocEnabled ? ("ooc_on") : ("ooc_off"), INVALID_PLAYER_ID, "");
@@ -474,9 +420,6 @@ cmd:cc(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(playerid, name);
-
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
         if (!Account_IsLoggedIn(i))
@@ -484,7 +427,7 @@ cmd:cc(playerid, params[])
             continue;
         }
         Chat_Clear(i);
-        Msg_Admin(i, "Admin %s je obrisao chat.", name);
+        Msg_Admin(i, "Admin %s je obrisao chat.", Account_Name(playerid));
     }
     Staff_Log(playerid, "clear_chat", INVALID_PLAYER_ID, "");
     return 1;
@@ -502,9 +445,8 @@ cmd:ao(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "[ADMIN] %s: %s", name, params);
+    new message[192];
+    format(message, sizeof(message), "[ADMIN] %s: %s", Account_Name(playerid), params);
     Chat_SendToAll(COLOR_ADMIN, message);
     Staff_Log(playerid, "announce_chat", INVALID_PLAYER_ID, params);
     return 1;
@@ -559,22 +501,15 @@ cmd:disarm(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/disarm [id ili ime] (oduzima svo oruzje)");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid) || !Staff_CheckOutranks(playerid, targetid))
+    new targetid = Staff_ParseTarget(playerid, params, "/disarm [id ili ime] (oduzima svo oruzje)");
+    if (targetid == INVALID_PLAYER_ID || !Staff_CheckOutranks(playerid, targetid))
     {
         return 1;
     }
 
     AC_ResetPlayerWeapons(targetid);
 
-    new target_name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Oduzeli ste svo oruzje igracu %s.", target_name);
+    Msg_Admin(playerid, "Oduzeli ste svo oruzje igracu %s.", Account_Name(targetid));
     Staff_NotifyTarget(playerid, targetid, "vam je oduzeo svo oruzje.");
     Staff_Log(playerid, "disarm", targetid, "");
     return 1;
@@ -715,9 +650,8 @@ cmd:setskin(playerid, params[])
     g_Player[targetid][pSkin] = skin;
     SetPlayerSkin(targetid, skin);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[48];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Postavili ste skin %d igracu %s.", skin, target_name);
+    new details[48];
+    Msg_Admin(playerid, "Postavili ste skin %d igracu %s.", skin, Account_Name(targetid));
     format(details, sizeof(details), "vam je postavio skin %d.", skin);
     Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%d", skin);
@@ -745,9 +679,8 @@ cmd:setint(playerid, params[])
 
     SetPlayerInterior(targetid, interior);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[48];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Postavili ste enterijer %d igracu %s.", interior, target_name);
+    new details[48];
+    Msg_Admin(playerid, "Postavili ste enterijer %d igracu %s.", interior, Account_Name(targetid));
     format(details, sizeof(details), "vam je postavio enterijer %d.", interior);
     Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%d", interior);
@@ -775,9 +708,8 @@ cmd:setvw(playerid, params[])
 
     SetPlayerVirtualWorld(targetid, world);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[48];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Postavili ste virtuelni svet %d igracu %s. Vi ste u svetu %d.", world, target_name, GetPlayerVirtualWorld(playerid));
+    new details[48];
+    Msg_Admin(playerid, "Postavili ste virtuelni svet %d igracu %s. Vi ste u svetu %d.", world, Account_Name(targetid), GetPlayerVirtualWorld(playerid));
     format(details, sizeof(details), "vam je postavio virtuelni svet %d.", world);
     Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%d", world);
@@ -909,21 +841,19 @@ cmd:makehelper(playerid, params[])
     }
     Account_Save(targetid);
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[160], details[16];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
+    new message[160], details[16];
 
     if (level == 0)
     {
-        format(message, sizeof(message), "%s vam je oduzeo helper status.", name);
+        format(message, sizeof(message), "%s vam je oduzeo helper status.", Account_Name(playerid));
         Staff_MessageAs(playerid, targetid, message);
-        format(message, sizeof(message), "[H] %s je oduzeo helper status igracu %s.", name, target_name);
+        format(message, sizeof(message), "[H] %s je oduzeo helper status igracu %s.", Account_Name(playerid), Account_Name(targetid));
     }
     else
     {
-        format(message, sizeof(message), "%s vas je postavio za: %s. Komande: /hhelp", name, g_HelperRankNames[level]);
+        format(message, sizeof(message), "%s vas je postavio za: %s. Komande: /hhelp", Account_Name(playerid), g_HelperRankNames[level]);
         Staff_MessageAs(playerid, targetid, message);
-        format(message, sizeof(message), "[H] %s je postavio %s za: %s.", name, target_name, g_HelperRankNames[level]);
+        format(message, sizeof(message), "[H] %s je postavio %s za: %s.", Account_Name(playerid), Account_Name(targetid), g_HelperRankNames[level]);
     }
     Staff_SendToHelpers(message);
     format(details, sizeof(details), "%d", level);
@@ -953,11 +883,9 @@ cmd:setlevel(playerid, params[])
     SetPlayerScore(targetid, level);
     Account_Save(targetid);
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], details[16];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(targetid, "Admin %s vam je postavio nivo na %d.", name, level);
-    Msg_Admin(playerid, "Postavili ste nivo %d igracu %s.", level, target_name);
+    new details[16];
+    Msg_Admin(targetid, "Admin %s vam je postavio nivo na %d.", Account_Name(playerid), level);
+    Msg_Admin(playerid, "Postavili ste nivo %d igracu %s.", level, Account_Name(targetid));
     format(details, sizeof(details), "%d", level);
     Staff_Log(playerid, "setlevel", targetid, details);
     return 1;
@@ -984,9 +912,8 @@ cmd:setrespect(playerid, params[])
     g_Player[targetid][pRespect] = respect;
     Account_Save(targetid);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[48];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Postavili ste respect %d igracu %s.", respect, target_name);
+    new details[48];
+    Msg_Admin(playerid, "Postavili ste respect %d igracu %s.", respect, Account_Name(targetid));
     format(details, sizeof(details), "vam je postavio respect na %d.", respect);
     Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%d", respect);
@@ -1049,9 +976,7 @@ public OnStaffSetNameCheck(playerid, targetid, target_race, const new_name[])
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `name` = '%e' WHERE `id` = %d", new_name, g_Player[targetid][pDbId]);
     mysql_tquery(g_SQL, query);
 
-    new name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(playerid, name);
-    Msg_Admin(targetid, "Admin %s vam je promenio ime u %s. Od sada se prijavljujete sa tim imenom.", name, new_name);
+    Msg_Admin(targetid, "Admin %s vam je promenio ime u %s. Od sada se prijavljujete sa tim imenom.", Account_Name(playerid), new_name);
     Msg_Admin(playerid, "Promenili ste ime %s u %s.", old_name, new_name);
 
     new details[64];
@@ -1102,19 +1027,17 @@ cmd:makeadmin(playerid, params[])
         Msg_Info(playerid, "Helper status igraca je uklonjen, jer admin vec ima sve helper komande.");
     }
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[160], details[16];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
+    new message[160], details[16];
 
     if (level == 0)
     {
-        Msg_Admin(targetid, "%s vam je oduzeo admin status.", name);
-        format(message, sizeof(message), "[A] %s je oduzeo admin status igracu %s.", name, target_name);
+        Msg_Admin(targetid, "%s vam je oduzeo admin status.", Account_Name(playerid));
+        format(message, sizeof(message), "[A] %s je oduzeo admin status igracu %s.", Account_Name(playerid), Account_Name(targetid));
     }
     else
     {
-        Msg_Admin(targetid, "%s vas je postavio za: %s. Komande: /ahelp", name, g_AdminRankNames[level]);
-        format(message, sizeof(message), "[A] %s je postavio %s za: %s.", name, target_name, g_AdminRankNames[level]);
+        Msg_Admin(targetid, "%s vas je postavio za: %s. Komande: /ahelp", Account_Name(playerid), g_AdminRankNames[level]);
+        format(message, sizeof(message), "[A] %s je postavio %s za: %s.", Account_Name(playerid), Account_Name(targetid), g_AdminRankNames[level]);
     }
     Staff_SendToAdmins(message);
     format(details, sizeof(details), "%d", level);
@@ -1162,9 +1085,8 @@ cmd:givemoney(playerid, params[])
     Account_GiveCash(targetid, amount);
     Account_Save(targetid);
 
-    new target_name[MAX_PLAYER_NAME + 1], details[48];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Dali ste $%d igracu %s. Sada ima $%d.", amount, target_name, g_Player[targetid][pCash]);
+    new details[48];
+    Msg_Admin(playerid, "Dali ste $%d igracu %s. Sada ima $%d.", amount, Account_Name(targetid), g_Player[targetid][pCash]);
     format(details, sizeof(details), "vam je %s $%d.", amount > 0 ? ("dao") : ("oduzeo"), amount > 0 ? amount : -amount);
     Staff_NotifyTarget(playerid, targetid, details);
     format(details, sizeof(details), "%d", amount);

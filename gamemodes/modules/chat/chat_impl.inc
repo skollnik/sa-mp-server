@@ -144,9 +144,8 @@ stock Chat_SendToAll(color, const message[])
 
 stock Chat_OnPlayerText(playerid, const text[])
 {
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "%s kaze: %s", name, text);
+    new message[192];
+    format(message, sizeof(message), "%s kaze: %s", Account_Name(playerid), text);
     Chat_SendNearby(playerid, CHAT_RADIUS_TALK, COLOR_WHITE, message, true);
 }
 

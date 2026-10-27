@@ -32,10 +32,8 @@ cmd:report(playerid, params[])
     strcopy(g_Reports[slot][rReason], reason, 96);
     g_Staff[playerid][sLastReport] = gettime();
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
-    format(message, sizeof(message), "[REPORT #%d] %s [%d] prijavljuje %s [%d]: %s", slot + 1, name, playerid, target_name, targetid, reason);
+    new message[192];
+    format(message, sizeof(message), "[REPORT #%d] %s [%d] prijavljuje %s [%d]: %s", slot + 1, Account_Name(playerid), playerid, Account_Name(targetid), targetid, reason);
     Staff_SendToAdmins(message);
     format(message, sizeof(message), "[REPORT #%d] Prihvati: /ar %d    Odbij: /rr %d [razlog]", slot + 1, slot + 1, slot + 1);
     Staff_SendToAdmins(message);
@@ -61,9 +59,8 @@ cmd:ask(playerid, params[])
     g_Staff[playerid][sLastAsk] = gettime();
     g_Staff[playerid][sHasOpenQuestion] = true;
 
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "[PITANJE] %s [%d]: %s", name, playerid, params);
+    new message[192];
+    format(message, sizeof(message), "[PITANJE] %s [%d]: %s", Account_Name(playerid), playerid, params);
 
     // With no helper on duty the question still reaches someone: every helper and admin gets it.
     Staff_SendToHelpers(message);
@@ -115,8 +112,7 @@ cmd:n(playerid, params[])
         g_Staff[playerid][sLastNewbie] = gettime();
     }
 
-    new name[MAX_PLAYER_NAME + 1], rank[24], message[192];
-    Account_GetDisplayName(playerid, name);
+    new rank[24], message[192];
 
     if (Staff_IsAdmin(playerid))
     {
@@ -131,7 +127,7 @@ cmd:n(playerid, params[])
         strcopy(rank, "Igrac");
     }
 
-    format(message, sizeof(message), "[N] %s %s [%d]: %s", rank, name, playerid, params);
+    format(message, sizeof(message), "[N] %s %s [%d]: %s", rank, Account_Name(playerid), playerid, params);
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
         if (Account_IsLoggedIn(i) && !g_Player[i][pTogNewbie])
@@ -158,7 +154,7 @@ cmd:tognewbie(playerid, params[])
 
 cmd:admins(playerid, params[])
 {
-    new body[1024], line[96], name[MAX_PLAYER_NAME + 1], count;
+    new body[1024], line[96], count;
 
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
@@ -167,9 +163,8 @@ cmd:admins(playerid, params[])
             continue;
         }
 
-        Account_GetDisplayName(i, name);
         format(line, sizeof(line), C_ADMIN "%s " C_WHITE "%s [%d]%s\n",
-            g_AdminRankNames[g_Player[i][pAdminLevel]], name, i, g_Staff[i][sAdminDuty] ? (C_GREEN " - na duznosti") : (C_GREY " - nije na duznosti"));
+            g_AdminRankNames[g_Player[i][pAdminLevel]], Account_Name(i), i, g_Staff[i][sAdminDuty] ? (C_GREEN " - na duznosti") : (C_GREY " - nije na duznosti"));
         strcat(body, line);
         count++;
     }
@@ -184,7 +179,7 @@ cmd:admins(playerid, params[])
 
 cmd:helpers(playerid, params[])
 {
-    new body[1024], line[96], name[MAX_PLAYER_NAME + 1], count;
+    new body[1024], line[96], count;
 
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
@@ -193,9 +188,8 @@ cmd:helpers(playerid, params[])
             continue;
         }
 
-        Account_GetDisplayName(i, name);
         format(line, sizeof(line), C_HELPER "%s " C_WHITE "%s [%d]%s\n",
-            g_HelperRankNames[g_Player[i][pHelperLevel]], name, i, g_Staff[i][sHelperDuty] ? (C_GREEN " - na duznosti") : (C_GREY " - nije na duznosti"));
+            g_HelperRankNames[g_Player[i][pHelperLevel]], Account_Name(i), i, g_Staff[i][sHelperDuty] ? (C_GREEN " - na duznosti") : (C_GREY " - nije na duznosti"));
         strcat(body, line);
         count++;
     }

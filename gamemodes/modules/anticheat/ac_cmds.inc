@@ -5,13 +5,8 @@ cmd:aclog(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/aclog [id ili ime] (poslednja anti-cheat upozorenja)");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid))
+    new targetid = Staff_ParseTarget(playerid, params, "/aclog [id ili ime] (poslednja anti-cheat upozorenja)");
+    if (targetid == INVALID_PLAYER_ID)
     {
         return 1;
     }

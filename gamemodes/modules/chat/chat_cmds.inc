@@ -6,9 +6,8 @@ cmd:s(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "%s vice: %s!", name, params);
+    new message[192];
+    format(message, sizeof(message), "%s vice: %s!", Account_Name(playerid), params);
     Chat_SendNearby(playerid, CHAT_RADIUS_SHOUT, COLOR_SHOUT, message, true);
     return 1;
 }
@@ -21,9 +20,8 @@ cmd:l(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "%s kaze (tiho): %s", name, params);
+    new message[192];
+    format(message, sizeof(message), "%s kaze (tiho): %s", Account_Name(playerid), params);
     Chat_SendNearby(playerid, CHAT_RADIUS_LOW, COLOR_WHITE, message, true);
     return 1;
 }
@@ -52,13 +50,11 @@ cmd:w(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
+    new message[192];
 
-    format(message, sizeof(message), "%s vam sapuce: %s", name, text);
+    format(message, sizeof(message), "%s vam sapuce: %s", Account_Name(playerid), text);
     Chat_Send(targetid, COLOR_WHISPER, message);
-    format(message, sizeof(message), "Sapucete %s: %s", target_name, text);
+    format(message, sizeof(message), "Sapucete %s: %s", Account_Name(targetid), text);
     Chat_Send(playerid, COLOR_WHISPER, message);
     return 1;
 }
@@ -71,9 +67,8 @@ cmd:me(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "* %s %s", name, params);
+    new message[192];
+    format(message, sizeof(message), "* %s %s", Account_Name(playerid), params);
     Chat_SendNearby(playerid, CHAT_RADIUS_ACTION, COLOR_PURPLE, message);
     return 1;
 }
@@ -86,9 +81,8 @@ cmd:do(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "* %s (( %s ))", params, name);
+    new message[192];
+    format(message, sizeof(message), "* %s (( %s ))", params, Account_Name(playerid));
     Chat_SendNearby(playerid, CHAT_RADIUS_ACTION, COLOR_PURPLE, message);
     return 1;
 }
@@ -101,9 +95,8 @@ cmd:ame(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "* %s %s", name, params);
+    new message[192];
+    format(message, sizeof(message), "* %s %s", Account_Name(playerid), params);
     Chat_ShowBubble(playerid, message);
 
     format(message, sizeof(message), "> %s", params);
@@ -119,9 +112,8 @@ cmd:b(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "(( [%d] %s: %s ))", playerid, name, params);
+    new message[192];
+    format(message, sizeof(message), "(( [%d] %s: %s ))", playerid, Account_Name(playerid), params);
     Chat_SendNearby(playerid, CHAT_RADIUS_OOC, COLOR_OOC_LOCAL, message);
     return 1;
 }
@@ -144,9 +136,8 @@ cmd:o(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "(( [OOC] %s: %s ))", name, params);
+    new message[192];
+    format(message, sizeof(message), "(( [OOC] %s: %s ))", Account_Name(playerid), params);
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
         if (Account_IsLoggedIn(i) && !g_Player[i][pTogOoc])
@@ -193,9 +184,8 @@ cmd:ado(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    format(message, sizeof(message), "* %s (( %s ))", params, name);
+    new message[192];
+    format(message, sizeof(message), "* %s (( %s ))", params, Account_Name(playerid));
     Chat_ShowBubble(playerid, message);
 
     format(message, sizeof(message), "> %s", params);
@@ -227,16 +217,14 @@ cmd:pm(playerid, params[])
         return 1;
     }
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
+    new message[192];
 
-    format(message, sizeof(message), "(( PM od %s [%d]: %s ))", name, playerid, text);
+    format(message, sizeof(message), "(( PM od %s [%d]: %s ))", Account_Name(playerid), playerid, text);
     Chat_Send(targetid, COLOR_PM, message);
-    format(message, sizeof(message), "(( PM za %s [%d]: %s ))", target_name, targetid, text);
+    format(message, sizeof(message), "(( PM za %s [%d]: %s ))", Account_Name(targetid), targetid, text);
     Chat_Send(playerid, COLOR_PM, message);
 
-    format(message, sizeof(message), "[PM SPY] %s [%d] -> %s [%d]: %s", name, playerid, target_name, targetid, text);
+    format(message, sizeof(message), "[PM SPY] %s [%d] -> %s [%d]: %s", Account_Name(playerid), playerid, Account_Name(targetid), targetid, text);
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
         if (i != playerid && i != targetid && Account_IsLoggedIn(i) && g_Staff[i][sPmSpy])

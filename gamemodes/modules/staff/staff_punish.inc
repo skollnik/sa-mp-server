@@ -170,9 +170,7 @@ stock Punish_BanOnline(adminid, targetid, days, const reason[])
     gpci(targetid, serial, sizeof(serial));
     Punish_InsertBan(adminid, g_Player[targetid][pDbId], g_Player[targetid][pName], ip, serial, days, reason);
 
-    new admin_name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[192], length[24];
-    Account_GetDisplayName(adminid, admin_name);
-    Account_GetDisplayName(targetid, target_name);
+    new message[192], length[24];
 
     if (days > 0)
     {
@@ -183,7 +181,7 @@ stock Punish_BanOnline(adminid, targetid, days, const reason[])
         strcopy(length, "trajno");
     }
 
-    format(message, sizeof(message), "[ADMIN] %s je banovao igraca %s (%s). Razlog: %s", admin_name, target_name, length, reason);
+    format(message, sizeof(message), "[ADMIN] %s je banovao igraca %s (%s). Razlog: %s", Account_Name(adminid), Account_Name(targetid), length, reason);
     Punish_Announce(message);
 
     format(message, sizeof(message), "%s, %s", length, reason);
@@ -276,10 +274,8 @@ cmd:kick(playerid, params[])
         return 1;
     }
 
-    new admin_name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, admin_name);
-    Account_GetDisplayName(targetid, target_name);
-    format(message, sizeof(message), "[ADMIN] %s je izbacio igraca %s sa servera. Razlog: %s", admin_name, target_name, reason);
+    new message[192];
+    format(message, sizeof(message), "[ADMIN] %s je izbacio igraca %s sa servera. Razlog: %s", Account_Name(playerid), Account_Name(targetid), reason);
     Punish_Announce(message);
 
     Staff_Log(playerid, "kick", targetid, reason);
@@ -374,15 +370,14 @@ public OnPunishOfflineBan(playerid, days, const reason[])
 
     Punish_InsertBan(playerid, account_id, name, ip, "", days, reason);
 
-    new admin_name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, admin_name);
+    new message[192];
     if (days > 0)
     {
-        format(message, sizeof(message), "[ADMIN] %s je banovao igraca %s (%d dana, van servera). Razlog: %s", admin_name, name, days, reason);
+        format(message, sizeof(message), "[ADMIN] %s je banovao igraca %s (%d dana, van servera). Razlog: %s", Account_Name(playerid), name, days, reason);
     }
     else
     {
-        format(message, sizeof(message), "[ADMIN] %s je trajno banovao igraca %s (van servera). Razlog: %s", admin_name, name, reason);
+        format(message, sizeof(message), "[ADMIN] %s je trajno banovao igraca %s (van servera). Razlog: %s", Account_Name(playerid), name, reason);
     }
     Punish_Announce(message);
 
@@ -501,10 +496,8 @@ public OnPunishWarnCount(playerid, targetid, target_race, const reason[])
     new total;
     cache_get_value_name_int(0, "total", total);
 
-    new admin_name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, admin_name);
-    Account_GetDisplayName(targetid, target_name);
-    format(message, sizeof(message), "[ADMIN] %s je upozorio igraca %s (%d/%d). Razlog: %s", admin_name, target_name, total, MAX_WARNINGS, reason);
+    new message[192];
+    format(message, sizeof(message), "[ADMIN] %s je upozorio igraca %s (%d/%d). Razlog: %s", Account_Name(playerid), Account_Name(targetid), total, MAX_WARNINGS, reason);
     Punish_Announce(message);
     Staff_Log(playerid, "warn", targetid, reason);
 
@@ -527,13 +520,8 @@ cmd:unwarn(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/unwarn [id ili ime] (skida poslednje upozorenje)");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid))
+    new targetid = Staff_ParseTarget(playerid, params, "/unwarn [id ili ime] (skida poslednje upozorenje)");
+    if (targetid == INVALID_PLAYER_ID)
     {
         return 1;
     }
@@ -558,9 +546,7 @@ public OnPunishUnwarn(playerid, targetid)
         return 1;
     }
 
-    new target_name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Skinuli ste poslednje upozorenje igracu %s.", target_name);
+    Msg_Admin(playerid, "Skinuli ste poslednje upozorenje igracu %s.", Account_Name(targetid));
     Staff_NotifyTarget(playerid, targetid, "vam je skinuo jedno upozorenje.");
     Staff_Log(playerid, "unwarn", targetid, "");
     return 1;
@@ -573,13 +559,8 @@ cmd:warns(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/warns [id ili ime]");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid))
+    new targetid = Staff_ParseTarget(playerid, params, "/warns [id ili ime]");
+    if (targetid == INVALID_PLAYER_ID)
     {
         return 1;
     }
@@ -644,10 +625,8 @@ cmd:mute(playerid, params[])
     g_Player[targetid][pMuteUntil] = gettime() + minutes * 60;
     Account_Save(targetid);
 
-    new admin_name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, admin_name);
-    Account_GetDisplayName(targetid, target_name);
-    format(message, sizeof(message), "[ADMIN] %s je dao mute igracu %s na %d min. Razlog: %s", admin_name, target_name, minutes, reason);
+    new message[192];
+    format(message, sizeof(message), "[ADMIN] %s je dao mute igracu %s na %d min. Razlog: %s", Account_Name(playerid), Account_Name(targetid), minutes, reason);
     Punish_Announce(message);
 
     format(message, sizeof(message), "%d min, %s", minutes, reason);
@@ -662,13 +641,8 @@ cmd:unmute(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/unmute [id ili ime]");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid))
+    new targetid = Staff_ParseTarget(playerid, params, "/unmute [id ili ime]");
+    if (targetid == INVALID_PLAYER_ID)
     {
         return 1;
     }
@@ -681,9 +655,7 @@ cmd:unmute(playerid, params[])
     g_Player[targetid][pMuteUntil] = 0;
     Account_Save(targetid);
 
-    new target_name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Skinuli ste mute igracu %s.", target_name);
+    Msg_Admin(playerid, "Skinuli ste mute igracu %s.", Account_Name(targetid));
     Staff_NotifyTarget(playerid, targetid, "vam je skinuo mute.");
     Staff_Log(playerid, "unmute", targetid, "");
     return 1;
@@ -715,12 +687,10 @@ cmd:nmute(playerid, params[])
     g_Player[targetid][pNewbieMuteUntil] = gettime() + minutes * 60;
     Account_Save(targetid);
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[160];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
-    format(message, sizeof(message), "%s vam je zabranio pisanje u newbie chat na %d min.", name, minutes);
+    new message[160];
+    format(message, sizeof(message), "%s vam je zabranio pisanje u newbie chat na %d min.", Account_Name(playerid), minutes);
     Staff_MessageAs(playerid, targetid, message);
-    format(message, sizeof(message), "[H] %s je dao newbie mute igracu %s na %d min.", name, target_name, minutes);
+    format(message, sizeof(message), "[H] %s je dao newbie mute igracu %s na %d min.", Account_Name(playerid), Account_Name(targetid), minutes);
     Staff_SendToHelpers(message);
     return 1;
 }
@@ -732,13 +702,8 @@ cmd:unnmute(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/unnmute [id ili ime]");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid))
+    new targetid = Staff_ParseTarget(playerid, params, "/unnmute [id ili ime]");
+    if (targetid == INVALID_PLAYER_ID)
     {
         return 1;
     }
@@ -746,13 +711,11 @@ cmd:unnmute(playerid, params[])
     g_Player[targetid][pNewbieMuteUntil] = 0;
     Account_Save(targetid);
 
-    new name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[144];
-    Account_GetDisplayName(playerid, name);
-    Account_GetDisplayName(targetid, target_name);
+    new message[144];
 
-    format(message, sizeof(message), "Skinuli ste newbie mute igracu %s.", target_name);
+    format(message, sizeof(message), "Skinuli ste newbie mute igracu %s.", Account_Name(targetid));
     Staff_MessageAs(playerid, playerid, message);
-    format(message, sizeof(message), "%s vam je skinuo newbie mute. Ponovo mozete pisati u newbie chat.", name);
+    format(message, sizeof(message), "%s vam je skinuo newbie mute. Ponovo mozete pisati u newbie chat.", Account_Name(playerid));
     Staff_MessageAs(playerid, targetid, message);
     return 1;
 }
@@ -782,10 +745,8 @@ cmd:ajail(playerid, params[])
     Punish_PutInJail(targetid);
     Account_Save(targetid);
 
-    new admin_name[MAX_PLAYER_NAME + 1], target_name[MAX_PLAYER_NAME + 1], message[192];
-    Account_GetDisplayName(playerid, admin_name);
-    Account_GetDisplayName(targetid, target_name);
-    format(message, sizeof(message), "[ADMIN] %s je poslao igraca %s u admin zatvor na %d min. Razlog: %s", admin_name, target_name, minutes, reason);
+    new message[192];
+    format(message, sizeof(message), "[ADMIN] %s je poslao igraca %s u admin zatvor na %d min. Razlog: %s", Account_Name(playerid), Account_Name(targetid), minutes, reason);
     Punish_Announce(message);
 
     format(message, sizeof(message), "%d min, %s", minutes, reason);
@@ -800,13 +761,8 @@ cmd:unjail(playerid, params[])
         return 1;
     }
 
-    new targetid;
-    if (sscanf(params, "u", targetid))
-    {
-        Msg_Usage(playerid, "/unjail [id ili ime]");
-        return 1;
-    }
-    if (!Staff_CheckTarget(playerid, targetid))
+    new targetid = Staff_ParseTarget(playerid, params, "/unjail [id ili ime]");
+    if (targetid == INVALID_PLAYER_ID)
     {
         return 1;
     }
@@ -818,9 +774,7 @@ cmd:unjail(playerid, params[])
 
     Punish_Release(targetid);
 
-    new target_name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(targetid, target_name);
-    Msg_Admin(playerid, "Pustili ste igraca %s iz admin zatvora.", target_name);
+    Msg_Admin(playerid, "Pustili ste igraca %s iz admin zatvora.", Account_Name(targetid));
     Staff_NotifyTarget(playerid, targetid, "vas je pustio iz admin zatvora.");
     Staff_Log(playerid, "unjail", targetid, "");
     return 1;

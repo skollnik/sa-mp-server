@@ -179,6 +179,23 @@ stock bool:Staff_CheckTarget(playerid, targetid, const self_error[] = "")
     return true;
 }
 
+// Reads a single "[id or name]" parameter and validates it. Prints the usage or error itself;
+// returns INVALID_PLAYER_ID when the command should stop.
+stock Staff_ParseTarget(playerid, const params[], const usage[], const self_error[] = "")
+{
+    new targetid;
+    if (sscanf(params, "u", targetid))
+    {
+        Msg_Usage(playerid, "%s", usage);
+        return INVALID_PLAYER_ID;
+    }
+    if (!Staff_CheckTarget(playerid, targetid, self_error))
+    {
+        return INVALID_PLAYER_ID;
+    }
+    return targetid;
+}
+
 // Lower staff can never act on someone of equal or higher admin level.
 stock bool:Staff_CheckOutranks(playerid, targetid)
 {
@@ -242,9 +259,7 @@ stock Staff_NotifyTarget(adminid, targetid, const action[])
         return;
     }
 
-    new name[MAX_PLAYER_NAME + 1];
-    Account_GetDisplayName(adminid, name);
-    Msg_Admin(targetid, "Admin %s %s", name, action);
+    Msg_Admin(targetid, "Admin %s %s", Account_Name(adminid), action);
 }
 
 // The tag follows whoever acted: an admin's action reads [ADMIN], a helper's reads [HELPER].
