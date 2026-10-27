@@ -63,6 +63,13 @@
 | Prelazak na viši nivo bez gubitka preostalih dana (sada novi nivo kreće od danas) |
 | Rezervisano mesto za VIP kad je server pun |
 | Pogodnosti vezane za payday, inventar, telefon, vozila i oglase, kad ti sistemi budu napravljeni |
+| Proširene VIP pogodnosti i komande (spisak poslat vlasniku 27.10.2026., čeka odluku po stavkama) |
+| Oznaka [VIP] iznad glave u boji nivoa, sa prioritetom oznake tima na dužnosti |
+
+**Tim (čeka odobrenje predloga)**
+| Stavka |
+|--------|
+| Isključivanje kanala koje admin ili helper ne želi da prati (VIP chat, newbie, reportovi, AC upozorenja...) i komanda za pregled šta je uključeno, od admin nivoa 1 |
 
 **Kasnije**
 | Stavka |
@@ -156,6 +163,13 @@ What must be added **after** a system or **once** another system exists. When an
 | Upgrading to a higher tier without losing remaining days (now the new tier starts from today) |
 | Reserved slot for VIP when the server is full |
 | Perks tied to payday, inventory, phone, vehicles and ads, once those systems exist |
+| Extended VIP perks and commands (list sent to the owner on 2026-10-27, waiting for a decision per item) |
+| [VIP] tag above the head in the tier colour, with on-duty staff tags taking priority |
+
+**Staff (waiting for proposal approval)**
+| Item |
+|------|
+| Muting channels an admin or helper does not want to follow (VIP chat, newbie, reports, AC alerts...) and a command to see what is on, from admin level 1 |
 
 **Later**
 | Item |
