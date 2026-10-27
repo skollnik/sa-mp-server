@@ -22,6 +22,7 @@
 #include "modules/account/account_data.inc"
 #include "modules/staff/staff_data.inc"
 #include "modules/anticheat/ac_data.inc"
+#include "modules/vip/vip_data.inc"
 
 #include "modules/account/account_impl.inc"
 #include "modules/account/account_cmds.inc"
@@ -37,6 +38,9 @@
 
 #include "modules/anticheat/ac_impl.inc"
 #include "modules/anticheat/ac_cmds.inc"
+
+#include "modules/vip/vip_impl.inc"
+#include "modules/vip/vip_cmds.inc"
 
 #include "modules/help/help_cmds.inc"
 
@@ -65,6 +69,7 @@ public OnGameModeInit()
     Staff_Init();
     Punish_Init();
     AC_Init();
+    Vip_Init();
     Maps_Init();
 
     printf("[SERVER] %s gamemode loaded.", SERVER_NAME);

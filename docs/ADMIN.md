@@ -43,7 +43,7 @@ Viši nivo uvek ima sve komande nižeg nivoa.
 | 3 | Visi admin | `/setskin`, `/setint` (enterijer), `/setvw` (virtuelni svet), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (tekst na sredini ekrana), `/settime`, `/setweather`, `/gotopos`, `/mypos`, `/ban` (i trajni), `/oban`, `/banip`, `/unban`, `/unwarn` |
 | 4 | Glavni admin | `/makehelper` (svi nivoi), `/setlevel`, `/setrespect`, `/setname`, `/pmspy` |
 | 5 | Menadzment | `/makeadmin` (do nivoa 4), `/gmx` (restart servera) |
-| 6 | Vlasnik | `/makeadmin` (do nivoa 5), `/givemoney`, `/dozvoliime`, `/zabraniime` |
+| 6 | Vlasnik | `/makeadmin` (do nivoa 5), `/givemoney`, `/dozvoliime`, `/zabraniime`, `/setvip` (vidi VIP.md) |
 
 ### Kazne
 - Svaka kazna (kick, ban, warn, mute, admin zatvor) se objavljuje svim igračima crvenom porukom i upisuje u `admin_logs`.
@@ -108,7 +108,7 @@ A higher level always has every command of the lower levels.
 | 3 | Senior admin | `/setskin`, `/setint` (interior), `/setvw` (virtual world), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (text in the middle of the screen), `/settime`, `/setweather`, `/gotopos`, `/mypos`, `/ban` (also permanent), `/oban`, `/banip`, `/unban`, `/unwarn` |
 | 4 | Head admin | `/makehelper` (all levels), `/setlevel`, `/setrespect`, `/setname`, `/pmspy` |
 | 5 | Management | `/makeadmin` (up to level 4), `/gmx` (server restart) |
-| 6 | Owner | `/makeadmin` (up to level 5), `/givemoney`, `/dozvoliime`, `/zabraniime` |
+| 6 | Owner | `/makeadmin` (up to level 5), `/givemoney`, `/dozvoliime`, `/zabraniime`, `/setvip` (see VIP.md) |
 
 ### Punishments
 - Every punishment (kick, ban, warn, mute, admin jail) is announced to all players in red and written to `admin_logs`.

@@ -20,6 +20,8 @@ enum E_PLAYER_DATA
     pNewbieMuteUntil,
     pJailSeconds,
     pJailReason[96],
+    pVipLevel,
+    pVipUntil,
     pGender,
     pAge,
     pSkin,

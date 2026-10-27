@@ -36,7 +36,9 @@ stock Account_Init()
         "`mute_until` INT NOT NULL DEFAULT 0," \
         "`newbie_mute_until` INT NOT NULL DEFAULT 0," \
         "`jail_seconds` INT NOT NULL DEFAULT 0," \
-        "`jail_reason` VARCHAR(96) NOT NULL DEFAULT ''" \
+        "`jail_reason` VARCHAR(96) NOT NULL DEFAULT ''," \
+        "`vip_level` TINYINT UNSIGNED NOT NULL DEFAULT 0," \
+        "`vip_until` INT NOT NULL DEFAULT 0" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
     // Columns added after the table first shipped; existing databases get them here.
@@ -48,6 +50,8 @@ stock Account_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `newbie_mute_until` INT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `jail_seconds` INT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `jail_reason` VARCHAR(96) NOT NULL DEFAULT ''");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `vip_level` TINYINT UNSIGNED NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `vip_until` INT NOT NULL DEFAULT 0");
 
     mysql_tquery(g_SQL,
         "CREATE TABLE IF NOT EXISTS `login_attempts` (" \
@@ -323,6 +327,8 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_int(0, "newbie_mute_until", g_Player[playerid][pNewbieMuteUntil]);
     cache_get_value_name_int(0, "jail_seconds", g_Player[playerid][pJailSeconds]);
     cache_get_value_name(0, "jail_reason", g_Player[playerid][pJailReason], 96);
+    cache_get_value_name_int(0, "vip_level", g_Player[playerid][pVipLevel]);
+    cache_get_value_name_int(0, "vip_until", g_Player[playerid][pVipUntil]);
     cache_get_value_name_int(0, "gender", g_Player[playerid][pGender]);
     cache_get_value_name_int(0, "age", g_Player[playerid][pAge]);
     cache_get_value_name_int(0, "skin", g_Player[playerid][pSkin]);
@@ -808,6 +814,7 @@ stock Account_CompleteLogin(playerid, bool:is_new)
         {
             Msg_Info(playerid, "Poslednja prijava: %s sa IP %s", g_Player[playerid][pLastLoginText], g_Player[playerid][pLastIp]);
         }
+        Vip_OnLogin(playerid);
     }
 
     SetSpawnInfo(playerid, NO_TEAM, g_Player[playerid][pSkin],

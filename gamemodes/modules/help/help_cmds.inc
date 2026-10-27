@@ -14,6 +14,8 @@ cmd:pomoc(playerid, params[])
         C_SERVER "Pomoc i podrska\n" \
         C_WHITE "/n - newbie chat (pitanja novih igraca)    /ask - pitanje helperima\n" \
         "/report - prijava igraca adminima    /admins, /helpers - tim online\n\n" \
+        C_SERVER "VIP\n" \
+        C_WHITE "/vip - VIP nivoi i pogodnosti    /vips - VIP igraci online    /vc - VIP chat\n\n" \
         C_SERVER "Nalog\n" \
         C_WHITE "/promenilozinku - promena lozinke",
         "Zatvori", "");

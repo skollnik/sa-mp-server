@@ -39,6 +39,10 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 31 | 2026-10-24 | Newbie chat čitaju svi, a pišu samo igrači do nivoa 3 i tim | Iskusni igrači mogu da pozovu helpera |
 | 32 | 2026-10-24 | Anti-cheat: automatski kick za oružje i jetpack; za teleport, brzinu, HP i armor samo upozorenje adminima | Prvo su sigurni cheatovi, a drugo ima lažnih uzbuna (lag, padovi) |
 | 33 | 2026-10-24 | Flood: blokada i upozorenje, a posle 3 upozorenja u minuti automatski mute od 2 minuta | Uobičajeno na RP serverima |
+| 34 | 2026-10-27 | Flood se meri u milisekundama (kazneni poeni), a ponovljena poruka se računa kao upozorenje | Stara provera u sekundama nije hvatala ručni spam |
+| 35 | 2026-10-27 | Zaključavanje posle pogrešnih lozinki važi po nalogu i IP adresi | Da niko ne može namerno da zaključa tuđi nalog |
+| 36 | 2026-10-27 | U admin zatvoru rade samo chat komande i komande označene kao bezbedne | Da se zatvor ne izbegne preko `/goto` ili `/spec` |
+| 37 | 2026-10-27 | VIP: Bronze, Silver, Gold, mesečno, dodeljuje samo vlasnik, bez prednosti u igri i bez admin moći | Uobičajeno na ozbiljnim RP serverima |
 
 ### Arhitektura koda (predlog)
 ```
@@ -99,6 +103,10 @@ This file records every important decision so it does not get re-discussed. Newe
 | 31 | 2026-10-24 | Everyone reads newbie chat; only players up to level 3 and staff write | Experienced players can call a helper |
 | 32 | 2026-10-24 | Anti-cheat: automatic kick for weapons and jetpack; teleport, speed, HP and armour only alert admins | The first are certain cheats, the second have false alarms (lag, falls) |
 | 33 | 2026-10-24 | Flood: block and warn, then an automatic 2-minute mute after 3 warnings in a minute | Common on RP servers |
+| 34 | 2026-10-27 | Flood is measured in milliseconds (strikes), and a repeated message counts as a warning | The old per-second check missed manual spam |
+| 35 | 2026-10-27 | The wrong-password lockout applies per account and IP address | Nobody can lock someone else out on purpose |
+| 36 | 2026-10-27 | In admin jail only chat commands and commands marked as safe work | Jail cannot be escaped via `/goto` or `/spec` |
+| 37 | 2026-10-27 | VIP: Bronze, Silver, Gold, monthly, granted only by the owner, no in-game advantage, no admin powers | Common on serious RP servers |
 
 ### Code architecture (proposal)
 ```

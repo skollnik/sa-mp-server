@@ -232,6 +232,7 @@ cmd:check(playerid, params[])
         C_GREY "Enterijer / virtuelni svet\t" C_WHITE "%d / %d\n" \
         C_GREY "Admin\t" C_ADMIN "%s\n" \
         C_GREY "Helper\t" C_HELPER "%s\n" \
+        C_GREY "VIP\t" C_WHITE "%s (%d dana)\n" \
         C_GREY "IP adresa\t" C_WHITE "%s",
         g_Player[targetid][pName],
         targetid, g_Player[targetid][pDbId],
@@ -244,6 +245,7 @@ cmd:check(playerid, params[])
         GetPlayerInterior(targetid), GetPlayerVirtualWorld(targetid),
         g_AdminRankNames[g_Player[targetid][pAdminLevel]],
         g_HelperRankNames[g_Player[targetid][pHelperLevel]],
+        g_VipNames[Vip_GetLevel(targetid)], Vip_IsVip(targetid) ? Vip_DaysLeft(targetid) : 0,
         ip);
     format(title, sizeof(title), SERVER_NAME " - Provera: %s", g_Player[targetid][pName]);
     ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_TABLIST_HEADERS, title, body, "Zatvori", "");
@@ -1123,7 +1125,7 @@ cmd:ahelp(playerid, params[])
     }
     if (level >= ADMIN_LEVEL_OWNER)
     {
-        strcat(body, C_ADMIN "6 - Vlasnik\n" C_WHITE "/givemoney /dozvoliime /zabraniime\n\n");
+        strcat(body, C_ADMIN "6 - Vlasnik\n" C_WHITE "/givemoney /dozvoliime /zabraniime /setvip\n\n");
     }
     if (level < ADMIN_LEVEL_OWNER)
     {

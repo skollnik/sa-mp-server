@@ -433,3 +433,9 @@ stock bool:Staff_OnDialogResponse(playerid, dialogid, response, listitem)
     }
     return true;
 }
+
+// Seconds left before a support command can be used again; VIP status shortens the wait.
+stock Staff_CooldownLeft(playerid, last_used, base_seconds)
+{
+    return last_used + Vip_Cooldown(playerid, base_seconds) - gettime();
+}

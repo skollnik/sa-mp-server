@@ -11,7 +11,7 @@ cmd:report(playerid, params[])
         return 1;
     }
 
-    new wait = g_Staff[playerid][sLastReport] + REPORT_COOLDOWN_S - gettime();
+    new wait = Staff_CooldownLeft(playerid, g_Staff[playerid][sLastReport], REPORT_COOLDOWN_S);
     if (wait > 0)
     {
         Msg_Error(playerid, "Mozete poslati novi report za %d sekundi.", wait);
@@ -50,7 +50,7 @@ cmd:ask(playerid, params[])
         return 1;
     }
 
-    new wait = g_Staff[playerid][sLastAsk] + ASK_COOLDOWN_S - gettime();
+    new wait = Staff_CooldownLeft(playerid, g_Staff[playerid][sLastAsk], ASK_COOLDOWN_S);
     if (wait > 0)
     {
         Msg_Error(playerid, "Mozete postaviti novo pitanje za %d sekundi.", wait);
@@ -103,7 +103,7 @@ cmd:n(playerid, params[])
 
     if (!Staff_IsStaff(playerid))
     {
-        new wait = g_Staff[playerid][sLastNewbie] + NEWBIE_COOLDOWN_S - gettime();
+        new wait = Staff_CooldownLeft(playerid, g_Staff[playerid][sLastNewbie], NEWBIE_COOLDOWN_S);
         if (wait > 0)
         {
             Msg_Error(playerid, "Mozete pisati u newbie chat za %d sekundi.", wait);

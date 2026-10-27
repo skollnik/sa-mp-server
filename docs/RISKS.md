@@ -48,6 +48,15 @@ Ova pravila sprečavaju greške kao što je „GPS pomeri marker posla, pa igra�
 | Ban IP-a zaključa sve na istoj mreži | 👁 | Namerno; `127.0.0.1` se nikad ne banuje. `/unban` skida ceo ban |
 | Ban po serijskom broju pogodi sve naloge na istom računaru | 👁 | Namerno (sprečava zaobilaženje bana). Vlasnik je izuzet |
 
+### VIP
+| Rizik | Status | Kako je rešeno |
+|-------|--------|----------------|
+| VIP dodeli neko ko nije vlasnik | ✅ | `/setvip` radi samo za vlasnika |
+| Autosave prepiše tek dodeljen VIP | ✅ | VIP polja menja samo VIP modul, odmah u bazi |
+| VIP istekne dok je igrač online, a pogodnosti i dalje rade | ✅ | Rok se proverava pri svakoj upotrebi |
+| Spor oko plaćenih meseci | ✅ | Svaka dodela je u tabeli `vip_history` |
+| Spam u VIP chatu | ✅ | `/vc` je chat komanda: važe mute i flood zaštita |
+
 ### Anti-cheat
 | Rizik | Status | Kako je rešeno |
 |-------|--------|----------------|
@@ -109,6 +118,15 @@ These rules prevent bugs like "the GPS moves the job marker, so the player finis
 | A report number is reused, so an admin accepts the wrong report | 👁 | Rare; numbers are reused only after a report is closed |
 | An IP ban locks everyone on the same network | 👁 | By design; `127.0.0.1` is never banned. `/unban` lifts the whole ban |
 | A serial ban hits every account on the same computer | 👁 | By design (stops ban evasion). The owner is exempt |
+
+### VIP
+| Risk | Status | How it is handled |
+|------|--------|-------------------|
+| VIP granted by someone other than the owner | ✅ | `/setvip` works only for the owner |
+| Autosave overwrites a fresh VIP grant | ✅ | Only the VIP module writes the VIP columns, straight to the database |
+| VIP expires while online but perks keep working | ✅ | Expiry is checked on every use |
+| Dispute over paid months | ✅ | Every grant is stored in `vip_history` |
+| VIP chat spam | ✅ | `/vc` is a chat command: mute and flood protection apply |
 
 ### Anti-cheat
 | Risk | Status | How it is handled |

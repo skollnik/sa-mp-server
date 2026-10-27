@@ -55,6 +55,15 @@
 | Akcenti (`/accent`) |
 | Report bez igrača, npr. `/report zaglavio sam` (čeka odgovor vlasnika) |
 
+**VIP (čeka odluku vlasnika i druge sisteme, vidi VIP.md)**
+| Stavka |
+|--------|
+| Odluka o pogodnostima koje daju malu prednost (bonus na platu, dodatni respect, dodatno vozilo) i o cenama |
+| `/setvip` za igrača koji nije online |
+| Prelazak na viši nivo bez gubitka preostalih dana (sada novi nivo kreće od danas) |
+| Rezervisano mesto za VIP kad je server pun |
+| Pogodnosti vezane za payday, inventar, telefon, vozila i oglase, kad ti sistemi budu napravljeni |
+
 **Kasnije**
 | Stavka |
 |--------|
@@ -77,6 +86,10 @@
 | 24.10.2026. | Osnovni anti-cheat: oružje, jetpack, HP, armor, novac, teleport, brzina, flood, boje u chatu, `/aclog` |
 | 24.10.2026. | Prikaz HP-a, armora, oružja, brzine i pinga dok admin posmatra igrača (`/spec`) |
 | 24.10.2026. | Oznaka poruke prati ko je uradio akciju ([ADMIN] ili [HELPER]) |
+| 27.10.2026. | Ispravljena flood zaštita (milisekunde, ponovljene poruke), zaključavanje po IP-u, bezbedan odloženi kick, ograničene komande u zatvoru, brisanje oružja pri smrti |
+| 27.10.2026. | Prerada koda: `Account_Name`, `Staff_ParseTarget`, `Staff_CooldownLeft` umesto ponovljenog koda |
+| 27.10.2026. | Pregled rizika i zloupotreba (`docs/RISKS.md`) |
+| 27.10.2026. | VIP sistem: Bronze, Silver, Gold, `/vip`, `/vc`, `/vips`, `/setvip`, kraće pauze, istorija dodela |
 
 ---
 
@@ -135,6 +148,15 @@ What must be added **after** a system or **once** another system exists. When an
 | Accents (`/accent`) |
 | Report without a player, e.g. `/report I'm stuck` (waiting for the owner's answer) |
 
+**VIP (waiting for the owner's decision and other systems, see VIP.md)**
+| Item |
+|------|
+| Decision on perks with a small advantage (payday bonus, extra respect, extra vehicle) and on prices |
+| `/setvip` for an offline player |
+| Upgrading to a higher tier without losing remaining days (now the new tier starts from today) |
+| Reserved slot for VIP when the server is full |
+| Perks tied to payday, inventory, phone, vehicles and ads, once those systems exist |
+
 **Later**
 | Item |
 |------|
@@ -157,3 +179,7 @@ What must be added **after** a system or **once** another system exists. When an
 | 2026-10-24 | Basic anti-cheat: weapons, jetpack, HP, armour, money, teleport, speed, flood, chat colours, `/aclog` |
 | 2026-10-24 | HP, armour, weapon, speed and ping shown while an admin spectates (`/spec`) |
 | 2026-10-24 | Message tag follows who acted ([ADMIN] or [HELPER]) |
+| 2026-10-27 | Fixed flood protection (milliseconds, repeated messages), per-IP lockout, safe delayed kick, limited commands in jail, weapons cleared on death |
+| 2026-10-27 | Code refactor: `Account_Name`, `Staff_ParseTarget`, `Staff_CooldownLeft` instead of repeated code |
+| 2026-10-27 | Risk and exploit review (`docs/RISKS.md`) |
+| 2026-10-27 | VIP system: Bronze, Silver, Gold, `/vip`, `/vc`, `/vips`, `/setvip`, shorter cooldowns, grant history |
