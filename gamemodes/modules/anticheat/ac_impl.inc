@@ -32,16 +32,27 @@ stock AC_OnPlayerSpawn(playerid)
     AC_GraceMovement(playerid);
 }
 
-// Server-side teleports (admin tools, jail, spawn) get a short grace period so they are not reported as cheats.
 stock AC_GraceMovement(playerid)
 {
     g_Ac[playerid][acGraceUntil] = gettime() + AC_MOVE_GRACE_S;
     g_Ac[playerid][acHasLastPos] = false;
+    g_Ac[playerid][acHasTarget] = false;
+}
+
+// After a server teleport, movement checks pause until the client reports being at the destination.
+stock AC_ExpectTeleport(playerid, Float:x, Float:y, Float:z)
+{
+    g_Ac[playerid][acTargetX] = x;
+    g_Ac[playerid][acTargetY] = y;
+    g_Ac[playerid][acTargetZ] = z;
+    g_Ac[playerid][acHasTarget] = true;
+    g_Ac[playerid][acHasLastPos] = false;
+    g_Ac[playerid][acGraceUntil] = gettime() + AC_TELEPORT_CONFIRM_S;
 }
 
 stock AC_SetPlayerPos(playerid, Float:x, Float:y, Float:z)
 {
-    AC_GraceMovement(playerid);
+    AC_ExpectTeleport(playerid, x, y, z);
     SetPlayerPos(playerid, x, y, z);
 }
 
@@ -62,12 +73,14 @@ stock AC_ResetPlayerWeapons(playerid)
     {
         g_Ac[playerid][acWeapon][i] = WEAPON_FIST;
     }
+    g_Ac[playerid][acWeaponSyncUntil] = gettime() + AC_WEAPON_SYNC_S;
     ResetPlayerWeapons(playerid);
 }
 
 stock AC_SetPlayerArmour(playerid, Float:armour)
 {
     g_Ac[playerid][acArmour] = armour;
+    g_Ac[playerid][acArmourSyncUntil] = gettime() + AC_ARMOUR_SYNC_S;
     SetPlayerArmour(playerid, armour);
 }
 
@@ -80,7 +93,6 @@ stock AC_Log(playerid, E_AC_TYPE:type, const details[], const action[])
     mysql_tquery(g_SQL, query);
 }
 
-// Suspicions go to admins only, at most once per type every AC_ALERT_COOLDOWN_S per player.
 stock AC_Alert(playerid, E_AC_TYPE:type, const details[])
 {
     new now = gettime();
@@ -117,6 +129,12 @@ stock AC_KickForCheat(playerid, E_AC_TYPE:type, const details[])
 
 stock AC_CheckWeapons(playerid)
 {
+    // Right after the server takes weapons away the client still holds them for a moment.
+    if (g_Ac[playerid][acWeaponSyncUntil] > gettime())
+    {
+        return;
+    }
+
     new WEAPON:weapon, ammo;
     for (new slot = 0; slot < AC_WEAPON_SLOTS; slot++)
     {
@@ -149,6 +167,16 @@ stock AC_CheckHealthArmour(playerid)
         AC_Alert(playerid, AC_TYPE_HEALTH, details);
     }
 
+    // Until the client shows the armour the server just set, its old value must not become the new allowance.
+    if (g_Ac[playerid][acArmourSyncUntil] > gettime())
+    {
+        if (floatabs(armour - g_Ac[playerid][acArmour]) <= 1.0)
+        {
+            g_Ac[playerid][acArmourSyncUntil] = 0;
+        }
+        return;
+    }
+
     if (armour > g_Ac[playerid][acArmour] + 1.0)
     {
         SetPlayerArmour(playerid, g_Ac[playerid][acArmour]);
@@ -178,6 +206,17 @@ stock AC_CheckMovement(playerid, PLAYER_STATE:player_state)
 {
     new Float:x, Float:y, Float:z;
     GetPlayerPos(playerid, x, y, z);
+
+    if (g_Ac[playerid][acHasTarget])
+    {
+        new bool:arrived = VectorSize(x - g_Ac[playerid][acTargetX], y - g_Ac[playerid][acTargetY], z - g_Ac[playerid][acTargetZ]) <= AC_TELEPORT_ARRIVE_RADIUS;
+        if (!arrived && gettime() < g_Ac[playerid][acGraceUntil])
+        {
+            return;
+        }
+        g_Ac[playerid][acHasTarget] = false;
+        g_Ac[playerid][acGraceUntil] = 0;
+    }
 
     if (gettime() < g_Ac[playerid][acGraceUntil] || !g_Ac[playerid][acHasLastPos])
     {
@@ -275,7 +314,6 @@ public AC_Tick()
     return 1;
 }
 
-// Adds or removes a strike depending on how soon this action follows the previous one.
 stock AC_UpdateStrikes(&last_tick, &strikes, min_gap_ms, calm_gap_ms)
 {
     new now = GetTickCount(), gap = now - last_tick;
@@ -296,7 +334,6 @@ stock AC_UpdateStrikes(&last_tick, &strikes, min_gap_ms, calm_gap_ms)
     return strikes;
 }
 
-// One flood warning; the third within a minute turns into an automatic mute.
 stock AC_FloodWarning(playerid)
 {
     new now = gettime();

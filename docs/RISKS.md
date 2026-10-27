@@ -17,6 +17,15 @@ Ova pravila sprečavaju greške kao što je „GPS pomeri marker posla, pa igra�
 6. **Svaka komanda ima pauzu ili limit** ako može da se spamuje (report, ask, newbie chat, komande uopšte).
 7. **Teleport, oružje i armor samo preko AC funkcija**, inače ih anti-cheat prijavljuje ili, još gore, ne primećuje cheat.
 
+### Kako se proverava svaka izmena
+Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće sisteme, a ne samo za jedan primer:
+1. **Zajednički podaci:** ko još čita ili menja isti podatak (novac, poziciju, checkpoint, oružje, tajmer, kolonu u bazi)? Može li jedan sistem da pregazi drugi?
+2. **Stanja igrača:** šta ako igrač u tom trenutku izađe, umre, bude u zatvoru, ima mute, posmatra ili je posmatran, sedi u vozilu, u enterijeru ili drugom virtuelnom svetu?
+3. **Kašnjenje klijenta:** šta ako klijent javi promenu sekundu kasnije (lag, prozor u pozadini)? Ne sme da nastane lažna uzbuna ni pogrešan kick.
+4. **Ponavljanje i brzina:** šta ako igrač komandu kuca 100 puta ili dva igrača rade isto u istoj sekundi?
+5. **Ko sme:** da li je provera nivoa i dužnosti na pravom mestu, i da li poruka otkriva previše?
+6. **Baza:** da li asinhroni odgovor proverava da je igrač isti i da li se išta gubi pri restartu?
+
 ### Nalog i login
 | Rizik | Status | Kako je rešeno |
 |-------|--------|----------------|
@@ -44,6 +53,7 @@ Ova pravila sprečavaju greške kao što je „GPS pomeri marker posla, pa igra�
 | Admin u zatvoru pobegne preko `/goto` ili `/spec` | ✅ | U zatvoru rade samo chat komande i nekoliko bezbednih (report, ask, pomoć) |
 | Zatvor se izbegne izlaskom sa servera | ✅ | Preostalo vreme se čuva u bazi |
 | Admin vozila kao besplatni automobili | ✅ | Vozi ih samo admin, a brišu se kad admin izađe |
+| Igrač bez dozvole ukuca `/specoff` i dobije poruku namenjenu adminu | ✅ | Prvo se proverava dozvola |
 | Broj reporta se ponovo iskoristi, pa admin prihvati pogrešan report | 👁 | Retko; brojevi se ponovo koriste tek kad se report zatvori |
 | Ban IP-a zaključa sve na istoj mreži | 👁 | Namerno; `127.0.0.1` se nikad ne banuje. `/unban` skida ceo ban |
 | Ban po serijskom broju pogodi sve naloge na istom računaru | 👁 | Namerno (sprečava zaobilaženje bana). Vlasnik je izuzet |
@@ -66,6 +76,9 @@ Ova pravila sprečavaju greške kao što je „GPS pomeri marker posla, pa igra�
 | Jetpack | ✅ | Kick |
 | HP i armor | 👁 | Vraćaju se na pravu vrednost i adminima stiže upozorenje |
 | Teleport i speedhack | 👁 | Samo upozorenje adminima, jer lag i padovi daju lažne uzbune |
+| Lažna uzbuna za teleport posle izlaska iz zatvora (klijent kasni sa novom pozicijom) | ✅ | Posle teleporta servera provera čeka dok igrač stvarno ne stigne na cilj, najviše 10 s |
+| Lažna uzbuna za armor odmah posle `/setarmour` | ✅ | Provera čeka da klijent potvrdi novu vrednost |
+| Pogrešan kick za oružje odmah posle `/disarm` ili ulaska u zatvor | ✅ | Posle oduzimanja oružja provera oružja čeka 3 s |
 | Vozila: popravka cheat-om, ulazak u zaključano vozilo | 📋 | Kad dođe sistem vozila |
 | Lažna smrt, spam konekcija, botovi | 📋 | Napredni anti-cheat (Faza 7) |
 
@@ -87,6 +100,15 @@ These rules prevent bugs like "the GPS moves the job marker, so the player finis
 5. **Money moves in one step.** In trades it is removed and added at once, after checking both sides still have what they sell, so nothing can be duplicated.
 6. **Every spammable command has a cooldown or limit** (report, ask, newbie chat, commands in general).
 7. **Teleports, weapons and armour only through the AC functions**, otherwise anti-cheat flags them or, worse, misses a cheat.
+
+### How every change is checked
+Every new system or change goes through these questions, against all existing systems, not just one example:
+1. **Shared data:** who else reads or writes the same data (money, position, checkpoint, weapons, timer, database column)? Can one system overwrite another?
+2. **Player states:** what if the player leaves, dies, is jailed, muted, spectating or spectated, in a vehicle, an interior or another virtual world at that moment?
+3. **Client delay:** what if the client reports the change a second later (lag, window in the background)? No false alarm or wrong kick may follow.
+4. **Repetition and speed:** what if the player types the command 100 times, or two players do the same thing in the same second?
+5. **Permissions:** is the level and duty check in the right place, and does the message reveal too much?
+6. **Database:** does the async answer check the player is still the same, and is anything lost on restart?
 
 ### Account and login
 | Risk | Status | How it is handled |
@@ -115,6 +137,7 @@ These rules prevent bugs like "the GPS moves the job marker, so the player finis
 | A jailed admin escapes via `/goto` or `/spec` | ✅ | In jail only chat commands and a few safe ones (report, ask, help) work |
 | Avoiding jail by leaving the server | ✅ | Remaining time is stored in the database |
 | Admin vehicles as free cars | ✅ | Only admins drive them, and they are deleted when the admin leaves |
+| A player without permission types `/specoff` and gets an admin-only message | ✅ | Permission is checked first |
 | A report number is reused, so an admin accepts the wrong report | 👁 | Rare; numbers are reused only after a report is closed |
 | An IP ban locks everyone on the same network | 👁 | By design; `127.0.0.1` is never banned. `/unban` lifts the whole ban |
 | A serial ban hits every account on the same computer | 👁 | By design (stops ban evasion). The owner is exempt |
@@ -137,5 +160,8 @@ These rules prevent bugs like "the GPS moves the job marker, so the player finis
 | Jetpack | ✅ | Kick |
 | HP and armour | 👁 | Reset to the real value and admins are alerted |
 | Teleport and speedhack | 👁 | Admin alert only, since lag and falls cause false alarms |
+| False teleport alert after leaving jail (client reports the new position late) | ✅ | After a server teleport the check waits until the player actually arrives, up to 10 s |
+| False armour alert right after `/setarmour` | ✅ | The check waits for the client to confirm the new value |
+| Wrong weapon kick right after `/disarm` or being jailed | ✅ | After weapons are taken away the weapon check waits 3 s |
 | Vehicles: cheat repair, entering a locked vehicle | 📋 | With the vehicle system |
 | Fake kill, connection spam, bots | 📋 | Advanced anti-cheat (Phase 7) |

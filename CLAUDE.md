@@ -23,7 +23,6 @@
 - `docs/DECISIONS.md`: odluke i arhitektura koda / decisions and code architecture
 - `docs/ECONOMY.md`: cene, plate, nivoi / prices, wages, levels
 - `docs/ADMIN.md`: tim, nivoi i komande / staff, levels and commands
-- `docs/MAPPING.md`: Texture Studio i gotove mape / Texture Studio and ready-made maps
 - `docs/VIP.md`: VIP nivoi, pogodnosti i cene / VIP tiers, perks and prices
 - `docs/RISKS.md`: rizici, zloupotrebe i pravila za nove sisteme / risks, exploits and rules for new systems
 - `docs/BACKLOG.md`: podsetnik za stvari koje čekaju drugi sistem / reminders for things waiting on another system

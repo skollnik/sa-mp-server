@@ -36,7 +36,6 @@ stock Punish_Exit()
     KillTimer(g_JailTimer);
 }
 
-// Every punishment is announced to the whole server in one consistent line.
 stock Punish_Announce(const message[])
 {
     Chat_SendToAll(COLOR_RED, message);

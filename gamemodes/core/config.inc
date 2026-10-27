@@ -26,7 +26,6 @@
 #define LOGIN_LOOKAT_Z      (60.0)
 #define LOGIN_CAMERA_TIME_MS (40 * 1000)
 
-// Neutral civilian skins handed out at random on registration.
 new const g_StarterSkinsMale[] = { 7, 47, 60 };
 new const g_StarterSkinsFemale[] = { 40, 56, 93 };
 
@@ -40,7 +39,6 @@ new const g_StarterSkinsFemale[] = { 40, 56, 93 };
 
 #define MAX_LOGIN_ATTEMPTS  (3)
 
-// Brute-force protection across reconnects: this many failures within the window locks the account.
 #define LOCKOUT_MAX_FAILURES    (5)
 #define LOCKOUT_WINDOW_MINUTES  (15)
 #define LOCKOUT_MINUTES         (15)

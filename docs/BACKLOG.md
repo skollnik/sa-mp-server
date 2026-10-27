@@ -6,12 +6,12 @@
 
 ### Čeka
 
-**Posle odluke o mapama** (Texture Studio ili gotove mape)
+**Kad vlasnik doda mape** (vlasnik ih pravi sam, a ja ih ubacujem u `gamemodes/maps/`)
 | Stavka |
 |--------|
 | Baza za admine i helpere (`/abaza`, `/hbaza`) |
 | Baze bandi, mafija i frakcija |
-| Uređenje spawna na aerodromu (prva verzija iz koda je obrisana, radi se ponovo u Texture Studio-u) |
+| Uređenje spawna na aerodromu (prva verzija iz koda je obrisana) |
 | Prebaciti admin zatvor u bazu tima, kad baza bude napravljena |
 
 **Posle sistema vozila (Faza 3)**
@@ -82,7 +82,7 @@
 | 23.10.2026. | Sistem mapa (`gamemodes/maps/`). Prva verzija uređenja aerodroma je obrisana na zahtev vlasnika |
 | 23.10.2026. | Admin sistem, deo 2: kick, ban (privremeni, trajni, offline, IP), warn, mute, newbie mute, admin zatvor, `/pmspy` |
 | 23.10.2026. | Provera bana pri ulasku i upozorenje adminima za istu IP adresu |
-| 23.10.2026. | Uputstvo za mapiranje (`docs/MAPPING.md`) |
+| 23.10.2026. | Uputstvo za mapiranje (obrisano 27.10.2026. na zahtev vlasnika) |
 | 24.10.2026. | Osnovni anti-cheat: oružje, jetpack, HP, armor, novac, teleport, brzina, flood, boje u chatu, `/aclog` |
 | 24.10.2026. | Prikaz HP-a, armora, oružja, brzine i pinga dok admin posmatra igrača (`/spec`) |
 | 24.10.2026. | Oznaka poruke prati ko je uradio akciju ([ADMIN] ili [HELPER]) |
@@ -99,12 +99,12 @@ What must be added **after** a system or **once** another system exists. When an
 
 ### Waiting
 
-**After the decision on maps** (Texture Studio or ready-made maps)
+**Once the owner adds maps** (the owner makes them, I put them into `gamemodes/maps/`)
 | Item |
 |------|
 | Staff base for admins and helpers (`/abaza`, `/hbaza`) |
 | Bases for gangs, mafias and factions |
-| Decorate the airport spawn (the first code-only version was deleted, redo it in Texture Studio) |
+| Decorate the airport spawn (the first code-only version was deleted) |
 | Move admin jail into the staff base once the base exists |
 
 **After the vehicle system (Phase 3)**
@@ -175,7 +175,7 @@ What must be added **after** a system or **once** another system exists. When an
 | 2026-10-23 | Map system (`gamemodes/maps/`). The first airport decoration was deleted at the owner's request |
 | 2026-10-23 | Admin system part 2: kick, ban (temporary, permanent, offline, IP), warn, mute, newbie mute, admin jail, `/pmspy` |
 | 2026-10-23 | Ban check on connect and admin alert for a shared IP |
-| 2026-10-23 | Mapping guide (`docs/MAPPING.md`) |
+| 2026-10-23 | Mapping guide (deleted 2026-10-27 at the owner's request) |
 | 2026-10-24 | Basic anti-cheat: weapons, jetpack, HP, armour, money, teleport, speed, flood, chat colours, `/aclog` |
 | 2026-10-24 | HP, armour, weapon, speed and ping shown while an admin spectates (`/spec`) |
 | 2026-10-24 | Message tag follows who acted ([ADMIN] or [HELPER]) |

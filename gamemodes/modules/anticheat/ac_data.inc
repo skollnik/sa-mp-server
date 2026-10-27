@@ -4,7 +4,12 @@ forward bool:AC_CheckCommand(playerid);
 #define AC_WEAPON_SLOTS             (13)
 #define AC_TICK_MS                  (1000)
 #define AC_ALERT_COOLDOWN_S         (30)
-#define AC_MOVE_GRACE_S             (3)
+// The client confirms server changes with a delay (lag, a window in the background), so checks wait for it.
+#define AC_MOVE_GRACE_S             (5)
+#define AC_TELEPORT_CONFIRM_S       (10)
+#define AC_TELEPORT_ARRIVE_RADIUS   (15.0)
+#define AC_ARMOUR_SYNC_S            (5)
+#define AC_WEAPON_SYNC_S            (3)
 
 // Sprinting is about 9 m/s; anything far above that on foot, horizontally, is not legit movement.
 #define AC_MAX_FOOT_SPEED           (20.0)
@@ -49,6 +54,12 @@ enum E_AC_STATE
     Float:acLastZ,
     bool:acHasLastPos,
     acGraceUntil,
+    Float:acTargetX,
+    Float:acTargetY,
+    Float:acTargetZ,
+    bool:acHasTarget,
+    acArmourSyncUntil,
+    acWeaponSyncUntil,
     acLastAlert[E_AC_TYPE],
     acLastChatTick,
     acChatStrikes,

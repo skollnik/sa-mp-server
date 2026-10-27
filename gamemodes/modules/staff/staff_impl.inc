@@ -251,7 +251,6 @@ stock Staff_UpdateDutyLook(playerid)
     }
 }
 
-// Tells the affected player which admin did what; skipped when admins use a command on themselves.
 stock Staff_NotifyTarget(adminid, targetid, const action[])
 {
     if (adminid == targetid)
@@ -336,7 +335,7 @@ stock Staff_TeleportTo(playerid, Float:x, Float:y, Float:z, interior, world)
     if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
     {
         new vehicleid = GetPlayerVehicleID(playerid);
-        AC_GraceMovement(playerid);
+        AC_ExpectTeleport(playerid, x, y, z);
         SetVehiclePos(vehicleid, x, y, z);
         LinkVehicleToInterior(vehicleid, interior);
         SetVehicleVirtualWorld(vehicleid, world);

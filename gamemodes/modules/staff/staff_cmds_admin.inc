@@ -187,9 +187,17 @@ cmd:spec(playerid, params[])
 
 cmd:specoff(playerid, params[])
 {
+    // An admin demoted while spectating must still be able to stop, so the rank is only checked when not spectating.
     if (!g_Staff[playerid][sSpectating])
     {
-        Msg_Error(playerid, "Trenutno ne posmatrate nikoga.");
+        if (!Staff_IsAdmin(playerid))
+        {
+            Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        }
+        else
+        {
+            Msg_Error(playerid, "Trenutno ne posmatrate nikoga.");
+        }
         return 1;
     }
 
