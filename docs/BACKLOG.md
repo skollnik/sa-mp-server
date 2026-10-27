@@ -64,6 +64,12 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Lažna smrt (fake kill), spam konekcija i botovi |
 | Automatske kazne za teleport i brzinu kad se pragovi provere u praksi |
 
+### Čeka odluku vlasnika
+| Stavka |
+|--------|
+| `/vskin`: umesto ID-ja skina prikazati slike skinova ili nazive „VIP skin 1, 2, 3...“ (predlog poslat 27.10.2026.) |
+| Faza 2: detaljan predlog poslat 27.10.2026., čeka odobrenje i odgovore na pitanja |
+
 ### Može bilo kada
 | Stavka |
 |--------|
@@ -169,6 +175,12 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 |------|
 | Fake kill, connection spam and bots |
 | Automatic punishment for teleport and speed once the thresholds are proven in practice |
+
+### Waiting for the owner's decision
+| Item |
+|------|
+| `/vskin`: show skin pictures or "VIP skin 1, 2, 3..." instead of skin IDs (proposal sent 2026-10-27) |
+| Phase 2: detailed proposal sent 2026-10-27, waiting for approval and answers |
 
 ### Any time
 | Item |
