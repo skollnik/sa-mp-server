@@ -104,7 +104,7 @@ stock AC_Alert(playerid, E_AC_TYPE:type, const details[])
 
     new message[160];
     format(message, sizeof(message), "[AC] %s [%d]: sumnja na %s (%s). Proverite sa /spec %d", g_Player[playerid][pName], playerid, g_AcTypeNames[type], details, playerid);
-    Staff_SendToAdmins(message);
+    Staff_SendToAdmins(message, CHANNEL_ANTICHEAT);
     AC_Log(playerid, type, details, "alert");
 }
 

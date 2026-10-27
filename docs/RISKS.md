@@ -66,6 +66,21 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | VIP istekne dok je igrač online, a pogodnosti i dalje rade | ✅ | Rok se proverava pri svakoj upotrebi |
 | Spor oko plaćenih meseci | ✅ | Svaka dodela je u tabeli `vip_history` |
 | Spam u VIP chatu | ✅ | `/vc` je chat komanda: važe mute i flood zaštita |
+| `/vgoto` za bežanje iz borbe ili ulazak u tuđi enterijer | ✅ | Pauza 5 min, ne radi minut posle primljene štete, samo peške, samo do igrača napolju (enterijer 0, svet 0), ne do tima na dužnosti ni do igrača u spec-u ili mrtvog; cilj dobija obaveštenje |
+| `/vheal` i `/vfix` usred borbe | ✅ | Ne rade minut posle primljene štete i imaju pauzu |
+| `/vheal` dok je igrač ranjen, `/vgoto` i `/vfix` u potjeri | 📋 | Kad dođu povrede i policija |
+| `/vcolor` i `/vfix` na tuđem vozilu | 📋 | Kad dođu lična vozila: samo sopstvena |
+| `/vskin` uniforma frakcije | ✅ | Lista sadrži samo civilne skinove |
+| Igrač odgovori na `/vskin` dijalog posle isteka VIP-a | ✅ | Status se proverava i pri odgovoru |
+| Rezervisano mesto zaobiđe neko ko nije VIP | ✅ | Provera posle čitanja naloga iz baze, pre logina |
+
+### Kanali
+| Rizik | Status | Kako je rešeno |
+|-------|--------|----------------|
+| Admin isključi reportove ili AC upozorenja, pa ih niko ne vidi | ✅ | Na dužnosti su zaključani |
+| Niko ne vidi pitanje kad nema helpera | ✅ | Pitanja su zaključana za helpere i admine na dužnosti |
+| Igrač piše u kanal koji je sam isključio | ✅ | Ne može dok ga ne uključi |
+| Klik u `/kanali` promeni pogrešan kanal | ✅ | Pamti se koji je red koji kanal u poslednjem prikazanom spisku |
 
 ### Anti-cheat
 | Rizik | Status | Kako je rešeno |
@@ -150,6 +165,21 @@ Every new system or change goes through these questions, against all existing sy
 | VIP expires while online but perks keep working | ✅ | Expiry is checked on every use |
 | Dispute over paid months | ✅ | Every grant is stored in `vip_history` |
 | VIP chat spam | ✅ | `/vc` is a chat command: mute and flood protection apply |
+| `/vgoto` to escape a fight or enter someone's interior | ✅ | 5 min cooldown, not for a minute after taking damage, on foot only, only to players outdoors (interior 0, world 0), not to staff on duty or players spectating or dead; the target is notified |
+| `/vheal` and `/vfix` mid-fight | ✅ | Blocked for a minute after taking damage, plus a cooldown |
+| `/vheal` while wounded, `/vgoto` and `/vfix` during a chase | 📋 | Once injuries and police exist |
+| `/vcolor` and `/vfix` on someone else's vehicle | 📋 | Once personal vehicles exist: own vehicles only |
+| `/vskin` faction uniform | ✅ | The list holds civilian skins only |
+| Answering the `/vskin` dialog after VIP expired | ✅ | Status is checked again on the answer |
+| A non-VIP gets a reserved slot | ✅ | Checked after the account row is read, before login |
+
+### Channels
+| Risk | Status | How it is handled |
+|------|--------|-------------------|
+| An admin switches off reports or AC alerts, so nobody sees them | ✅ | Locked while on duty |
+| Nobody sees a question when no helper is around | ✅ | Questions are locked for helpers and admins on duty |
+| A player writes in a channel they switched off | ✅ | Not until they switch it back on |
+| A click in `/kanali` toggles the wrong channel | ✅ | The row-to-channel mapping of the last shown list is remembered |
 
 ### Anti-cheat
 | Risk | Status | How it is handled |

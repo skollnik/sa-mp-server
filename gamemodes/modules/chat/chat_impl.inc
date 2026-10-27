@@ -35,11 +35,15 @@ stock Chat_FadeColor(Float:distance, Float:radius)
 }
 
 // Player text always goes in as a "%s" argument: open.mp formats every message and a stray % can crash it.
-stock Chat_Send(playerid, color, const message[])
+// keep_colors is only for messages whose player text was already cleaned with Chat_CleanText.
+stock Chat_Send(playerid, color, const message[], bool:keep_colors = false)
 {
     new text[256];
     strcopy(text, message);
-    Chat_StripColors(text);
+    if (!keep_colors)
+    {
+        Chat_StripColors(text);
+    }
 
     new len = strlen(text);
     if (len <= CHAT_SPLIT_AT)
@@ -68,7 +72,7 @@ stock Chat_Send(playerid, color, const message[])
     SendClientMessage(playerid, color, "%s", part);
 }
 
-stock Chat_SendNearby(playerid, Float:radius, color, const message[], bool:fade = false)
+stock Chat_SendNearby(playerid, Float:radius, color, const message[], bool:fade = false, bool:keep_colors = false)
 {
     new Float:x, Float:y, Float:z;
     GetPlayerPos(playerid, x, y, z);
@@ -89,7 +93,7 @@ stock Chat_SendNearby(playerid, Float:radius, color, const message[], bool:fade 
             continue;
         }
 
-        Chat_Send(i, fade ? Chat_FadeColor(distance, radius) : color, message);
+        Chat_Send(i, fade ? Chat_FadeColor(distance, radius) : color, message, keep_colors);
     }
 }
 
@@ -166,4 +170,28 @@ stock Chat_ShowBubble(playerid, const message[])
     strcopy(text, message);
     Chat_StripColors(text);
     SetPlayerChatBubble(playerid, "%s", COLOR_PURPLE, CHAT_RADIUS_ACTION, 8000, text);
+}
+
+// Player text without colour codes, for messages that carry intentional colours of their own.
+stock Chat_CleanText(const text[])
+{
+    new clean[144];
+    strcopy(clean, text);
+    Chat_StripColors(clean);
+    return clean;
+}
+
+// Name in the VIP colour for OOC chats, switching back to the chat's own colour afterwards.
+stock Chat_ColoredName(playerid, const chat_color[])
+{
+    new text[64];
+    if (Vip_IsVip(playerid))
+    {
+        format(text, sizeof(text), "%s%s%s", g_VipColorTags[Vip_GetLevel(playerid)], Account_Name(playerid), chat_color);
+    }
+    else
+    {
+        strcopy(text, Account_Name(playerid));
+    }
+    return text;
 }

@@ -1,5 +1,6 @@
 forward bool:Account_IsOwnerName(const name[]);
 forward bool:Account_IsValidRpName(const name[]);
+forward bool:Account_CheckFreeSlot(playerid);
 
 stock Account_Init()
 {
@@ -52,6 +53,12 @@ stock Account_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `jail_reason` VARCHAR(96) NOT NULL DEFAULT ''");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `vip_level` TINYINT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `vip_until` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `channel_bits` INT NOT NULL DEFAULT 0");
+
+    // The old per-chat toggle columns are folded into channel_bits (OOC = bit 0, PM = bit 1, newbie = bit 2) and cleared.
+    mysql_tquery(g_SQL,
+        "UPDATE `accounts` SET `channel_bits` = `channel_bits` | `tog_ooc` | (`tog_pm` << 1) | (`tog_newbie` << 2), " \
+        "`tog_ooc` = 0, `tog_pm` = 0, `tog_newbie` = 0 WHERE `tog_ooc` = 1 OR `tog_pm` = 1 OR `tog_newbie` = 1");
 
     mysql_tquery(g_SQL,
         "CREATE TABLE IF NOT EXISTS `login_attempts` (" \
@@ -299,6 +306,10 @@ public OnAccountLookup(playerid, race)
 
     if (cache_num_rows() == 0)
     {
+        if (!Account_CheckFreeSlot(playerid))
+        {
+            return 1;
+        }
         g_Player[playerid][pState] = ACCOUNT_STATE_REGISTER;
         Account_ShowRegisterPassword(playerid, "");
         Account_StartTimeout(playerid, REGISTER_TIMEOUT_MS);
@@ -320,9 +331,7 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name(0, "password", g_Player[playerid][pPasswordHash], BCRYPT_HASH_LENGTH);
     cache_get_value_name_int(0, "admin_level", g_Player[playerid][pAdminLevel]);
     cache_get_value_name_int(0, "helper_level", g_Player[playerid][pHelperLevel]);
-    cache_get_value_name_int(0, "tog_ooc", g_Player[playerid][pTogOoc]);
-    cache_get_value_name_int(0, "tog_pm", g_Player[playerid][pTogPm]);
-    cache_get_value_name_int(0, "tog_newbie", g_Player[playerid][pTogNewbie]);
+    cache_get_value_name_int(0, "channel_bits", g_Player[playerid][pChannelBits]);
     cache_get_value_name_int(0, "mute_until", g_Player[playerid][pMuteUntil]);
     cache_get_value_name_int(0, "newbie_mute_until", g_Player[playerid][pNewbieMuteUntil]);
     cache_get_value_name_int(0, "jail_seconds", g_Player[playerid][pJailSeconds]);
@@ -345,6 +354,11 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_float(0, "health", g_Player[playerid][pHealth]);
     cache_get_value_name_float(0, "armour", g_Player[playerid][pArmour]);
     cache_get_value_name_int(0, "played_seconds", g_Player[playerid][pPlayedSeconds]);
+
+    if (!Account_CheckFreeSlot(playerid))
+    {
+        return 1;
+    }
 
     g_Player[playerid][pState] = ACCOUNT_STATE_LOGIN;
     Account_ShowLogin(playerid, "");
@@ -871,7 +885,7 @@ stock Account_Save(playerid, bool:sync = false)
     mysql_format(g_SQL, query, sizeof(query),
         "UPDATE `accounts` SET `admin_level` = %d, `helper_level` = %d, `skin` = %d, `level` = %d, `respect` = %d, `cash` = %d, `bank` = %d, " \
         "`pos_x` = %f, `pos_y` = %f, `pos_z` = %f, `pos_a` = %f, `interior` = %d, `virtual_world` = %d, " \
-        "`health` = %f, `armour` = %f, `played_seconds` = %d, `tog_ooc` = %d, `tog_pm` = %d, `tog_newbie` = %d, " \
+        "`health` = %f, `armour` = %f, `played_seconds` = %d, `channel_bits` = %d, " \
         "`mute_until` = %d, `newbie_mute_until` = %d, `jail_seconds` = %d, `jail_reason` = '%e' WHERE `id` = %d",
         g_Player[playerid][pAdminLevel], g_Player[playerid][pHelperLevel], g_Player[playerid][pSkin],
         g_Player[playerid][pLevel], g_Player[playerid][pRespect],
@@ -879,7 +893,7 @@ stock Account_Save(playerid, bool:sync = false)
         g_Player[playerid][pPosX], g_Player[playerid][pPosY], g_Player[playerid][pPosZ], g_Player[playerid][pPosA],
         g_Player[playerid][pInterior], g_Player[playerid][pVirtualWorld],
         g_Player[playerid][pHealth], g_Player[playerid][pArmour], g_Player[playerid][pPlayedSeconds],
-        g_Player[playerid][pTogOoc], g_Player[playerid][pTogPm], g_Player[playerid][pTogNewbie],
+        g_Player[playerid][pChannelBits],
         g_Player[playerid][pMuteUntil], g_Player[playerid][pNewbieMuteUntil],
         g_Player[playerid][pJailSeconds], g_Player[playerid][pJailReason],
         g_Player[playerid][pDbId]);
@@ -902,4 +916,16 @@ public Account_Autosave()
         Account_Save(i);
     }
     return 1;
+}
+
+// Runs after the account row is read, so VIP and staff status are known before the slot is refused.
+stock bool:Account_CheckFreeSlot(playerid)
+{
+    if (Vip_HasFreeSlot(playerid))
+    {
+        return true;
+    }
+    Msg_Error(playerid, "Server je pun. Poslednja mesta su rezervisana za VIP igrace. Pokusajte malo kasnije.");
+    KickWithDelay(playerid);
+    return false;
 }

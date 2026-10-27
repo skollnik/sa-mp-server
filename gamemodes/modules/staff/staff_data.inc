@@ -83,8 +83,7 @@ enum E_STAFF_STATE
     sLastAsk,
     sLastNewbie,
     bool:sHasOpenQuestion,
-    STREAMER_TAG_3D_TEXT_LABEL:sDutyTag,
-    bool:sPmSpy
+    STREAMER_TAG_3D_TEXT_LABEL:sDutyTag
 }
 
 new g_Staff[MAX_PLAYERS][E_STAFF_STATE];

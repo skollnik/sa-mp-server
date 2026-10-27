@@ -3,91 +3,91 @@
 ## 🇷🇸 Srpski
 
 ### Principi
-- Tri nivoa: **Bronze**, **Silver** i **Gold VIP**. Plaćaju se mesečno, a dodeljuje ih samo vlasnik (`/setvip`).
-- **Bez prednosti u igri (no pay-to-win).** VIP daje udobnost, izgled i sitne pogodnosti, ali ne novac, oružje ili moć koju igrač bez VIP-a ne može da dobije igranjem. Tako rade ozbiljni RP serveri, jer inače igrači koji ne plaćaju odlaze.
+- Tri nivoa: **Bronze** (3 €), **Silver** (5 €) i **Gold VIP** (10 €), mesečno. Dodeljuje ih samo vlasnik (`/setvip`).
 - **VIP nikad ne daje admin ili helper ovlašćenja.**
+- Komande koje pomažu u igri (`/vgoto`, `/vfix`, `/vheal`) imaju pauzu, ne rade minut posle primljene štete i ne rade u zatvoru, da ne bi služile za bežanje iz borbe.
 - Kad VIP istekne, pogodnosti prestaju odmah, i u igri. Karakter, novac i imovina ostaju.
 
-### Šta je urađeno
+### Pogodnosti koje rade
 | Pogodnost | Bronze | Silver | Gold |
 |-----------|:------:|:------:|:----:|
+| Oznaka **[VIP]** iznad glave u boji nivoa (`/vtag` je sakriva) | ✅ | ✅ | ✅ |
+| Ime u boji nivoa u OOC chatovima (`/b`, `/o`, `/n`); u IC govoru ostaje belo | ✅ | ✅ | ✅ |
 | VIP chat `/vc` i spisak VIP igrača `/vips` | ✅ | ✅ | ✅ |
+| `/vskin`: izbor sa liste civilnih VIP skinova | ✅ | ✅ | ✅ |
+| `/vtime`, `/vweather`: lično vreme i vremenske prilike | ✅ | ✅ | ✅ |
 | Kraća pauza za `/report`, `/ask` i `/n` | 25% | 50% | 50% |
-| Status u `/vip` i poruka pri loginu (broj preostalih dana, upozorenje 3 dana pre isteka) | ✅ | ✅ | ✅ |
+| Rezervisano mesto kad je server pun (poslednja 2 mesta) | ✅ | ✅ | ✅ |
+| `/vfix`: popravka vozila koje voziš (pauza 10 min) | – | ✅ | ✅ |
+| `/vcolor`: farbanje vozila koje voziš | – | ✅ | ✅ |
+| `/vgoto`: teleport do igrača napolju (pauza 5 min) | – | – | ✅ |
+| `/vheal`: HP na 100 (pauza 15 min) | – | – | ✅ |
 
-**Za vlasnika:**
-- `/setvip [id] [nivo 0-3] [dana]` dodeljuje, produžava ili skida VIP. Podrazumevano je 30 dana.
-- Ponovna dodela **istog** nivoa produžava preostalo vreme. Dodela **drugog** nivoa kreće od danas.
-- Svaka dodela se upisuje u tabelu `vip_history` (ko, koji nivo, koliko dana, do kada, ko je dodelio), da bi plaćeni meseci mogli da se provere.
-- Admini vide VIP status igrača u `/check` i mogu da čitaju i pišu u VIP chat.
+**Oznaka iznad glave:** prikazuje se samo jedna, po prioritetu: admin na dužnosti, pa helper na dužnosti, pa VIP. Kad admin koji je VIP izađe sa dužnosti, vidi se [VIP].
 
-### Predlog pogodnosti kad dođu ostali sistemi (čeka tvoju odluku)
+**`/vgoto` ne radi** do igrača u enterijeru ili drugom virtuelnom svetu, do tima na dužnosti, do igrača koji posmatra nekoga ili je mrtav, kao ni iz vozila. Igrač do koga se teleportuješ dobija obaveštenje.
+
+### Pogodnosti koje dolaze sa drugim sistemima (odobrene)
 | Pogodnost | Bronze | Silver | Gold | Sistem |
 |-----------|:------:|:------:|:----:|--------|
-| Bonus na platu (payday) | +5% | +10% | +15% | Faza 2 (payday) |
-| Dodatni respect poen na payday | – | – | +1 | Faza 2 (nivoi) |
-| Mesto za lično vozilo više | – | +1 | +1 | Faza 3 (vozila) |
-| Dodatni slotovi u inventaru | +2 | +4 | +6 | Faza 2 (inventar) |
-| Biranje broja telefona | – | ✅ | ✅ | Faza 2 (telefon) |
-| Sopstvena registarska tablica | – | – | ✅ | Faza 3 (vozila) |
+| Bonus na platu (payday) | +5% | +10% | +15% | Faza 2 |
+| Dodatni respect poen na payday | – | – | +1 | Faza 2 |
+| Dodatni slotovi u inventaru | +2 | +4 | +6 | Faza 2 |
+| Biranje broja telefona | – | ✅ | ✅ | Faza 2 |
+| Mesto za još jedno vozilo | – | +1 | +1 | Faza 3 |
+| Sopstvena registarska tablica i neon | – | – | ✅ | Faza 3 |
+| Popust na oglase | 10% | 20% | 30% | Faza 5 |
 | Besplatna promena imena jednom mesečno | – | – | ✅ | bilo kada |
-| Rezervisano mesto kad je server pun | ✅ | ✅ | ✅ | bilo kada |
-| Popust na oglase (`/ad`) | 10% | 20% | 30% | Faza 5 (novinari) |
+| VIP klub (enterijer) | – | ✅ | ✅ | kad vlasnik napravi mapu |
 
-Bonus na platu, dodatni respect i dodatno vozilo daju malu prednost. Na većini servera to postoji, ali na heavy RP-u se često izbacuje. To je tvoja odluka.
-
-### Predlog cena (mesečno)
-| Nivo | Cena |
-|------|------|
-| Bronze VIP | 3 € |
-| Silver VIP | 5 € |
-| Gold VIP | 10 € |
-
-Plaćanje za sada ide van igre (dogovor sa tobom), a ti dodeljuješ VIP komandom. Automatska naplata preko sajta može kasnije, uz web panel.
+### Za vlasnika
+- `/setvip [id] [nivo 0-3] [dana]` dodeljuje, produžava ili skida VIP. Podrazumevano je 30 dana. Ponovna dodela istog nivoa produžava preostalo vreme.
+- Svaka dodela se upisuje u tabelu `vip_history`.
+- Admini vide VIP status u `/check` i mogu da pišu u VIP chat.
 
 ---
 
 ## 🇬🇧 English
 
 ### Principles
-- Three tiers: **Bronze**, **Silver** and **Gold VIP**. They are paid monthly and only the owner grants them (`/setvip`).
-- **No pay-to-win.** VIP gives convenience, looks and small perks, but not money, weapons or power a non-VIP player cannot earn by playing. Serious RP servers work this way, because otherwise non-paying players leave.
+- Three tiers: **Bronze** (€3), **Silver** (€5) and **Gold VIP** (€10), monthly. Only the owner grants them (`/setvip`).
 - **VIP never grants admin or helper powers.**
+- Commands that help in-game (`/vgoto`, `/vfix`, `/vheal`) have a cooldown, do not work for a minute after taking damage and do not work in jail, so they cannot be used to escape a fight.
 - When VIP expires, perks stop immediately, even in-game. Character, money and property stay.
 
-### Done
+### Working perks
 | Perk | Bronze | Silver | Gold |
 |------|:------:|:------:|:----:|
+| **[VIP]** tag above the head in the tier colour (`/vtag` hides it) | ✅ | ✅ | ✅ |
+| Name in the tier colour in OOC chats (`/b`, `/o`, `/n`); IC speech stays white | ✅ | ✅ | ✅ |
 | VIP chat `/vc` and online VIP list `/vips` | ✅ | ✅ | ✅ |
+| `/vskin`: pick from a list of civilian VIP skins | ✅ | ✅ | ✅ |
+| `/vtime`, `/vweather`: personal time and weather | ✅ | ✅ | ✅ |
 | Shorter cooldown for `/report`, `/ask` and `/n` | 25% | 50% | 50% |
-| Status in `/vip` and a login message (days left, warning 3 days before expiry) | ✅ | ✅ | ✅ |
+| Reserved slot when the server is full (last 2 slots) | ✅ | ✅ | ✅ |
+| `/vfix`: repair the vehicle you drive (10 min cooldown) | – | ✅ | ✅ |
+| `/vcolor`: paint the vehicle you drive | – | ✅ | ✅ |
+| `/vgoto`: teleport to a player outdoors (5 min cooldown) | – | – | ✅ |
+| `/vheal`: HP to 100 (15 min cooldown) | – | – | ✅ |
 
-**For the owner:**
-- `/setvip [id] [level 0-3] [days]` grants, extends or removes VIP. Default is 30 days.
-- Granting the **same** level again extends the remaining time. Granting a **different** level starts from today.
-- Every grant is stored in the `vip_history` table (who, which level, how many days, until when, granted by), so paid months can be checked.
-- Admins see a player's VIP status in `/check` and can read and write in VIP chat.
+**Tag above the head:** only one is shown, by priority: admin on duty, then helper on duty, then VIP. When an admin who is VIP goes off duty, [VIP] shows.
 
-### Proposed perks once other systems exist (waiting for your decision)
+**`/vgoto` does not work** to players in an interior or another virtual world, to staff on duty, to players who are spectating or dead, nor from a vehicle. The target is notified.
+
+### Perks coming with other systems (approved)
 | Perk | Bronze | Silver | Gold | System |
 |------|:------:|:------:|:----:|--------|
-| Payday bonus | +5% | +10% | +15% | Phase 2 (payday) |
-| Extra respect point on payday | – | – | +1 | Phase 2 (levels) |
-| One more personal vehicle slot | – | +1 | +1 | Phase 3 (vehicles) |
-| Extra inventory slots | +2 | +4 | +6 | Phase 2 (inventory) |
-| Choose your phone number | – | ✅ | ✅ | Phase 2 (phone) |
-| Custom number plate | – | – | ✅ | Phase 3 (vehicles) |
+| Payday bonus | +5% | +10% | +15% | Phase 2 |
+| Extra respect point on payday | – | – | +1 | Phase 2 |
+| Extra inventory slots | +2 | +4 | +6 | Phase 2 |
+| Choose your phone number | – | ✅ | ✅ | Phase 2 |
+| One more vehicle slot | – | +1 | +1 | Phase 3 |
+| Custom number plate and neon | – | – | ✅ | Phase 3 |
+| Discount on ads | 10% | 20% | 30% | Phase 5 |
 | Free name change once a month | – | – | ✅ | any time |
-| Reserved slot when the server is full | ✅ | ✅ | ✅ | any time |
-| Discount on ads (`/ad`) | 10% | 20% | 30% | Phase 5 (news) |
+| VIP club (interior) | – | ✅ | ✅ | once the owner makes the map |
 
-Payday bonus, extra respect and an extra vehicle give a small advantage. Most servers have them, but heavy RP servers often leave them out. That is your call.
-
-### Proposed prices (monthly)
-| Tier | Price |
-|------|-------|
-| Bronze VIP | €3 |
-| Silver VIP | €5 |
-| Gold VIP | €10 |
-
-For now payment happens outside the game (arranged with you), and you grant VIP with the command. Automatic payment through a website can come later with the web panel.
+### For the owner
+- `/setvip [id] [level 0-3] [days]` grants, extends or removes VIP. Default is 30 days. Granting the same level again extends the remaining time.
+- Every grant is stored in the `vip_history` table.
+- Admins see VIP status in `/check` and can write in VIP chat.

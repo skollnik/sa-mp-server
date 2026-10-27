@@ -113,8 +113,8 @@ cmd:b(playerid, params[])
     }
 
     new message[192];
-    format(message, sizeof(message), "(( [%d] %s: %s ))", playerid, Account_Name(playerid), params);
-    Chat_SendNearby(playerid, CHAT_RADIUS_OOC, COLOR_OOC_LOCAL, message);
+    format(message, sizeof(message), "(( [%d] %s: %s ))", playerid, Chat_ColoredName(playerid, C_OOC_LOCAL), Chat_CleanText(params));
+    Chat_SendNearby(playerid, CHAT_RADIUS_OOC, COLOR_OOC_LOCAL, message, false, true);
     return 1;
 }
 
@@ -130,49 +130,15 @@ cmd:o(playerid, params[])
         Msg_Error(playerid, "Globalni OOC chat je trenutno iskljucen.");
         return 1;
     }
-    if (g_Player[playerid][pTogOoc])
+    if (!Channel_IsOn(playerid, CHANNEL_OOC))
     {
         Msg_Error(playerid, "Iskljucili ste globalni OOC. Ukljucite ga sa /togooc.");
         return 1;
     }
 
     new message[192];
-    format(message, sizeof(message), "(( [OOC] %s: %s ))", Account_Name(playerid), params);
-    for (new i = 0; i < MAX_PLAYERS; i++)
-    {
-        if (Account_IsLoggedIn(i) && !g_Player[i][pTogOoc])
-        {
-            Chat_Send(i, COLOR_OOC_GLOBAL, message);
-        }
-    }
-    return 1;
-}
-
-cmd:togooc(playerid, params[])
-{
-    g_Player[playerid][pTogOoc] = !g_Player[playerid][pTogOoc];
-    if (g_Player[playerid][pTogOoc])
-    {
-        Msg_Info(playerid, "Globalni OOC chat je iskljucen za vas. Ponovo ga ukljucite sa /togooc.");
-    }
-    else
-    {
-        Msg_Info(playerid, "Globalni OOC chat je ukljucen za vas.");
-    }
-    return 1;
-}
-
-cmd:togpm(playerid, params[])
-{
-    g_Player[playerid][pTogPm] = !g_Player[playerid][pTogPm];
-    if (g_Player[playerid][pTogPm])
-    {
-        Msg_Info(playerid, "Privatne poruke su iskljucene. Admini i dalje mogu da vam pisu.");
-    }
-    else
-    {
-        Msg_Info(playerid, "Privatne poruke su ukljucene.");
-    }
+    format(message, sizeof(message), "(( [OOC] %s: %s ))", Chat_ColoredName(playerid, C_OOC_GLOBAL), Chat_CleanText(params));
+    Channel_Send(CHANNEL_OOC, COLOR_OOC_GLOBAL, message, true);
     return 1;
 }
 
@@ -211,7 +177,7 @@ cmd:pm(playerid, params[])
         Msg_Error(playerid, "Ne mozete poslati poruku sebi.");
         return 1;
     }
-    if (g_Player[targetid][pTogPm] && !Staff_IsAdmin(playerid))
+    if (!Channel_IsOn(targetid, CHANNEL_PM) && !Staff_IsAdmin(playerid))
     {
         Msg_Error(playerid, "Taj igrac je iskljucio privatne poruke.");
         return 1;
@@ -227,7 +193,7 @@ cmd:pm(playerid, params[])
     format(message, sizeof(message), "[PM SPY] %s [%d] -> %s [%d]: %s", Account_Name(playerid), playerid, Account_Name(targetid), targetid, text);
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
-        if (i != playerid && i != targetid && Account_IsLoggedIn(i) && g_Staff[i][sPmSpy])
+        if (i != playerid && i != targetid && Account_IsLoggedIn(i) && Channel_IsOn(i, CHANNEL_PM_SPY))
         {
             Chat_Send(i, COLOR_GREY, message);
         }
@@ -246,5 +212,3 @@ flags:ado(CMD_FLAG_CHAT)
 flags:b(CMD_FLAG_CHAT)
 flags:o(CMD_FLAG_CHAT)
 flags:pm(CMD_FLAG_CHAT)
-flags:togooc(CMD_FLAG_JAIL_OK)
-flags:togpm(CMD_FLAG_JAIL_OK)

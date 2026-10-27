@@ -7,7 +7,7 @@ cmd:aduty(playerid, params[])
     }
 
     g_Staff[playerid][sAdminDuty] = !g_Staff[playerid][sAdminDuty];
-    Staff_UpdateDutyLook(playerid);
+    Staff_UpdateLook(playerid);
 
     new rank[24], message[128];
     Staff_GetAdminRank(playerid, rank);
@@ -22,6 +22,11 @@ cmd:a(playerid, params[])
     if (!Staff_IsAdmin(playerid))
     {
         Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        return 1;
+    }
+    if (!Channel_IsOn(playerid, CHANNEL_ADMIN))
+    {
+        Msg_Error(playerid, "Iskljucili ste admin chat. Ukljucite ga u /kanali.");
         return 1;
     }
     if (isnull(params))
@@ -847,7 +852,7 @@ cmd:makehelper(playerid, params[])
     if (level == 0)
     {
         g_Staff[targetid][sHelperDuty] = false;
-        Staff_UpdateDutyLook(targetid);
+        Staff_UpdateLook(targetid);
     }
     Account_Save(targetid);
 
@@ -1029,7 +1034,7 @@ cmd:makeadmin(playerid, params[])
     {
         g_Staff[targetid][sAdminDuty] = false;
     }
-    Staff_UpdateDutyLook(targetid);
+    Staff_UpdateLook(targetid);
     Account_Save(targetid);
 
     if (removed_helper)
@@ -1114,7 +1119,7 @@ cmd:ahelp(playerid, params[])
 
     new level = g_Player[playerid][pAdminLevel], body[2048];
 
-    strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns\n\n");
+    strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns /aclog /kanali\n\n");
     if (level >= ADMIN_LEVEL_ADMIN)
     {
         strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\n\n");

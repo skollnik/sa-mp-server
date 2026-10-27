@@ -13,6 +13,8 @@ stock Vip_Init()
         "`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," \
         "INDEX `vip_account` (`account_id`)" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    g_VipExpiryTimer = SetTimer("Vip_ExpiryTick", VIP_EXPIRY_CHECK_MS, true);
 }
 
 // Expiry is checked on every read, so a status that runs out while the player is online stops working immediately.
@@ -99,11 +101,109 @@ stock Vip_Grant(adminid, targetid, level, days)
 
 stock Vip_SendToVips(const message[])
 {
+    Channel_Send(CHANNEL_VIP, g_VipColors[VIP_GOLD], message);
+}
+
+stock Vip_Exit()
+{
+    KillTimer(g_VipExpiryTimer);
+}
+
+stock Vip_OnPlayerConnect(playerid)
+{
+    static const empty[E_VIP_STATE];
+    g_Vip[playerid] = empty;
+}
+
+stock Vip_OnPlayerTakeDamage(playerid)
+{
+    g_Vip[playerid][vLastDamage] = gettime();
+}
+
+// Expiry is also checked on every use; this timer only tells the player and removes the tag.
+forward Vip_ExpiryTick();
+public Vip_ExpiryTick()
+{
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
-        if (Account_IsLoggedIn(i) && (Vip_IsVip(i) || Staff_IsAdmin(i)))
+        if (Account_IsLoggedIn(i) && g_Player[i][pVipLevel] > 0 && !Vip_IsVip(i))
         {
-            Chat_Send(i, g_VipColors[VIP_GOLD], message);
+            Msg_Info(i, "Vas %s je istekao. Za produzenje se javite vlasniku servera.", g_VipNames[g_Player[i][pVipLevel]]);
+            Vip_Store(i, 0, 0);
+            Staff_UpdateLook(i);
         }
     }
+    return 1;
+}
+
+stock bool:Vip_HasLevel(playerid, level)
+{
+    if (Vip_GetLevel(playerid) < level)
+    {
+        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        return false;
+    }
+    return true;
+}
+
+stock bool:Vip_IsInCombat(playerid)
+{
+    return gettime() - g_Vip[playerid][vLastDamage] < VIP_COMBAT_LOCK_S;
+}
+
+// Prints the remaining wait itself; returns true when the command may be used now.
+stock bool:Vip_CheckCooldown(playerid, last_used, cooldown_s)
+{
+    new wait = last_used + cooldown_s - gettime();
+    if (wait > 0)
+    {
+        Msg_Error(playerid, "Ovu VIP komandu mozete ponovo koristiti za %d min i %d s.", wait / 60, wait % 60);
+        return false;
+    }
+    return true;
+}
+
+// The last VIP_RESERVED_SLOTS free places are kept for VIP players and staff.
+stock bool:Vip_HasFreeSlot(playerid)
+{
+    if (Vip_IsVip(playerid) || Staff_IsStaff(playerid))
+    {
+        return true;
+    }
+
+    new online;
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (i != playerid && IsPlayerConnected(i))
+        {
+            online++;
+        }
+    }
+    return online < GetMaxPlayers() - VIP_RESERVED_SLOTS;
+}
+
+stock bool:Vip_OnDialogResponse(playerid, dialogid, response, listitem)
+{
+    if (dialogid != DIALOG_VIP_SKIN)
+    {
+        return false;
+    }
+
+    // The status is checked again: the dialog may be answered after VIP has run out.
+    if (!response || !Vip_IsVip(playerid))
+    {
+        return true;
+    }
+
+    new bool:female = g_Player[playerid][pGender] == GENDER_FEMALE;
+    new count = female ? sizeof(g_VipSkinsFemale) : sizeof(g_VipSkinsMale);
+    if (listitem < 0 || listitem >= count)
+    {
+        return true;
+    }
+
+    g_Player[playerid][pSkin] = female ? g_VipSkinsFemale[listitem] : g_VipSkinsMale[listitem];
+    Staff_UpdateLook(playerid);
+    Msg_Info(playerid, "Novi skin: %d.", g_Player[playerid][pSkin]);
+    return true;
 }

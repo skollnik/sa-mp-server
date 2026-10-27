@@ -38,12 +38,18 @@ Viši nivo uvek ima sve komande nižeg nivoa.
 ### Admini
 | Nivo | Naziv | Komande |
 |------|-------|---------|
-| 1 | Admin pocetnik | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (do 30 min), `/unjail`, `/warns`, `/aclog` |
+| 1 | Admin pocetnik | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (do 30 min), `/unjail`, `/warns`, `/aclog`, `/kanali` |
 | 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport lokacije), `/ooc` (globalni OOC), `/cc` (briše chat svima), `/ao` (admin obaveštenje u chatu), `/fixveh`, `/flip`, `/disarm`, `/ban` (do 7 dana), `/warn`, `/ajail` (do 24 h) |
 | 3 | Visi admin | `/setskin`, `/setint` (enterijer), `/setvw` (virtuelni svet), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (tekst na sredini ekrana), `/settime`, `/setweather`, `/gotopos`, `/mypos`, `/ban` (i trajni), `/oban`, `/banip`, `/unban`, `/unwarn` |
 | 4 | Glavni admin | `/makehelper` (svi nivoi), `/setlevel`, `/setrespect`, `/setname`, `/pmspy` |
 | 5 | Menadzment | `/makeadmin` (do nivoa 4), `/gmx` (restart servera) |
 | 6 | Vlasnik | `/makeadmin` (do nivoa 5), `/givemoney`, `/dozvoliime`, `/zabraniime`, `/setvip` (vidi VIP.md) |
+
+### Kanali (`/kanali`)
+- Svako bira koje chatove i obaveštenja prati: globalni OOC, PM, newbie, VIP chat, helper chat, pitanja, admin chat, reportovi, anti-cheat upozorenja, ista IP adresa i PM spy (samo admin 4+, podrazumevano isključen).
+- Spisak u `/kanali` pokazuje šta je uključeno, a klik menja stanje. Podešavanje se čuva i posle izlaska.
+- **Na dužnosti** admin ne može da isključi reportove i anti-cheat upozorenja, a helper i admin ne mogu da isključe pitanja.
+- Ko je isključio kanal, ne može ni da piše u njega dok ga ne uključi.
 
 ### Kazne
 - Svaka kazna (kick, ban, warn, mute, admin zatvor) se objavljuje svim igračima crvenom porukom i upisuje u `admin_logs`.
@@ -103,12 +109,18 @@ A higher level always has every command of the lower levels.
 ### Admins
 | Level | Name | Commands |
 |-------|------|----------|
-| 1 | Trial admin | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (up to 30 min), `/unjail`, `/warns`, `/aclog` |
+| 1 | Trial admin | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (up to 30 min), `/unjail`, `/warns`, `/aclog`, `/kanali` |
 | 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport locations), `/ooc` (global OOC), `/cc` (clears everyone's chat), `/ao` (admin notice in chat), `/fixveh`, `/flip`, `/disarm`, `/ban` (up to 7 days), `/warn`, `/ajail` (up to 24 h) |
 | 3 | Senior admin | `/setskin`, `/setint` (interior), `/setvw` (virtual world), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (text in the middle of the screen), `/settime`, `/setweather`, `/gotopos`, `/mypos`, `/ban` (also permanent), `/oban`, `/banip`, `/unban`, `/unwarn` |
 | 4 | Head admin | `/makehelper` (all levels), `/setlevel`, `/setrespect`, `/setname`, `/pmspy` |
 | 5 | Management | `/makeadmin` (up to level 4), `/gmx` (server restart) |
 | 6 | Owner | `/makeadmin` (up to level 5), `/givemoney`, `/dozvoliime`, `/zabraniime`, `/setvip` (see VIP.md) |
+
+### Channels (`/kanali`)
+- Everyone picks which chats and notifications they follow: global OOC, PM, newbie, VIP chat, helper chat, questions, admin chat, reports, anti-cheat alerts, shared IP and PM spy (admin 4+ only, off by default).
+- The `/kanali` list shows what is on, and a click toggles it. The setting is kept after leaving.
+- **On duty** an admin cannot switch off reports and anti-cheat alerts, and helpers and admins cannot switch off questions.
+- Whoever switched a channel off cannot write in it until they switch it back on.
 
 ### Punishments
 - Every punishment (kick, ban, warn, mute, admin jail) is announced to all players in red and written to `admin_logs`.

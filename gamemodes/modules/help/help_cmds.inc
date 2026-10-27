@@ -10,7 +10,7 @@ cmd:pomoc(playerid, params[])
         C_SERVER "OOC (van uloge)\n" \
         C_WHITE "/b - lokalni OOC    /pm - privatna poruka\n" \
         "/o - globalni OOC (radi samo kad ga admin ukljuci)\n" \
-        "/togooc, /togpm, /tognewbie - iskljucivanje chatova za sebe\n\n" \
+        "/kanali - ukljucivanje i iskljucivanje chatova (ili /togooc, /togpm, /tognewbie)\n\n" \
         C_SERVER "Pomoc i podrska\n" \
         C_WHITE "/n - newbie chat (pitanja novih igraca)    /ask - pitanje helperima\n" \
         "/report - prijava igraca adminima    /admins, /helpers - tim online\n\n" \

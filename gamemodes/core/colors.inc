@@ -26,3 +26,5 @@
 #define C_ADMIN             "{FF9900}"
 #define C_HELPER            "{00C8C8}"
 #define C_NEWBIE            "{A0E0A0}"
+#define C_OOC_LOCAL         "{C8C8C8}"
+#define C_OOC_GLOBAL        "{B1C8FB}"

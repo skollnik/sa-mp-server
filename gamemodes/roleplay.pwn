@@ -23,6 +23,7 @@
 #include "modules/staff/staff_data.inc"
 #include "modules/anticheat/ac_data.inc"
 #include "modules/vip/vip_data.inc"
+#include "modules/channel/channel_data.inc"
 
 #include "modules/account/account_impl.inc"
 #include "modules/account/account_cmds.inc"
@@ -41,6 +42,9 @@
 
 #include "modules/vip/vip_impl.inc"
 #include "modules/vip/vip_cmds.inc"
+
+#include "modules/channel/channel_impl.inc"
+#include "modules/channel/channel_cmds.inc"
 
 #include "modules/help/help_cmds.inc"
 
@@ -78,6 +82,7 @@ public OnGameModeInit()
 
 public OnGameModeExit()
 {
+    Vip_Exit();
     AC_Exit();
     Punish_Exit();
     Account_Exit();
@@ -89,6 +94,7 @@ public OnPlayerConnect(playerid)
 {
     Utils_OnPlayerConnect(playerid);
     AC_OnPlayerConnect(playerid);
+    Vip_OnPlayerConnect(playerid);
     Staff_OnPlayerConnect(playerid);
     Maps_OnPlayerConnect(playerid);
     Account_OnPlayerConnect(playerid);
@@ -119,6 +125,12 @@ public OnPlayerSpawn(playerid)
     Account_OnPlayerSpawn(playerid);
     Staff_OnPlayerSpawn(playerid);
     Punish_OnPlayerSpawn(playerid);
+    return 1;
+}
+
+public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bodypart)
+{
+    Vip_OnPlayerTakeDamage(playerid);
     return 1;
 }
 
@@ -167,6 +179,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Staff_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (Channel_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (Vip_OnDialogResponse(playerid, dialogid, response, listitem))
     {
         return 1;
     }

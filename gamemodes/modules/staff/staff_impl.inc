@@ -64,7 +64,7 @@ stock Staff_OnPlayerSpawn(playerid)
         SetPlayerInterior(playerid, g_Staff[playerid][sSpecInterior]);
         SetPlayerVirtualWorld(playerid, g_Staff[playerid][sSpecWorld]);
     }
-    Staff_UpdateDutyLook(playerid);
+    Staff_UpdateLook(playerid);
 }
 
 stock Staff_OnPlayerStateChange(playerid, PLAYER_STATE:newstate)
@@ -219,7 +219,7 @@ stock Staff_GetHelperRank(playerid, dest[], size = sizeof(dest))
 
 // Names stay white; staff on duty are recognised by a tag floating above the name instead.
 // Admins on duty also wear the staff outfit; the character's own skin (pSkin) is never overwritten.
-stock Staff_UpdateDutyLook(playerid)
+stock Staff_UpdateLook(playerid)
 {
     SetPlayerColor(playerid, COLOR_PLAYER_NAME);
 
@@ -232,22 +232,37 @@ stock Staff_UpdateDutyLook(playerid)
         SetPlayerSkin(playerid, g_Player[playerid][pSkin]);
     }
 
+    // Only one tag is shown: staff on duty first, then VIP (unless the VIP hid it with /vtag).
+    if (g_Staff[playerid][sAdminDuty])
+    {
+        Staff_SetTag(playerid, (g_Player[playerid][pAdminLevel] >= ADMIN_LEVEL_OWNER) ? ("[VLASNIK]") : ("[ADMIN]"), COLOR_ADMIN_TAG);
+    }
+    else if (g_Staff[playerid][sHelperDuty])
+    {
+        Staff_SetTag(playerid, "[HELPER]", COLOR_HELPER_TAG);
+    }
+    else if (Vip_IsVip(playerid) && !g_Vip[playerid][vTagHidden])
+    {
+        Staff_SetTag(playerid, "[VIP]", g_VipColors[Vip_GetLevel(playerid)]);
+    }
+    else
+    {
+        Staff_SetTag(playerid, "", 0);
+    }
+}
+
+// An empty text removes the tag.
+stock Staff_SetTag(playerid, const text[], color)
+{
     if (IsValidDynamic3DTextLabel(g_Staff[playerid][sDutyTag]))
     {
         DestroyDynamic3DTextLabel(g_Staff[playerid][sDutyTag]);
     }
     g_Staff[playerid][sDutyTag] = STREAMER_TAG_3D_TEXT_LABEL:INVALID_STREAMER_ID;
 
-    if (g_Staff[playerid][sAdminDuty])
+    if (text[0])
     {
-        g_Staff[playerid][sDutyTag] = CreateDynamic3DTextLabel(
-            (g_Player[playerid][pAdminLevel] >= ADMIN_LEVEL_OWNER) ? ("[VLASNIK]") : ("[ADMIN]"),
-            COLOR_ADMIN_TAG, 0.0, 0.0, STAFF_TAG_OFFSET_Z, STAFF_TAG_DRAW_DISTANCE, playerid, INVALID_VEHICLE_ID, 1);
-    }
-    else if (g_Staff[playerid][sHelperDuty])
-    {
-        g_Staff[playerid][sDutyTag] = CreateDynamic3DTextLabel("[HELPER]",
-            COLOR_HELPER_TAG, 0.0, 0.0, STAFF_TAG_OFFSET_Z, STAFF_TAG_DRAW_DISTANCE, playerid, INVALID_VEHICLE_ID, 1);
+        g_Staff[playerid][sDutyTag] = CreateDynamic3DTextLabel(text, color, 0.0, 0.0, STAFF_TAG_OFFSET_Z, STAFF_TAG_DRAW_DISTANCE, playerid, INVALID_VEHICLE_ID, 1);
     }
 }
 
@@ -274,27 +289,15 @@ stock Staff_MessageAs(actorid, targetid, const message[])
     }
 }
 
-stock Staff_SendToAdmins(const message[])
+stock Staff_SendToAdmins(const message[], E_CHANNEL:channel = CHANNEL_ADMIN)
 {
-    for (new i = 0; i < MAX_PLAYERS; i++)
-    {
-        if (Account_IsLoggedIn(i) && Staff_IsAdmin(i))
-        {
-            Chat_Send(i, COLOR_ADMIN, message);
-        }
-    }
+    Channel_Send(channel, COLOR_ADMIN, message);
 }
 
 // Helpers and admins together; used for questions and the helper chat.
-stock Staff_SendToHelpers(const message[])
+stock Staff_SendToHelpers(const message[], E_CHANNEL:channel = CHANNEL_HELPER)
 {
-    for (new i = 0; i < MAX_PLAYERS; i++)
-    {
-        if (Account_IsLoggedIn(i) && Staff_IsStaff(i))
-        {
-            Chat_Send(i, COLOR_HELPER, message);
-        }
-    }
+    Channel_Send(channel, COLOR_HELPER, message);
 }
 
 stock Staff_CountOnDutyHelpers()

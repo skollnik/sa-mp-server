@@ -13,10 +13,13 @@ cmd:vip(playerid, params[])
 
     format(body, sizeof(body),
         "%s" \
-        "{CD7F32}Bronze VIP\n" C_WHITE "- VIP chat (/vc) i spisak VIP igraca (/vips)\n- 25%% kraca pauza za /report, /ask i /n\n\n" \
-        "{C0C0C0}Silver VIP\n" C_WHITE "- sve iz Bronze VIP\n- 50%% kraca pauza za /report, /ask i /n\n\n" \
-        "{FFD700}Gold VIP\n" C_WHITE "- sve iz Silver VIP\n- dodatne pogodnosti stizu sa novim sistemima\n\n" \
-        C_GREY "VIP traje mesecno i ne daje prednost u igri ni admin ovlascenja.\nZa VIP se javite vlasniku servera.",
+        "{CD7F32}Bronze VIP\n" C_WHITE "- oznaka [VIP] iznad glave (/vtag sakriva) i ime u boji u OOC chatovima\n" \
+        "- VIP chat (/vc), spisak VIP igraca (/vips)\n- /vskin (VIP skinovi), /vtime i /vweather (licno vreme i vremenske prilike)\n" \
+        "- 25%% kraca pauza za /report, /ask i /n, rezervisano mesto kad je server pun\n\n" \
+        "{C0C0C0}Silver VIP\n" C_WHITE "- sve iz Bronze VIP\n- /vfix (popravka vozila, na 10 min), /vcolor (farbanje vozila)\n- 50%% kraca pauza za /report, /ask i /n\n\n" \
+        "{FFD700}Gold VIP\n" C_WHITE "- sve iz Silver VIP\n- /vgoto (do igraca, na 5 min), /vheal (HP na 100, na 15 min)\n\n" \
+        C_GREY "/vgoto, /vfix i /vheal ne rade minut posle primljene stete i ne rade u zatvoru.\n" \
+        "Nove pogodnosti stizu sa novim sistemima. VIP ne daje admin ovlascenja.\nZa VIP se javite vlasniku servera.",
         status);
     ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_MSGBOX, SERVER_NAME " - VIP", body, "Zatvori", "");
     return 1;
@@ -27,6 +30,11 @@ cmd:vc(playerid, params[])
     if (!Vip_IsVip(playerid) && !Staff_IsAdmin(playerid))
     {
         Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        return 1;
+    }
+    if (!Channel_IsOn(playerid, CHANNEL_VIP))
+    {
+        Msg_Error(playerid, "Iskljucili ste VIP chat. Ukljucite ga u /kanali.");
         return 1;
     }
     if (isnull(params))
@@ -85,6 +93,7 @@ cmd:setvip(playerid, params[])
     }
 
     Vip_Grant(playerid, targetid, level, days);
+    Staff_UpdateLook(targetid);
 
     new details[96];
     if (level == 0)
@@ -104,6 +113,177 @@ cmd:setvip(playerid, params[])
     return 1;
 }
 
+cmd:vgoto(playerid, params[])
+{
+    if (!Vip_HasLevel(playerid, VIP_GOLD) || !Vip_CheckCooldown(playerid, g_Vip[playerid][vLastGoto], VIP_GOTO_COOLDOWN_S))
+    {
+        return 1;
+    }
+
+    new targetid = Staff_ParseTarget(playerid, params, "/vgoto [id ili ime]", "Ne mozete se teleportovati do samog sebe.");
+    if (targetid == INVALID_PLAYER_ID)
+    {
+        return 1;
+    }
+    if (GetPlayerState(playerid) != PLAYER_STATE_ONFOOT || Vip_IsInCombat(playerid))
+    {
+        Msg_Error(playerid, "/vgoto radi samo peske i ne minut posle primljene stete.");
+        return 1;
+    }
+    // Only to players outside: no shortcuts into interiors, other virtual worlds or to staff at work.
+    new PLAYER_STATE:target_state = GetPlayerState(targetid);
+    if (GetPlayerInterior(targetid) != 0 || GetPlayerVirtualWorld(targetid) != 0 || GetPlayerVirtualWorld(playerid) != 0
+        || g_Staff[targetid][sAdminDuty] || g_Staff[targetid][sHelperDuty] || g_Staff[targetid][sSpectating]
+        || (target_state != PLAYER_STATE_ONFOOT && target_state != PLAYER_STATE_DRIVER && target_state != PLAYER_STATE_PASSENGER))
+    {
+        Msg_Error(playerid, "Do tog igraca trenutno ne mozete da se teleportujete.");
+        return 1;
+    }
+
+    new Float:x, Float:y, Float:z;
+    GetPlayerPos(targetid, x, y, z);
+    Staff_TeleportTo(playerid, x + 1.0, y, z, 0, 0);
+    g_Vip[playerid][vLastGoto] = gettime();
+
+    Msg_Info(playerid, "Teleportovali ste se do igraca %s.", Account_Name(targetid));
+    Msg_Info(targetid, "VIP igrac %s se teleportovao do vas.", Account_Name(playerid));
+    return 1;
+}
+
+cmd:vfix(playerid, params[])
+{
+    if (!Vip_HasLevel(playerid, VIP_SILVER) || !Vip_CheckCooldown(playerid, g_Vip[playerid][vLastFix], VIP_FIX_COOLDOWN_S))
+    {
+        return 1;
+    }
+    if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER || Vip_IsInCombat(playerid))
+    {
+        Msg_Error(playerid, "/vfix radi samo dok vozite i ne minut posle primljene stete.");
+        return 1;
+    }
+
+    RepairVehicle(GetPlayerVehicleID(playerid));
+    g_Vip[playerid][vLastFix] = gettime();
+    Msg_Info(playerid, "Vozilo je popravljeno.");
+    return 1;
+}
+
+cmd:vheal(playerid, params[])
+{
+    if (!Vip_HasLevel(playerid, VIP_GOLD) || !Vip_CheckCooldown(playerid, g_Vip[playerid][vLastHeal], VIP_HEAL_COOLDOWN_S))
+    {
+        return 1;
+    }
+    if (Vip_IsInCombat(playerid))
+    {
+        Msg_Error(playerid, "/vheal ne radi minut posle primljene stete.");
+        return 1;
+    }
+
+    SetPlayerHealth(playerid, 100.0);
+    g_Vip[playerid][vLastHeal] = gettime();
+    Msg_Info(playerid, "HP je vracen na 100.");
+    return 1;
+}
+
+cmd:vskin(playerid, params[])
+{
+    if (!Vip_HasLevel(playerid, VIP_BRONZE))
+    {
+        return 1;
+    }
+
+    new list[256], line[16];
+    new bool:female = g_Player[playerid][pGender] == GENDER_FEMALE;
+    new count = female ? sizeof(g_VipSkinsFemale) : sizeof(g_VipSkinsMale);
+    for (new i = 0; i < count; i++)
+    {
+        format(line, sizeof(line), "Skin %d
+", female ? g_VipSkinsFemale[i] : g_VipSkinsMale[i]);
+        strcat(list, line);
+    }
+    ShowPlayerDialog(playerid, DIALOG_VIP_SKIN, DIALOG_STYLE_LIST, SERVER_NAME " - VIP skinovi", list, "Izaberi", "Zatvori");
+    return 1;
+}
+
+cmd:vtime(playerid, params[])
+{
+    if (!Vip_HasLevel(playerid, VIP_BRONZE))
+    {
+        return 1;
+    }
+
+    new hour;
+    if (sscanf(params, "d", hour) || hour < 0 || hour > 23)
+    {
+        Msg_Usage(playerid, "/vtime [sat 0-23] (vreme koje vidite samo vi)");
+        return 1;
+    }
+
+    SetPlayerTime(playerid, hour, 0);
+    Msg_Info(playerid, "Vase licno vreme je %02d:00. Vraca se na serversko posle ponovnog ulaska.", hour);
+    return 1;
+}
+
+cmd:vweather(playerid, params[])
+{
+    if (!Vip_HasLevel(playerid, VIP_BRONZE))
+    {
+        return 1;
+    }
+
+    new weather;
+    if (sscanf(params, "d", weather) || weather < 0 || weather > 45)
+    {
+        Msg_Usage(playerid, "/vweather [id 0-45] (vremenske prilike koje vidite samo vi)");
+        return 1;
+    }
+
+    SetPlayerWeather(playerid, weather);
+    Msg_Info(playerid, "Vase licne vremenske prilike su postavljene na %d.", weather);
+    return 1;
+}
+
+cmd:vcolor(playerid, params[])
+{
+    if (!Vip_HasLevel(playerid, VIP_SILVER))
+    {
+        return 1;
+    }
+
+    new color1, color2;
+    if (sscanf(params, "dd", color1, color2) || color1 < 0 || color1 > 255 || color2 < 0 || color2 > 255)
+    {
+        Msg_Usage(playerid, "/vcolor [boja 1] [boja 2] (0-255, dok vozite)");
+        return 1;
+    }
+    if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
+    {
+        Msg_Error(playerid, "Morate voziti vozilo.");
+        return 1;
+    }
+
+    ChangeVehicleColours(GetPlayerVehicleID(playerid), color1, color2);
+    Msg_Info(playerid, "Vozilo je ofarbano.");
+    return 1;
+}
+
+cmd:vtag(playerid, params[])
+{
+    if (!Vip_HasLevel(playerid, VIP_BRONZE))
+    {
+        return 1;
+    }
+
+    g_Vip[playerid][vTagHidden] = !g_Vip[playerid][vTagHidden];
+    Staff_UpdateLook(playerid);
+    Msg_Info(playerid, "Oznaka [VIP] iznad glave je %s.", g_Vip[playerid][vTagHidden] ? ("sakrivena") : ("ponovo vidljiva"));
+    return 1;
+}
+
 flags:vc(CMD_FLAG_CHAT)
 flags:vip(CMD_FLAG_JAIL_OK)
 flags:vips(CMD_FLAG_JAIL_OK)
+flags:vtag(CMD_FLAG_JAIL_OK)
+flags:vtime(CMD_FLAG_JAIL_OK)
+flags:vweather(CMD_FLAG_JAIL_OK)

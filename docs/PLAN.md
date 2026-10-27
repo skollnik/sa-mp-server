@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 0, priprema (ažurirano 2026-10-21)
+**Trenutni status:** Faza 1 završena, sledi Faza 2 (ažurirano 2026-10-27)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -28,7 +28,8 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Dopune logina: poslednja prijava, zaključavanje posle 5 pogrešnih lozinki, `/promenilozinku`, kamera na loginu
 - [x] ADM-1, ADM-2, ADM-4, ADM-6 (deo 1): tim (Helper 1–3, Admin 1–6), duty, report, ask, newbie chat, alati, logovi. Vidi [ADMIN.md](ADMIN.md)
 - [x] ADM-3 (deo 2): kazne (kick, ban, warn, mute, admin zatvor), provera bana, `/pmspy`
-- [x] VIP sistem (osnova), vidi [VIP.md](VIP.md)
+- [x] VIP sistem sa svim komandama i oznakom, vidi [VIP.md](VIP.md)
+- [x] Kanali (`/kanali`) za uključivanje i isključivanje chatova i obaveštenja
 - [x] AC-1, AC-3, AC-4: serverski novac/HP/armor/oružje, zaštita dijaloga (open.mp), flood zaštita, osnovna detekcija teleporta i brzine
 
 ### Faza 2: Svet i ekonomija
@@ -98,7 +99,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** Phase 0, preparation (updated 2026-10-21)
+**Current status:** Phase 1 done, Phase 2 next (updated 2026-10-27)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -124,7 +125,8 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] Login additions: last login, lockout after 5 wrong passwords, `/promenilozinku`, login camera
 - [x] ADM-1, ADM-2, ADM-4, ADM-6 (part 1): staff (Helper 1–3, Admin 1–6), duty, reports, ask, newbie chat, tools, logs. See [ADMIN.md](ADMIN.md)
 - [x] ADM-3 (part 2): punishments (kick, ban, warn, mute, admin jail), ban check, `/pmspy`
-- [x] VIP system (base), see [VIP.md](VIP.md)
+- [x] VIP system with all commands and the tag, see [VIP.md](VIP.md)
+- [x] Channels (`/kanali`) for toggling chats and notifications
 - [x] AC-1, AC-3, AC-4: server-side money/HP/armour/weapons, dialog protection (open.mp), flood protection, basic teleport and speed detection
 
 ### Phase 2: World and economy

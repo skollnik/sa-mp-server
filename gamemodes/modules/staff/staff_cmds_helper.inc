@@ -7,7 +7,7 @@ cmd:hduty(playerid, params[])
     }
 
     g_Staff[playerid][sHelperDuty] = !g_Staff[playerid][sHelperDuty];
-    Staff_UpdateDutyLook(playerid);
+    Staff_UpdateLook(playerid);
 
     new message[128];
     format(message, sizeof(message), "[H] %s je %s helper duznosti.", Account_Name(playerid), g_Staff[playerid][sHelperDuty] ? ("sada na") : ("napustio"));
@@ -20,6 +20,11 @@ cmd:hc(playerid, params[])
     if (!Staff_IsStaff(playerid))
     {
         Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        return 1;
+    }
+    if (!Channel_IsOn(playerid, CHANNEL_HELPER))
+    {
+        Msg_Error(playerid, "Iskljucili ste helper chat. Ukljucite ga u /kanali.");
         return 1;
     }
     if (isnull(params))

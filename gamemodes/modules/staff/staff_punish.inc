@@ -130,7 +130,7 @@ stock Punish_CheckSharedIp(playerid)
         {
             format(message, sizeof(message), "[A] Upozorenje: %s [%d] je usao sa iste IP adrese kao %s [%d].",
                 g_Player[playerid][pName], playerid, g_Player[i][pName], i);
-            Staff_SendToAdmins(message);
+            Staff_SendToAdmins(message, CHANNEL_SHARED_IP);
         }
     }
 }
@@ -776,25 +776,5 @@ cmd:unjail(playerid, params[])
     Msg_Admin(playerid, "Pustili ste igraca %s iz admin zatvora.", Account_Name(targetid));
     Staff_NotifyTarget(playerid, targetid, "vas je pustio iz admin zatvora.");
     Staff_Log(playerid, "unjail", targetid, "");
-    return 1;
-}
-
-cmd:pmspy(playerid, params[])
-{
-    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
-    {
-        return 1;
-    }
-
-    g_Staff[playerid][sPmSpy] = !g_Staff[playerid][sPmSpy];
-    if (g_Staff[playerid][sPmSpy])
-    {
-        Msg_Admin(playerid, "Pracenje privatnih poruka je ukljuceno.");
-    }
-    else
-    {
-        Msg_Admin(playerid, "Pracenje privatnih poruka je iskljuceno.");
-    }
-    Staff_Log(playerid, g_Staff[playerid][sPmSpy] ? ("pmspy_on") : ("pmspy_off"), INVALID_PLAYER_ID, "");
     return 1;
 }

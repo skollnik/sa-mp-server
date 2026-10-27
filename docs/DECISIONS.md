@@ -43,6 +43,9 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 35 | 2026-10-27 | Zaključavanje posle pogrešnih lozinki važi po nalogu i IP adresi | Da niko ne može namerno da zaključa tuđi nalog |
 | 36 | 2026-10-27 | U admin zatvoru rade samo chat komande i komande označene kao bezbedne | Da se zatvor ne izbegne preko `/goto` ili `/spec` |
 | 37 | 2026-10-27 | VIP: Bronze, Silver, Gold, mesečno, dodeljuje samo vlasnik, bez prednosti u igri i bez admin moći | Uobičajeno na ozbiljnim RP serverima |
+| 38 | 2026-10-27 | VIP cene: Bronze 3 €, Silver 5 €, Gold 10 € mesečno; sve predložene pogodnosti su odobrene | Odluka vlasnika |
+| 39 | 2026-10-27 | Iznad glave se vidi jedna oznaka: admin na dužnosti, pa helper na dužnosti, pa VIP | Dve oznake bi zatrpale ekran |
+| 40 | 2026-10-27 | Kanali: svaki chat i obaveštenje može da se isključi preko `/kanali`, osim reportova, AC upozorenja i pitanja dok si na dužnosti | Tim ne sme da propusti ono zbog čega je na dužnosti |
 
 ### Arhitektura koda (predlog)
 ```
@@ -107,6 +110,9 @@ This file records every important decision so it does not get re-discussed. Newe
 | 35 | 2026-10-27 | The wrong-password lockout applies per account and IP address | Nobody can lock someone else out on purpose |
 | 36 | 2026-10-27 | In admin jail only chat commands and commands marked as safe work | Jail cannot be escaped via `/goto` or `/spec` |
 | 37 | 2026-10-27 | VIP: Bronze, Silver, Gold, monthly, granted only by the owner, no in-game advantage, no admin powers | Common on serious RP servers |
+| 38 | 2026-10-27 | VIP prices: Bronze €3, Silver €5, Gold €10 monthly; all proposed perks approved | Owner's decision |
+| 39 | 2026-10-27 | One tag above the head: admin on duty, then helper on duty, then VIP | Two tags would clutter the screen |
+| 40 | 2026-10-27 | Channels: every chat and notification can be switched off via `/kanali`, except reports, AC alerts and questions while on duty | Staff must not miss what they are on duty for |
 
 ### Code architecture (proposal)
 ```

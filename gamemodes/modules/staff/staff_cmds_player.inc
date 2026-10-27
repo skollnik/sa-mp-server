@@ -34,9 +34,9 @@ cmd:report(playerid, params[])
 
     new message[192];
     format(message, sizeof(message), "[REPORT #%d] %s [%d] prijavljuje %s [%d]: %s", slot + 1, Account_Name(playerid), playerid, Account_Name(targetid), targetid, reason);
-    Staff_SendToAdmins(message);
+    Staff_SendToAdmins(message, CHANNEL_REPORTS);
     format(message, sizeof(message), "[REPORT #%d] Prihvati: /ar %d    Odbij: /rr %d [razlog]", slot + 1, slot + 1, slot + 1);
-    Staff_SendToAdmins(message);
+    Staff_SendToAdmins(message, CHANNEL_REPORTS);
 
     Msg_Success(playerid, "Vas report je poslat administraciji.");
     return 1;
@@ -63,9 +63,9 @@ cmd:ask(playerid, params[])
     format(message, sizeof(message), "[PITANJE] %s [%d]: %s", Account_Name(playerid), playerid, params);
 
     // With no helper on duty the question still reaches someone: every helper and admin gets it.
-    Staff_SendToHelpers(message);
+    Staff_SendToHelpers(message, CHANNEL_QUESTIONS);
     format(message, sizeof(message), "[PITANJE] Odgovor: /odg %d [tekst]", playerid);
-    Staff_SendToHelpers(message);
+    Staff_SendToHelpers(message, CHANNEL_QUESTIONS);
 
     if (Staff_CountOnDutyHelpers() == 0)
     {
@@ -90,7 +90,7 @@ cmd:n(playerid, params[])
         Msg_Usage(playerid, "/n [pitanje ili odgovor] (newbie chat)");
         return 1;
     }
-    if (g_Player[playerid][pTogNewbie])
+    if (!Channel_IsOn(playerid, CHANNEL_NEWBIE))
     {
         Msg_Error(playerid, "Iskljucili ste newbie chat. Ukljucite ga sa /tognewbie.");
         return 1;
@@ -127,28 +127,8 @@ cmd:n(playerid, params[])
         strcopy(rank, "Igrac");
     }
 
-    format(message, sizeof(message), "[N] %s %s [%d]: %s", rank, Account_Name(playerid), playerid, params);
-    for (new i = 0; i < MAX_PLAYERS; i++)
-    {
-        if (Account_IsLoggedIn(i) && !g_Player[i][pTogNewbie])
-        {
-            Chat_Send(i, COLOR_NEWBIE, message);
-        }
-    }
-    return 1;
-}
-
-cmd:tognewbie(playerid, params[])
-{
-    g_Player[playerid][pTogNewbie] = !g_Player[playerid][pTogNewbie];
-    if (g_Player[playerid][pTogNewbie])
-    {
-        Msg_Info(playerid, "Newbie chat je iskljucen. Ponovo ga ukljucite sa /tognewbie.");
-    }
-    else
-    {
-        Msg_Info(playerid, "Newbie chat je ukljucen.");
-    }
+    format(message, sizeof(message), "[N] %s %s [%d]: %s", rank, Chat_ColoredName(playerid, C_NEWBIE), playerid, Chat_CleanText(params));
+    Channel_Send(CHANNEL_NEWBIE, COLOR_NEWBIE, message, true);
     return 1;
 }
 
@@ -204,6 +184,5 @@ cmd:helpers(playerid, params[])
 flags:n(CMD_FLAG_CHAT)
 flags:report(CMD_FLAG_JAIL_OK)
 flags:ask(CMD_FLAG_JAIL_OK)
-flags:tognewbie(CMD_FLAG_JAIL_OK)
 flags:admins(CMD_FLAG_JAIL_OK)
 flags:helpers(CMD_FLAG_JAIL_OK)
