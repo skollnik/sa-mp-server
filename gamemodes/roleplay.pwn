@@ -29,6 +29,7 @@
 #include "modules/door/door_data.inc"
 #include "modules/point/point_data.inc"
 #include "modules/money/money_data.inc"
+#include "modules/inventory/inventory_data.inc"
 #include "modules/world/checkpoint.inc"
 #include "modules/world/zones.inc"
 #include "modules/world/gps.inc"
@@ -70,6 +71,9 @@
 
 #include "modules/cityhall/cityhall.inc"
 
+#include "modules/inventory/inventory_impl.inc"
+#include "modules/phone/phone.inc"
+
 #include "modules/help/help_cmds.inc"
 
 #include "maps/maps.inc"
@@ -105,6 +109,8 @@ public OnGameModeInit()
     Gps_Init();
     Time_Init();
     Hud_Init();
+    Inv_Init();
+    Phone_Init();
     Maps_Init();
 
     printf("[SERVER] %s gamemode loaded.", SERVER_NAME);
@@ -113,6 +119,8 @@ public OnGameModeInit()
 
 public OnGameModeExit()
 {
+    Phone_Exit();
+    Inv_Exit();
     Hud_Exit();
     Time_Exit();
     Payday_Exit();
@@ -134,6 +142,8 @@ public OnPlayerConnect(playerid)
     Checkpoint_OnPlayerConnect(playerid);
     Gps_OnPlayerConnect(playerid);
     Hud_OnPlayerConnect(playerid);
+    Inv_OnPlayerConnect(playerid);
+    Phone_OnPlayerConnect(playerid);
     Staff_OnPlayerConnect(playerid);
     Maps_OnPlayerConnect(playerid);
     Account_OnPlayerConnect(playerid);
@@ -143,6 +153,7 @@ public OnPlayerConnect(playerid)
 public OnPlayerDisconnect(playerid, reason)
 {
     Gps_OnPlayerDisconnect(playerid);
+    Phone_OnPlayerDisconnect(playerid);
     Staff_OnPlayerDisconnect(playerid);
     Account_OnPlayerDisconnect(playerid);
     return 1;
@@ -191,6 +202,7 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bod
 public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 {
     AC_OnPlayerDeath(playerid);
+    Phone_OnPlayerDeath(playerid);
     return 1;
 }
 
@@ -243,7 +255,10 @@ public OnPlayerText(playerid, text[])
     }
 
     Payday_MarkActive(playerid);
-    Chat_OnPlayerText(playerid, text);
+    if (!Phone_OnPlayerText(playerid, text))
+    {
+        Chat_OnPlayerText(playerid, text);
+    }
     return 0;
 }
 
@@ -270,6 +285,18 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (CityHall_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (Inv_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Shop_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (Phone_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
     {
         return 1;
     }

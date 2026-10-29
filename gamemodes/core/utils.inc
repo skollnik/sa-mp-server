@@ -35,3 +35,8 @@ stock Utils_MoveInto(playerid, Float:x, Float:y, Float:z, Float:angle, interior,
     SetPlayerFacingAngle(playerid, angle);
     SetCameraBehindPlayer(playerid);
 }
+
+stock Float:Utils_FloatMin(Float:a, Float:b)
+{
+    return a < b ? a : b;
+}

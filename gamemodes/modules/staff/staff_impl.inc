@@ -61,8 +61,8 @@ stock Staff_OnPlayerSpawn(playerid)
     if (g_Staff[playerid][sRestoreAfterSpec])
     {
         g_Staff[playerid][sRestoreAfterSpec] = false;
-        SetPlayerInterior(playerid, g_Staff[playerid][sSpecInterior]);
-        SetPlayerVirtualWorld(playerid, g_Staff[playerid][sSpecWorld]);
+        Utils_MoveInto(playerid, g_Staff[playerid][sSpecX], g_Staff[playerid][sSpecY], g_Staff[playerid][sSpecZ], g_Staff[playerid][sSpecA],
+            g_Staff[playerid][sSpecInterior], g_Staff[playerid][sSpecWorld]);
     }
     Staff_UpdateLook(playerid);
 }
