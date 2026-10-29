@@ -554,7 +554,7 @@ stock Phone_ShowMenu(playerid)
         return;
     }
 
-    new title[64], body[256];
+    new title[64], body[320];
     if (g_Player[playerid][pPhoneNumber] > 0)
     {
         format(title, sizeof(title), "Telefon | Broj: %d | Kredit: $%d", g_Player[playerid][pPhoneNumber], g_Player[playerid][pPhoneCredit]);
@@ -564,9 +564,21 @@ stock Phone_ShowMenu(playerid)
         strcopy(title, "Telefon | nema SIM kartice");
     }
     format(body, sizeof(body),
-        "Pozovi\nPoruka (SMS)\nKontakti\nJavni imenik ($%d kredita)\nDopuna sa racuna\nPromeni broj\nUpis u javni imenik: %s\n%s telefon",
-        PHONE_DIRECTORY_PRICE, g_Player[playerid][pPhoneListed] ? (C_GREEN "da") : (C_GREY "ne"), g_Phone[playerid][phOff] ? ("Ukljuci") : ("Iskljuci"));
+        "Pozovi\nPoruka (SMS)\nKontakti\nJavni imenik ($%d kredita)\nDopuna sa racuna\nPromeni broj\nUpis u javni imenik: %s\nMelodija: " C_SERVER "%s" C_WHITE "\n%s telefon",
+        PHONE_DIRECTORY_PRICE, g_Player[playerid][pPhoneListed] ? (C_GREEN "da") : (C_GREY "ne"),
+        g_RingtoneNames[Phone_Ringtone(playerid)], g_Phone[playerid][phOff] ? ("Ukljuci") : ("Iskljuci"));
     ShowPlayerDialog(playerid, DIALOG_PHONE_MENU, DIALOG_STYLE_LIST, title, body, "Izaberi", "Zatvori");
+}
+
+static stock Phone_ShowRingtones(playerid)
+{
+    new body[256], line[48], current = Phone_Ringtone(playerid);
+    for (new i = 0; i < sizeof(g_RingtoneNames); i++)
+    {
+        format(line, sizeof(line), "%s%s%s\n", i == current ? (C_GREEN) : (C_WHITE), g_RingtoneNames[i], i == current ? (" (izabrana)") : (""));
+        strcat(body, line);
+    }
+    ShowPlayerDialog(playerid, DIALOG_PHONE_RINGTONE, DIALOG_STYLE_LIST, "Melodija (klik pusta i bira)", body, "Izaberi", "Nazad");
 }
 
 static stock Phone_OnMenuSelect(playerid, listitem)
@@ -606,7 +618,8 @@ static stock Phone_OnMenuSelect(playerid, listitem)
             }
             Phone_ShowMenu(playerid);
         }
-        case 7:
+        case 7: Phone_ShowRingtones(playerid);
+        case 8:
         {
             g_Phone[playerid][phOff] = !g_Phone[playerid][phOff];
             if (g_Phone[playerid][phOff])
@@ -881,6 +894,21 @@ stock bool:Phone_OnDialogResponse(playerid, dialogid, response, listitem, const 
             {
                 Phone_OnMenuSelect(playerid, listitem);
             }
+        }
+        case DIALOG_PHONE_RINGTONE:
+        {
+            if (!response || !Inv_Has(playerid, ITEM_PHONE))
+            {
+                Phone_ShowMenu(playerid);
+                return true;
+            }
+            if (listitem >= 0 && listitem < sizeof(g_RingtoneNames))
+            {
+                g_Player[playerid][pRingtone] = listitem;
+                PlayerPlaySound(playerid, g_Ringtones[listitem][0], 0.0, 0.0, 0.0);
+                Msg_Info(playerid, "Melodija telefona: %s.", g_RingtoneNames[listitem]);
+            }
+            Phone_ShowRingtones(playerid);
         }
         case DIALOG_PHONE_CALL, DIALOG_PHONE_SMS:
         {

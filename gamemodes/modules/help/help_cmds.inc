@@ -11,7 +11,7 @@ cmd:pomoc(playerid, params[])
         C_WHITE "/b - lokalni OOC    /pm - privatna poruka\n" \
         "/o - globalni OOC (radi samo kad ga admin ukljuci)\n" \
         "/kanali - ukljucivanje i iskljucivanje chatova (ili /togooc, /togpm, /tognewbie)\n" \
-        "/podesavanja - HUD, melodija telefona i kanali (pamti se i posle izlaska)\n\n" \
+        "/podesavanja - HUD i kanali (pamti se i posle izlaska); melodija se bira u /telefon\n\n" \
         C_SERVER "Svet i novac\n" \
         C_WHITE "F ili /udji, /izadji - vrata zgrada    /gps - navigacija    /hud - sat i kvart\n" \
         "/stats - statistika    /daj - novac igracu pored vas    /licna - licna karta\n" \

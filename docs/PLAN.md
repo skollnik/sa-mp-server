@@ -38,7 +38,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] WORLD-2, WORLD-3, WORLD-7: stvarno vreme, GPS sa upravljačem checkpoint-a, HUD (sat, datum, kvart)
 - [x] ECO-1, ECO-2, ECO-4: novac sa logovima, banka, bankomat, transfer, `/daj`
 - [x] ACC-7, ACC-8, ACC-10: payday (sa AFK proverom i happy hour), `/stats`, nivoi
-- [x] ACC-9: podešavanja (`/podesavanja`: delovi HUD-a, melodija telefona, kanali; sve se pamti)
+- [x] ACC-9: podešavanja (`/podesavanja`: delovi HUD-a i kanali, melodija u `/telefon`; sve se pamti)
 - [x] WORLD-4: opština (lična karta); prijava na posao čeka poslove
 - [x] INV-1, INV-2: inventar sa slotovima, predmeti, prodavnice 24/7, `/vskin` sa slikama
 - [x] PHONE-1, PHONE-2: telefon (pozivi, SMS, kontakti, 911 adminima)
@@ -139,7 +139,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] WORLD-2, WORLD-3, WORLD-7: real time, GPS with a checkpoint manager, HUD (clock, date, district)
 - [x] ECO-1, ECO-2, ECO-4: money with logs, bank, ATM, transfers, `/daj`
 - [x] ACC-7, ACC-8, ACC-10: payday (with AFK check and happy hour), `/stats`, levels
-- [x] ACC-9: settings (`/podesavanja`: HUD parts, phone ringtone, channels; all remembered)
+- [x] ACC-9: settings (`/podesavanja`: HUD parts and channels, the ringtone in `/telefon`; all remembered)
 - [x] WORLD-4: city hall (ID card); job sign-up waits for jobs
 - [x] INV-1, INV-2: slot inventory, items, 24/7 shops, `/vskin` with pictures
 - [x] PHONE-1, PHONE-2: phone (calls, SMS, contacts, 911 to admins)

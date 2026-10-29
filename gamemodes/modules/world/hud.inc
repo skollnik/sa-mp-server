@@ -129,6 +129,8 @@ static stock Hud_ShowZone(playerid)
 
 stock Hud_Show(playerid)
 {
+    // The hunger bar is game state, not decoration, so no setting hides it.
+    Hud_ShowHunger(playerid);
     if (!Setting_IsOn(playerid, SETTING_HUD))
     {
         return;
@@ -141,10 +143,6 @@ stock Hud_Show(playerid)
     if (Setting_IsOn(playerid, SETTING_HUD_ZONE))
     {
         Hud_ShowZone(playerid);
-    }
-    if (Setting_IsOn(playerid, SETTING_HUD_HUNGER))
-    {
-        Hud_ShowHunger(playerid);
     }
 }
 
@@ -241,7 +239,7 @@ cmd:hud(playerid, params[])
     }
     else
     {
-        Msg_Info(playerid, "HUD (sat, datum, kvart i glad) je sakriven i ostaje sakriven i posle izlaska. Ponovo: /hud");
+        Msg_Info(playerid, "HUD (sat, datum i kvart) je sakriven i ostaje sakriven i posle izlaska. Traka gladi se uvek vidi. Ponovo: /hud");
     }
     return 1;
 }

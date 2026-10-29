@@ -236,7 +236,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 29.10.2026. | Glad (HEALTH-5): traka ispod novca, hrana i piće je pune, na nuli se gubi HP do 20, `/setglad` |
 | 29.10.2026. | Telefon sa SIM karticom: telefon i SIM odvojeno, izbor broja, kredit i dopuna (24/7 i sa računa), meni `/telefon`, javni imenik, 30 kontakata, SMS iz kontakata, gašenje broja posle 6 meseci; `/promenibroj` ukinut |
 | 29.10.2026. | Strelice na vratima (meni sa slikama), nivo po formuli (sledeći nivo × 4), happy hour po broju plata; otvoreno piće se ne vraća u inventar |
-| 29.10.2026. | Podešavanja (ACC-9): `/podesavanja` sa delovima HUD-a, melodijom telefona (5 melodija, čuje se i okolo) i kanalima; `/hud` se pamti. Odluka: vozilo se prodaje samo drugom igraču |
+| 29.10.2026. | Podešavanja (ACC-9): `/podesavanja` sa delovima HUD-a i kanalima (traka gladi se uvek vidi); melodija telefona u meniju `/telefon` (5 melodija, čuje se i okolo); `/hud` se pamti. Odluka: vozilo se prodaje samo drugom igraču |
 
 ---
 
@@ -476,4 +476,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-29 | Hunger (HEALTH-5): a bar under the money, food and drinks fill it, at zero HP drops to 20, `/setglad` |
 | 2026-10-29 | SIM card phone: phone and SIM bought separately, picking a number, credit and top-up (24/7 and from the bank), a `/telefon` menu, public directory, 30 contacts, SMS from contacts, number freed after 6 months; `/promenibroj` removed |
 | 2026-10-29 | Door arrows (picture menu), levels by formula (next level × 4), happy hour counted in paydays; an opened drink does not go back to the inventory |
-| 2026-10-29 | Settings (ACC-9): `/podesavanja` with HUD parts, the phone ringtone (5 ringtones, heard nearby too) and channels; `/hud` is remembered. Decision: a vehicle is sold only to another player |
+| 2026-10-29 | Settings (ACC-9): `/podesavanja` with HUD parts and channels (the hunger bar is always shown); the phone ringtone in the `/telefon` menu (5 ringtones, heard nearby too); `/hud` is remembered. Decision: a vehicle is sold only to another player |

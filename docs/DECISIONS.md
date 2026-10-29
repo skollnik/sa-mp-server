@@ -75,7 +75,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 67 | 2026-10-29 | Izbor broja: Silver i Gold VIP i admini besplatno, ostali $2.000; SMS, pozivi i javni imenik se plaćaju kreditom (dopuna u 24/7 ili sa računa, najviše $500); javni imenik prikazuje samo one koji su se upisali; broj se gasi posle 180 dana neaktivnosti | Odobren predlog vlasnika; privatnost i odliv novca iz igre |
 | 68 | 2026-10-29 | Respect za sledeći nivo: (sledeći nivo) × 4; happy hour se zadaje u broju plata (1–12) | Uobičajena formula; happy hour u minutima je mogao da ne pogodi nijednu platu |
 | 69 | 2026-10-29 | Strelica na vratima se bira iz menija sa slikama (14 modela) i važi za ulaz i izlaz; otvoreno piće se ne vraća u inventar | Odobren predlog vlasnika |
-| 70 | 2026-10-29 | `/podesavanja` je jedno mesto za sve izbore igrača: delovi HUD-a, melodija telefona i kanali; čuva se u bazi (`setting_bits`, `ringtone`), a `/hud` se sada pamti | Odobren predlog vlasnika (ACC-9); novi sistemi samo dodaju svoj red |
+| 70 | 2026-10-29 | `/podesavanja` je jedno mesto za izbore igrača: delovi HUD-a (sat i datum, kvart) i kanali; traka gladi ne može da se sakrije; melodija se bira u meniju telefona; sve se čuva u bazi (`setting_bits`, `ringtone`), a `/hud` se sada pamti | Odobren predlog vlasnika (ACC-9); novi sistemi samo dodaju svoj red |
 | 71 | 2026-10-29 | Vozilo se prodaje samo drugom igraču, ne i državi | Odluka vlasnika; novac ne nastaje iz vazduha prodajom državi |
 
 ### Arhitektura koda (predlog)
@@ -173,7 +173,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 67 | 2026-10-29 | Picking a number: free for Silver and Gold VIP and admins, $2,000 for others; SMS, calls and the public directory are paid with credit (top-up at a 24/7 or from the bank, at most $500); the directory only shows those who listed themselves; a number is freed after 180 days of inactivity | Owner approved the proposal; privacy and money leaving the game |
 | 68 | 2026-10-29 | Respect for the next level: (next level) × 4; happy hour is set in paydays (1–12) | The usual formula; happy hour in minutes could miss every payday |
 | 69 | 2026-10-29 | A door's arrow is picked from a picture menu (14 models) and applies to both sides; an opened drink does not go back to the inventory | Owner approved the proposal |
-| 70 | 2026-10-29 | `/podesavanja` is one place for every player choice: HUD parts, phone ringtone and channels; stored in the DB (`setting_bits`, `ringtone`), and `/hud` is now remembered | Owner approved the proposal (ACC-9); new systems just add their row |
+| 70 | 2026-10-29 | `/podesavanja` is one place for player choices: HUD parts (clock and date, district) and channels; the hunger bar cannot be hidden; the ringtone is picked in the phone menu; everything is stored in the DB (`setting_bits`, `ringtone`), and `/hud` is now remembered | Owner approved the proposal (ACC-9); new systems just add their row |
 | 71 | 2026-10-29 | A vehicle can only be sold to another player, not to the state | Owner's decision; selling to the state would create money out of thin air |
 
 ### Code architecture (proposal)

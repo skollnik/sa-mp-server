@@ -12,7 +12,7 @@ stock Setting_Toggle(playerid, E_SETTING:setting)
 
 stock Settings_Show(playerid)
 {
-    new body[640], line[96];
+    new body[512], line[96];
     strcat(body, C_SERVER "Podesavanje\t" C_SERVER "Stanje\n");
 
     new bool:hud = Setting_IsOn(playerid, SETTING_HUD);
@@ -29,72 +29,39 @@ stock Settings_Show(playerid)
         strcat(body, line);
     }
 
-    format(line, sizeof(line), C_WHITE "Melodija telefona\t" C_SERVER "%s\n", g_RingtoneNames[Phone_Ringtone(playerid)]);
-    strcat(body, line);
     strcat(body, C_WHITE "Kanali (chatovi i obavestenja)\t" C_SERVER ">>\n");
     ShowPlayerDialog(playerid, DIALOG_SETTINGS, DIALOG_STYLE_TABLIST_HEADERS, SERVER_NAME " - Podesavanja (klik menja)", body, "Izaberi", "Zatvori");
 }
 
-static stock Settings_ShowRingtones(playerid)
-{
-    new body[256], line[48], current = Phone_Ringtone(playerid);
-    for (new i = 0; i < sizeof(g_RingtoneNames); i++)
-    {
-        format(line, sizeof(line), "%s%s%s\n", i == current ? (C_GREEN) : (C_WHITE), g_RingtoneNames[i], i == current ? (" (izabrana)") : (""));
-        strcat(body, line);
-    }
-    ShowPlayerDialog(playerid, DIALOG_SETTINGS_RINGTONE, DIALOG_STYLE_LIST, SERVER_NAME " - Melodija (klik pusta i bira)", body, "Izaberi", "Nazad");
-}
-
 stock bool:Settings_OnDialogResponse(playerid, dialogid, response, listitem)
 {
-    if (dialogid == DIALOG_SETTINGS)
+    if (dialogid != DIALOG_SETTINGS)
     {
-        if (!response)
-        {
-            return true;
-        }
-        if (listitem == SETTINGS_ROW_RINGTONE)
-        {
-            Settings_ShowRingtones(playerid);
-        }
-        else if (listitem == SETTINGS_ROW_CHANNELS)
-        {
-            Channel_ShowDialog(playerid);
-        }
-        else if (listitem >= 0 && listitem < _:E_SETTING)
-        {
-            new E_SETTING:setting = E_SETTING:listitem;
-            if (setting != SETTING_HUD && !Setting_IsOn(playerid, SETTING_HUD))
-            {
-                Msg_Error(playerid, "Prvo ukljucite HUD (prvi red).");
-            }
-            else
-            {
-                Setting_Toggle(playerid, setting);
-            }
-            Settings_Show(playerid);
-        }
+        return false;
+    }
+    if (!response)
+    {
         return true;
     }
 
-    if (dialogid == DIALOG_SETTINGS_RINGTONE)
+    if (listitem == SETTINGS_ROW_CHANNELS)
     {
-        if (!response)
-        {
-            Settings_Show(playerid);
-            return true;
-        }
-        if (listitem >= 0 && listitem < sizeof(g_RingtoneNames))
-        {
-            g_Player[playerid][pRingtone] = listitem;
-            PlayerPlaySound(playerid, g_Ringtones[listitem][0], 0.0, 0.0, 0.0);
-            Msg_Info(playerid, "Melodija telefona: %s.", g_RingtoneNames[listitem]);
-        }
-        Settings_ShowRingtones(playerid);
-        return true;
+        Channel_ShowDialog(playerid);
     }
-    return false;
+    else if (listitem >= 0 && listitem < _:E_SETTING)
+    {
+        new E_SETTING:setting = E_SETTING:listitem;
+        if (setting != SETTING_HUD && !Setting_IsOn(playerid, SETTING_HUD))
+        {
+            Msg_Error(playerid, "Prvo ukljucite HUD (prvi red).");
+        }
+        else
+        {
+            Setting_Toggle(playerid, setting);
+        }
+        Settings_Show(playerid);
+    }
+    return true;
 }
 
 cmd:podesavanja(playerid, params[])

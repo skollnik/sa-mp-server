@@ -3,23 +3,20 @@ enum E_SETTING
 {
     SETTING_HUD,
     SETTING_HUD_CLOCK,
-    SETTING_HUD_ZONE,
-    SETTING_HUD_HUNGER
+    SETTING_HUD_ZONE
 }
 
 forward bool:Setting_IsOn(playerid, E_SETTING:setting);
 
 new const g_SettingNames[E_SETTING][] =
 {
-    "HUD (sve ispod)",
+    "HUD (sat, datum i kvart)",
     "Sat i datum",
-    "Kvart",
-    "Traka gladi"
+    "Kvart"
 };
 
 // The settings dialog lists every E_SETTING first, then these rows.
 enum
 {
-    SETTINGS_ROW_RINGTONE = _:E_SETTING,
-    SETTINGS_ROW_CHANNELS
+    SETTINGS_ROW_CHANNELS = _:E_SETTING
 }
