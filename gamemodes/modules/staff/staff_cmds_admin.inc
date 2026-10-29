@@ -398,6 +398,14 @@ cmd:tp(playerid, params[])
         return 1;
     }
 
+    // Real places from the GPS list come first; the fixed list is only a fallback until locations exist.
+    new gps_list[4096];
+    if (Gps_BuildList(playerid, -1, gps_list) > 0)
+    {
+        ShowPlayerDialog(playerid, DIALOG_ADMIN_TELEPORT_GPS, DIALOG_STYLE_LIST, SERVER_NAME " - Teleport", gps_list, "Teleport", "Zatvori");
+        return 1;
+    }
+
     new list[512];
     for (new i = 0; i < sizeof(g_AdminTeleports); i++)
     {
@@ -566,24 +574,24 @@ cmd:settime(playerid, params[])
     }
 
     new hour;
-    if (sscanf(params, "d", hour) || hour < 0 || hour > 23)
+    if (sscanf(params, "d", hour) || hour < -1 || hour > 23)
     {
-        Msg_Usage(playerid, "/settime [sat 0-23]");
+        Msg_Usage(playerid, "/settime [sat 0-23, ili -1 za stvarno vreme]");
         return 1;
     }
 
-    SetWorldTime(hour);
-    for (new i = 0; i < MAX_PLAYERS; i++)
-    {
-        if (Account_IsLoggedIn(i))
-        {
-            SetPlayerTime(i, hour, 0);
-        }
-    }
+    Time_SetOverride(hour);
 
     new details[16];
     format(details, sizeof(details), "%d", hour);
-    Msg_Admin(playerid, "Vreme na serveru je postavljeno na %02d:00.", hour);
+    if (hour == -1)
+    {
+        Msg_Admin(playerid, "Vreme na serveru ponovo prati stvarno vreme.");
+    }
+    else
+    {
+        Msg_Admin(playerid, "Vreme na serveru je zadrzano na %02d:00. Povratak na stvarno vreme: /settime -1", hour);
+    }
     Staff_Log(playerid, "settime", INVALID_PLAYER_ID, details);
     return 1;
 }
@@ -1097,7 +1105,7 @@ cmd:givemoney(playerid, params[])
         return 1;
     }
 
-    Account_GiveCash(targetid, amount);
+    Money_GiveCash(targetid, amount, "admin /givemoney", g_Player[playerid][pDbId]);
     Account_Save(targetid);
 
     new details[48];

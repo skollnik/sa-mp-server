@@ -21,3 +21,17 @@ public Utils_DoKick(playerid, serial)
     }
     return 1;
 }
+
+// Moving into an interior: the objects around the destination are streamed first and the player is held
+// still meanwhile, otherwise they fall through a floor that has not loaded yet.
+#define UTILS_PRELOAD_MS    (1500)
+
+stock Utils_MoveInto(playerid, Float:x, Float:y, Float:z, Float:angle, interior, world)
+{
+    SetPlayerInterior(playerid, interior);
+    SetPlayerVirtualWorld(playerid, world);
+    AC_ExpectTeleport(playerid, x, y, z);
+    Streamer_UpdateEx(playerid, x, y, z, world, interior, STREAMER_TYPE_OBJECT, UTILS_PRELOAD_MS, 1);
+    SetPlayerFacingAngle(playerid, angle);
+    SetCameraBehindPlayer(playerid);
+}

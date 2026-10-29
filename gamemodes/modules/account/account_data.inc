@@ -36,6 +36,9 @@ enum E_PLAYER_DATA
     Float:pHealth,
     Float:pArmour,
     pPlayedSeconds,
+    pPaydayMinutes,
+    bool:pHasIdCard,
+    pPhoneNumber,
 
     // Runtime only, never saved
     pLastLoginText[24],
@@ -47,7 +50,12 @@ enum E_PLAYER_DATA
     pLoginAttempts,
     pLoginTimer,
     pSessionStart,
-    pLastDamage
+    pLastDamage,
+    pLastUpdateTick,
+    pIdleMinutes,
+    Float:pIdleX,
+    Float:pIdleY,
+    Float:pIdleZ
 }
 
 new g_Player[MAX_PLAYERS][E_PLAYER_DATA];

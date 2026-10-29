@@ -67,9 +67,7 @@ cmd:me(playerid, params[])
         return 1;
     }
 
-    new message[192];
-    format(message, sizeof(message), "* %s %s", Account_Name(playerid), params);
-    Chat_SendNearby(playerid, CHAT_RADIUS_ACTION, COLOR_PURPLE, message);
+    Chat_Action(playerid, params);
     return 1;
 }
 

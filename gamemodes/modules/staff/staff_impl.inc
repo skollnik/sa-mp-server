@@ -425,6 +425,17 @@ stock bool:Staff_OnDialogResponse(playerid, dialogid, response, listitem)
                 g_AdminTeleports[listitem][tInterior], 0);
             Msg_Admin(playerid, "Teleportovani ste: %s", g_AdminTeleports[listitem][tName]);
         }
+        case DIALOG_ADMIN_TELEPORT_GPS:
+        {
+            new slot = Gps_GetListed(playerid, listitem);
+            if (!response || slot == -1 || !Staff_IsAdminOnDuty(playerid))
+            {
+                return true;
+            }
+
+            Staff_TeleportTo(playerid, g_Gps[slot][gX], g_Gps[slot][gY], g_Gps[slot][gZ], 0, 0);
+            Msg_Admin(playerid, "Teleportovani ste: %s", g_Gps[slot][gName]);
+        }
         case DIALOG_ADMIN_REPORTS, DIALOG_ADMIN_INFO:
         {
         }

@@ -51,7 +51,8 @@ enum E_VIP_STATE
     vLastGoto,
     vLastFix,
     vLastHeal,
-    bool:vTagHidden
+    bool:vTagHidden,
+    bool:vPersonalTime
 }
 
 new g_Vip[MAX_PLAYERS][E_VIP_STATE];

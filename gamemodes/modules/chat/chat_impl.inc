@@ -195,3 +195,11 @@ stock Chat_ColoredName(playerid, const chat_color[])
     }
     return text;
 }
+
+// "* Name does something" to everyone nearby, as /me prints it; also used by systems for automatic RP lines.
+stock Chat_Action(playerid, const action[])
+{
+    new message[192];
+    format(message, sizeof(message), "* %s %s", Account_Name(playerid), action);
+    Chat_SendNearby(playerid, CHAT_RADIUS_ACTION, COLOR_PURPLE, message);
+}

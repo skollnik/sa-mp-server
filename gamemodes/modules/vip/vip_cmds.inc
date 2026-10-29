@@ -212,14 +212,21 @@ cmd:vtime(playerid, params[])
     }
 
     new hour;
-    if (sscanf(params, "d", hour) || hour < 0 || hour > 23)
+    if (sscanf(params, "d", hour) || hour < -1 || hour > 23)
     {
-        Msg_Usage(playerid, "/vtime [sat 0-23] (vreme koje vidite samo vi)");
+        Msg_Usage(playerid, "/vtime [sat 0-23, ili -1 za serversko vreme] (vreme koje vidite samo vi)");
         return 1;
     }
 
+    g_Vip[playerid][vPersonalTime] = hour != -1;
+    if (hour == -1)
+    {
+        Time_Apply(playerid);
+        Msg_Info(playerid, "Ponovo vidite serversko vreme.");
+        return 1;
+    }
     SetPlayerTime(playerid, hour, 0);
-    Msg_Info(playerid, "Vase licno vreme je %02d:00. Vraca se na serversko posle ponovnog ulaska.", hour);
+    Msg_Info(playerid, "Vase licno vreme je %02d:00. Serversko vreme: /vtime -1 ili ponovni ulazak.", hour);
     return 1;
 }
 
