@@ -33,6 +33,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] AC-1, AC-3, AC-4: serverski novac/HP/armor/oružje, zaštita dijaloga (open.mp), flood zaštita, osnovna detekcija teleporta i brzine
 
 ### Faza 2: Svet i ekonomija
+- [x] WORLD-6 (deo 1): prve mape, i to opština spolja i parking ispred nje, ograđena auto pijaca, banka spolja i enterijeri opštine, policije, zatvora i banke. Enterijeri još nemaju ulaz (čekaju WORLD-1)
 - [ ] WORLD-1: dinamički ulazi/izlazi (enterijeri)
 - [ ] WORLD-2, WORLD-3, WORLD-7: vreme, GPS, HUD
 - [ ] ECO-1, ECO-2, ECO-4: novac i banka sa logovima
@@ -130,6 +131,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] AC-1, AC-3, AC-4: server-side money/HP/armour/weapons, dialog protection (open.mp), flood protection, basic teleport and speed detection
 
 ### Phase 2: World and economy
+- [x] WORLD-6 (part 1): first maps, namely the city hall exterior and the parking in front of it, the fenced car market, the bank exterior and the interiors of the city hall, the police, the prison and the bank. The interiors have no entrance yet (waiting for WORLD-1)
 - [ ] WORLD-1: dynamic entrances/exits (interiors)
 - [ ] WORLD-2, WORLD-3, WORLD-7: time, GPS, HUD
 - [ ] ECO-1, ECO-2, ECO-4: money and bank with logs

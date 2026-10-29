@@ -101,7 +101,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **HEALTH-2 Log povreda** (`/damages`): koje oružje i koji deo tela.
 - **HEALTH-3 Bolnica:** respawn posle smrti uz naplatu lečenja.
 - **HEALTH-4 PK / CK pravila:** zaboravljanje događaja (PK) i trajna smrt karaktera (CK) uz odobrenje admina.
-- **HEALTH-5 Glad i žeđ** (opciono).
+- **HEALTH-5 Glad:** traka gladi polako pada, a na nuli igrač polako gubi HP. Hrana puni glad i vraća malo HP-a, ali ne može da se jede kad je igrač sit, pa se hranom ne vraća pun HP. Prva pomoć iz 24/7 vraća deo HP-a (ne u borbi ni dok je igrač ranjen); pun HP vraćaju bolnica i hitna. Žeđi nema.
 - **HEALTH-6 Droga i alkohol** imaju vizuelne efekte (vremenske prilike, kretanje kamere).
 
 ### FAC — Frakcije (okvir)
@@ -267,7 +267,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **HEALTH-2 Damage log** (`/damages`): which weapon and which body part.
 - **HEALTH-3 Hospital:** respawn after death with a treatment fee.
 - **HEALTH-4 PK / CK rules:** forgetting the event (PK) and permanent character death (CK) with admin approval.
-- **HEALTH-5 Hunger and thirst** (optional).
+- **HEALTH-5 Hunger:** a hunger bar slowly drops, and at zero the player slowly loses HP. Food fills hunger and gives a little HP, but cannot be eaten when full, so food never restores full HP. A first aid kit from a 24/7 restores part of the HP (not in combat or while wounded); full HP comes from the hospital and EMS. There is no thirst.
 - **HEALTH-6 Drugs and alcohol** have visual effects (weather, camera sway).
 
 ### FAC — Factions (framework)

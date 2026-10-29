@@ -46,6 +46,14 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 38 | 2026-10-27 | VIP cene: Bronze 3 €, Silver 5 €, Gold 10 € mesečno; sve predložene pogodnosti su odobrene | Odluka vlasnika |
 | 39 | 2026-10-27 | Iznad glave se vidi jedna oznaka: admin na dužnosti, pa helper na dužnosti, pa VIP | Dve oznake bi zatrpale ekran |
 | 40 | 2026-10-27 | Kanali: svaki chat i obaveštenje može da se isključi preko `/kanali`, osim reportova, AC upozorenja i pitanja dok si na dužnosti | Tim ne sme da propusti ono zbog čega je na dužnosti |
+| 41 | 2026-10-28 | Mape se pišu u našem obliku: jedan fajl po mapi u `maps/exteriors` ili `maps/interiors`, objekti preko `Map_Exterior` i `Map_Interior`, a uklonjeni GTA objekti u funkciji `Map_X_Remove(playerid)` | Isti izgled koda, lako se dodaje i briše mapa |
+| 42 | 2026-10-28 | Spoljne mape su u svetu 0 i enterijeru 0. Custom enterijeri su visoko iznad grada, u enterijeru 20 i svim virtuelnim svetovima | Ne vide se iz grada, grad se ne vidi kroz njihove zidove, a vrata (WORLD-1) kasnije samo postave enterijer 20 |
+| 43 | 2026-10-28 | Igrač vidi do 1000 objekata odjednom (streamer) | Najveći enterijer ima skoro 1000 objekata, a sa podrazumevanih 500 bi mu falili zidovi |
+| 44 | 2026-10-28 | GTA zgrada kojoj treba promeniti izgled (npr. natpisi na pozorištu pored banke) uklanja se i pravi ponovo kao objekat, sa zamenjenim materijalom | GTA zgradama se materijal ne može menjati direktno |
+| 45 | 2026-10-28 | Medicinska karta važi 3 meseca i izdaju je doktori iz bolnice | Da igrači ne obnavljaju kartu prečesto |
+| 46 | 2026-10-28 | Brak ne menja prezime; u `/stats` piše „u braku sa X“ | Ime naloga je vezano za logove i banove |
+| 47 | 2026-10-29 | Glad bez žeđi; hrana daje malo HP-a i ne može da se jede kad je igrač sit; pun HP vraćaju samo bolnica i hitna | Hrana ima smisla, a HP se ne vraća prejedanjem |
+| 48 | 2026-10-29 | Objekti spoljnih mapa se vide do 300 m, a velike ploče tla i ponovo napravljene GTA zgrade do 800 m (`Map_Exterior`) | Te ploče i zgrade zamenjuju uklonjene GTA modele za daljinu, pa bi bez toga izdaleka ostala rupa |
 
 ### Arhitektura koda (predlog)
 ```
@@ -113,6 +121,14 @@ This file records every important decision so it does not get re-discussed. Newe
 | 38 | 2026-10-27 | VIP prices: Bronze €3, Silver €5, Gold €10 monthly; all proposed perks approved | Owner's decision |
 | 39 | 2026-10-27 | One tag above the head: admin on duty, then helper on duty, then VIP | Two tags would clutter the screen |
 | 40 | 2026-10-27 | Channels: every chat and notification can be switched off via `/kanali`, except reports, AC alerts and questions while on duty | Staff must not miss what they are on duty for |
+| 41 | 2026-10-28 | Maps are written in our format: one file per map in `maps/exteriors` or `maps/interiors`, objects via `Map_Exterior` and `Map_Interior`, removed GTA objects in a `Map_X_Remove(playerid)` function | Uniform code, maps are easy to add and remove |
+| 42 | 2026-10-28 | Exterior maps are in world 0 and interior 0. Custom interiors sit high above the city, in interior 20 and every virtual world | They are not visible from the city, the city does not show through their walls, and doors (WORLD-1) later just set interior 20 |
+| 43 | 2026-10-28 | A player sees up to 1000 objects at once (streamer) | The biggest interior has almost 1000 objects; with the default 500 its walls would be missing |
+| 44 | 2026-10-28 | A GTA building whose look must change (e.g. the banners on the theatre next to the bank) is removed and recreated as an object with the material replaced | Materials of GTA buildings cannot be changed directly |
+| 45 | 2026-10-28 | The medical card is valid for 3 months and is issued by hospital doctors | So players do not renew it too often |
+| 46 | 2026-10-28 | Marriage does not change the surname; `/stats` shows "married to X" | The account name is tied to logs and bans |
+| 47 | 2026-10-29 | Hunger without thirst; food gives a little HP and cannot be eaten when full; only the hospital and EMS restore full HP | Food matters, and HP cannot be restored by overeating |
+| 48 | 2026-10-29 | Exterior map objects are visible up to 300 m, large ground planes and rebuilt GTA buildings up to 800 m (`Map_Exterior`) | They stand in for removed GTA LOD models, so without it a hole would show from a distance |
 
 ### Code architecture (proposal)
 ```

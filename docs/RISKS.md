@@ -97,6 +97,19 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Vozila: popravka cheat-om, ulazak u zaključano vozilo | 📋 | Kad dođe sistem vozila |
 | Lažna smrt, spam konekcija, botovi | 📋 | Napredni anti-cheat (Faza 7) |
 
+### Mape
+| Rizik | Status | Kako je rešeno |
+|-------|--------|----------------|
+| Skriven kod u gotovim skriptama sa interneta (npr. komanda koja određenoj IP adresi daje admin nivo) | ✅ | Ne ubacujemo gotove skripte ni filterskripte, sav kod pišemo sami |
+| Igrač avionom doleti do enterijera koji visi iznad grada i uđe u njega bez vrata | ✅ | Enterijeri su u enterijeru 20, pa se u otvorenom svetu ne vide i nemaju koliziju |
+| Previše objekata na jednom mestu, pa klijentu fale zidovi | ✅ | Streamer šalje do 1000 objekata, a najveći enterijer ih ima 986 |
+| Igrač ili admin se pojavi zaglavljen u objektu nove mape (npr. `/tp` na Pershing Square, gde je sada parking) | ✅ | Provereno u igri |
+| Uklonjeni GTA objekti (zgrada opštine, lampe i drveće na trgu, pozorište pored banke) ostanu kod igrača koji je već bio na serveru | ✅ | Uklanjaju se pri svakom ulasku na server, pre spawna |
+| Nova zgrada opštine i parking ispred nje se dodiruju, pa tlo može da treperi ili da se objekti preklope | ✅ | Provereno u igri |
+| Izdaleka nestanu objekti nove mape, a GTA modeli za daljinu su uklonjeni, pa ostane rupa (tlo opštine i trga, pozorište pored banke) | ✅ | Objekti mapa se vide do 300 m, a velike ploče tla i ponovo napravljeno pozorište do 800 m |
+| Natpis „BANKA“ se ne uklapa u banere pozorišta (jedan materijal pokriva dva banera) | ✅ | Svaki baner dobija reč odozgo nadole; provereno u igri |
+| Staklene ploče ispred banke se razbiju kod jednog igrača (GTA staklo puca od metka), a kod drugih ostanu cele | 👁 | Samo izgled, ne utiče na igru; proverava se u igri, a staklo se menja drugim modelom ako smeta |
+
 ---
 
 ## 🇬🇧 English
@@ -195,3 +208,16 @@ Every new system or change goes through these questions, against all existing sy
 | Wrong weapon kick right after `/disarm` or being jailed | ✅ | After weapons are taken away the weapon check waits 3 s |
 | Vehicles: cheat repair, entering a locked vehicle | 📋 | With the vehicle system |
 | Fake kill, connection spam, bots | 📋 | Advanced anti-cheat (Phase 7) |
+
+### Maps
+| Risk | Status | How it is handled |
+|------|--------|-------------------|
+| Hidden code in ready-made scripts from the internet (e.g. a command granting admin to a specific IP address) | ✅ | We never add ready-made scripts or filterscripts, all code is our own |
+| A player flies a plane up to an interior hanging above the city and walks in without a door | ✅ | Interiors are in interior 20, so in the open world they are invisible and have no collision |
+| Too many objects in one place, so the client misses walls | ✅ | The streamer sends up to 1000 objects, and the biggest interior has 986 |
+| A player or admin ends up stuck in an object of a new map (e.g. `/tp` to Pershing Square, now a parking lot) | ✅ | Checked in game |
+| Removed GTA objects (the city hall building, lamps and trees on the square, the theatre next to the bank) stay for a player who was on the server before | ✅ | They are removed on every connect, before spawn |
+| The new city hall building and the parking in front of it touch, so the ground may flicker or objects may overlap | ✅ | Checked in game |
+| Map objects vanish at a distance while the GTA LOD models are removed, leaving a hole (city hall and square ground, the theatre next to the bank) | ✅ | Map objects are visible up to 300 m, large ground planes and the recreated theatre up to 800 m |
+| The "BANKA" text does not fit the theatre banners (one material covers two banners) | ✅ | Each banner gets the word top to bottom; checked in game |
+| The glass panels in front of the bank break for one player (GTA glass shatters when shot) but stay whole for others | 👁 | Visual only, no gameplay effect; checked in game, the glass is swapped for another model if it matters |
