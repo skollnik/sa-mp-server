@@ -110,6 +110,30 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Natpis „BANKA“ se ne uklapa u banere pozorišta (jedan materijal pokriva dva banera) | ✅ | Svaki baner dobija reč odozgo nadole; provereno u igri |
 | Staklene ploče ispred banke se razbiju kod jednog igrača (GTA staklo puca od metka), a kod drugih ostanu cele | 👁 | Samo izgled, ne utiče na igru; proverava se u igri, a staklo se menja drugim modelom ako smeta |
 
+### Faza 2: vrata, novac, inventar, telefon
+| Rizik | Status | Kako je rešeno |
+|-------|--------|----------------|
+| GPS i posao koriste isti checkpoint, pa se posao završi bez vožnje | ✅ | Upravljač checkpoint-a: reaguje samo sistem koji je postavio checkpoint, a GPS nikad ne uzima tuđi (koristi ikonicu na mapi) |
+| Bežanje iz borbe kroz vrata | ✅ | Vrata ne rade 30 s posle primljene štete, samo peške, uz pauzu od 2 s |
+| Bekstvo iz admin zatvora ili zamrzavanja kroz vrata (učitavanje enterijera odmrzava igrača) | ✅ | Vrata, inventar i telefon ne rade u zatvoru ni dok je igrač zamrznut; admin teleport ne odmrzava zamrznutog |
+| Propadanje kroz pod custom enterijera pre nego što se objekti učitaju (vrata, login u enterijeru, admin teleport, kraj posmatranja) | ✅ | Objekti se učitaju pre pomeranja i igrač stoji 1,5 s (`Utils_MoveInto`) |
+| Lažni AC teleport pri prolasku kroz vrata | ✅ | Svako pomeranje ide preko `AC_ExpectTeleport` |
+| Ulaz obrisan dok je igrač unutra (ostane zaglavljen) | 👁 | Admin ga izvlači sa `/gethere`; brisanje ulaza je samo za glavnog admina |
+| Dupliranje novca preko transfera ili `/daj` | ✅ | Novac se skida pa dodaje, oba igrača se odmah čuvaju, sve ide u `money_logs` |
+| Prebacivanje novca sa lažnih naloga | ✅ | Transfer od nivoa 2 uz proviziju 1%, svaki prenos u logu sa oba naloga |
+| Transfer igraču koji se upravo prijavljuje (njegovo staro stanje prepiše uplatu) | ✅ | Transfer se odbija dok se primalac prijavljuje |
+| Negativan ili ogroman iznos u dijalogu banke | ✅ | Prihvata se samo pozitivan ceo broj do stanja |
+| Payday za AFK igrače ili dvaput isti sat (izlazak i ulazak) | ✅ | Minuti se broje samo dok igrač nije pauzirao i pomera se ili piše; čuvaju se u bazi; payday je jednom po punom satu |
+| Payday u admin zatvoru | ✅ | Vreme u zatvoru se ne broji |
+| Dupliranje predmeta (davanje, bacanje, podizanje) | ✅ | Predmet se uvek prvo skida, pa dodaje; bačen predmet nestaje sa zemlje pre nego što uđe u inventar |
+| Zatrpavanje mape bačenim predmetima | ✅ | Najviše 200 bačenih predmeta, svaki nestaje posle 15 min |
+| Bačeni predmeti nestanu posle restarta servera | 👁 | Namerno, ne čuvaju se u bazi |
+| Lečenje hranom ili prvom pomoći u borbi | ✅ | Hrana daje malo HP-a i posle nje je igrač sit 10 min; prva pomoć ne radi minut posle štete i leči samo do 75 HP |
+| Telefonski razgovor nastavi posle izlaska, smrti, zatvora ili kad igrač ostane bez telefona | ✅ | Poziv se prekida u svim tim slučajevima |
+| Spam SMS-om ili pozivima | ✅ | `/sms` i `/pozovi` su chat komande: mute i flood zaštita važe i za njih, uz cenu po poruci |
+| Dva igrača sa istim brojem telefona | ✅ | Broj se proverava u bazi i među igračima online pre dodele |
+| VIP lično vreme ostane posle isteka VIP-a | ✅ | Serversko vreme se primenjuje čim VIP istekne |
+
 ---
 
 ## 🇬🇧 English
@@ -221,3 +245,27 @@ Every new system or change goes through these questions, against all existing sy
 | Map objects vanish at a distance while the GTA LOD models are removed, leaving a hole (city hall and square ground, the theatre next to the bank) | ✅ | Map objects are visible up to 300 m, large ground planes and the recreated theatre up to 800 m |
 | The "BANKA" text does not fit the theatre banners (one material covers two banners) | ✅ | Each banner gets the word top to bottom; checked in game |
 | The glass panels in front of the bank break for one player (GTA glass shatters when shot) but stay whole for others | 👁 | Visual only, no gameplay effect; checked in game, the glass is swapped for another model if it matters |
+
+### Phase 2: doors, money, inventory, phone
+| Risk | Status | How it is handled |
+|------|--------|-------------------|
+| GPS and a job share the checkpoint, so the job finishes without driving | ✅ | Checkpoint manager: only the system that set the checkpoint reacts, and GPS never takes someone else's (it uses a map icon) |
+| Escaping a fight through a door | ✅ | Doors do not work for 30 s after taking damage, only on foot, with a 2 s pause |
+| Escaping admin jail or a freeze through a door (loading an interior unfreezes the player) | ✅ | Doors, inventory and phone do not work in jail or while frozen; admin teleports do not unfreeze a frozen player |
+| Falling through a custom interior floor before its objects load (doors, login inside, admin teleport, end of spectating) | ✅ | Objects are loaded before the move and the player is held for 1.5 s (`Utils_MoveInto`) |
+| False AC teleport alert when using a door | ✅ | Every move goes through `AC_ExpectTeleport` |
+| A door deleted while a player is inside (stuck) | 👁 | An admin pulls them out with `/gethere`; only head admins can delete doors |
+| Money duplication through transfers or `/daj` | ✅ | Money is taken before it is given, both players are saved right away, everything goes into `money_logs` |
+| Moving money from alt accounts | ✅ | Transfers from level 2 with a 1% fee, every transfer logged with both accounts |
+| Transfer to a player who is logging in (their old balance overwrites the payment) | ✅ | The transfer is refused while the receiver is logging in |
+| Negative or huge amount in the bank dialog | ✅ | Only a positive whole number up to the balance is accepted |
+| Payday for AFK players or twice in the same hour (relogging) | ✅ | Minutes only count while the game is not paused and the player moves or types; they are saved in the DB; payday happens once per full hour |
+| Payday in admin jail | ✅ | Time in jail does not count |
+| Item duplication (give, drop, pick up) | ✅ | The item is always taken first, then given; a dropped item leaves the ground before it enters the inventory |
+| The map filling up with dropped items | ✅ | At most 200 dropped items, each disappears after 15 min |
+| Dropped items vanish after a server restart | 👁 | On purpose, they are not stored in the DB |
+| Healing with food or first aid during a fight | ✅ | Food gives a little HP and the player is full for 10 min; first aid does not work for a minute after damage and heals only up to 75 HP |
+| A phone call goes on after leaving, dying, jail or losing the phone | ✅ | The call ends in all those cases |
+| SMS or call spam | ✅ | `/sms` and `/pozovi` are chat commands: mute and flood protection apply, plus a price per message |
+| Two players with the same phone number | ✅ | The number is checked in the DB and among online players before it is assigned |
+| VIP personal time stays after VIP expires | ✅ | Server time applies as soon as VIP expires |

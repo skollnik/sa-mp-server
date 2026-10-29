@@ -7,10 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 2 | Ulazi i izlazi u enterijere (pickup, `/udji`, `/izadji`, admin alati za pravljenje) |
-| 2 | Novac i banka sa logovima, payday svakog sata, nivoi i respect, statistike (`/stats`) |
-| 2 | Opština (posao, lična karta), GPS lokacije, HUD |
-| 2 | Inventar i predmeti, telefon (pozivi, SMS, 911) |
+| 2 | Test cele Faze 2 u igri (vlasnik), pa ACC-9: podešavanja koja se pamte (npr. `/hud`) |
 | 3 | Lična vozila (ključevi, gorivo, parkiranje, gepek), auto pijaca kao admin event, auto škola i dozvole, mehaničar |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
@@ -31,12 +28,11 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 **Posle opštine, banke i ostalih mesta (Faza 2)**
 | Stavka |
 |--------|
-| Teleport lokacije (`/tp`): generičke lokacije se zamenjuju pravim |
-| Ulazi u ubačene enterijere: opština, policija, zatvor, banka. Svi su u enterijeru 20, koordinate su u fajlovima u `gamemodes/maps/interiors/` |
+| Vlasnik postavlja u igri ulaze (`/napraviulaz`), šaltere (`/napravimesto`) i GPS lokacije (`/dodajgps`) za opštinu, policiju i banku; prodavnice 24/7 i bankomate po gradu |
+| Prijava na posao u opštini i GPS kategorija „Posao“ (kad dođu poslovi, Faza 4) |
+| Telefon: SMS igraču koji nije online (sanduče poruka), kredit i dopuna |
+| Glad (HEALTH-5): traka gladi; hrana sada samo daje malo HP-a, a igrač je posle nje sit 10 min |
 | Tutorijal posle registracije |
-| Sve cene i plate iz `ECONOMY.md` u jedan config fajl u kodu |
-| VIP: bonus na platu (+5/10/15%), +1 respect na payday za Gold |
-| VIP: dodatni slotovi u inventaru (+2/4/6), biranje broja telefona (Silver+) |
 
 **Posle sistema vozila (Faza 3)**
 | Stavka |
@@ -57,6 +53,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Stavka |
 |--------|
 | Spawn posle smrti u bolnici; admin komanda za podizanje ranjenog igrača |
+| Poziv 911 ide policiji i hitnoj (sada ide adminima) |
 | Oružje se daje samo preko `AC_GivePlayerWeapon` |
 | Vrata ćelija u zatvorskom enterijeru da se otvaraju i zatvaraju (sada su nepomična i zatvorena) |
 | VIP: `/vheal` ne sme da radi dok je igrač ranjen; `/vgoto` i `/vfix` ne smeju da rade u potjeri ili sa potragom |
@@ -74,8 +71,6 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 **Faza 2: novac, banka, payday, telefon, inventar**
 | Stavka | Kako radi i sa čim se vezuje | Mapa |
 |--------|------------------------------|------|
-| AFK detekcija | Ko stoji AFK duže od X minuta, tom vremenu se ne broji payday | — |
-| Happy hours | Admin pokrene period sa duplom platom ili respectom; vezano za payday i poslove | — |
 | Bankarski kredit | Iznos zavisi od nivoa, rata se skida na payday; ako se ne plaća, dug raste i blokira kupovine, a posle X dana se oduzima imovina | — |
 | PIN za bankomat i karticu | Bez PIN-a nema isplate na bankomatu; posle 3 pogrešna PIN-a kartica se blokira na neko vreme | — |
 | Lutrija | Tiket se kupuje do izvlačenja u zadato vreme; deo uplata ide u državnu kasu | — |
@@ -178,8 +173,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Čeka odluku vlasnika
 | Stavka |
 |--------|
-| `/vskin`: umesto ID-ja skina prikazati slike skinova ili nazive „VIP skin 1, 2, 3...“ (predlog poslat 27.10.2026.) |
-| Faza 2: detaljan predlog poslat 27.10.2026., čeka odobrenje i odgovore na pitanja |
+| Pitanja za vlasnika posle Faze 2 (poslato 29.10.2026.) |
 
 ### Može bilo kada
 | Stavka |
@@ -228,6 +222,14 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 28.10.2026. | Prve mape: opština spolja i parking ispred nje, ograđena auto pijaca, enterijeri opštine, policije i zatvora |
 | 28.10.2026. | Izbor sistema iz liste 1–118: odobreno upisano u „Odobreni sistemi“, a „možda“ u „Potencijalno“ |
 | 29.10.2026. | Banka spolja i enterijer banke, natpis BANKA na pozorištu pored banke, mape se vide i iz daljine |
+| 29.10.2026. | `/vskin` sa slikama skinova (zajednički meni sa slikama modela) |
+| 29.10.2026. | Ulazi i izlazi (F, `/udji`, `/izadji`) sa admin alatima; mesta za šaltere, bankomate i prodavnice |
+| 29.10.2026. | Novac sa logovima, banka, bankomat, transfer, `/daj`; sve cene u `core/economy.inc` |
+| 29.10.2026. | Payday na pun sat sa AFK proverom, nivoi, happy hour, `/stats`; VIP bonus na platu i +1 respect za Gold |
+| 29.10.2026. | Stvarno vreme, HUD (sat, datum, kvart), GPS sa upravljačem checkpoint-a, `/tp` preko GPS lokacija |
+| 29.10.2026. | Opština (lična karta), `/licna` |
+| 29.10.2026. | Inventar (10 mesta + VIP), predmeti, bacanje i podizanje, prodavnice 24/7 |
+| 29.10.2026. | Telefon: broj, pozivi, SMS, kontakti, 911, biranje broja za Silver i Gold VIP |
 
 ---
 
@@ -238,10 +240,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 2 | Interior entrances and exits (pickup, `/udji`, `/izadji`, admin creation tools) |
-| 2 | Money and bank with logs, hourly payday, levels and respect, stats (`/stats`) |
-| 2 | City hall (job, ID card), GPS locations, HUD |
-| 2 | Inventory and items, phone (calls, SMS, 911) |
+| 2 | Owner tests all of Phase 2 in game, then ACC-9: settings that are remembered (e.g. `/hud`) |
 | 3 | Personal vehicles (keys, fuel, parking, trunk), car market as an admin event, driving school and licenses, mechanic |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
@@ -262,12 +261,11 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 **After city hall, bank and other places (Phase 2)**
 | Item |
 |------|
-| Teleport locations (`/tp`): generic spots replaced by real ones |
-| Entrances to the added interiors: city hall, police, prison, bank. All are in interior 20; coordinates are in the files in `gamemodes/maps/interiors/` |
+| The owner sets up in game the doors (`/napraviulaz`), counters (`/napravimesto`) and GPS locations (`/dodajgps`) for city hall, police and bank; 24/7 shops and ATMs around the city |
+| Job sign-up at city hall and the "Posao" GPS category (once jobs exist, Phase 4) |
+| Phone: SMS to an offline player (message inbox), credit and top-up |
+| Hunger (HEALTH-5): a hunger bar; food now only gives a little HP and leaves the player full for 10 min |
 | Tutorial after registration |
-| All prices and wages from `ECONOMY.md` in one config file in the code |
-| VIP: payday bonus (+5/10/15%), +1 respect per payday for Gold |
-| VIP: extra inventory slots (+2/4/6), choosing a phone number (Silver+) |
 
 **After the vehicle system (Phase 3)**
 | Item |
@@ -288,6 +286,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Item |
 |------|
 | Respawn at the hospital after death; admin command to revive a wounded player |
+| 911 calls go to police and EMS (now they go to admins) |
 | Weapons are only given through `AC_GivePlayerWeapon` |
 | Cell doors in the prison interior open and close (they are now fixed and closed) |
 | VIP: `/vheal` must not work while wounded; `/vgoto` and `/vfix` must not work during a chase or while wanted |
@@ -305,8 +304,6 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 **Phase 2: money, bank, payday, phone, inventory**
 | Item | How it works and what it ties into | Map |
 |------|------------------------------------|-----|
-| AFK detection | Time spent AFK longer than X minutes does not count toward payday | — |
-| Happy hours | An admin starts a period of double pay or respect; tied to payday and jobs | — |
 | Bank loan | Amount depends on level, an instalment is taken on payday; unpaid debt grows and blocks purchases, after X days property is seized | — |
 | ATM and card PIN | No ATM withdrawal without the PIN; 3 wrong PINs block the card for a while | — |
 | Lottery | Tickets are sold until the draw at a set time; part of the money goes to the state treasury | — |
@@ -409,8 +406,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 ### Waiting for the owner's decision
 | Item |
 |------|
-| `/vskin`: show skin pictures or "VIP skin 1, 2, 3..." instead of skin IDs (proposal sent 2026-10-27) |
-| Phase 2: detailed proposal sent 2026-10-27, waiting for approval and answers |
+| Questions for the owner after Phase 2 (sent 2026-10-29) |
 
 ### Any time
 | Item |
@@ -459,3 +455,11 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-28 | First maps: city hall exterior and the parking in front of it, fenced car market, interiors of the city hall, police and prison |
 | 2026-10-28 | Pick from the 1–118 list: approved items written under "Approved systems", "maybe" items under "Potential" |
 | 2026-10-29 | Bank exterior and interior, BANKA on the theatre next to the bank, maps visible from a distance |
+| 2026-10-29 | `/vskin` with skin pictures (shared picture menu for models) |
+| 2026-10-29 | Doors (F, `/udji`, `/izadji`) with admin tools; points for counters, ATMs and shops |
+| 2026-10-29 | Money with logs, bank, ATM, transfers, `/daj`; every price in `core/economy.inc` |
+| 2026-10-29 | Full-hour payday with an AFK check, levels, happy hour, `/stats`; VIP payday bonus and +1 respect for Gold |
+| 2026-10-29 | Real time, HUD (clock, date, district), GPS with a checkpoint manager, `/tp` through GPS locations |
+| 2026-10-29 | City hall (ID card), `/licna` |
+| 2026-10-29 | Inventory (10 slots + VIP), items, dropping and picking up, 24/7 shops |
+| 2026-10-29 | Phone: number, calls, SMS, contacts, 911, number choice for Silver and Gold VIP |

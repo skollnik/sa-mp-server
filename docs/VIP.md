@@ -14,8 +14,12 @@
 | Oznaka **[VIP]** iznad glave u boji nivoa (`/vtag` je sakriva) | ✅ | ✅ | ✅ |
 | Ime u boji nivoa u OOC chatovima (`/b`, `/o`, `/n`); u IC govoru ostaje belo | ✅ | ✅ | ✅ |
 | VIP chat `/vc` i spisak VIP igrača `/vips` | ✅ | ✅ | ✅ |
-| `/vskin`: izbor sa liste civilnih VIP skinova | ✅ | ✅ | ✅ |
-| `/vtime`, `/vweather`: lično vreme i vremenske prilike | ✅ | ✅ | ✅ |
+| `/vskin`: izbor civilnih VIP skinova sa slika | ✅ | ✅ | ✅ |
+| `/vtime`, `/vweather`: lično vreme i vremenske prilike (`/vtime -1` vraća serversko) | ✅ | ✅ | ✅ |
+| Bonus na platu (payday) | +5% | +10% | +15% |
+| Dodatni respect poen na payday | – | – | +1 |
+| Dodatna mesta u inventaru | +2 | +4 | +6 |
+| Biranje broja telefona (`/promenibroj`) | – | ✅ | ✅ |
 | Kraća pauza za `/report`, `/ask` i `/n` | 25% | 50% | 50% |
 | Rezervisano mesto kad je server pun (poslednja 2 mesta) | ✅ | ✅ | ✅ |
 | `/vfix`: popravka vozila koje voziš (pauza 10 min) | – | ✅ | ✅ |
@@ -30,10 +34,6 @@
 ### Pogodnosti koje dolaze sa drugim sistemima (odobrene)
 | Pogodnost | Bronze | Silver | Gold | Sistem |
 |-----------|:------:|:------:|:----:|--------|
-| Bonus na platu (payday) | +5% | +10% | +15% | Faza 2 |
-| Dodatni respect poen na payday | – | – | +1 | Faza 2 |
-| Dodatni slotovi u inventaru | +2 | +4 | +6 | Faza 2 |
-| Biranje broja telefona | – | ✅ | ✅ | Faza 2 |
 | Mesto za još jedno vozilo | – | +1 | +1 | Faza 3 |
 | Sopstvena registarska tablica i neon | – | – | ✅ | Faza 3 |
 | Popust na oglase | 10% | 20% | 30% | Faza 5 |
@@ -61,8 +61,12 @@
 | **[VIP]** tag above the head in the tier colour (`/vtag` hides it) | ✅ | ✅ | ✅ |
 | Name in the tier colour in OOC chats (`/b`, `/o`, `/n`); IC speech stays white | ✅ | ✅ | ✅ |
 | VIP chat `/vc` and online VIP list `/vips` | ✅ | ✅ | ✅ |
-| `/vskin`: pick from a list of civilian VIP skins | ✅ | ✅ | ✅ |
-| `/vtime`, `/vweather`: personal time and weather | ✅ | ✅ | ✅ |
+| `/vskin`: pick civilian VIP skins from pictures | ✅ | ✅ | ✅ |
+| `/vtime`, `/vweather`: personal time and weather (`/vtime -1` returns to server time) | ✅ | ✅ | ✅ |
+| Payday bonus | +5% | +10% | +15% |
+| Extra respect point on payday | – | – | +1 |
+| Extra inventory slots | +2 | +4 | +6 |
+| Choose your phone number (`/promenibroj`) | – | ✅ | ✅ |
 | Shorter cooldown for `/report`, `/ask` and `/n` | 25% | 50% | 50% |
 | Reserved slot when the server is full (last 2 slots) | ✅ | ✅ | ✅ |
 | `/vfix`: repair the vehicle you drive (10 min cooldown) | – | ✅ | ✅ |
@@ -77,10 +81,6 @@
 ### Perks coming with other systems (approved)
 | Perk | Bronze | Silver | Gold | System |
 |------|:------:|:------:|:----:|--------|
-| Payday bonus | +5% | +10% | +15% | Phase 2 |
-| Extra respect point on payday | – | – | +1 | Phase 2 |
-| Extra inventory slots | +2 | +4 | +6 | Phase 2 |
-| Choose your phone number | – | ✅ | ✅ | Phase 2 |
 | One more vehicle slot | – | +1 | +1 | Phase 3 |
 | Custom number plate and neon | – | – | ✅ | Phase 3 |
 | Discount on ads | 10% | 20% | 30% | Phase 5 |

@@ -54,6 +54,18 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 46 | 2026-10-28 | Brak ne menja prezime; u `/stats` piše „u braku sa X“ | Ime naloga je vezano za logove i banove |
 | 47 | 2026-10-29 | Glad bez žeđi; hrana daje malo HP-a i ne može da se jede kad je igrač sit; pun HP vraćaju samo bolnica i hitna | Hrana ima smisla, a HP se ne vraća prejedanjem |
 | 48 | 2026-10-29 | Objekti spoljnih mapa se vide do 300 m, a velike ploče tla i ponovo napravljene GTA zgrade do 800 m (`Map_Exterior`) | Te ploče i zgrade zamenjuju uklonjene GTA modele za daljinu, pa bi bez toga izdaleka ostala rupa |
+| 49 | 2026-10-29 | `/vskin` i ostali izbori modela (odeća, vozila) idu kroz mrežu sa slikama (`Preview_Show`), klik bira, ESC zatvara | Igrač vidi šta bira; isti meni služi za sve |
+| 50 | 2026-10-29 | Vrata: taster F i komande `/udji` i `/izadji`; admin ih pravi u igri; svaka vrata imaju svoj virtuelni svet (1000 + ID) | Oba načina su uobičajena; ulazi se dodaju bez menjanja koda |
+| 51 | 2026-10-29 | Šalteri, bankomati i prodavnice su „mesta“ koja admin postavlja u igri (`/napravimesto`); komanda radi samo pored mesta | Isti sistem za sve usluge, bez koordinata u kodu |
+| 52 | 2026-10-29 | Vreme u igri prati stvarno vreme; admin može da ga zadrži (`/settime`), VIP ima lično (`/vtime`) | Odluka vlasnika („generalno kao na serverima“) |
+| 53 | 2026-10-29 | Payday je na svaki pun sat za sve koji su od prošle plate bili aktivni bar 30 min; kraće vreme se prenosi; novac ide na račun | Uobičajen način; AFK i ponovni ulazak ne donose platu |
+| 54 | 2026-10-29 | Nivo raste automatski kad se skupi N × 4 respecta; višak respecta ostaje | Odluka vlasnika |
+| 55 | 2026-10-29 | Inventar sa slotovima: 10 mesta + VIP (2/4/6), predmeti se slažu do najveće količine | Jednostavnije za igrače od težine; odluka prepuštena meni |
+| 56 | 2026-10-29 | Do firmi (Faza 4) postoje državne prodavnice 24/7 sa cenama iz `core/economy.inc` | Igrači moraju negde da kupe telefon i hranu |
+| 57 | 2026-10-29 | Sve cene, plate i granice su u `core/economy.inc` | Balans se menja na jednom mestu |
+| 58 | 2026-10-29 | Novac se menja samo kroz `Money_GiveCash` i `Money_GiveBank`, uz zapis u `money_logs` | Svaka promena novca može da se prati |
+| 59 | 2026-10-29 | Transfer na račun: od nivoa 2, provizija 1%; bankomat do $10.000 odjednom; lična karta $50 | Otežava prebacivanje sa lažnih naloga |
+| 60 | 2026-10-29 | Telefon: nasumičan broj od 6 cifara (Silver i Gold biraju broj), SMS $1, minut poziva $2 koje plaća pozivalac; 911 ide adminima dok ne dođu službe | Novac izlazi iz igre, a hitni pozivi ipak stižu do nekoga |
 
 ### Arhitektura koda (predlog)
 ```
@@ -129,6 +141,18 @@ This file records every important decision so it does not get re-discussed. Newe
 | 46 | 2026-10-28 | Marriage does not change the surname; `/stats` shows "married to X" | The account name is tied to logs and bans |
 | 47 | 2026-10-29 | Hunger without thirst; food gives a little HP and cannot be eaten when full; only the hospital and EMS restore full HP | Food matters, and HP cannot be restored by overeating |
 | 48 | 2026-10-29 | Exterior map objects are visible up to 300 m, large ground planes and rebuilt GTA buildings up to 800 m (`Map_Exterior`) | They stand in for removed GTA LOD models, so without it a hole would show from a distance |
+| 49 | 2026-10-29 | `/vskin` and other model choices (clothes, vehicles) use a picture grid (`Preview_Show`); click picks, ESC closes | Players see what they pick; one menu serves everything |
+| 50 | 2026-10-29 | Doors: the F key and `/udji`, `/izadji`; admins create them in game; each door has its own virtual world (1000 + ID) | Both ways are common; doors are added without code changes |
+| 51 | 2026-10-29 | Counters, ATMs and shops are "points" admins place in game (`/napravimesto`); the command only works next to one | One system for every service, no coordinates in code |
+| 52 | 2026-10-29 | In-game time follows real time; admins can pin it (`/settime`), VIPs have a personal one (`/vtime`) | Owner's decision ("as servers generally do") |
+| 53 | 2026-10-29 | Payday comes every full hour to everyone active for at least 30 min since the last one; shorter time carries over; the money goes to the bank | The usual way; AFK and relogging earn nothing |
+| 54 | 2026-10-29 | The level rises automatically once N × 4 respect is collected; leftover respect stays | Owner's decision |
+| 55 | 2026-10-29 | Slot inventory: 10 slots + VIP (2/4/6), items stack up to a maximum | Simpler for players than weight; the choice was left to me |
+| 56 | 2026-10-29 | Until businesses (Phase 4), state 24/7 shops sell at prices from `core/economy.inc` | Players need somewhere to buy a phone and food |
+| 57 | 2026-10-29 | Every price, wage and limit is in `core/economy.inc` | Balancing happens in one place |
+| 58 | 2026-10-29 | Money only changes through `Money_GiveCash` and `Money_GiveBank`, logged in `money_logs` | Every money change can be traced |
+| 59 | 2026-10-29 | Bank transfers: from level 2, 1% fee; ATM up to $10,000 at once; ID card $50 | Makes moving money from alt accounts harder |
+| 60 | 2026-10-29 | Phone: random 6-digit number (Silver and Gold pick one), SMS $1, $2 per call minute paid by the caller; 911 goes to admins until the services exist | Money leaves the game, and emergency calls still reach someone |
 
 ### Code architecture (proposal)
 ```

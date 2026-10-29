@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 1 završena, sledi Faza 2 (ažurirano 2026-10-27)
+**Trenutni status:** Faza 2 napisana, čeka test vlasnika u igri (ažurirano 2026-10-29)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -33,14 +33,15 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] AC-1, AC-3, AC-4: serverski novac/HP/armor/oružje, zaštita dijaloga (open.mp), flood zaštita, osnovna detekcija teleporta i brzine
 
 ### Faza 2: Svet i ekonomija
-- [x] WORLD-6 (deo 1): prve mape, i to opština spolja i parking ispred nje, ograđena auto pijaca, banka spolja i enterijeri opštine, policije, zatvora i banke. Enterijeri još nemaju ulaz (čekaju WORLD-1)
-- [ ] WORLD-1: dinamički ulazi/izlazi (enterijeri)
-- [ ] WORLD-2, WORLD-3, WORLD-7: vreme, GPS, HUD
-- [ ] ECO-1, ECO-2, ECO-4: novac i banka sa logovima
-- [ ] ACC-7, ACC-8, ACC-9, ACC-10: payday, statistike, podešavanja, nivoi
-- [ ] WORLD-4: opština
-- [ ] INV-1, INV-2: inventar i predmeti
-- [ ] PHONE-1, PHONE-2: telefon
+- [x] WORLD-6 (deo 1): prve mape, i to opština spolja i parking ispred nje, ograđena auto pijaca, banka spolja i enterijeri opštine, policije, zatvora i banke. Ulazi u enterijere se postavljaju u igri (`/napraviulaz`)
+- [x] WORLD-1: ulazi i izlazi (F, `/udji`, `/izadji`), admin ih pravi u igri; „mesta“ za šaltere, bankomate i prodavnice
+- [x] WORLD-2, WORLD-3, WORLD-7: stvarno vreme, GPS sa upravljačem checkpoint-a, HUD (sat, datum, kvart)
+- [x] ECO-1, ECO-2, ECO-4: novac sa logovima, banka, bankomat, transfer, `/daj`
+- [x] ACC-7, ACC-8, ACC-10: payday (sa AFK proverom i happy hour), `/stats`, nivoi
+- [ ] ACC-9: podešavanja (npr. da se `/hud` pamti posle izlaska)
+- [x] WORLD-4: opština (lična karta); prijava na posao čeka poslove
+- [x] INV-1, INV-2: inventar sa slotovima, predmeti, prodavnice 24/7, `/vskin` sa slikama
+- [x] PHONE-1, PHONE-2: telefon (pozivi, SMS, kontakti, 911 adminima)
 
 ### Faza 3: Vozila i dozvole
 - [ ] VEH-1 – VEH-9: lična vozila, ključevi, gorivo, parkiranje, gepek, rent
@@ -90,17 +91,14 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 | Faza | Pitanje |
 |------|---------|
-| 2 | Vreme u igri: realno vreme ili ubrzano? |
-| 2 | Inventar: jednostavan (slotovi) ili sa težinom? |
 | 3 | Da li igrač može da proda vozilo državi (npr. za 50% cene) ili samo drugom igraču? |
 | 5 | Taksi: frakcija ili posao koji svako može da radi? |
-| 7 | Glad i žeđ: da ili ne? |
 
 ---
 
 ## 🇬🇧 English
 
-**Current status:** Phase 1 done, Phase 2 next (updated 2026-10-27)
+**Current status:** Phase 2 written, waiting for the owner to test it in game (updated 2026-10-29)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -131,14 +129,15 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] AC-1, AC-3, AC-4: server-side money/HP/armour/weapons, dialog protection (open.mp), flood protection, basic teleport and speed detection
 
 ### Phase 2: World and economy
-- [x] WORLD-6 (part 1): first maps, namely the city hall exterior and the parking in front of it, the fenced car market, the bank exterior and the interiors of the city hall, the police, the prison and the bank. The interiors have no entrance yet (waiting for WORLD-1)
-- [ ] WORLD-1: dynamic entrances/exits (interiors)
-- [ ] WORLD-2, WORLD-3, WORLD-7: time, GPS, HUD
-- [ ] ECO-1, ECO-2, ECO-4: money and bank with logs
-- [ ] ACC-7, ACC-8, ACC-9, ACC-10: payday, stats, settings, levels
-- [ ] WORLD-4: city hall
-- [ ] INV-1, INV-2: inventory and items
-- [ ] PHONE-1, PHONE-2: phone
+- [x] WORLD-6 (part 1): first maps, namely the city hall exterior and the parking in front of it, the fenced car market, the bank exterior and the interiors of the city hall, the police, the prison and the bank. Doors into the interiors are set up in game (`/napraviulaz`)
+- [x] WORLD-1: doors (F, `/udji`, `/izadji`), created by admins in game; "points" for counters, ATMs and shops
+- [x] WORLD-2, WORLD-3, WORLD-7: real time, GPS with a checkpoint manager, HUD (clock, date, district)
+- [x] ECO-1, ECO-2, ECO-4: money with logs, bank, ATM, transfers, `/daj`
+- [x] ACC-7, ACC-8, ACC-10: payday (with AFK check and happy hour), `/stats`, levels
+- [ ] ACC-9: settings (e.g. remembering `/hud` after leaving)
+- [x] WORLD-4: city hall (ID card); job sign-up waits for jobs
+- [x] INV-1, INV-2: slot inventory, items, 24/7 shops, `/vskin` with pictures
+- [x] PHONE-1, PHONE-2: phone (calls, SMS, contacts, 911 to admins)
 
 ### Phase 3: Vehicles and licenses
 - [ ] VEH-1 – VEH-9: personal vehicles, keys, fuel, parking, trunk, rentals
@@ -188,8 +187,5 @@ Questions that must be answered before the phase they belong to:
 
 | Phase | Question |
 |-------|----------|
-| 2 | In-game time: real time or accelerated? |
-| 2 | Inventory: simple (slots) or weight-based? |
 | 3 | Can a player sell a vehicle to the state (e.g. for 50% of the price) or only to another player? |
 | 5 | Taxi: a faction or a job anyone can do? |
-| 7 | Hunger and thirst: yes or no? |

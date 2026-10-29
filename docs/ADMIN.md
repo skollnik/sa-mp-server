@@ -39,10 +39,10 @@ Viši nivo uvek ima sve komande nižeg nivoa.
 | Nivo | Naziv | Komande |
 |------|-------|---------|
 | 1 | Admin pocetnik | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (do 30 min), `/unjail`, `/warns`, `/aclog`, `/kanali` |
-| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport lokacije), `/ooc` (globalni OOC), `/cc` (briše chat svima), `/ao` (admin obaveštenje u chatu), `/fixveh`, `/flip`, `/disarm`, `/ban` (do 7 dana), `/warn`, `/ajail` (do 24 h) |
-| 3 | Visi admin | `/setskin`, `/setint` (enterijer), `/setvw` (virtuelni svet), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (tekst na sredini ekrana), `/settime`, `/setweather`, `/gotopos`, `/mypos`, `/ban` (i trajni), `/oban`, `/banip`, `/unban`, `/unwarn` |
-| 4 | Glavni admin | `/makehelper` (svi nivoi), `/setlevel`, `/setrespect`, `/setname`, `/pmspy` |
-| 5 | Menadzment | `/makeadmin` (do nivoa 4), `/gmx` (restart servera) |
+| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (GPS lokacije, a dok ih nema opšte lokacije), `/gotoulaz`, `/ooc` (globalni OOC), `/cc` (briše chat svima), `/ao` (admin obaveštenje u chatu), `/fixveh`, `/flip`, `/disarm`, `/ban` (do 7 dana), `/warn`, `/ajail` (do 24 h) |
+| 3 | Visi admin | `/setskin`, `/setint` (enterijer), `/setvw` (virtuelni svet), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (tekst na sredini ekrana), `/settime` (`-1` vraća stvarno vreme), `/setweather`, `/gotopos`, `/mypos`, `/ban` (i trajni), `/oban`, `/banip`, `/unban`, `/unwarn` |
+| 4 | Glavni admin | `/makehelper` (svi nivoi), `/setlevel`, `/setrespect`, `/setname`, `/pmspy`; vrata: `/napraviulaz`, `/izmeniulaz` (ime, ulaz, izlaz, ikona, zakljucaj, svet), `/obrisiulaz`, `/ulazi`; mesta: `/napravimesto` (banka, bankomat, opstina, prodavnica), `/obrisimesto`, `/mesta`; GPS: `/dodajgps`, `/obrisigps` |
+| 5 | Menadzment | `/makeadmin` (do nivoa 4), `/gmx` (restart servera), `/happyhour` (dupla plata i respect na payday) |
 | 6 | Vlasnik | `/makeadmin` (do nivoa 5), `/givemoney`, `/dozvoliime`, `/zabraniime`, `/setvip` (vidi VIP.md) |
 
 ### Kanali (`/kanali`)
@@ -110,10 +110,10 @@ A higher level always has every command of the lower levels.
 | Level | Name | Commands |
 |-------|------|----------|
 | 1 | Trial admin | `/aduty`, `/a`, `/ahelp`, `/reports`, `/ar`, `/rr`, `/goto`, `/gethere`, `/spec`, `/specoff`, `/check`, `/freeze`, `/unfreeze`, `/slap`, `/kick`, `/mute`, `/unmute`, `/ajail` (up to 30 min), `/unjail`, `/warns`, `/aclog`, `/kanali` |
-| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (teleport locations), `/ooc` (global OOC), `/cc` (clears everyone's chat), `/ao` (admin notice in chat), `/fixveh`, `/flip`, `/disarm`, `/ban` (up to 7 days), `/warn`, `/ajail` (up to 24 h) |
-| 3 | Senior admin | `/setskin`, `/setint` (interior), `/setvw` (virtual world), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (text in the middle of the screen), `/settime`, `/setweather`, `/gotopos`, `/mypos`, `/ban` (also permanent), `/oban`, `/banip`, `/unban`, `/unwarn` |
-| 4 | Head admin | `/makehelper` (all levels), `/setlevel`, `/setrespect`, `/setname`, `/pmspy` |
-| 5 | Management | `/makeadmin` (up to level 4), `/gmx` (server restart) |
+| 2 | Admin | `/sethp`, `/setarmour`, `/tp` (GPS locations, generic spots until there are any), `/gotoulaz`, `/ooc` (global OOC), `/cc` (clears everyone's chat), `/ao` (admin notice in chat), `/fixveh`, `/flip`, `/disarm`, `/ban` (up to 7 days), `/warn`, `/ajail` (up to 24 h) |
+| 3 | Senior admin | `/setskin`, `/setint` (interior), `/setvw` (virtual world), `/veh [model]`, `/dveh`, `/dveh sva`, `/ann` (text in the middle of the screen), `/settime` (`-1` returns to real time), `/setweather`, `/gotopos`, `/mypos`, `/ban` (also permanent), `/oban`, `/banip`, `/unban`, `/unwarn` |
+| 4 | Head admin | `/makehelper` (all levels), `/setlevel`, `/setrespect`, `/setname`, `/pmspy`; doors: `/napraviulaz`, `/izmeniulaz` (name, outside, inside, icon, lock, world), `/obrisiulaz`, `/ulazi`; points: `/napravimesto` (bank, ATM, city hall, shop), `/obrisimesto`, `/mesta`; GPS: `/dodajgps`, `/obrisigps` |
+| 5 | Management | `/makeadmin` (up to level 4), `/gmx` (server restart), `/happyhour` (double pay and respect on payday) |
 | 6 | Owner | `/makeadmin` (up to level 5), `/givemoney`, `/dozvoliime`, `/zabraniime`, `/setvip` (see VIP.md) |
 
 ### Channels (`/kanali`)

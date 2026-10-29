@@ -17,6 +17,8 @@
 | Plata u legalnoj frakciji (payday) | $1.000 (najniži rank) → $3.000 (lider) |
 | Socijalna pomoć, nezaposleni (payday) | $100 |
 | Kamata na banku (payday) | 0.05% stanja, najviše $250 |
+| Payday | Na svaki pun sat, ako je igrač od prošle plate bio aktivan bar 30 min; uplata ide na račun |
+| Transfer na drugi račun | Od nivoa 2, provizija 1%; bankomat isplaćuje najviše $10.000 odjednom |
 
 ### Startni paket
 - **$2.000 keš + $3.000 u banci = $5.000.** To pokriva vozačku, telefon i hranu, ali ne i vozilo.
@@ -26,10 +28,12 @@
 |-------|------|
 | Voda / sok / pivo | $2 / $3 / $5 |
 | Hamburger / pica | $10 / $15 |
-| Cigarete | $12 |
+| Cigarete (kutija, 20 komada) / upaljač | $12 / $3 |
 | Gorivo | $3 po litru (pun rezervoar ~$150–200) |
 | Kanister (prazan) | $50 |
-| Telefon | $500 |
+| Telefon (SMS $1, minut poziva $2) | $500 |
+| Prva pomoć (leči do 75 HP) | $150 |
+| Lična karta (opština) | $50 |
 | Radio | $700 |
 | Alat (kit za popravku) | $300 |
 | Uže | $50 |
@@ -134,6 +138,8 @@
 | Legal faction salary (payday) | $1,000 (lowest rank) → $3,000 (leader) |
 | Welfare, unemployed (payday) | $100 |
 | Bank interest (payday) | 0.05% of balance, max $250 |
+| Payday | Every full hour, if the player was active for at least 30 min since the last one; paid into the bank |
+| Transfer to another account | From level 2, 1% fee; an ATM pays out at most $10,000 at once |
 
 ### Starter pack
 - **$2,000 cash + $3,000 in the bank = $5,000.** That covers a driving license, a phone and food, but not a vehicle.
@@ -143,10 +149,12 @@
 |------|-------|
 | Water / juice / beer | $2 / $3 / $5 |
 | Burger / pizza | $10 / $15 |
-| Cigarettes | $12 |
+| Cigarettes (pack of 20) / lighter | $12 / $3 |
 | Fuel | $3 per liter (full tank ~$150–200) |
 | Jerry can (empty) | $50 |
-| Phone | $500 |
+| Phone (SMS $1, $2 per call minute) | $500 |
+| First aid kit (heals up to 75 HP) | $150 |
+| ID card (city hall) | $50 |
 | Radio | $700 |
 | Toolkit (repair kit) | $300 |
 | Rope | $50 |
