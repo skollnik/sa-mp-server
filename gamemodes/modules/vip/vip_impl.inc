@@ -135,7 +135,7 @@ stock bool:Vip_HasLevel(playerid, level)
 {
     if (Vip_GetLevel(playerid) < level)
     {
-        Msg_Error(playerid, "Nemate dozvolu za ovu komandu.");
+        Msg_Error(playerid, "Ova komanda je za %s i vise. Pogodnosti i cene: /vip", g_VipNames[level]);
         return false;
     }
     return true;
@@ -194,5 +194,12 @@ stock Vip_OnSkinSelected(playerid, index)
 
     g_Player[playerid][pSkin] = female ? g_VipSkinsFemale[index] : g_VipSkinsMale[index];
     Staff_UpdateLook(playerid);
-    Msg_Info(playerid, "Obukli ste novi VIP skin.");
+    if (g_Staff[playerid][sAdminDuty])
+    {
+        Msg_Info(playerid, "VIP skin je sacuvan. Videcete ga kad izadjete sa admin duznosti.");
+    }
+    else
+    {
+        Msg_Info(playerid, "Obukli ste novi VIP skin.");
+    }
 }

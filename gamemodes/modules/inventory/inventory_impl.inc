@@ -253,12 +253,14 @@ stock bool:Inv_Use(playerid, slot)
         {
             SetPlayerSpecialAction(playerid, SPECIAL_ACTION_DRINK_SPRUNK);
             Chat_Action(playerid, item == ITEM_WATER ? ("otvara flasu vode i pije.") : ("otvara sok i pije."));
+            Inv_ShowHandHint(playerid, "gutljaj", "bacate flasu");
         }
         case ITEM_BEER:
         {
             SetPlayerSpecialAction(playerid, SPECIAL_ACTION_DRINK_BEER);
             SetPlayerDrunkLevel(playerid, min(GetPlayerDrunkLevel(playerid) + 1500, 10000));
             Chat_Action(playerid, "otvara pivo i pije.");
+            Inv_ShowHandHint(playerid, "gutljaj", "bacate flasu");
         }
         case ITEM_CIGARETTE:
         {
@@ -269,6 +271,7 @@ stock bool:Inv_Use(playerid, slot)
             }
             SetPlayerSpecialAction(playerid, SPECIAL_ACTION_SMOKE_CIGGY);
             Chat_Action(playerid, "vadi cigaretu i pali je upaljacem.");
+            Inv_ShowHandHint(playerid, "dim", "bacate cigaretu");
         }
         case ITEM_FIRST_AID:
         {
@@ -300,6 +303,31 @@ stock bool:Inv_Use(playerid, slot)
     }
 
     Inv_TakeFromSlot(playerid, slot, 1);
+    return true;
+}
+
+stock Inv_ShowHandHint(playerid, const use[], const drop[])
+{
+    Msg_Info(playerid, "Levi klik: %s. F: %s.", use, drop);
+}
+
+// F throws away a cigarette or a bottle in hand; it returns true so the same press does not also open a door.
+stock bool:Inv_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
+{
+    if (!(newkeys & KEY_SECONDARY_ATTACK) || (oldkeys & KEY_SECONDARY_ATTACK))
+    {
+        return false;
+    }
+
+    new action[24];
+    switch (GetPlayerSpecialAction(playerid))
+    {
+        case SPECIAL_ACTION_SMOKE_CIGGY: strcopy(action, "baca cigaretu.");
+        case SPECIAL_ACTION_DRINK_BEER, SPECIAL_ACTION_DRINK_SPRUNK, SPECIAL_ACTION_DRINK_WINE: strcopy(action, "baca flasu.");
+        default: return false;
+    }
+    SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
+    Chat_Action(playerid, action);
     return true;
 }
 

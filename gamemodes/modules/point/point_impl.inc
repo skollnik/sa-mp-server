@@ -44,7 +44,7 @@ stock Point_CreateVisuals(slot)
         // The machine stands a step in front of the spot where the admin stood, facing them.
         new Float:angle = g_Points[slot][ptA];
         g_Points[slot][ptObject] = CreateDynamicObject(POINT_ATM_MODEL, x + 0.8 * floatsin(-angle, degrees), y + 0.8 * floatcos(-angle, degrees), z - 0.35,
-            0.0, 0.0, angle + 180.0, g_Points[slot][ptWorld], g_Points[slot][ptInterior]);
+            0.0, 0.0, angle, g_Points[slot][ptWorld], g_Points[slot][ptInterior]);
     }
     else
     {
@@ -68,7 +68,46 @@ stock Point_Destroy(slot)
     g_Points[slot] = empty;
 }
 
+stock Point_FindSlotByDbId(dbid)
+{
+    for (new i = 0; i < MAX_POINTS; i++)
+    {
+        if (g_Points[i][ptUsed] && g_Points[i][ptDbId] == dbid)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// IDs of deleted points are given out again, so the IDs admins see stay short.
+stock Point_FreeDbId()
+{
+    new dbid = 1;
+    while (Point_FindSlotByDbId(dbid) != -1)
+    {
+        dbid++;
+    }
+    return dbid;
+}
+
+// Used when the door that led into this world is deleted; returns how many points were removed.
+stock Point_DestroyInWorld(world)
+{
+    new count;
+    for (new i = 0; i < MAX_POINTS; i++)
+    {
+        if (g_Points[i][ptUsed] && g_Points[i][ptWorld] == world)
+        {
+            Point_Destroy(i);
+            count++;
+        }
+    }
+    return count;
+}
+
 stock Point_FindNearest(playerid, Float:radius)
+
 {
     new interior = GetPlayerInterior(playerid), world = GetPlayerVirtualWorld(playerid);
     for (new i = 0; i < MAX_POINTS; i++)
@@ -145,6 +184,7 @@ cmd:napravimesto(playerid, params[])
     }
 
     g_Points[slot][ptUsed] = true;
+    g_Points[slot][ptDbId] = Point_FreeDbId();
     g_Points[slot][ptType] = type;
     GetPlayerPos(playerid, g_Points[slot][ptX], g_Points[slot][ptY], g_Points[slot][ptZ]);
     GetPlayerFacingAngle(playerid, g_Points[slot][ptA]);
@@ -152,20 +192,13 @@ cmd:napravimesto(playerid, params[])
     g_Points[slot][ptWorld] = GetPlayerVirtualWorld(playerid);
     Point_CreateVisuals(slot);
 
-    new query[256];
+    new query[256], details[48];
     mysql_format(g_SQL, query, sizeof(query),
-        "INSERT INTO `points` (`type`, `x`, `y`, `z`, `a`, `interior`, `world`) VALUES (%d, %f, %f, %f, %f, %d, %d)",
-        _:type, g_Points[slot][ptX], g_Points[slot][ptY], g_Points[slot][ptZ], g_Points[slot][ptA], g_Points[slot][ptInterior], g_Points[slot][ptWorld]);
-    mysql_tquery(g_SQL, query, "OnPointCreated", "dd", playerid, slot);
-    return 1;
-}
+        "INSERT INTO `points` (`id`, `type`, `x`, `y`, `z`, `a`, `interior`, `world`) VALUES (%d, %d, %f, %f, %f, %f, %d, %d)",
+        g_Points[slot][ptDbId], _:type, g_Points[slot][ptX], g_Points[slot][ptY], g_Points[slot][ptZ], g_Points[slot][ptA],
+        g_Points[slot][ptInterior], g_Points[slot][ptWorld]);
+    mysql_tquery(g_SQL, query);
 
-forward OnPointCreated(playerid, slot);
-public OnPointCreated(playerid, slot)
-{
-    g_Points[slot][ptDbId] = cache_insert_id();
-
-    new details[48];
     format(details, sizeof(details), "mesto %d: %s", g_Points[slot][ptDbId], g_PointInfo[g_Points[slot][ptType]][piKey]);
     Staff_Log(playerid, "point_create", INVALID_PLAYER_ID, details);
     Msg_Admin(playerid, "Napravljeno je %s (%s).", details, g_PointInfo[g_Points[slot][ptType]][piName]);

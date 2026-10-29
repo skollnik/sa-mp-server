@@ -70,10 +70,15 @@ cmd:licna(playerid, params[])
         return 1;
     }
 
-    SendClientMessage(targetid, COLOR_SERVER, "_______ LICNA KARTA _______");
-    SendClientMessage(targetid, COLOR_WHITE, "Ime i prezime: %s", Account_Name(playerid));
-    SendClientMessage(targetid, COLOR_WHITE, "Pol: %s | Godine: %d", g_Player[playerid][pGender] == GENDER_FEMALE ? ("zenski") : ("muski"), g_Player[playerid][pAge]);
-    SendClientMessage(targetid, COLOR_WHITE, "Prebivaliste: Los Santos, San Andreas");
+    new body[256];
+    format(body, sizeof(body),
+        C_GREY "Broj licne karte: " C_WHITE "%06d\n\n" \
+        C_GREY "Ime i prezime: " C_WHITE "%s\n" \
+        C_GREY "Pol: " C_WHITE "%s\n" \
+        C_GREY "Godine: " C_WHITE "%d\n" \
+        C_GREY "Prebivaliste: " C_WHITE "Los Santos, San Andreas",
+        g_Player[playerid][pDbId], Account_Name(playerid), g_Player[playerid][pGender] == GENDER_FEMALE ? ("zenski") : ("muski"), g_Player[playerid][pAge]);
+    ShowPlayerDialog(targetid, DIALOG_ADMIN_INFO, DIALOG_STYLE_MSGBOX, "Licna karta", body, "Vrati", "");
 
     if (targetid != playerid)
     {

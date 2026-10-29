@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 2 | Test cele Faze 2 u igri (vlasnik), pa ACC-9: podešavanja koja se pamte (npr. `/hud`) |
+| 2 | Odluka vlasnika o predlozima iz „Čeka odluku“ (glad, telefon sa SIM karticom i kreditom, strelice, nivo, happy hour), pa njihova izrada; zatim ACC-9: podešavanja koja se pamte (npr. `/hud`) |
 | 3 | Lična vozila (ključevi, gorivo, parkiranje, gepek), auto pijaca kao admin event, auto škola i dozvole, mehaničar |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
@@ -30,8 +30,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 |--------|
 | Vlasnik postavlja u igri ulaze (`/napraviulaz`), šaltere (`/napravimesto`) i GPS lokacije (`/dodajgps`) za opštinu, policiju i banku; prodavnice 24/7 i bankomate po gradu |
 | Prijava na posao u opštini i GPS kategorija „Posao“ (kad dođu poslovi, Faza 4) |
-| Telefon: SMS igraču koji nije online (sanduče poruka), kredit i dopuna |
-| Glad (HEALTH-5): traka gladi; hrana sada samo daje malo HP-a, a igrač je posle nje sit 10 min |
+| Telefon: SMS igraču koji nije online (sanduče poruka) |
 | Tutorijal posle registracije |
 
 **Posle sistema vozila (Faza 3)**
@@ -46,6 +45,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Stavka |
 |--------|
 | Izbor spawna pri loginu: poslednja pozicija, kuća, sedište frakcije ili javni spawn |
+| Nalog neaktivan 6 meseci: brisanje naloga i sve imovine (kuće, vozila, firme, posao); broj telefona se gasi ranije, uz telefon sa SIM karticom |
 | Radio, frakcijski chat, megafon |
 | VIP: popust na oglase (10/20/30%) |
 
@@ -173,7 +173,14 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Čeka odluku vlasnika
 | Stavka |
 |--------|
-| Pitanja za vlasnika posle Faze 2 (poslato 29.10.2026.) |
+| Glad (HEALTH-5): traka gladi, pada s vremenom, na nuli skida HP (predlog poslat 29.10.2026.) |
+| Telefon sa SIM karticom: telefon i SIM se kupuju odvojeno, broj ostaje na nalogu, biranje broja uz proveru, kredit sa dopunom u 24/7 ili sa računa, meni `/telefon`, javni imenik, gašenje broja posle 6 meseci neaktivnosti (predlog poslat 29.10.2026.) |
+| Izbor strelice (modela) na ulazu i izlazu vrata (predlog poslat 29.10.2026.) |
+| Nivo: respect potreban za sledeći nivo po uobičajenoj formuli (sledeći nivo × 4) (predlog poslat 29.10.2026.) |
+| Happy hour po broju plata umesto po minutima (predlog poslat 29.10.2026.) |
+| Da li vlasnik automatski ima VIP pogodnosti (sada ih nema, `/vc` ima zbog moderacije) |
+| Prodaja vozila državi, taksi kao frakcija ili posao (stara pitanja) |
+
 
 ### Može bilo kada
 | Stavka |
@@ -230,6 +237,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 29.10.2026. | Opština (lična karta), `/licna` |
 | 29.10.2026. | Inventar (10 mesta + VIP), predmeti, bacanje i podizanje, prodavnice 24/7 |
 | 29.10.2026. | Telefon: broj, pozivi, SMS, kontakti, 911, biranje broja za Silver i Gold VIP |
+| 29.10.2026. | Ispravke posle testa Faze 2: datum na HUD-u iznad sata (išao je preko armora), lična karta u dijalogu, ID-jevi ulaza, mesta i GPS-a se ponovo koriste, brisanje ulaza čisti njegov enterijer, bankomat okrenut ka igraču, F baca cigaretu i flašu, ponovljena poruka je spam samo u 10 s, `/pozovi` više ne daje mute, kontakt se prikazuje kao „Ime (broj)“, spec prati enterijer i svet i učitava objekte, teleport tokom speca ga prekida, jasnija poruka za VIP komande |
 
 ---
 
@@ -240,7 +248,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 2 | Owner tests all of Phase 2 in game, then ACC-9: settings that are remembered (e.g. `/hud`) |
+| 2 | Owner decides on the proposals under "Waiting for the owner's decision" (hunger, phone with SIM card and credit, arrows, levels, happy hour), then they are built; then ACC-9: settings that are remembered (e.g. `/hud`) |
 | 3 | Personal vehicles (keys, fuel, parking, trunk), car market as an admin event, driving school and licenses, mechanic |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
@@ -263,8 +271,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 |------|
 | The owner sets up in game the doors (`/napraviulaz`), counters (`/napravimesto`) and GPS locations (`/dodajgps`) for city hall, police and bank; 24/7 shops and ATMs around the city |
 | Job sign-up at city hall and the "Posao" GPS category (once jobs exist, Phase 4) |
-| Phone: SMS to an offline player (message inbox), credit and top-up |
-| Hunger (HEALTH-5): a hunger bar; food now only gives a little HP and leaves the player full for 10 min |
+| Phone: SMS to an offline player (message inbox) |
 | Tutorial after registration |
 
 **After the vehicle system (Phase 3)**
@@ -279,6 +286,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Item |
 |------|
 | Spawn choice on login: last position, house, faction HQ or public spawn |
+| Account inactive for 6 months: delete the account and everything it owns (houses, vehicles, businesses, job); the phone number is freed earlier, with the SIM card phone |
 | Radio, faction chat, megaphone |
 | VIP: discount on ads (10/20/30%) |
 
@@ -406,7 +414,14 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 ### Waiting for the owner's decision
 | Item |
 |------|
-| Questions for the owner after Phase 2 (sent 2026-10-29) |
+| Hunger (HEALTH-5): a hunger bar that drops over time and takes HP at zero (proposal sent 2026-10-29) |
+| Phone with a SIM card: phone and SIM bought separately, the number stays on the account, picking a number with a check, credit with top-up at a 24/7 or from the bank account, a `/telefon` menu, a public directory, the number is freed after 6 months of inactivity (proposal sent 2026-10-29) |
+| Choice of arrow (model) at a door's entrance and exit (proposal sent 2026-10-29) |
+| Levels: respect needed for the next level by the usual formula (next level × 4) (proposal sent 2026-10-29) |
+| Happy hour counted in paydays instead of minutes (proposal sent 2026-10-29) |
+| Whether the owner automatically gets VIP perks (now they don't; `/vc` works for moderation) |
+| Selling vehicles to the state, taxi as a faction or a job (older questions) |
+
 
 ### Any time
 | Item |
@@ -463,3 +478,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-29 | City hall (ID card), `/licna` |
 | 2026-10-29 | Inventory (10 slots + VIP), items, dropping and picking up, 24/7 shops |
 | 2026-10-29 | Phone: number, calls, SMS, contacts, 911, number choice for Silver and Gold VIP |
+| 2026-10-29 | Fixes after the Phase 2 test: HUD date above the clock (it covered the armour bar), ID card in a dialog, door, point and GPS IDs are reused, deleting a door clears its interior, ATM faces the player, F throws away a cigarette or bottle, a repeated message is spam only within 10 s, `/pozovi` no longer mutes, a contact shows as "Name (number)", spectating follows interior and world and loads objects, teleporting while spectating ends it, a clearer message for VIP commands |

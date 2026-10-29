@@ -96,6 +96,29 @@ stock Gps_BuildList(playerid, category, dest[], size = sizeof(dest), bool:with_i
     return count;
 }
 
+stock Gps_FindSlotByDbId(dbid)
+{
+    for (new i = 0; i < MAX_GPS_LOCATIONS; i++)
+    {
+        if (g_Gps[i][gUsed] && g_Gps[i][gDbId] == dbid)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// IDs of deleted locations are given out again, so the IDs admins type stay short.
+stock Gps_FreeDbId()
+{
+    new dbid = 1;
+    while (Gps_FindSlotByDbId(dbid) != -1)
+    {
+        dbid++;
+    }
+    return dbid;
+}
+
 stock Gps_GetListed(playerid, listitem)
 {
     if (listitem < 0 || listitem >= g_GpsPlayer[playerid][gpListedCount])
@@ -269,23 +292,16 @@ cmd:dodajgps(playerid, params[])
     }
 
     g_Gps[slot][gUsed] = true;
+    g_Gps[slot][gDbId] = Gps_FreeDbId();
     g_Gps[slot][gCategory] = category - 1;
     strcopy(g_Gps[slot][gName], name, GPS_NAME_LENGTH);
     GetPlayerPos(playerid, g_Gps[slot][gX], g_Gps[slot][gY], g_Gps[slot][gZ]);
 
-    new query[256];
-    mysql_format(g_SQL, query, sizeof(query), "INSERT INTO `gps_locations` (`category`, `name`, `x`, `y`, `z`) VALUES (%d, '%e', %f, %f, %f)",
-        category - 1, name, g_Gps[slot][gX], g_Gps[slot][gY], g_Gps[slot][gZ]);
-    mysql_tquery(g_SQL, query, "OnGpsCreated", "dd", playerid, slot);
-    return 1;
-}
+    new query[256], details[80];
+    mysql_format(g_SQL, query, sizeof(query), "INSERT INTO `gps_locations` (`id`, `category`, `name`, `x`, `y`, `z`) VALUES (%d, %d, '%e', %f, %f, %f)",
+        g_Gps[slot][gDbId], category - 1, name, g_Gps[slot][gX], g_Gps[slot][gY], g_Gps[slot][gZ]);
+    mysql_tquery(g_SQL, query);
 
-forward OnGpsCreated(playerid, slot);
-public OnGpsCreated(playerid, slot)
-{
-    g_Gps[slot][gDbId] = cache_insert_id();
-
-    new details[80];
     format(details, sizeof(details), "gps %d: %s", g_Gps[slot][gDbId], g_Gps[slot][gName]);
     Staff_Log(playerid, "gps_create", INVALID_PLAYER_ID, details);
     Msg_Admin(playerid, "Dodata je GPS lokacija %d: %s (%s).", g_Gps[slot][gDbId], g_Gps[slot][gName], g_GpsCategories[g_Gps[slot][gCategory]]);
@@ -299,20 +315,13 @@ cmd:obrisigps(playerid, params[])
         return 1;
     }
 
-    new dbid, slot = -1;
+    new dbid;
     if (sscanf(params, "d", dbid))
     {
         Msg_Usage(playerid, "/obrisigps [id] (ID se vidi u /gps dok ste na admin duznosti)");
         return 1;
     }
-    for (new i = 0; i < MAX_GPS_LOCATIONS; i++)
-    {
-        if (g_Gps[i][gUsed] && g_Gps[i][gDbId] == dbid)
-        {
-            slot = i;
-            break;
-        }
-    }
+    new slot = Gps_FindSlotByDbId(dbid);
     if (slot == -1)
     {
         Msg_Error(playerid, "GPS lokacija sa tim ID-jem ne postoji.");

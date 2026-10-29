@@ -159,14 +159,80 @@ stock Door_SetInside(slot, playerid)
     SetPlayerVirtualWorld(playerid, g_Doors[slot][dInWorld]);
 }
 
+// IDs of deleted doors are given out again, so the IDs admins type stay short.
+stock Door_FreeDbId()
+{
+    new dbid = 1;
+    while (Door_FindSlotByDbId(dbid) != -1)
+    {
+        dbid++;
+    }
+    return dbid;
+}
+
+// Whoever is inside a deleted door's own world would be stuck without an exit, and since IDs are reused,
+// they and the service points there would turn up inside the next door with this ID.
+// Returns how many service points were removed.
+static stock Door_ClearInside(slot)
+{
+    new world = DOOR_WORLD_BASE + g_Doors[slot][dDbId];
+    if (!g_Doors[slot][dHasExit] || g_Doors[slot][dInWorld] != world)
+    {
+        return 0;
+    }
+    for (new i = 0; i < MAX_DOORS; i++)
+    {
+        if (i != slot && g_Doors[i][dUsed] && g_Doors[i][dHasExit] && g_Doors[i][dInWorld] == world)
+        {
+            return 0;
+        }
+    }
+
+    new Float:x = g_Doors[slot][dOutX], Float:y = g_Doors[slot][dOutY], Float:z = g_Doors[slot][dOutZ];
+    new Float:angle = g_Doors[slot][dOutA] + 180.0, interior = g_Doors[slot][dOutInterior], out_world = g_Doors[slot][dOutWorld];
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (!Account_IsLoggedIn(i))
+        {
+            continue;
+        }
+        if (g_Staff[i][sSpectating])
+        {
+            if (g_Staff[i][sSpecWorld] == world)
+            {
+                g_Staff[i][sSpecX] = x;
+                g_Staff[i][sSpecY] = y;
+                g_Staff[i][sSpecZ] = z;
+                g_Staff[i][sSpecInterior] = interior;
+                g_Staff[i][sSpecWorld] = out_world;
+            }
+        }
+        else if (GetPlayerVirtualWorld(i) == world)
+        {
+            Utils_MoveInto(i, x, y, z, angle, interior, out_world, !g_Staff[i][sFrozen]);
+            Msg_Info(i, "Ulaz u ovu zgradu je uklonjen, pa ste premesteni napolje.");
+        }
+    }
+
+    new query[256];
+    mysql_format(g_SQL, query, sizeof(query),
+        "UPDATE `accounts` SET `pos_x` = %f, `pos_y` = %f, `pos_z` = %f, `pos_a` = %f, `interior` = %d, `virtual_world` = %d WHERE `virtual_world` = %d",
+        x, y, z, angle, interior, out_world, world);
+    mysql_tquery(g_SQL, query);
+
+    return Point_DestroyInWorld(world);
+}
+
+// Returns how many service points inside the door were removed with it.
 stock Door_Destroy(slot)
 {
-    new query[64];
+    new points = Door_ClearInside(slot), query[64];
     mysql_format(g_SQL, query, sizeof(query), "DELETE FROM `doors` WHERE `id` = %d", g_Doors[slot][dDbId]);
     mysql_tquery(g_SQL, query);
 
     Door_DestroyVisuals(slot);
     g_Doors[slot][dUsed] = false;
+    return points;
 }
 
 stock Door_FindOutside(playerid)

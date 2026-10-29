@@ -52,6 +52,17 @@ stock bool:Punish_IsMuted(playerid)
     return g_Player[playerid][pMuteUntil] > gettime();
 }
 
+// Everything a player says to others passes here: mute first, then the spam check. Prints the reason itself.
+stock bool:Punish_CanSpeak(playerid, const text[])
+{
+    if (Punish_IsMuted(playerid))
+    {
+        Msg_Error(playerid, "Imate mute jos %d min.", Punish_MinutesLeft(g_Player[playerid][pMuteUntil]));
+        return false;
+    }
+    return isnull(text) || AC_CheckChat(playerid, text);
+}
+
 stock Punish_MinutesLeft(until)
 {
     return (until - gettime() + 59) / 60;

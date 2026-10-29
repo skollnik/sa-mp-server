@@ -96,14 +96,33 @@ stock Staff_OnPlayerStateChange(playerid, PLAYER_STATE:newstate)
 
 stock Staff_OnPlayerInteriorChange(playerid, newinteriorid)
 {
+    #pragma unused newinteriorid
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
         if (g_Staff[i][sSpectating] && g_Staff[i][sSpecTarget] == playerid)
         {
-            SetPlayerInterior(i, newinteriorid);
-            SetPlayerVirtualWorld(i, GetPlayerVirtualWorld(playerid));
+            Staff_SpecFollow(i);
         }
     }
+}
+
+// Custom interiors are streamer objects, so they are loaded around the target rather than the spot the admin left;
+// this also follows world changes, which have no callback (one door to another).
+stock Staff_SpecFollow(playerid)
+{
+    new targetid = g_Staff[playerid][sSpecTarget], interior = GetPlayerInterior(targetid), world = GetPlayerVirtualWorld(targetid);
+    if (GetPlayerInterior(playerid) != interior)
+    {
+        SetPlayerInterior(playerid, interior);
+    }
+    if (GetPlayerVirtualWorld(playerid) != world)
+    {
+        SetPlayerVirtualWorld(playerid, world);
+    }
+
+    new Float:x, Float:y, Float:z;
+    GetPlayerPos(targetid, x, y, z);
+    Streamer_UpdateEx(playerid, x, y, z, world, interior, STREAMER_TYPE_OBJECT, -1, 0);
 }
 
 stock bool:Staff_IsAdmin(playerid)
@@ -335,6 +354,19 @@ stock Staff_Log(adminid, const action[], targetid, const details[])
 
 stock Staff_TeleportTo(playerid, Float:x, Float:y, Float:z, interior, world)
 {
+    // A spectator has no body to move: the camera would stay on the target in the wrong interior.
+    // The teleport becomes the spot they come back to, and spectating ends.
+    if (g_Staff[playerid][sSpectating])
+    {
+        g_Staff[playerid][sSpecX] = x;
+        g_Staff[playerid][sSpecY] = y;
+        g_Staff[playerid][sSpecZ] = z;
+        g_Staff[playerid][sSpecInterior] = interior;
+        g_Staff[playerid][sSpecWorld] = world;
+        Staff_StopSpectating(playerid);
+        return;
+    }
+
     if (GetPlayerState(playerid) == PLAYER_STATE_DRIVER)
     {
         new vehicleid = GetPlayerVehicleID(playerid);
@@ -375,8 +407,7 @@ stock Staff_StartSpectating(playerid, targetid)
 
     TogglePlayerSpectating(playerid, true);
     AC_ShowSpecInfo(playerid);
-    SetPlayerInterior(playerid, GetPlayerInterior(targetid));
-    SetPlayerVirtualWorld(playerid, GetPlayerVirtualWorld(targetid));
+    Staff_SpecFollow(playerid);
 
     if (IsPlayerInAnyVehicle(targetid))
     {

@@ -59,29 +59,21 @@ cmd:napraviulaz(playerid, params[])
     }
 
     g_Doors[slot][dUsed] = true;
-    g_Doors[slot][dDbId] = 0;
+    g_Doors[slot][dDbId] = Door_FreeDbId();
     g_Doors[slot][dHasExit] = false;
     g_Doors[slot][dLocked] = false;
     g_Doors[slot][dIcon] = 0;
     strcopy(g_Doors[slot][dName], params, DOOR_NAME_LENGTH);
     Door_SetOutside(slot, playerid);
 
-    new query[320];
+    new query[320], details[64];
     mysql_format(g_SQL, query, sizeof(query),
-        "INSERT INTO `doors` (`name`, `out_x`, `out_y`, `out_z`, `out_a`, `out_interior`, `out_world`) VALUES ('%e', %f, %f, %f, %f, %d, %d)",
-        g_Doors[slot][dName], g_Doors[slot][dOutX], g_Doors[slot][dOutY], g_Doors[slot][dOutZ], g_Doors[slot][dOutA],
+        "INSERT INTO `doors` (`id`, `name`, `out_x`, `out_y`, `out_z`, `out_a`, `out_interior`, `out_world`) VALUES (%d, '%e', %f, %f, %f, %f, %d, %d)",
+        g_Doors[slot][dDbId], g_Doors[slot][dName], g_Doors[slot][dOutX], g_Doors[slot][dOutY], g_Doors[slot][dOutZ], g_Doors[slot][dOutA],
         g_Doors[slot][dOutInterior], g_Doors[slot][dOutWorld]);
-    mysql_tquery(g_SQL, query, "OnDoorCreated", "dd", playerid, slot);
-    return 1;
-}
-
-forward OnDoorCreated(playerid, slot);
-public OnDoorCreated(playerid, slot)
-{
-    g_Doors[slot][dDbId] = cache_insert_id();
+    mysql_tquery(g_SQL, query);
     Door_Refresh(slot);
 
-    new details[64];
     format(details, sizeof(details), "ulaz %d: %s", g_Doors[slot][dDbId], g_Doors[slot][dName]);
     Staff_Log(playerid, "door_create", INVALID_PLAYER_ID, details);
     Msg_Admin(playerid, "Napravljen je ulaz %d (%s). Udjite u enterijer i postavite izlaz: /izmeniulaz %d izlaz", g_Doors[slot][dDbId], g_Doors[slot][dName], g_Doors[slot][dDbId]);
@@ -189,7 +181,11 @@ cmd:obrisiulaz(playerid, params[])
     format(details, sizeof(details), "ulaz %d: %s", g_Doors[slot][dDbId], g_Doors[slot][dName]);
     Staff_Log(playerid, "door_delete", INVALID_PLAYER_ID, details);
     Msg_Admin(playerid, "Obrisan je %s.", details);
-    Door_Destroy(slot);
+    new points = Door_Destroy(slot);
+    if (points > 0)
+    {
+        Msg_Admin(playerid, "Obrisano je i %d mesta (salter, bankomat...) koja su bila unutra.", points);
+    }
     return 1;
 }
 

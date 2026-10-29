@@ -31,6 +31,7 @@ forward bool:Inv_Add(playerid, E_ITEM:item, amount);
 forward bool:Inv_CanAdd(playerid, E_ITEM:item, amount);
 forward bool:Inv_Remove(playerid, E_ITEM:item, amount);
 forward bool:Inv_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Inv_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
 
 enum E_ITEM_INFO
 {

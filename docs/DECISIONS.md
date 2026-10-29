@@ -66,6 +66,10 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 58 | 2026-10-29 | Novac se menja samo kroz `Money_GiveCash` i `Money_GiveBank`, uz zapis u `money_logs` | Svaka promena novca može da se prati |
 | 59 | 2026-10-29 | Transfer na račun: od nivoa 2, provizija 1%; bankomat do $10.000 odjednom; lična karta $50 | Otežava prebacivanje sa lažnih naloga |
 | 60 | 2026-10-29 | Telefon: nasumičan broj od 6 cifara (Silver i Gold biraju broj), SMS $1, minut poziva $2 koje plaća pozivalac; 911 ide adminima dok ne dođu službe | Novac izlazi iz igre, a hitni pozivi ipak stižu do nekoga |
+| 61 | 2026-10-29 | ID obrisanog ulaza, mesta ili GPS lokacije dobija sledeće napravljeno (uvek najmanji slobodan); brisanje ulaza izvodi sve iz njegovog sveta i briše mesta u njemu | Zahtev vlasnika; bez čišćenja bi novi ulaz sa istim ID-jem nasledio stari svet |
+| 62 | 2026-10-29 | Ista poruka je spam samo ako se ponovi u roku od 10 s; `/pozovi` nije chat komanda (911 tekst ipak prolazi proveru za mute i spam) | Vlasnik je dobio mute za tri obična poziva |
+| 63 | 2026-10-29 | F baca cigaretu ili flašu iz ruke, pre vrata; lična karta se pokazuje u dijalogu | Zahtev vlasnika |
+| 64 | 2026-10-29 | Admin koji posmatra prati enterijer i svet igrača i učitava objekte oko njega; teleport tokom posmatranja prekida posmatranje | Custom enterijeri su objekti; bez toga je admin video prazninu |
 
 ### Arhitektura koda (predlog)
 ```
@@ -153,6 +157,10 @@ This file records every important decision so it does not get re-discussed. Newe
 | 58 | 2026-10-29 | Money only changes through `Money_GiveCash` and `Money_GiveBank`, logged in `money_logs` | Every money change can be traced |
 | 59 | 2026-10-29 | Bank transfers: from level 2, 1% fee; ATM up to $10,000 at once; ID card $50 | Makes moving money from alt accounts harder |
 | 60 | 2026-10-29 | Phone: random 6-digit number (Silver and Gold pick one), SMS $1, $2 per call minute paid by the caller; 911 goes to admins until the services exist | Money leaves the game, and emergency calls still reach someone |
+| 61 | 2026-10-29 | The ID of a deleted door, point or GPS location goes to the next one created (always the lowest free one); deleting a door moves everyone out of its world and deletes the points inside | Owner's request; without the cleanup a new door with the same ID would inherit the old world |
+| 62 | 2026-10-29 | The same message is spam only if repeated within 10 s; `/pozovi` is not a chat command (911 text still goes through the mute and spam check) | The owner got muted for three ordinary calls |
+| 63 | 2026-10-29 | F throws away a cigarette or bottle in hand, before doors; the ID card is shown in a dialog | Owner's request |
+| 64 | 2026-10-29 | A spectating admin follows the player's interior and world and loads objects around them; teleporting while spectating ends it | Custom interiors are objects; without this the admin saw nothing |
 
 ### Code architecture (proposal)
 ```

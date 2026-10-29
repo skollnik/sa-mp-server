@@ -222,7 +222,10 @@ public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
     if (Account_IsLoggedIn(playerid))
     {
-        Door_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
+        if (!Inv_OnPlayerKeyStateChange(playerid, newkeys, oldkeys))
+        {
+            Door_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
+        }
     }
     return 1;
 }
@@ -244,12 +247,7 @@ public OnPlayerText(playerid, text[])
     {
         return 0;
     }
-    if (Punish_IsMuted(playerid))
-    {
-        Msg_Error(playerid, "Imate mute jos %d min.", Punish_MinutesLeft(g_Player[playerid][pMuteUntil]));
-        return 0;
-    }
-    if (!AC_CheckChat(playerid, text))
+    if (!Punish_CanSpeak(playerid, text))
     {
         return 0;
     }
@@ -318,17 +316,9 @@ public OnPlayerCommandReceived(playerid, cmd[], params[], flags)
         Msg_Error(playerid, "Ova komanda se ne moze koristiti u admin zatvoru.");
         return 0;
     }
-    if (flags & CMD_FLAG_CHAT)
+    if ((flags & CMD_FLAG_CHAT) && !Punish_CanSpeak(playerid, params))
     {
-        if (Punish_IsMuted(playerid))
-        {
-            Msg_Error(playerid, "Imate mute jos %d min.", Punish_MinutesLeft(g_Player[playerid][pMuteUntil]));
-            return 0;
-        }
-        if (!isnull(params) && !AC_CheckChat(playerid, params))
-        {
-            return 0;
-        }
+        return 0;
     }
     return 1;
 }

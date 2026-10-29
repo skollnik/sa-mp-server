@@ -118,7 +118,12 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Bekstvo iz admin zatvora ili zamrzavanja kroz vrata (učitavanje enterijera odmrzava igrača) | ✅ | Vrata, inventar i telefon ne rade u zatvoru ni dok je igrač zamrznut; admin teleport ne odmrzava zamrznutog |
 | Propadanje kroz pod custom enterijera pre nego što se objekti učitaju (vrata, login u enterijeru, admin teleport, kraj posmatranja) | ✅ | Objekti se učitaju pre pomeranja i igrač stoji 1,5 s (`Utils_MoveInto`) |
 | Lažni AC teleport pri prolasku kroz vrata | ✅ | Svako pomeranje ide preko `AC_ExpectTeleport` |
-| Ulaz obrisan dok je igrač unutra (ostane zaglavljen) | 👁 | Admin ga izvlači sa `/gethere`; brisanje ulaza je samo za glavnog admina |
+| Ulaz obrisan dok je igrač unutra (ostane zaglavljen) | ✅ | Igrači unutra se prebacuju ispred ulaza, a sačuvan položaj igrača van igre se menja u bazi; adminu koji posmatra menja se mesto povratka |
+| Ponovo korišćen ID ulaza: novi ulaz dobije svet obrisanog, pa se u njemu pojave stara mesta ili igrači | ✅ | Brisanje ulaza briše i mesta u njegovom svetu i izvodi sve iz njega; svet se ne dira ako ga deli još neki ulaz |
+| Igrač se prijavi baš dok se briše ulaz (učitan je stari položaj u obrisanom svetu) | 👁 | Retko; admin ga izvlači sa `/gethere` |
+| F za bacanje cigarete ili flaše istovremeno otvori vrata | ✅ | Isti pritisak samo baca ono što je u ruci |
+| Admin posmatra igrača u custom enterijeru i vidi prazninu; teleport tokom posmatranja ostavi pogrešan enterijer | ✅ | Admin svake sekunde prati enterijer i svet igrača i objekti se učitavaju oko igrača; teleport tokom posmatranja ga prekida i postaje mesto povratka (vlasnik proverava u igri) |
+| Lična karta u dijalogu zatvori igraču dijalog koji je imao otvoren (npr. banku) | 👁 | Samo na 3 m, uz zaštitu od spama komandama |
 | Dupliranje novca preko transfera ili `/daj` | ✅ | Novac se skida pa dodaje, oba igrača se odmah čuvaju, sve ide u `money_logs` |
 | Prebacivanje novca sa lažnih naloga | ✅ | Transfer od nivoa 2 uz proviziju 1%, svaki prenos u logu sa oba naloga |
 | Transfer igraču koji se upravo prijavljuje (njegovo staro stanje prepiše uplatu) | ✅ | Transfer se odbija dok se primalac prijavljuje |
@@ -130,7 +135,8 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Bačeni predmeti nestanu posle restarta servera | 👁 | Namerno, ne čuvaju se u bazi |
 | Lečenje hranom ili prvom pomoći u borbi | ✅ | Hrana daje malo HP-a i posle nje je igrač sit 10 min; prva pomoć ne radi minut posle štete i leči samo do 75 HP |
 | Telefonski razgovor nastavi posle izlaska, smrti, zatvora ili kad igrač ostane bez telefona | ✅ | Poziv se prekida u svim tim slučajevima |
-| Spam SMS-om ili pozivima | ✅ | `/sms` i `/pozovi` su chat komande: mute i flood zaštita važe i za njih, uz cenu po poruci |
+| Spam SMS-om ili pozivima | ✅ | `/sms` je chat komanda (mute i flood zaštita), uz cenu po poruci; `/pozovi` ima zaštitu od spama komandama, a tekst za 911 prolazi proveru za mute i spam |
+| Mute zbog ponovljene komande koja nije spam (npr. dva puta isti `/pozovi`) | ✅ | `/pozovi` više nije chat komanda; ista poruka se računa kao ponavljanje samo ako stigne u roku od 10 s |
 | Dva igrača sa istim brojem telefona | ✅ | Broj se proverava u bazi i među igračima online pre dodele |
 | VIP lično vreme ostane posle isteka VIP-a | ✅ | Serversko vreme se primenjuje čim VIP istekne |
 
@@ -254,7 +260,12 @@ Every new system or change goes through these questions, against all existing sy
 | Escaping admin jail or a freeze through a door (loading an interior unfreezes the player) | ✅ | Doors, inventory and phone do not work in jail or while frozen; admin teleports do not unfreeze a frozen player |
 | Falling through a custom interior floor before its objects load (doors, login inside, admin teleport, end of spectating) | ✅ | Objects are loaded before the move and the player is held for 1.5 s (`Utils_MoveInto`) |
 | False AC teleport alert when using a door | ✅ | Every move goes through `AC_ExpectTeleport` |
-| A door deleted while a player is inside (stuck) | 👁 | An admin pulls them out with `/gethere`; only head admins can delete doors |
+| A door deleted while a player is inside (stuck) | ✅ | Players inside are moved in front of the door and the saved position of offline players is changed in the DB; a spectating admin's return spot is moved |
+| A reused door ID: the new door gets the deleted door's world, and old points or players show up in it | ✅ | Deleting a door also deletes the points in its world and moves everyone out; the world is left alone if another door shares it |
+| A player logs in exactly while a door is deleted (old position in the deleted world is loaded) | 👁 | Rare; an admin pulls them out with `/gethere` |
+| F to throw away a cigarette or bottle also opens a door | ✅ | The same press only throws away what is in hand |
+| An admin spectating a player in a custom interior sees nothing; teleporting while spectating leaves the wrong interior | ✅ | The admin follows the player's interior and world every second and objects are loaded around the player; teleporting while spectating ends it and becomes the return spot (the owner checks in game) |
+| The ID card dialog closes a dialog the player had open (e.g. the bank) | 👁 | Only within 3 m, with command spam protection |
 | Money duplication through transfers or `/daj` | ✅ | Money is taken before it is given, both players are saved right away, everything goes into `money_logs` |
 | Moving money from alt accounts | ✅ | Transfers from level 2 with a 1% fee, every transfer logged with both accounts |
 | Transfer to a player who is logging in (their old balance overwrites the payment) | ✅ | The transfer is refused while the receiver is logging in |
@@ -266,6 +277,7 @@ Every new system or change goes through these questions, against all existing sy
 | Dropped items vanish after a server restart | 👁 | On purpose, they are not stored in the DB |
 | Healing with food or first aid during a fight | ✅ | Food gives a little HP and the player is full for 10 min; first aid does not work for a minute after damage and heals only up to 75 HP |
 | A phone call goes on after leaving, dying, jail or losing the phone | ✅ | The call ends in all those cases |
-| SMS or call spam | ✅ | `/sms` and `/pozovi` are chat commands: mute and flood protection apply, plus a price per message |
+| SMS or call spam | ✅ | `/sms` is a chat command (mute and flood protection) with a price per message; `/pozovi` has command spam protection, and 911 text goes through the mute and spam check |
+| A mute for a repeated command that is not spam (e.g. the same `/pozovi` twice) | ✅ | `/pozovi` is no longer a chat command; the same message only counts as a repeat if it comes within 10 s |
 | Two players with the same phone number | ✅ | The number is checked in the DB and among online players before it is assigned |
 | VIP personal time stays after VIP expires | ✅ | Server time applies as soon as VIP expires |

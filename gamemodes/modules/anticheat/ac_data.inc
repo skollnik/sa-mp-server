@@ -22,6 +22,8 @@ forward bool:AC_CheckCommand(playerid);
 #define AC_CHAT_CALM_GAP_MS         (3000)
 #define AC_CHAT_STRIKES             (3)
 #define AC_REPEAT_LIMIT             (2)
+// The same text only counts as a repeat when it comes this soon; saying it again later is normal.
+#define AC_REPEAT_WINDOW_MS         (10000)
 #define AC_CMD_MIN_GAP_MS           (700)
 #define AC_CMD_STRIKES              (3)
 #define AC_FLOOD_WARNINGS_TO_MUTE   (3)

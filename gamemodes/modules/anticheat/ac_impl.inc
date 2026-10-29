@@ -279,6 +279,7 @@ public AC_Tick()
         if (g_Staff[i][sSpectating])
         {
             AC_UpdateSpecInfo(i);
+            Staff_SpecFollow(i);
             continue;
         }
 
@@ -362,7 +363,7 @@ stock AC_FloodWarning(playerid)
 
 stock bool:AC_CheckChat(playerid, const text[])
 {
-    if (text[0] && !strcmp(text, g_Ac[playerid][acLastMessage], true))
+    if (text[0] && !strcmp(text, g_Ac[playerid][acLastMessage], true) && GetTickCount() - g_Ac[playerid][acLastChatTick] < AC_REPEAT_WINDOW_MS)
     {
         if (++g_Ac[playerid][acRepeatCount] >= AC_REPEAT_LIMIT)
         {

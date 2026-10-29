@@ -14,7 +14,8 @@ stock Hud_Init()
     TextDrawSetOutline(g_HudClock, 2);
     TextDrawColour(g_HudClock, 0xC2C2C2FF);
 
-    g_HudDate = TextDrawCreate(577.0, 45.0, "01.01.2026.");
+    // The date sits above the clock: right under it is where GTA draws the armour bar.
+    g_HudDate = TextDrawCreate(577.0, 10.0, "01.01.2026.");
     TextDrawFont(g_HudDate, TEXT_DRAW_FONT_1);
     TextDrawLetterSize(g_HudDate, 0.25, 1.0);
     TextDrawAlignment(g_HudDate, TEXT_DRAW_ALIGN_CENTER);

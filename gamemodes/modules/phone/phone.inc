@@ -106,15 +106,15 @@ stock bool:Phone_IsReachable(playerid)
     return playerid != INVALID_PLAYER_ID && Inv_Has(playerid, ITEM_PHONE) && !g_Phone[playerid][phOff] && g_Player[playerid][pJailSeconds] == 0;
 }
 
-// What a listener's phone shows for a number: the saved contact name, or the bare number.
+// What a listener's phone shows for a number: "Name (number)" for a saved contact, or the bare number.
 stock Phone_Label(listener, number)
 {
-    new label[MAX_PLAYER_NAME + 1];
+    new label[MAX_PLAYER_NAME + 12];
     for (new i = 0; i < MAX_CONTACTS; i++)
     {
         if (g_Contacts[listener][i][ctDbId] && g_Contacts[listener][i][ctNumber] == number)
         {
-            strcopy(label, g_Contacts[listener][i][ctName]);
+            format(label, sizeof(label), "%s (%d)", g_Contacts[listener][i][ctName], number);
             return label;
         }
     }
@@ -319,6 +319,10 @@ cmd:pozovi(playerid, params[])
         if (isnull(text))
         {
             Msg_Usage(playerid, "/pozovi 911 [sta se desilo i gde]");
+            return 1;
+        }
+        if (!Punish_CanSpeak(playerid, text))
+        {
             return 1;
         }
         Chat_Action(playerid, "vadi telefon i zove hitne sluzbe.");
@@ -626,4 +630,3 @@ cmd:promenibroj(playerid, params[])
 }
 
 flags:sms(CMD_FLAG_CHAT)
-flags:pozovi(CMD_FLAG_CHAT)
