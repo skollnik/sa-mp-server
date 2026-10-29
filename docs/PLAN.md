@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 2 sa dopunama (glad, telefon sa SIM karticom i kreditom, strelice, nivo, happy hour) napisana, čeka test vlasnika u igri (ažurirano 2026-10-29)
+**Trenutni status:** ACC-9 (podešavanja) napisan, čeka test vlasnika; zatim lepši HUD i dodaci Faze 2, pa Faza 3 (ažurirano 2026-10-29)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -38,7 +38,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] WORLD-2, WORLD-3, WORLD-7: stvarno vreme, GPS sa upravljačem checkpoint-a, HUD (sat, datum, kvart)
 - [x] ECO-1, ECO-2, ECO-4: novac sa logovima, banka, bankomat, transfer, `/daj`
 - [x] ACC-7, ACC-8, ACC-10: payday (sa AFK proverom i happy hour), `/stats`, nivoi
-- [ ] ACC-9: podešavanja (npr. da se `/hud` pamti posle izlaska)
+- [x] ACC-9: podešavanja (`/podesavanja`: delovi HUD-a, melodija telefona, kanali; sve se pamti)
 - [x] WORLD-4: opština (lična karta); prijava na posao čeka poslove
 - [x] INV-1, INV-2: inventar sa slotovima, predmeti, prodavnice 24/7, `/vskin` sa slikama
 - [x] PHONE-1, PHONE-2: telefon (pozivi, SMS, kontakti, 911 adminima)
@@ -46,6 +46,8 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] HEALTH-5: glad sa trakom
 - [x] PHONE-1 (nadogradnja): telefon i SIM kartica odvojeno, kredit i dopuna, meni `/telefon`, javni imenik
 - [x] Strelice na vratima, nivo po uobičajenoj formuli, happy hour po broju plata
+- [ ] Lepši HUD sa teksturama (predlog čeka odobrenje vlasnika)
+- [ ] Dodaci: PIN za bankomat i karticu, dodaci na telu, novčić i kockice uz opkladu, prošnja, lutrija (svaki se pre izrade predlaže)
 
 ### Faza 3: Vozila i dozvole
 - [ ] VEH-1 – VEH-9: lična vozila, ključevi, gorivo, parkiranje, gepek, rent
@@ -95,14 +97,13 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 | Faza | Pitanje |
 |------|---------|
-| 3 | Da li igrač može da proda vozilo državi (npr. za 50% cene) ili samo drugom igraču? |
 | 5 | Taksi: frakcija ili posao koji svako može da radi? |
 
 ---
 
 ## 🇬🇧 English
 
-**Current status:** Phase 2 with additions (hunger, SIM card phone with credit, arrows, levels, happy hour) written, waiting for the owner to test it in game (updated 2026-10-29)
+**Current status:** ACC-9 (settings) written, waiting for the owner's test; then a nicer HUD and the Phase 2 extras, then Phase 3 (updated 2026-10-29)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -138,7 +139,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] WORLD-2, WORLD-3, WORLD-7: real time, GPS with a checkpoint manager, HUD (clock, date, district)
 - [x] ECO-1, ECO-2, ECO-4: money with logs, bank, ATM, transfers, `/daj`
 - [x] ACC-7, ACC-8, ACC-10: payday (with AFK check and happy hour), `/stats`, levels
-- [ ] ACC-9: settings (e.g. remembering `/hud` after leaving)
+- [x] ACC-9: settings (`/podesavanja`: HUD parts, phone ringtone, channels; all remembered)
 - [x] WORLD-4: city hall (ID card); job sign-up waits for jobs
 - [x] INV-1, INV-2: slot inventory, items, 24/7 shops, `/vskin` with pictures
 - [x] PHONE-1, PHONE-2: phone (calls, SMS, contacts, 911 to admins)
@@ -146,6 +147,8 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] HEALTH-5: hunger with a bar
 - [x] PHONE-1 (upgrade): phone and SIM card bought separately, credit and top-up, a `/telefon` menu, a public directory
 - [x] Door arrows, levels by the usual formula, happy hour counted in paydays
+- [ ] A nicer HUD with textures (proposal waiting for the owner's approval)
+- [ ] Extras: ATM and card PIN, body accessories, coin flip and dice bets, begging, lottery (each is proposed before it is built)
 
 ### Phase 3: Vehicles and licenses
 - [ ] VEH-1 – VEH-9: personal vehicles, keys, fuel, parking, trunk, rentals
@@ -195,5 +198,4 @@ Questions that must be answered before the phase they belong to:
 
 | Phase | Question |
 |-------|----------|
-| 3 | Can a player sell a vehicle to the state (e.g. for 50% of the price) or only to another player? |
 | 5 | Taxi: a faction or a job anyone can do? |

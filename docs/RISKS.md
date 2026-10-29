@@ -153,6 +153,9 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Mute zbog ponovljene komande koja nije spam (npr. dva puta isti `/pozovi`) | ✅ | `/pozovi` više nije chat komanda; ista poruka se računa kao ponavljanje samo ako stigne u roku od 10 s |
 | Dva igrača sa istim brojem telefona | ✅ | Broj se proverava u bazi i među igračima online pre dodele i naplate |
 | VIP lično vreme ostane posle isteka VIP-a | ✅ | Serversko vreme se primenjuje čim VIP istekne |
+| Melodija telefona sa nevažećim brojem iz baze | ✅ | Broj melodije se proverava pre upotrebe, nevažeći postaje prva melodija |
+| Zvonjava kao spam okolini | ✅ | Zvoni najviše 30 s po pozivu, čuje se samo do 15 m, a pozivi se plaćaju kreditom |
+| Sakriven deo HUD-a ostane prikazan ili se pojavi dupli | ✅ | Posle svake promene HUD se ceo sklanja i ponovo crta samo sa uključenim delovima |
 
 ---
 
@@ -309,3 +312,6 @@ Every new system or change goes through these questions, against all existing sy
 | A mute for a repeated command that is not spam (e.g. the same `/pozovi` twice) | ✅ | `/pozovi` is no longer a chat command; the same message only counts as a repeat if it comes within 10 s |
 | Two players with the same phone number | ✅ | The number is checked in the DB and among online players before it is assigned |
 | VIP personal time stays after VIP expires | ✅ | Server time applies as soon as VIP expires |
+| A phone ringtone with an invalid number from the DB | ✅ | The ringtone number is checked before use; an invalid one becomes the first ringtone |
+| Ringing as spam for people around | ✅ | It rings at most 30 s per call, is heard only within 15 m, and calls cost credit |
+| A hidden HUD part stays on screen or shows up twice | ✅ | After every change the whole HUD is removed and drawn again with only the parts that are on |

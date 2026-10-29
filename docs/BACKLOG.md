@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 2 | Test gladi, telefona sa SIM karticom, strelica, nivoa i happy hour-a u igri (vlasnik); zatim ACC-9: podešavanja koja se pamte (npr. `/hud`) |
+| 2 | Lepši HUD sa teksturama (zahtev vlasnika 29.10, predlog čeka odobrenje); zatim PIN za bankomat i karticu, dodaci na telu, novčić i kockice uz opkladu, prošnja i lutrija (vlasnik odobrio sve, svaki se pre izrade predlaže) |
 | 3 | Lična vozila (ključevi, gorivo, parkiranje, gepek), auto pijaca kao admin event, auto škola i dozvole, mehaničar |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
@@ -79,7 +79,6 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Prošnja (do nivoa 4) | Sitan novac od drugih igrača, ne radi kod spawna; dnevni limit po davaocu i log, da se novac ne prebacuje sa drugih naloga | — |
 | Novčić i kockice uz opkladu | Oba igrača potvrde ulog, novac drži server dok traje bacanje, najveći ulog je ograničen, sve ide u log | — |
 | Meni za ponude između igrača | Jedna komanda za prodaju vozila, kuće i firme: oba igrača blizu, potvrda dijalogom, log protiv prevare | — |
-| Telefon: dopuna, promena broja, melodija | Dodatak na PHONE-1; kredit se troši na pozive i SMS | — |
 | Dodaci na telu (naočare, kape, torbe) | Predmeti iz prodavnice u inventaru, nose se na telu, igrač sam podešava položaj | — |
 | Muzika: radio u vozilu, boombox, muzika sa linka | Radio stanice u vozilu, boombox kao predmet koji svira ljudima oko njega | — |
 
@@ -175,7 +174,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Stavka |
 |--------|
 | Da li vlasnik automatski ima VIP pogodnosti (sada ih nema, `/vc` ima zbog moderacije) |
-| Prodaja vozila državi, taksi kao frakcija ili posao (stara pitanja) |
+| Taksi kao frakcija ili posao (staro pitanje) |
 
 ### Može bilo kada
 | Stavka |
@@ -237,6 +236,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 29.10.2026. | Glad (HEALTH-5): traka ispod novca, hrana i piće je pune, na nuli se gubi HP do 20, `/setglad` |
 | 29.10.2026. | Telefon sa SIM karticom: telefon i SIM odvojeno, izbor broja, kredit i dopuna (24/7 i sa računa), meni `/telefon`, javni imenik, 30 kontakata, SMS iz kontakata, gašenje broja posle 6 meseci; `/promenibroj` ukinut |
 | 29.10.2026. | Strelice na vratima (meni sa slikama), nivo po formuli (sledeći nivo × 4), happy hour po broju plata; otvoreno piće se ne vraća u inventar |
+| 29.10.2026. | Podešavanja (ACC-9): `/podesavanja` sa delovima HUD-a, melodijom telefona (5 melodija, čuje se i okolo) i kanalima; `/hud` se pamti. Odluka: vozilo se prodaje samo drugom igraču |
 
 ---
 
@@ -247,7 +247,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 2 | Owner tests hunger, the SIM card phone, arrows, levels and happy hour in game; then ACC-9: settings that are remembered (e.g. `/hud`) |
+| 2 | A nicer HUD with textures (owner's request 2026-10-29, proposal waiting for approval); then ATM and card PIN, body accessories, coin flip and dice bets, begging and the lottery (owner approved all, each is proposed before it is built) |
 | 3 | Personal vehicles (keys, fuel, parking, trunk), car market as an admin event, driving school and licenses, mechanic |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
@@ -319,7 +319,6 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Begging (up to level 4) | Small money from other players, not near the spawn; daily limit per giver and a log, so money is not moved from alt accounts | — |
 | Coin flip and dice bets | Both players confirm the stake, the server holds the money during the roll, the max stake is capped, everything is logged | — |
 | Offer menu between players | One command to sell a vehicle, house or business: both players nearby, dialog confirmation, a log against scams | — |
-| Phone: top-up, number change, ringtone | Extends PHONE-1; credit is spent on calls and SMS | — |
 | Body accessories (glasses, hats, bags) | Shop items in the inventory, worn on the body, the player adjusts the position | — |
 | Music: car radio, boombox, music from a link | Radio stations in vehicles, a boombox item that plays to people around it | — |
 
@@ -415,7 +414,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Item |
 |------|
 | Whether the owner automatically gets VIP perks (now they don't; `/vc` works for moderation) |
-| Selling vehicles to the state, taxi as a faction or a job (older questions) |
+| Taxi as a faction or a job (older question) |
 
 ### Any time
 | Item |
@@ -477,3 +476,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-29 | Hunger (HEALTH-5): a bar under the money, food and drinks fill it, at zero HP drops to 20, `/setglad` |
 | 2026-10-29 | SIM card phone: phone and SIM bought separately, picking a number, credit and top-up (24/7 and from the bank), a `/telefon` menu, public directory, 30 contacts, SMS from contacts, number freed after 6 months; `/promenibroj` removed |
 | 2026-10-29 | Door arrows (picture menu), levels by formula (next level × 4), happy hour counted in paydays; an opened drink does not go back to the inventory |
+| 2026-10-29 | Settings (ACC-9): `/podesavanja` with HUD parts, the phone ringtone (5 ringtones, heard nearby too) and channels; `/hud` is remembered. Decision: a vehicle is sold only to another player |

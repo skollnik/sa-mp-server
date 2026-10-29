@@ -42,6 +42,8 @@ enum E_PLAYER_DATA
     pPhoneCredit,
     bool:pPhoneListed,
     pHunger,
+    pSettingBits,
+    pRingtone,
 
     // Runtime only, never saved
     pLastLoginText[24],

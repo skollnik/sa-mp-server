@@ -25,6 +25,7 @@
 #include "modules/anticheat/ac_data.inc"
 #include "modules/vip/vip_data.inc"
 #include "modules/channel/channel_data.inc"
+#include "modules/settings/settings_data.inc"
 #include "modules/preview/preview_data.inc"
 #include "modules/door/door_data.inc"
 #include "modules/point/point_data.inc"
@@ -75,6 +76,7 @@
 
 #include "modules/inventory/inventory_impl.inc"
 #include "modules/phone/phone.inc"
+#include "modules/settings/settings.inc"
 
 #include "modules/help/help_cmds.inc"
 
@@ -301,6 +303,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Phone_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Settings_OnDialogResponse(playerid, dialogid, response, listitem))
     {
         return 1;
     }

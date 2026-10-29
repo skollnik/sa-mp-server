@@ -5,6 +5,26 @@
 #define PHONE_NUMBER_MAX        (999999)
 #define PHONE_EMERGENCY         (911)
 #define PHONE_RANDOM_TRIES      (10)
+#define PHONE_RING_RADIUS       (15.0)
+
+// Two GTA sounds played in turn, one per second, while the phone rings.
+new const g_Ringtones[][2] =
+{
+    {1137, 1138},
+    {1056, 1056},
+    {1052, 1052},
+    {1052, 1053},
+    {1139, 1139}
+};
+
+new const g_RingtoneNames[sizeof(g_Ringtones)][] =
+{
+    "Klasicna",
+    "Odbrojavanje",
+    "Pisak",
+    "Dvostruki pisak",
+    "Signal"
+};
 
 enum E_PHONE_CALL
 {
@@ -439,6 +459,28 @@ stock Phone_OnPlayerDeath(playerid)
     Phone_EndCall(playerid, "Poziv je prekinut.");
 }
 
+// A value from the database is not trusted as an array index.
+stock Phone_Ringtone(playerid)
+{
+    new ringtone = g_Player[playerid][pRingtone];
+    return (ringtone >= 0 && ringtone < sizeof(g_Ringtones)) ? ringtone : 0;
+}
+
+// Heard by the ringing player and everyone close by, from where the phone is.
+static stock Phone_PlayRing(playerid, tick)
+{
+    new sound = g_Ringtones[Phone_Ringtone(playerid)][tick % 2];
+    new Float:x, Float:y, Float:z;
+    GetPlayerPos(playerid, x, y, z);
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (Account_IsLoggedIn(i) && (i == playerid || Chat_IsInRange(i, playerid, PHONE_RING_RADIUS)))
+        {
+            PlayerPlaySound(i, sound, x, y, z);
+        }
+    }
+}
+
 forward Phone_Tick();
 public Phone_Tick()
 {
@@ -460,6 +502,10 @@ public Phone_Tick()
             Msg_Info(partner, "Propusten poziv: %s.", Phone_Label(partner, g_Player[i][pPhoneNumber]));
             Phone_EndCall(i, "Niko se ne javlja.");
             continue;
+        }
+        if (g_Phone[i][phCall] == CALL_RINGING)
+        {
+            Phone_PlayRing(i, now);
         }
         // phCallStart -1 marks the paying side of an active call.
         if (g_Phone[i][phCall] == CALL_ACTIVE && g_Phone[i][phCallStart] == -1 && now - g_Phone[i][phLastCharge] >= 60)

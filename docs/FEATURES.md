@@ -19,7 +19,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **ACC-6 Čuvanje podataka:** pri izlasku i periodično (autosave). Čuva se pozicija, enterijer, virtuelni svet, HP i armor.
 - **ACC-7 Payday:** svakih sat vremena provedenog u igri isplaćuje platu, kamatu i naplaćuje poreze/račune.
 - **ACC-8 Statistike / lična karta** (`/stats`): ime, godine, novac, banka, posao, organizacija, sati igre.
-- **ACC-9 Podešavanja igrača:** isključivanje OOC chata, PM-ova, prikaza imena itd.
+- **ACC-9 Podešavanja igrača:** `/podesavanja` sa delovima HUD-a (sat i datum, kvart, traka gladi), melodijom telefona i kanalima; sve se pamti posle izlaska
 - **ACC-10 Nivoi:** respect poeni se dobijaju na payday, a sa njima se prelazi na sledeći nivo. Nivo otključava imovinu, vozila i dozvole (vidi `ECONOMY.md`).
 
 ### CHAT — Komunikacija
@@ -185,7 +185,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **ACC-6 Data saving:** on quit and periodically (autosave). Saves position, interior, virtual world, HP and armour.
 - **ACC-7 Payday:** every hour of playtime it pays salary and interest and charges taxes/bills.
 - **ACC-8 Stats / ID card** (`/stats`): name, age, money, bank, job, organization, hours played.
-- **ACC-9 Player settings:** toggle OOC chat, PMs, name tags etc.
+- **ACC-9 Player settings:** `/podesavanja` with HUD parts (clock and date, district, hunger bar), the phone ringtone and channels; everything is remembered after leaving
 - **ACC-10 Levels:** respect points are earned on payday and used to reach the next level. Level unlocks property, vehicles and licenses (see `ECONOMY.md`).
 
 ### CHAT — Communication

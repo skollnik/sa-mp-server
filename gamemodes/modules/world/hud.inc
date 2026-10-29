@@ -16,7 +16,6 @@ enum E_HUD_HUNGER
 }
 new PlayerText:g_HudHunger[MAX_PLAYERS][E_HUD_HUNGER];
 new g_HudZoneIndex[MAX_PLAYERS];
-new bool:g_HudHidden[MAX_PLAYERS];
 new g_HudTimer;
 
 stock Hud_Init()
@@ -50,7 +49,6 @@ stock Hud_OnPlayerConnect(playerid)
 {
     g_HudZone[playerid] = INVALID_PLAYER_TEXT_DRAW;
     g_HudZoneIndex[playerid] = -1;
-    g_HudHidden[playerid] = false;
     for (new E_HUD_HUNGER:part; part < E_HUD_HUNGER; part++)
     {
         g_HudHunger[playerid][part] = INVALID_PLAYER_TEXT_DRAW;
@@ -114,16 +112,8 @@ stock Hud_UpdateHunger(playerid)
     PlayerTextDrawShow(playerid, fill);
 }
 
-stock Hud_Show(playerid)
-
+static stock Hud_ShowZone(playerid)
 {
-    if (g_HudHidden[playerid])
-    {
-        return;
-    }
-    TextDrawShowForPlayer(playerid, g_HudClock);
-    TextDrawShowForPlayer(playerid, g_HudDate);
-
     if (g_HudZone[playerid] == INVALID_PLAYER_TEXT_DRAW)
     {
         new PlayerText:td = CreatePlayerTextDraw(playerid, 88.0, 318.0, "_");
@@ -135,7 +125,34 @@ stock Hud_Show(playerid)
     }
     g_HudZoneIndex[playerid] = -1;
     PlayerTextDrawShow(playerid, g_HudZone[playerid]);
-    Hud_ShowHunger(playerid);
+}
+
+stock Hud_Show(playerid)
+{
+    if (!Setting_IsOn(playerid, SETTING_HUD))
+    {
+        return;
+    }
+    if (Setting_IsOn(playerid, SETTING_HUD_CLOCK))
+    {
+        TextDrawShowForPlayer(playerid, g_HudClock);
+        TextDrawShowForPlayer(playerid, g_HudDate);
+    }
+    if (Setting_IsOn(playerid, SETTING_HUD_ZONE))
+    {
+        Hud_ShowZone(playerid);
+    }
+    if (Setting_IsOn(playerid, SETTING_HUD_HUNGER))
+    {
+        Hud_ShowHunger(playerid);
+    }
+}
+
+// Rebuilt from scratch after a setting changes, so only the parts still switched on come back.
+stock Hud_Refresh(playerid)
+{
+    Hud_Hide(playerid);
+    Hud_Show(playerid);
 }
 
 stock Hud_Hide(playerid)
@@ -217,16 +234,14 @@ public Hud_Tick()
 
 cmd:hud(playerid, params[])
 {
-    g_HudHidden[playerid] = !g_HudHidden[playerid];
-    if (g_HudHidden[playerid])
+    Setting_Toggle(playerid, SETTING_HUD);
+    if (Setting_IsOn(playerid, SETTING_HUD))
     {
-        Hud_Hide(playerid);
-        Msg_Info(playerid, "HUD (sat, datum, kvart i glad) je sakriven. Ponovo ga ukljucite sa /hud.");
+        Msg_Info(playerid, "HUD je ponovo prikazan. Delovi HUD-a se biraju u /podesavanja.");
     }
     else
     {
-        Hud_Show(playerid);
-        Msg_Info(playerid, "HUD je ponovo prikazan.");
+        Msg_Info(playerid, "HUD (sat, datum, kvart i glad) je sakriven i ostaje sakriven i posle izlaska. Ponovo: /hud");
     }
     return 1;
 }
