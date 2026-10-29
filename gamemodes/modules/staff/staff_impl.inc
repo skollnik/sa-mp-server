@@ -342,13 +342,14 @@ stock Staff_TeleportTo(playerid, Float:x, Float:y, Float:z, interior, world)
         SetVehiclePos(vehicleid, x, y, z);
         LinkVehicleToInterior(vehicleid, interior);
         SetVehicleVirtualWorld(vehicleid, world);
+        SetPlayerInterior(playerid, interior);
+        SetPlayerVirtualWorld(playerid, world);
+        return;
     }
-    else
-    {
-        AC_SetPlayerPos(playerid, x, y, z);
-    }
-    SetPlayerInterior(playerid, interior);
-    SetPlayerVirtualWorld(playerid, world);
+
+    new Float:angle;
+    GetPlayerFacingAngle(playerid, angle);
+    Utils_MoveInto(playerid, x, y, z, angle, interior, world, !g_Staff[playerid][sFrozen]);
 }
 
 stock Staff_StartSpectating(playerid, targetid)

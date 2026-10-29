@@ -11,6 +11,13 @@ cmd:pomoc(playerid, params[])
         C_WHITE "/b - lokalni OOC    /pm - privatna poruka\n" \
         "/o - globalni OOC (radi samo kad ga admin ukljuci)\n" \
         "/kanali - ukljucivanje i iskljucivanje chatova (ili /togooc, /togpm, /tognewbie)\n\n" \
+        C_SERVER "Svet i novac\n" \
+        C_WHITE "F ili /udji, /izadji - vrata zgrada    /gps - navigacija    /hud - sat i kvart\n" \
+        "/stats - statistika    /daj - novac igracu pored vas    /licna - licna karta\n" \
+        "/banka, /bankomat, /opstina, /kupi - na salterima i u prodavnicama (oznaka iznad mesta)\n\n" \
+        C_SERVER "Inventar i telefon\n" \
+        C_WHITE "/inv - inventar    /podigni - podizanje bacenog predmeta\n" \
+        "/pozovi /javi /prekini /sms /kontakti /telefon (911 - hitne sluzbe)\n\n" \
         C_SERVER "Pomoc i podrska\n" \
         C_WHITE "/n - newbie chat (pitanja novih igraca)    /ask - pitanje helperima\n" \
         "/report - prijava igraca adminima    /admins, /helpers - tim online\n\n" \

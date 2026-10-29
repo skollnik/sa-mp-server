@@ -1130,7 +1130,7 @@ cmd:ahelp(playerid, params[])
     strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns /aclog /kanali\n\n");
     if (level >= ADMIN_LEVEL_ADMIN)
     {
-        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\n\n");
+        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /gotoulaz /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\n\n");
     }
     if (level >= ADMIN_LEVEL_SENIOR)
     {
@@ -1138,11 +1138,12 @@ cmd:ahelp(playerid, params[])
     }
     if (level >= ADMIN_LEVEL_HEAD)
     {
-        strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setname /pmspy\n\n");
+        strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setname /pmspy\n" \
+            "Ulazi: /napraviulaz /izmeniulaz /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps\n\n");
     }
     if (level >= ADMIN_LEVEL_MANAGEMENT)
     {
-        strcat(body, C_ADMIN "5 - Menadzment\n" C_WHITE "/makeadmin /gmx\n\n");
+        strcat(body, C_ADMIN "5 - Menadzment\n" C_WHITE "/makeadmin /gmx /happyhour\n\n");
     }
     if (level >= ADMIN_LEVEL_OWNER)
     {

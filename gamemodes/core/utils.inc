@@ -26,12 +26,13 @@ public Utils_DoKick(playerid, serial)
 // still meanwhile, otherwise they fall through a floor that has not loaded yet.
 #define UTILS_PRELOAD_MS    (1500)
 
-stock Utils_MoveInto(playerid, Float:x, Float:y, Float:z, Float:angle, interior, world)
+// freeze is false for a player an admin froze, so the loading does not unfreeze them.
+stock Utils_MoveInto(playerid, Float:x, Float:y, Float:z, Float:angle, interior, world, bool:freeze = true)
 {
     SetPlayerInterior(playerid, interior);
     SetPlayerVirtualWorld(playerid, world);
     AC_ExpectTeleport(playerid, x, y, z);
-    Streamer_UpdateEx(playerid, x, y, z, world, interior, STREAMER_TYPE_OBJECT, UTILS_PRELOAD_MS, 1);
+    Streamer_UpdateEx(playerid, x, y, z, world, interior, STREAMER_TYPE_OBJECT, UTILS_PRELOAD_MS, freeze ? 1 : 0);
     SetPlayerFacingAngle(playerid, angle);
     SetCameraBehindPlayer(playerid);
 }

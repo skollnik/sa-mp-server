@@ -15,9 +15,9 @@ cmd:vip(playerid, params[])
         "%s" \
         "{CD7F32}Bronze VIP\n" C_WHITE "- oznaka [VIP] iznad glave (/vtag sakriva) i ime u boji u OOC chatovima\n" \
         "- VIP chat (/vc), spisak VIP igraca (/vips)\n- /vskin (VIP skinovi), /vtime i /vweather (licno vreme i vremenske prilike)\n" \
-        "- 25%% kraca pauza za /report, /ask i /n, rezervisano mesto kad je server pun\n\n" \
-        "{C0C0C0}Silver VIP\n" C_WHITE "- sve iz Bronze VIP\n- /vfix (popravka vozila, na 10 min), /vcolor (farbanje vozila)\n- 50%% kraca pauza za /report, /ask i /n\n\n" \
-        "{FFD700}Gold VIP\n" C_WHITE "- sve iz Silver VIP\n- /vgoto (do igraca, na 5 min), /vheal (HP na 100, na 15 min)\n\n" \
+        "- 25%% kraca pauza za /report, /ask i /n, rezervisano mesto kad je server pun\n- +5%% na payday, +2 mesta u inventaru\n\n" \
+        "{C0C0C0}Silver VIP\n" C_WHITE "- sve iz Bronze VIP\n- /vfix (popravka vozila, na 10 min), /vcolor (farbanje vozila)\n- 50%% kraca pauza za /report, /ask i /n\n- +10%% na payday, +4 mesta u inventaru, biranje broja telefona (/promenibroj)\n\n" \
+        "{FFD700}Gold VIP\n" C_WHITE "- sve iz Silver VIP\n- /vgoto (do igraca, na 5 min), /vheal (HP na 100, na 15 min)\n- +15%% na payday i +1 respect, +6 mesta u inventaru\n\n" \
         C_GREY "/vgoto, /vfix i /vheal ne rade minut posle primljene stete i ne rade u zatvoru.\n" \
         "Nove pogodnosti stizu sa novim sistemima. VIP ne daje admin ovlascenja.\nZa VIP se javite vlasniku servera.",
         status);
