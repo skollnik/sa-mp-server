@@ -178,6 +178,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Izbor strelice (modela) na ulazu i izlazu vrata (predlog poslat 29.10.2026.) |
 | Nivo: respect potreban za sledeći nivo po uobičajenoj formuli (sledeći nivo × 4) (predlog poslat 29.10.2026.) |
 | Happy hour po broju plata umesto po minutima (predlog poslat 29.10.2026.) |
+| Piće: da li se otvoreno piće vraća u inventar ako igrač nije pio (sada se troši čim se otvori, a F baca flašu) |
 | Da li vlasnik automatski ima VIP pogodnosti (sada ih nema, `/vc` ima zbog moderacije) |
 | Prodaja vozila državi, taksi kao frakcija ili posao (stara pitanja) |
 
@@ -237,7 +238,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 29.10.2026. | Opština (lična karta), `/licna` |
 | 29.10.2026. | Inventar (10 mesta + VIP), predmeti, bacanje i podizanje, prodavnice 24/7 |
 | 29.10.2026. | Telefon: broj, pozivi, SMS, kontakti, 911, biranje broja za Silver i Gold VIP |
-| 29.10.2026. | Ispravke posle testa Faze 2: datum na HUD-u iznad sata (išao je preko armora), lična karta u dijalogu, ID-jevi ulaza, mesta i GPS-a se ponovo koriste, brisanje ulaza čisti njegov enterijer, bankomat okrenut ka igraču, F baca cigaretu i flašu, ponovljena poruka je spam samo u 10 s, `/pozovi` više ne daje mute, kontakt se prikazuje kao „Ime (broj)“, spec prati enterijer i svet i učitava objekte, teleport tokom speca ga prekida, jasnija poruka za VIP komande |
+| 29.10.2026. | Ispravke posle testa Faze 2: datum na HUD-u iznad sata (išao je preko armora), lična karta u dijalogu, ID-jevi ulaza, mesta i GPS-a se ponovo koriste, brisanje ulaza čisti njegov enterijer, bankomat okrenut ka igraču, F baca cigaretu i flašu, ponovljena poruka je spam samo u 10 s, `/pozovi` više ne daje mute, kontakt se prikazuje kao „Ime (broj)“, spec prati enterijer i svet, učitava objekte i ponovo kači kameru posle teleporta igrača, teleport tokom speca ga prekida, jasnija poruka za VIP komande |
 
 ---
 
@@ -419,6 +420,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Choice of arrow (model) at a door's entrance and exit (proposal sent 2026-10-29) |
 | Levels: respect needed for the next level by the usual formula (next level × 4) (proposal sent 2026-10-29) |
 | Happy hour counted in paydays instead of minutes (proposal sent 2026-10-29) |
+| Drinks: whether an opened drink goes back to the inventory if the player did not drink (now it is used up when opened, and F throws the bottle away) |
 | Whether the owner automatically gets VIP perks (now they don't; `/vc` works for moderation) |
 | Selling vehicles to the state, taxi as a faction or a job (older questions) |
 
@@ -478,4 +480,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-29 | City hall (ID card), `/licna` |
 | 2026-10-29 | Inventory (10 slots + VIP), items, dropping and picking up, 24/7 shops |
 | 2026-10-29 | Phone: number, calls, SMS, contacts, 911, number choice for Silver and Gold VIP |
-| 2026-10-29 | Fixes after the Phase 2 test: HUD date above the clock (it covered the armour bar), ID card in a dialog, door, point and GPS IDs are reused, deleting a door clears its interior, ATM faces the player, F throws away a cigarette or bottle, a repeated message is spam only within 10 s, `/pozovi` no longer mutes, a contact shows as "Name (number)", spectating follows interior and world and loads objects, teleporting while spectating ends it, a clearer message for VIP commands |
+| 2026-10-29 | Fixes after the Phase 2 test: HUD date above the clock (it covered the armour bar), ID card in a dialog, door, point and GPS IDs are reused, deleting a door clears its interior, ATM faces the player, F throws away a cigarette or bottle, a repeated message is spam only within 10 s, `/pozovi` no longer mutes, a contact shows as "Name (number)", spectating follows interior and world, loads objects and re-attaches the camera after the player teleports, teleporting while spectating ends it, a clearer message for VIP commands |

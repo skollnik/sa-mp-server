@@ -78,18 +78,10 @@ stock Staff_OnPlayerStateChange(playerid, PLAYER_STATE:newstate)
 
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
-        if (!g_Staff[i][sSpectating] || g_Staff[i][sSpecTarget] != playerid)
+        if (g_Staff[i][sSpectating] && g_Staff[i][sSpecTarget] == playerid
+            && (newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER || newstate == PLAYER_STATE_ONFOOT))
         {
-            continue;
-        }
-
-        if (newstate == PLAYER_STATE_DRIVER || newstate == PLAYER_STATE_PASSENGER)
-        {
-            PlayerSpectateVehicle(i, GetPlayerVehicleID(playerid));
-        }
-        else if (newstate == PLAYER_STATE_ONFOOT)
-        {
-            PlayerSpectatePlayer(i, playerid);
+            Staff_SpecAttach(i);
         }
     }
 }
@@ -108,21 +100,45 @@ stock Staff_OnPlayerInteriorChange(playerid, newinteriorid)
 
 // Custom interiors are streamer objects, so they are loaded around the target rather than the spot the admin left;
 // this also follows world changes, which have no callback (one door to another).
-stock Staff_SpecFollow(playerid)
+stock Staff_SpecFollow(playerid, bool:attach = false)
 {
     new targetid = g_Staff[playerid][sSpecTarget], interior = GetPlayerInterior(targetid), world = GetPlayerVirtualWorld(targetid);
-    if (GetPlayerInterior(playerid) != interior)
-    {
-        SetPlayerInterior(playerid, interior);
-    }
-    if (GetPlayerVirtualWorld(playerid) != world)
-    {
-        SetPlayerVirtualWorld(playerid, world);
-    }
-
     new Float:x, Float:y, Float:z;
     GetPlayerPos(targetid, x, y, z);
+
+    // After a teleport or an interior change the spectator's camera loses the target and has to be attached again.
+    if (GetPlayerInterior(playerid) != interior || GetPlayerVirtualWorld(playerid) != world
+        || VectorSize(x - g_Staff[playerid][sSpecLastX], y - g_Staff[playerid][sSpecLastY], z - g_Staff[playerid][sSpecLastZ]) > SPEC_JUMP_DISTANCE)
+    {
+        attach = true;
+    }
+    g_Staff[playerid][sSpecLastX] = x;
+    g_Staff[playerid][sSpecLastY] = y;
+    g_Staff[playerid][sSpecLastZ] = z;
+
+    if (attach)
+    {
+        SetPlayerInterior(playerid, interior);
+        SetPlayerVirtualWorld(playerid, world);
+    }
     Streamer_UpdateEx(playerid, x, y, z, world, interior, STREAMER_TYPE_OBJECT, -1, 0);
+    if (attach)
+    {
+        Staff_SpecAttach(playerid);
+    }
+}
+
+stock Staff_SpecAttach(playerid)
+{
+    new targetid = g_Staff[playerid][sSpecTarget];
+    if (IsPlayerInAnyVehicle(targetid))
+    {
+        PlayerSpectateVehicle(playerid, GetPlayerVehicleID(targetid));
+    }
+    else
+    {
+        PlayerSpectatePlayer(playerid, targetid);
+    }
 }
 
 stock bool:Staff_IsAdmin(playerid)
@@ -407,16 +423,7 @@ stock Staff_StartSpectating(playerid, targetid)
 
     TogglePlayerSpectating(playerid, true);
     AC_ShowSpecInfo(playerid);
-    Staff_SpecFollow(playerid);
-
-    if (IsPlayerInAnyVehicle(targetid))
-    {
-        PlayerSpectateVehicle(playerid, GetPlayerVehicleID(targetid));
-    }
-    else
-    {
-        PlayerSpectatePlayer(playerid, targetid);
-    }
+    Staff_SpecFollow(playerid, true);
 }
 
 stock Staff_StopSpectating(playerid)

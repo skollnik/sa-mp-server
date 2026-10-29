@@ -53,6 +53,8 @@ new const g_HelperRankNames[][] =
 #define ASK_COOLDOWN_S          (30)
 #define NEWBIE_COOLDOWN_S       (30)
 #define NEWBIE_MAX_PLAYER_LEVEL (3)
+// A target that moves farther than this in one second has teleported; faster than any vehicle.
+#define SPEC_JUMP_DISTANCE      (100.0)
 
 enum E_REPORT
 {
@@ -78,6 +80,9 @@ enum E_STAFF_STATE
     Float:sSpecA,
     sSpecInterior,
     sSpecWorld,
+    Float:sSpecLastX,
+    Float:sSpecLastY,
+    Float:sSpecLastZ,
     bool:sFrozen,
     sLastReport,
     sLastAsk,

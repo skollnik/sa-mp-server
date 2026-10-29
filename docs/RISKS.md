@@ -122,7 +122,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Ponovo korišćen ID ulaza: novi ulaz dobije svet obrisanog, pa se u njemu pojave stara mesta ili igrači | ✅ | Brisanje ulaza briše i mesta u njegovom svetu i izvodi sve iz njega; svet se ne dira ako ga deli još neki ulaz |
 | Igrač se prijavi baš dok se briše ulaz (učitan je stari položaj u obrisanom svetu) | 👁 | Retko; admin ga izvlači sa `/gethere` |
 | F za bacanje cigarete ili flaše istovremeno otvori vrata | ✅ | Isti pritisak samo baca ono što je u ruci |
-| Admin posmatra igrača u custom enterijeru i vidi prazninu; teleport tokom posmatranja ostavi pogrešan enterijer | ✅ | Admin svake sekunde prati enterijer i svet igrača i objekti se učitavaju oko igrača; teleport tokom posmatranja ga prekida i postaje mesto povratka (vlasnik proverava u igri) |
+| Admin posmatra igrača u custom enterijeru i vidi prazninu; teleport tokom posmatranja ostavi pogrešan enterijer | ✅ | Admin svake sekunde prati enterijer i svet igrača i objekti se učitavaju oko igrača; kad se igrač teleportuje (skok veći od 100 m) ili promeni enterijer, kamera se ponovo kači za njega; teleport tokom posmatranja ga prekida i postaje mesto povratka (vlasnik proverava u igri) |
 | Lična karta u dijalogu zatvori igraču dijalog koji je imao otvoren (npr. banku) | 👁 | Samo na 3 m, uz zaštitu od spama komandama |
 | Dupliranje novca preko transfera ili `/daj` | ✅ | Novac se skida pa dodaje, oba igrača se odmah čuvaju, sve ide u `money_logs` |
 | Prebacivanje novca sa lažnih naloga | ✅ | Transfer od nivoa 2 uz proviziju 1%, svaki prenos u logu sa oba naloga |
@@ -264,7 +264,7 @@ Every new system or change goes through these questions, against all existing sy
 | A reused door ID: the new door gets the deleted door's world, and old points or players show up in it | ✅ | Deleting a door also deletes the points in its world and moves everyone out; the world is left alone if another door shares it |
 | A player logs in exactly while a door is deleted (old position in the deleted world is loaded) | 👁 | Rare; an admin pulls them out with `/gethere` |
 | F to throw away a cigarette or bottle also opens a door | ✅ | The same press only throws away what is in hand |
-| An admin spectating a player in a custom interior sees nothing; teleporting while spectating leaves the wrong interior | ✅ | The admin follows the player's interior and world every second and objects are loaded around the player; teleporting while spectating ends it and becomes the return spot (the owner checks in game) |
+| An admin spectating a player in a custom interior sees nothing; teleporting while spectating leaves the wrong interior | ✅ | The admin follows the player's interior and world every second and objects are loaded around the player; when the player teleports (a jump over 100 m) or changes interior, the camera is attached to them again; teleporting while spectating ends it and becomes the return spot (the owner checks in game) |
 | The ID card dialog closes a dialog the player had open (e.g. the bank) | 👁 | Only within 3 m, with command spam protection |
 | Money duplication through transfers or `/daj` | ✅ | Money is taken before it is given, both players are saved right away, everything goes into `money_logs` |
 | Moving money from alt accounts | ✅ | Transfers from level 2 with a 1% fee, every transfer logged with both accounts |

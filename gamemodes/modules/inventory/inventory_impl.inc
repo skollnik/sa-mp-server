@@ -252,14 +252,14 @@ stock bool:Inv_Use(playerid, slot)
         case ITEM_WATER, ITEM_JUICE:
         {
             SetPlayerSpecialAction(playerid, SPECIAL_ACTION_DRINK_SPRUNK);
-            Chat_Action(playerid, item == ITEM_WATER ? ("otvara flasu vode i pije.") : ("otvara sok i pije."));
+            Chat_Action(playerid, item == ITEM_WATER ? ("otvara flasu vode.") : ("otvara sok."));
             Inv_ShowHandHint(playerid, "gutljaj", "bacate flasu");
         }
         case ITEM_BEER:
         {
             SetPlayerSpecialAction(playerid, SPECIAL_ACTION_DRINK_BEER);
             SetPlayerDrunkLevel(playerid, min(GetPlayerDrunkLevel(playerid) + 1500, 10000));
-            Chat_Action(playerid, "otvara pivo i pije.");
+            Chat_Action(playerid, "otvara pivo.");
             Inv_ShowHandHint(playerid, "gutljaj", "bacate flasu");
         }
         case ITEM_CIGARETTE:
