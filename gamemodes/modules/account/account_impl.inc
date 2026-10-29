@@ -194,6 +194,17 @@ stock Account_OnPlayerSpawn(playerid)
     }
 }
 
+stock Account_OnPlayerTakeDamage(playerid)
+{
+    g_Player[playerid][pLastDamage] = gettime();
+}
+
+// Used to keep convenience features (VIP commands, doors) from serving as an escape from a fight.
+stock Account_SecondsSinceDamage(playerid)
+{
+    return gettime() - g_Player[playerid][pLastDamage];
+}
+
 stock bool:Account_IsLoggedIn(playerid)
 {
     return g_Player[playerid][pState] == ACCOUNT_STATE_LOGGED_IN;

@@ -115,11 +115,6 @@ stock Vip_OnPlayerConnect(playerid)
     g_Vip[playerid] = empty;
 }
 
-stock Vip_OnPlayerTakeDamage(playerid)
-{
-    g_Vip[playerid][vLastDamage] = gettime();
-}
-
 // Expiry is also checked on every use; this timer only tells the player and removes the tag.
 forward Vip_ExpiryTick();
 public Vip_ExpiryTick()
@@ -148,7 +143,7 @@ stock bool:Vip_HasLevel(playerid, level)
 
 stock bool:Vip_IsInCombat(playerid)
 {
-    return gettime() - g_Vip[playerid][vLastDamage] < VIP_COMBAT_LOCK_S;
+    return Account_SecondsSinceDamage(playerid) < VIP_COMBAT_LOCK_S;
 }
 
 // Prints the remaining wait itself; returns true when the command may be used now.
@@ -182,28 +177,22 @@ stock bool:Vip_HasFreeSlot(playerid)
     return online < GetMaxPlayers() - VIP_RESERVED_SLOTS;
 }
 
-stock bool:Vip_OnDialogResponse(playerid, dialogid, response, listitem)
+stock Vip_OnSkinSelected(playerid, index)
 {
-    if (dialogid != DIALOG_VIP_SKIN)
+    // The status is checked again: the menu may be answered after VIP has run out.
+    if (!Vip_IsVip(playerid))
     {
-        return false;
-    }
-
-    // The status is checked again: the dialog may be answered after VIP has run out.
-    if (!response || !Vip_IsVip(playerid))
-    {
-        return true;
+        return;
     }
 
     new bool:female = g_Player[playerid][pGender] == GENDER_FEMALE;
     new count = female ? sizeof(g_VipSkinsFemale) : sizeof(g_VipSkinsMale);
-    if (listitem < 0 || listitem >= count)
+    if (index < 0 || index >= count)
     {
-        return true;
+        return;
     }
 
-    g_Player[playerid][pSkin] = female ? g_VipSkinsFemale[listitem] : g_VipSkinsMale[listitem];
+    g_Player[playerid][pSkin] = female ? g_VipSkinsFemale[index] : g_VipSkinsMale[index];
     Staff_UpdateLook(playerid);
-    Msg_Info(playerid, "Novi skin: %d.", g_Player[playerid][pSkin]);
-    return true;
+    Msg_Info(playerid, "Obukli ste novi VIP skin.");
 }

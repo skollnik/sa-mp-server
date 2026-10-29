@@ -193,16 +193,14 @@ cmd:vskin(playerid, params[])
         return 1;
     }
 
-    new list[256], line[16];
-    new bool:female = g_Player[playerid][pGender] == GENDER_FEMALE;
-    new count = female ? sizeof(g_VipSkinsFemale) : sizeof(g_VipSkinsMale);
-    for (new i = 0; i < count; i++)
+    if (g_Player[playerid][pGender] == GENDER_FEMALE)
     {
-        format(line, sizeof(line), "Skin %d
-", female ? g_VipSkinsFemale[i] : g_VipSkinsMale[i]);
-        strcat(list, line);
+        Preview_Show(playerid, PREVIEW_VIP_SKIN, PREVIEW_KIND_SKIN, "VIP skinovi", g_VipSkinsFemale, sizeof(g_VipSkinsFemale));
     }
-    ShowPlayerDialog(playerid, DIALOG_VIP_SKIN, DIALOG_STYLE_LIST, SERVER_NAME " - VIP skinovi", list, "Izaberi", "Zatvori");
+    else
+    {
+        Preview_Show(playerid, PREVIEW_VIP_SKIN, PREVIEW_KIND_SKIN, "VIP skinovi", g_VipSkinsMale, sizeof(g_VipSkinsMale));
+    }
     return 1;
 }
 

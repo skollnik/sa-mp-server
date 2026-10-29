@@ -46,7 +46,8 @@ enum E_PLAYER_DATA
     bool:pFirstSpawn,
     pLoginAttempts,
     pLoginTimer,
-    pSessionStart
+    pSessionStart,
+    pLastDamage
 }
 
 new g_Player[MAX_PLAYERS][E_PLAYER_DATA];

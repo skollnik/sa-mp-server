@@ -3,7 +3,6 @@ forward bool:Vip_HasLevel(playerid, level);
 forward bool:Vip_IsInCombat(playerid);
 forward bool:Vip_CheckCooldown(playerid, last_used, cooldown_s);
 forward bool:Vip_HasFreeSlot(playerid);
-forward bool:Vip_OnDialogResponse(playerid, dialogid, response, listitem);
 
 #define VIP_BRONZE              (1)
 #define VIP_SILVER              (2)
@@ -52,7 +51,6 @@ enum E_VIP_STATE
     vLastGoto,
     vLastFix,
     vLastHeal,
-    vLastDamage,
     bool:vTagHidden
 }
 

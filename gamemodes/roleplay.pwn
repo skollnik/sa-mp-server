@@ -24,6 +24,7 @@
 #include "modules/anticheat/ac_data.inc"
 #include "modules/vip/vip_data.inc"
 #include "modules/channel/channel_data.inc"
+#include "modules/preview/preview_data.inc"
 
 #include "modules/account/account_impl.inc"
 #include "modules/account/account_cmds.inc"
@@ -45,6 +46,8 @@
 
 #include "modules/channel/channel_impl.inc"
 #include "modules/channel/channel_cmds.inc"
+
+#include "modules/preview/preview_impl.inc"
 
 #include "modules/help/help_cmds.inc"
 
@@ -95,6 +98,7 @@ public OnPlayerConnect(playerid)
     Utils_OnPlayerConnect(playerid);
     AC_OnPlayerConnect(playerid);
     Vip_OnPlayerConnect(playerid);
+    Preview_OnPlayerConnect(playerid);
     Staff_OnPlayerConnect(playerid);
     Maps_OnPlayerConnect(playerid);
     Account_OnPlayerConnect(playerid);
@@ -130,7 +134,7 @@ public OnPlayerSpawn(playerid)
 
 public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bodypart)
 {
-    Vip_OnPlayerTakeDamage(playerid);
+    Account_OnPlayerTakeDamage(playerid);
     return 1;
 }
 
@@ -150,6 +154,17 @@ public OnPlayerInteriorChange(playerid, newinteriorid, oldinteriorid)
 {
     Staff_OnPlayerInteriorChange(playerid, newinteriorid);
     return 1;
+}
+
+public OnPlayerClickTextDraw(playerid, Text:clickedid)
+{
+    Preview_OnClickTextDraw(playerid, clickedid);
+    return 0;
+}
+
+public OnPlayerClickPlayerTextDraw(playerid, PlayerText:playertextid)
+{
+    return Preview_OnClickPlayerTextDraw(playerid, playertextid) ? 1 : 0;
 }
 
 public OnPlayerText(playerid, text[])
@@ -183,10 +198,6 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Channel_OnDialogResponse(playerid, dialogid, response, listitem))
-    {
-        return 1;
-    }
-    if (Vip_OnDialogResponse(playerid, dialogid, response, listitem))
     {
         return 1;
     }
