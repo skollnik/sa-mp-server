@@ -124,6 +124,20 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | F za bacanje cigarete ili flaše istovremeno otvori vrata | ✅ | Isti pritisak samo baca ono što je u ruci |
 | Admin posmatra igrača u custom enterijeru i vidi prazninu; teleport tokom posmatranja ostavi pogrešan enterijer | ✅ | Admin svake sekunde prati enterijer i svet igrača i objekti se učitavaju oko igrača; kad se igrač teleportuje (skok veći od 100 m) ili promeni enterijer, kamera se ponovo kači za njega; teleport tokom posmatranja ga prekida i postaje mesto povratka (vlasnik proverava u igri) |
 | Lična karta u dijalogu zatvori igraču dijalog koji je imao otvoren (npr. banku) | 👁 | Samo na 3 m, uz zaštitu od spama komandama |
+| Igrač umre od gladi dok bolnica ne postoji | ✅ | Na nuli HP pada samo do 20 |
+| Glad pada AFK igraču, u zatvoru ili adminu na dužnosti | ✅ | Ne pada dok je igrač AFK, u admin zatvoru, na admin dužnosti ili nije u svetu (spec, mrtav) |
+| Lečenje hranom do punog HP-a | ✅ | Hrana daje malo HP-a i ne može da se jede iznad 90 na traci gladi |
+| Petlja smrti od gladi | ✅ | Posle smrti traka gladi je bar 50 |
+| Dva igrača dobiju isti broj (istovremena kupovina) | ✅ | Odgovori iz baze stižu jedan po jedan; drugi vidi da je broj već dodeljen igraču online |
+| Plaćanje za broj koji je u međuvremenu zauzet, ili dupla naplata | ✅ | Novac se uzima tek kad provera pokaže da je broj slobodan; dok provera traje, nova se ne prihvata |
+| Broj sa nulom na početku (000001) | ✅ | Prihvata se samo tačno 6 cifara od 100000 do 999999, uz jasnu poruku |
+| Davanje telefona drugome daje i broj | ✅ | Broj i kredit su na nalogu, ne na aparatu |
+| Kredit u minusu ili preko granice | ✅ | Plaća se samo ako ima dovoljno; dopuna najviše do $500 |
+| Pretraga javnog imenika za tuđe brojeve | ✅ | Prikazuje samo one koji su se sami upisali, a svaka pretraga košta $2 kredita |
+| Ugašen broj (180 dana) ostao u tuđim kontaktima pa ga dobije neko drugi | 👁 | Kao u stvarnosti; kontakt prikazuje ime dok ga vlasnik ne obriše |
+| Dopuna gotovinom bez prodavnice (otvoren dijalog pa odlazak) | ✅ | Mesto se proverava i kad igrač izabere iznos |
+| Happy hour u minutima ne pogodi nijednu platu | ✅ | Zadaje se u broju plata |
+| Happy hour se izgubi posle restarta | 👁 | Upisano u BACKLOG |
 | Dupliranje novca preko transfera ili `/daj` | ✅ | Novac se skida pa dodaje, oba igrača se odmah čuvaju, sve ide u `money_logs` |
 | Prebacivanje novca sa lažnih naloga | ✅ | Transfer od nivoa 2 uz proviziju 1%, svaki prenos u logu sa oba naloga |
 | Transfer igraču koji se upravo prijavljuje (njegovo staro stanje prepiše uplatu) | ✅ | Transfer se odbija dok se primalac prijavljuje |
@@ -133,11 +147,11 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Dupliranje predmeta (davanje, bacanje, podizanje) | ✅ | Predmet se uvek prvo skida, pa dodaje; bačen predmet nestaje sa zemlje pre nego što uđe u inventar |
 | Zatrpavanje mape bačenim predmetima | ✅ | Najviše 200 bačenih predmeta, svaki nestaje posle 15 min |
 | Bačeni predmeti nestanu posle restarta servera | 👁 | Namerno, ne čuvaju se u bazi |
-| Lečenje hranom ili prvom pomoći u borbi | ✅ | Hrana daje malo HP-a i posle nje je igrač sit 10 min; prva pomoć ne radi minut posle štete i leči samo do 75 HP |
+| Lečenje hranom ili prvom pomoći u borbi | ✅ | Hrana daje malo HP-a i ne jede se iznad 90 na traci gladi; prva pomoć ne radi minut posle štete i leči samo do 75 HP |
 | Telefonski razgovor nastavi posle izlaska, smrti, zatvora ili kad igrač ostane bez telefona | ✅ | Poziv se prekida u svim tim slučajevima |
 | Spam SMS-om ili pozivima | ✅ | `/sms` je chat komanda (mute i flood zaštita), uz cenu po poruci; `/pozovi` ima zaštitu od spama komandama, a tekst za 911 prolazi proveru za mute i spam |
 | Mute zbog ponovljene komande koja nije spam (npr. dva puta isti `/pozovi`) | ✅ | `/pozovi` više nije chat komanda; ista poruka se računa kao ponavljanje samo ako stigne u roku od 10 s |
-| Dva igrača sa istim brojem telefona | ✅ | Broj se proverava u bazi i među igračima online pre dodele |
+| Dva igrača sa istim brojem telefona | ✅ | Broj se proverava u bazi i među igračima online pre dodele i naplate |
 | VIP lično vreme ostane posle isteka VIP-a | ✅ | Serversko vreme se primenjuje čim VIP istekne |
 
 ---
@@ -266,6 +280,20 @@ Every new system or change goes through these questions, against all existing sy
 | F to throw away a cigarette or bottle also opens a door | ✅ | The same press only throws away what is in hand |
 | An admin spectating a player in a custom interior sees nothing; teleporting while spectating leaves the wrong interior | ✅ | The admin follows the player's interior and world every second and objects are loaded around the player; when the player teleports (a jump over 100 m) or changes interior, the camera is attached to them again; teleporting while spectating ends it and becomes the return spot (the owner checks in game) |
 | The ID card dialog closes a dialog the player had open (e.g. the bank) | 👁 | Only within 3 m, with command spam protection |
+| A player starves to death while there is no hospital | ✅ | At zero, HP only drops to 20 |
+| Hunger drops for AFK players, in jail or for admins on duty | ✅ | It does not drop while the player is AFK, in admin jail, on admin duty or not in the world (spectating, dead) |
+| Healing to full HP with food | ✅ | Food gives a little HP and cannot be eaten above 90 on the hunger bar |
+| A hunger death loop | ✅ | After death the hunger bar is at least 50 |
+| Two players get the same number (buying at the same time) | ✅ | DB answers arrive one by one; the second sees the number is already given to an online player |
+| Paying for a number taken in the meantime, or paying twice | ✅ | Money is taken only once the check shows the number is free; no new check is accepted while one runs |
+| A number with a leading zero (000001) | ✅ | Only exactly 6 digits from 100000 to 999999 are accepted, with a clear message |
+| Giving the phone away also gives the number | ✅ | Number and credit belong to the account, not the device |
+| Negative credit or credit over the limit | ✅ | It is charged only when there is enough; top-ups go up to $500 at most |
+| Searching the public directory for other people's numbers | ✅ | Only those who listed themselves are shown, and each search costs $2 of credit |
+| A freed number (180 days) stays in someone's contacts and goes to someone else | 👁 | As in real life; the contact shows the name until its owner deletes it |
+| Cash top-up away from a shop (dialog left open, then walking away) | ✅ | The place is checked again when the amount is picked |
+| Happy hour in minutes misses every payday | ✅ | It is set in paydays |
+| Happy hour is lost after a restart | 👁 | Written in BACKLOG |
 | Money duplication through transfers or `/daj` | ✅ | Money is taken before it is given, both players are saved right away, everything goes into `money_logs` |
 | Moving money from alt accounts | ✅ | Transfers from level 2 with a 1% fee, every transfer logged with both accounts |
 | Transfer to a player who is logging in (their old balance overwrites the payment) | ✅ | The transfer is refused while the receiver is logging in |
@@ -275,7 +303,7 @@ Every new system or change goes through these questions, against all existing sy
 | Item duplication (give, drop, pick up) | ✅ | The item is always taken first, then given; a dropped item leaves the ground before it enters the inventory |
 | The map filling up with dropped items | ✅ | At most 200 dropped items, each disappears after 15 min |
 | Dropped items vanish after a server restart | 👁 | On purpose, they are not stored in the DB |
-| Healing with food or first aid during a fight | ✅ | Food gives a little HP and the player is full for 10 min; first aid does not work for a minute after damage and heals only up to 75 HP |
+| Healing with food or first aid during a fight | ✅ | Food gives a little HP and cannot be eaten above 90 on the hunger bar; first aid does not work for a minute after damage and heals only up to 75 HP |
 | A phone call goes on after leaving, dying, jail or losing the phone | ✅ | The call ends in all those cases |
 | SMS or call spam | ✅ | `/sms` is a chat command (mute and flood protection) with a price per message; `/pozovi` has command spam protection, and 911 text goes through the mute and spam check |
 | A mute for a repeated command that is not spam (e.g. the same `/pozovi` twice) | ✅ | `/pozovi` is no longer a chat command; the same message only counts as a repeat if it comes within 10 s |

@@ -25,7 +25,6 @@ stock Inv_OnPlayerConnect(playerid)
         g_Inv[playerid][slot] = empty;
     }
     g_InvLoaded[playerid] = false;
-    g_InvFullUntil[playerid] = 0;
 }
 
 stock Inv_OnLogin(playerid)
@@ -237,15 +236,14 @@ stock bool:Inv_Use(playerid, slot)
     {
         case ITEM_BURGER, ITEM_PIZZA:
         {
-            if (g_InvFullUntil[playerid] > gettime())
+            if (Hunger_IsFull(playerid))
             {
-                Msg_Error(playerid, "Siti ste. Mozete ponovo jesti za %d min.", (g_InvFullUntil[playerid] - gettime()) / 60 + 1);
+                Msg_Error(playerid, "Siti ste (traka gladi %d/%d). Jesti mozete kad traka padne na %d.", g_Player[playerid][pHunger], HUNGER_MAX, HUNGER_FULL);
                 return false;
             }
             new Float:health;
             GetPlayerHealth(playerid, health);
             SetPlayerHealth(playerid, Utils_FloatMin(health + (item == ITEM_PIZZA ? 8.0 : 5.0), 100.0));
-            g_InvFullUntil[playerid] = gettime() + FOOD_FULL_MINUTES * 60;
             ApplyAnimation(playerid, "FOOD", "EAT_Burger", 4.1, false, false, false, false, 0, SYNC_ALL);
             Chat_Action(playerid, item == ITEM_PIZZA ? ("jede parce pice.") : ("jede hamburger."));
         }
@@ -292,7 +290,7 @@ stock bool:Inv_Use(playerid, slot)
         }
         case ITEM_PHONE:
         {
-            Msg_Info(playerid, "Telefon: /pozovi, /javi, /prekini, /sms, /kontakti, /telefon");
+            Phone_ShowMenu(playerid);
             return false;
         }
         default:
@@ -302,6 +300,10 @@ stock bool:Inv_Use(playerid, slot)
         }
     }
 
+    if (g_ItemInfo[item][itHunger] > 0)
+    {
+        Hunger_Add(playerid, g_ItemInfo[item][itHunger]);
+    }
     Inv_TakeFromSlot(playerid, slot, 1);
     return true;
 }
@@ -553,7 +555,7 @@ cmd:kupi(playerid, params[])
         return 1;
     }
 
-    new body[1024], line[64];
+    new body[1024], line[96];
     strcopy(body, "Predmet\tCena\n");
     for (new E_ITEM:item = ITEM_PHONE; item < E_ITEM; item++)
     {
@@ -561,6 +563,9 @@ cmd:kupi(playerid, params[])
         else format(line, sizeof(line), "%s (%d kom.)\t$%d\n", g_ItemInfo[item][itName], g_ItemInfo[item][itShopAmount], g_ItemInfo[item][itPrice]);
         strcat(body, line);
     }
+    // Services come after the items; the SIM card and credit belong to the account, not the inventory.
+    format(line, sizeof(line), "SIM kartica (broj telefona)\t$%d\nDopuna kredita za telefon\t$%d - $%d\n", PHONE_SIM_PRICE, g_PhoneTopups[0], g_PhoneTopups[sizeof(g_PhoneTopups) - 1]);
+    strcat(body, line);
     ShowPlayerDialog(playerid, DIALOG_SHOP, DIALOG_STYLE_TABLIST_HEADERS, "Prodavnica 24/7", body, "Kupi", "Zatvori");
     return 1;
 }
@@ -577,7 +582,16 @@ stock bool:Shop_OnDialogResponse(playerid, dialogid, response, listitem)
     }
 
     new E_ITEM:item = E_ITEM:(listitem + _:ITEM_PHONE);
-    if (item <= ITEM_NONE || item >= E_ITEM)
+    if (item >= E_ITEM)
+    {
+        switch (_:item - _:E_ITEM)
+        {
+            case 0: Phone_ShowSimMenu(playerid);
+            case 1: Phone_ShowTopup(playerid, false);
+        }
+        return true;
+    }
+    if (item <= ITEM_NONE)
     {
         return true;
     }

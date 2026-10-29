@@ -1138,12 +1138,12 @@ cmd:ahelp(playerid, params[])
     }
     if (level >= ADMIN_LEVEL_HEAD)
     {
-        strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setname /pmspy\n" \
-            "Ulazi: /napraviulaz /izmeniulaz /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps\n\n");
+        strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setglad /setname /pmspy\n" \
+            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps\n\n");
     }
     if (level >= ADMIN_LEVEL_MANAGEMENT)
     {
-        strcat(body, C_ADMIN "5 - Menadzment\n" C_WHITE "/makeadmin /gmx /happyhour\n\n");
+        strcat(body, C_ADMIN "5 - Menadzment\n" C_WHITE "/makeadmin /gmx /happyhour [broj plata]\n\n");
     }
     if (level >= ADMIN_LEVEL_OWNER)
     {

@@ -10,8 +10,10 @@ stock Door_Init()
         "`in_x` FLOAT NOT NULL DEFAULT 0, `in_y` FLOAT NOT NULL DEFAULT 0, `in_z` FLOAT NOT NULL DEFAULT 0, `in_a` FLOAT NOT NULL DEFAULT 0," \
         "`in_interior` INT NOT NULL DEFAULT 0, `in_world` INT NOT NULL DEFAULT 0," \
         "`locked` TINYINT(1) NOT NULL DEFAULT 0," \
-        "`icon` TINYINT UNSIGNED NOT NULL DEFAULT 0" \
+        "`icon` TINYINT UNSIGNED NOT NULL DEFAULT 0," \
+        "`model` INT NOT NULL DEFAULT 1318" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    mysql_tquery(g_SQL, "ALTER TABLE `doors` ADD COLUMN IF NOT EXISTS `model` INT NOT NULL DEFAULT 1318");
 
     mysql_tquery(g_SQL, "SELECT * FROM `doors`", "OnDoorsLoaded");
 }
@@ -19,6 +21,7 @@ stock Door_Init()
 stock Door_OnPlayerConnect(playerid)
 {
     g_DoorLastUse[playerid] = 0;
+    g_DoorArrowEdit[playerid] = 0;
 }
 
 forward OnDoorsLoaded();
@@ -46,6 +49,7 @@ public OnDoorsLoaded()
         cache_get_value_name_int(row, "in_world", g_Doors[slot][dInWorld]);
         cache_get_value_name_bool(row, "locked", g_Doors[slot][dLocked]);
         cache_get_value_name_int(row, "icon", g_Doors[slot][dIcon]);
+        cache_get_value_name_int(row, "model", g_Doors[slot][dModel]);
         Door_Refresh(slot);
         loaded++;
     }
@@ -98,14 +102,14 @@ stock Door_Refresh(slot)
 
     new text[128];
     format(text, sizeof(text), "%s\n" C_GREY "F ili /udji%s", g_Doors[slot][dName], g_Doors[slot][dLocked] ? (" " C_RED "(zakljucano)") : (""));
-    g_Doors[slot][dOutPickup] = CreateDynamicPickup(DOOR_PICKUP_MODEL, 1, g_Doors[slot][dOutX], g_Doors[slot][dOutY], g_Doors[slot][dOutZ],
+    g_Doors[slot][dOutPickup] = CreateDynamicPickup(g_Doors[slot][dModel], 1, g_Doors[slot][dOutX], g_Doors[slot][dOutY], g_Doors[slot][dOutZ],
         g_Doors[slot][dOutWorld], g_Doors[slot][dOutInterior]);
     g_Doors[slot][dOutLabel] = CreateDynamic3DTextLabel(text, COLOR_WHITE, g_Doors[slot][dOutX], g_Doors[slot][dOutY], g_Doors[slot][dOutZ] + 0.6,
         DOOR_LABEL_DISTANCE, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, g_Doors[slot][dOutWorld], g_Doors[slot][dOutInterior]);
 
     if (g_Doors[slot][dHasExit])
     {
-        g_Doors[slot][dInPickup] = CreateDynamicPickup(DOOR_PICKUP_MODEL, 1, g_Doors[slot][dInX], g_Doors[slot][dInY], g_Doors[slot][dInZ],
+        g_Doors[slot][dInPickup] = CreateDynamicPickup(g_Doors[slot][dModel], 1, g_Doors[slot][dInX], g_Doors[slot][dInY], g_Doors[slot][dInZ],
             g_Doors[slot][dInWorld], g_Doors[slot][dInInterior]);
         g_Doors[slot][dInLabel] = CreateDynamic3DTextLabel("Izlaz\n" C_GREY "F ili /izadji", COLOR_WHITE, g_Doors[slot][dInX], g_Doors[slot][dInY], g_Doors[slot][dInZ] + 0.6,
             DOOR_LABEL_DISTANCE, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, g_Doors[slot][dInWorld], g_Doors[slot][dInInterior]);
@@ -124,11 +128,11 @@ stock Door_Save(slot)
     mysql_format(g_SQL, query, sizeof(query),
         "UPDATE `doors` SET `name` = '%e', `out_x` = %f, `out_y` = %f, `out_z` = %f, `out_a` = %f, `out_interior` = %d, `out_world` = %d, " \
         "`has_exit` = %d, `in_x` = %f, `in_y` = %f, `in_z` = %f, `in_a` = %f, `in_interior` = %d, `in_world` = %d, " \
-        "`locked` = %d, `icon` = %d WHERE `id` = %d",
+        "`locked` = %d, `icon` = %d, `model` = %d WHERE `id` = %d",
         g_Doors[slot][dName], g_Doors[slot][dOutX], g_Doors[slot][dOutY], g_Doors[slot][dOutZ], g_Doors[slot][dOutA],
         g_Doors[slot][dOutInterior], g_Doors[slot][dOutWorld], g_Doors[slot][dHasExit] ? 1 : 0,
         g_Doors[slot][dInX], g_Doors[slot][dInY], g_Doors[slot][dInZ], g_Doors[slot][dInA],
-        g_Doors[slot][dInInterior], g_Doors[slot][dInWorld], g_Doors[slot][dLocked] ? 1 : 0, g_Doors[slot][dIcon],
+        g_Doors[slot][dInInterior], g_Doors[slot][dInWorld], g_Doors[slot][dLocked] ? 1 : 0, g_Doors[slot][dIcon], g_Doors[slot][dModel],
         g_Doors[slot][dDbId]);
     mysql_tquery(g_SQL, query);
 }

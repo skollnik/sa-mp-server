@@ -19,7 +19,7 @@
 | Bonus na platu (payday) | +5% | +10% | +15% |
 | Dodatni respect poen na payday | – | – | +1 |
 | Dodatna mesta u inventaru | +2 | +4 | +6 |
-| Biranje broja telefona (`/promenibroj`) | – | ✅ | ✅ |
+| Besplatan izbor broja telefona (SIM kartica u 24/7, „Promeni broj“ u `/telefon`; ostali plaćaju $2.000) | – | ✅ | ✅ |
 | Kraća pauza za `/report`, `/ask` i `/n` | 25% | 50% | 50% |
 | Rezervisano mesto kad je server pun (poslednja 2 mesta) | ✅ | ✅ | ✅ |
 | `/vfix`: popravka vozila koje voziš (pauza 10 min) | – | ✅ | ✅ |
@@ -66,7 +66,7 @@
 | Payday bonus | +5% | +10% | +15% |
 | Extra respect point on payday | – | – | +1 |
 | Extra inventory slots | +2 | +4 | +6 |
-| Choose your phone number (`/promenibroj`) | – | ✅ | ✅ |
+| Free choice of phone number (SIM card at a 24/7, "Promeni broj" in `/telefon`; others pay $2,000) | – | ✅ | ✅ |
 | Shorter cooldown for `/report`, `/ask` and `/n` | 25% | 50% | 50% |
 | Reserved slot when the server is full (last 2 slots) | ✅ | ✅ | ✅ |
 | `/vfix`: repair the vehicle you drive (10 min cooldown) | – | ✅ | ✅ |

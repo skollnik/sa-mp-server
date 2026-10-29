@@ -26,12 +26,16 @@
 ### Svakodnevne stvari
 | Stvar | Cena |
 |-------|------|
-| Voda / sok / pivo | $2 / $3 / $5 |
-| Hamburger / pica | $10 / $15 |
+| Voda / sok / pivo (traka gladi +5) | $2 / $3 / $5 |
+| Hamburger / pica (traka gladi +30 / +40) | $10 / $15 |
 | Cigarete (kutija, 20 komada) / upaljač | $12 / $3 |
 | Gorivo | $3 po litru (pun rezervoar ~$150–200) |
 | Kanister (prazan) | $50 |
-| Telefon (SMS $1, minut poziva $2) | $500 |
+| Telefon (aparat) | $500 |
+| SIM kartica (nasumičan broj) | $50 |
+| Izbor svog broja (besplatno za Silver i Gold VIP i admine) | +$2.000 |
+| Kredit: SMS / minut poziva / pretraga javnog imenika | $1 / $2 / $2 |
+| Dopuna kredita (24/7 gotovinom ili sa računa preko telefona; najviše $500 na kartici) | $10, $20, $50, $100 |
 | Prva pomoć (leči do 75 HP) | $150 |
 | Lična karta (opština) | $50 |
 | Radio | $700 |
@@ -105,7 +109,8 @@
 
 ### Nivoi
 - 1 respect poen se dobija na svaki payday (svaki sat igre).
-- Za prelaz sa nivoa N na N+1 potrebno je **N × 4** poena: 1→2 za 4 h, 2→3 za 8 h, 3→4 za 12 h, 4→5 za 16 h (ukupno 40 h do nivoa 5).
+- Za prelaz sa nivoa N na N+1 potrebno je **(N+1) × 4** poena, kao na većini servera: 1→2 za 8 h, 2→3 za 12 h, 3→4 za 16 h, 4→5 za 20 h (ukupno 56 h do nivoa 5).
+- Happy hour (`/happyhour [broj plata]`, menadžment): naredne plate (1–12) donose duplu platu i dupli respect.
 
 | Nivo | Otključava |
 |------|------------|
@@ -147,12 +152,16 @@
 ### Everyday items
 | Item | Price |
 |------|-------|
-| Water / juice / beer | $2 / $3 / $5 |
-| Burger / pizza | $10 / $15 |
+| Water / juice / beer (hunger bar +5) | $2 / $3 / $5 |
+| Burger / pizza (hunger bar +30 / +40) | $10 / $15 |
 | Cigarettes (pack of 20) / lighter | $12 / $3 |
 | Fuel | $3 per liter (full tank ~$150–200) |
 | Jerry can (empty) | $50 |
-| Phone (SMS $1, $2 per call minute) | $500 |
+| Phone (device) | $500 |
+| SIM card (random number) | $50 |
+| Picking your own number (free for Silver and Gold VIP and admins) | +$2,000 |
+| Credit: SMS / call minute / public directory search | $1 / $2 / $2 |
+| Credit top-up (24/7 in cash or from the bank account through the phone; at most $500 on the card) | $10, $20, $50, $100 |
 | First aid kit (heals up to 75 HP) | $150 |
 | ID card (city hall) | $50 |
 | Radio | $700 |
@@ -226,7 +235,8 @@
 
 ### Levels
 - 1 respect point is earned on every payday (every hour played).
-- Going from level N to N+1 takes **N × 4** points: 1→2 in 4 h, 2→3 in 8 h, 3→4 in 12 h, 4→5 in 16 h (40 h total to reach level 5).
+- Going from level N to N+1 takes **(N+1) × 4** points, as on most servers: 1→2 in 8 h, 2→3 in 12 h, 3→4 in 16 h, 4→5 in 20 h (56 h total to reach level 5).
+- Happy hour (`/happyhour [paydays]`, management): the next paydays (1–12) give double wage and double respect.
 
 | Level | Unlocks |
 |-------|---------|

@@ -1,6 +1,20 @@
 new Text:g_HudClock = INVALID_TEXT_DRAW;
 new Text:g_HudDate = INVALID_TEXT_DRAW;
 new PlayerText:g_HudZone[MAX_PLAYERS] = { INVALID_PLAYER_TEXT_DRAW, ... };
+// The hunger bar sits under the money, the same width as the GTA health bar above it.
+#define HUD_HUNGER_X            (546.5)
+#define HUD_HUNGER_Y            (101.0)
+#define HUD_HUNGER_WIDTH        (60.0)
+#define HUD_HUNGER_COLOR        (0xE0892AFF)
+#define HUD_HUNGER_LOW_COLOR    (0xB4191DFF)
+
+enum E_HUD_HUNGER
+{
+    PlayerText:hhLabel,
+    PlayerText:hhBack,
+    PlayerText:hhFill
+}
+new PlayerText:g_HudHunger[MAX_PLAYERS][E_HUD_HUNGER];
 new g_HudZoneIndex[MAX_PLAYERS];
 new bool:g_HudHidden[MAX_PLAYERS];
 new g_HudTimer;
@@ -37,6 +51,10 @@ stock Hud_OnPlayerConnect(playerid)
     g_HudZone[playerid] = INVALID_PLAYER_TEXT_DRAW;
     g_HudZoneIndex[playerid] = -1;
     g_HudHidden[playerid] = false;
+    for (new E_HUD_HUNGER:part; part < E_HUD_HUNGER; part++)
+    {
+        g_HudHunger[playerid][part] = INVALID_PLAYER_TEXT_DRAW;
+    }
 }
 
 stock Hud_UpdateClock()
@@ -48,7 +66,56 @@ stock Hud_UpdateClock()
     TextDrawSetString(g_HudDate, "%02d.%02d.%d.", day, month, year);
 }
 
+static stock PlayerText:Hud_CreateBox(playerid, Float:x, Float:y, Float:width, Float:height, colour)
+{
+    new PlayerText:td = CreatePlayerTextDraw(playerid, x, y, "_");
+    PlayerTextDrawLetterSize(playerid, td, 0.0, height);
+    PlayerTextDrawTextSize(playerid, td, x + width, 0.0);
+    PlayerTextDrawUseBox(playerid, td, true);
+    PlayerTextDrawBoxColour(playerid, td, colour);
+    return td;
+}
+
+static stock Hud_ShowHunger(playerid)
+{
+    if (g_HudHunger[playerid][hhBack] == INVALID_PLAYER_TEXT_DRAW)
+    {
+        new PlayerText:label = CreatePlayerTextDraw(playerid, HUD_HUNGER_X - 3.0, HUD_HUNGER_Y - 2.5, "Glad");
+        PlayerTextDrawFont(playerid, label, TEXT_DRAW_FONT_1);
+        PlayerTextDrawLetterSize(playerid, label, 0.2, 0.9);
+        PlayerTextDrawAlignment(playerid, label, TEXT_DRAW_ALIGN_RIGHT);
+        PlayerTextDrawSetOutline(playerid, label, 1);
+        g_HudHunger[playerid][hhLabel] = label;
+        g_HudHunger[playerid][hhBack] = Hud_CreateBox(playerid, HUD_HUNGER_X, HUD_HUNGER_Y, HUD_HUNGER_WIDTH, 0.55, 0x000000AA);
+        g_HudHunger[playerid][hhFill] = Hud_CreateBox(playerid, HUD_HUNGER_X + 1.5, HUD_HUNGER_Y + 1.5, HUD_HUNGER_WIDTH - 3.0, 0.25, HUD_HUNGER_COLOR);
+    }
+    PlayerTextDrawShow(playerid, g_HudHunger[playerid][hhLabel]);
+    PlayerTextDrawShow(playerid, g_HudHunger[playerid][hhBack]);
+    Hud_UpdateHunger(playerid);
+}
+
+// A box only takes a new size or colour when it is shown again.
+stock Hud_UpdateHunger(playerid)
+{
+    new PlayerText:fill = g_HudHunger[playerid][hhFill];
+    if (fill == INVALID_PLAYER_TEXT_DRAW)
+    {
+        return;
+    }
+
+    new hunger = g_Player[playerid][pHunger];
+    if (hunger == 0)
+    {
+        PlayerTextDrawHide(playerid, fill);
+        return;
+    }
+    PlayerTextDrawTextSize(playerid, fill, HUD_HUNGER_X + 1.5 + (HUD_HUNGER_WIDTH - 3.0) * float(hunger) / float(HUNGER_MAX), 0.0);
+    PlayerTextDrawBoxColour(playerid, fill, hunger <= HUNGER_WARNING ? HUD_HUNGER_LOW_COLOR : HUD_HUNGER_COLOR);
+    PlayerTextDrawShow(playerid, fill);
+}
+
 stock Hud_Show(playerid)
+
 {
     if (g_HudHidden[playerid])
     {
@@ -68,6 +135,7 @@ stock Hud_Show(playerid)
     }
     g_HudZoneIndex[playerid] = -1;
     PlayerTextDrawShow(playerid, g_HudZone[playerid]);
+    Hud_ShowHunger(playerid);
 }
 
 stock Hud_Hide(playerid)
@@ -78,6 +146,14 @@ stock Hud_Hide(playerid)
     {
         PlayerTextDrawDestroy(playerid, g_HudZone[playerid]);
         g_HudZone[playerid] = INVALID_PLAYER_TEXT_DRAW;
+    }
+    for (new E_HUD_HUNGER:part; part < E_HUD_HUNGER; part++)
+    {
+        if (g_HudHunger[playerid][part] != INVALID_PLAYER_TEXT_DRAW)
+        {
+            PlayerTextDrawDestroy(playerid, g_HudHunger[playerid][part]);
+            g_HudHunger[playerid][part] = INVALID_PLAYER_TEXT_DRAW;
+        }
     }
 }
 
@@ -145,7 +221,7 @@ cmd:hud(playerid, params[])
     if (g_HudHidden[playerid])
     {
         Hud_Hide(playerid);
-        Msg_Info(playerid, "HUD (sat, datum i kvart) je sakriven. Ponovo ga ukljucite sa /hud.");
+        Msg_Info(playerid, "HUD (sat, datum, kvart i glad) je sakriven. Ponovo ga ukljucite sa /hud.");
     }
     else
     {

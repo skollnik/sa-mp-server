@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 2 testirana, ispravke posle testa urađene; čekaju se odluke o gladi, telefonu sa SIM karticom, strelicama, nivou i happy hour-u (ažurirano 2026-10-29)
+**Trenutni status:** Faza 2 sa dopunama (glad, telefon sa SIM karticom i kreditom, strelice, nivo, happy hour) napisana, čeka test vlasnika u igri (ažurirano 2026-10-29)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -43,8 +43,9 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] INV-1, INV-2: inventar sa slotovima, predmeti, prodavnice 24/7, `/vskin` sa slikama
 - [x] PHONE-1, PHONE-2: telefon (pozivi, SMS, kontakti, 911 adminima)
 - [x] Ispravke posle testa vlasnika (HUD, lična karta, ID-jevi, bankomat, cigareta, spam, spec)
-- [ ] HEALTH-5: glad sa trakom (vlasnik želi odmah, čeka odobrenje predloga)
-- [ ] PHONE-1 (nadogradnja): telefon i SIM kartica odvojeno, kredit i dopuna, meni `/telefon`, javni imenik (čeka odobrenje predloga)
+- [x] HEALTH-5: glad sa trakom
+- [x] PHONE-1 (nadogradnja): telefon i SIM kartica odvojeno, kredit i dopuna, meni `/telefon`, javni imenik
+- [x] Strelice na vratima, nivo po uobičajenoj formuli, happy hour po broju plata
 
 ### Faza 3: Vozila i dozvole
 - [ ] VEH-1 – VEH-9: lična vozila, ključevi, gorivo, parkiranje, gepek, rent
@@ -82,7 +83,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [ ] JOB-4: ostali civilni poslovi
 - [ ] AC-2: napredni anti-cheat
 - [ ] WORLD-5, WORLD-6: kapije, mapiranja
-- [ ] CHAT-6, HEALTH-5 (ako ih odaberemo)
+- [ ] CHAT-6 (ako ga odaberemo); HEALTH-5 je urađen u Fazi 2
 - [ ] LOG-1: kompletiranje logova
 
 ### Faza 8: Kasnije
@@ -101,7 +102,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** Phase 2 tested, post-test fixes done; waiting for decisions on hunger, the SIM card phone, arrows, levels and happy hour (updated 2026-10-29)
+**Current status:** Phase 2 with additions (hunger, SIM card phone with credit, arrows, levels, happy hour) written, waiting for the owner to test it in game (updated 2026-10-29)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -142,8 +143,9 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] INV-1, INV-2: slot inventory, items, 24/7 shops, `/vskin` with pictures
 - [x] PHONE-1, PHONE-2: phone (calls, SMS, contacts, 911 to admins)
 - [x] Fixes after the owner's test (HUD, ID card, IDs, ATM, cigarette, spam, spectating)
-- [ ] HEALTH-5: hunger with a bar (the owner wants it now, waiting for the proposal to be approved)
-- [ ] PHONE-1 (upgrade): phone and SIM card bought separately, credit and top-up, a `/telefon` menu, a public directory (waiting for the proposal to be approved)
+- [x] HEALTH-5: hunger with a bar
+- [x] PHONE-1 (upgrade): phone and SIM card bought separately, credit and top-up, a `/telefon` menu, a public directory
+- [x] Door arrows, levels by the usual formula, happy hour counted in paydays
 
 ### Phase 3: Vehicles and licenses
 - [ ] VEH-1 – VEH-9: personal vehicles, keys, fuel, parking, trunk, rentals
@@ -181,7 +183,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [ ] JOB-4: other civilian jobs
 - [ ] AC-2: advanced anti-cheat
 - [ ] WORLD-5, WORLD-6: gates, mappings
-- [ ] CHAT-6, HEALTH-5 (if chosen)
+- [ ] CHAT-6 (if chosen); HEALTH-5 was done in Phase 2
 - [ ] LOG-1: complete logging
 
 ### Phase 8: Later

@@ -63,6 +63,7 @@ cmd:napraviulaz(playerid, params[])
     g_Doors[slot][dHasExit] = false;
     g_Doors[slot][dLocked] = false;
     g_Doors[slot][dIcon] = 0;
+    g_Doors[slot][dModel] = DOOR_PICKUP_MODEL;
     strcopy(g_Doors[slot][dName], params, DOOR_NAME_LENGTH);
     Door_SetOutside(slot, playerid);
 
@@ -90,7 +91,7 @@ cmd:izmeniulaz(playerid, params[])
     new dbid, option[16], value[DOOR_NAME_LENGTH];
     if (sscanf(params, "ds[16]S()[48]", dbid, option, value))
     {
-        Msg_Usage(playerid, "/izmeniulaz [id] [ime / ulaz / izlaz / ikona / zakljucaj / svet] [vrednost]");
+        Msg_Usage(playerid, "/izmeniulaz [id] [ime / ulaz / izlaz / ikona / strelica / zakljucaj / svet] [vrednost]");
         Msg_Info(playerid, "ulaz i izlaz se postavljaju na mesto gde stojite; ikona 0-63 (0 bez ikone); svet deli enterijer sa drugim ulazom.");
         return 1;
     }
@@ -137,6 +138,13 @@ cmd:izmeniulaz(playerid, params[])
         g_Doors[slot][dIcon] = number;
         Msg_Admin(playerid, "Ikona ulaza %d na mapi: %d.", dbid, number);
     }
+    else if (!strcmp(option, "strelica", true))
+    {
+        // Saved when a picture is clicked (Door_OnArrowSelected).
+        g_DoorArrowEdit[playerid] = dbid;
+        Preview_Show(playerid, PREVIEW_DOOR_ARROW, PREVIEW_KIND_OBJECT, "Strelica za ulaz i izlaz", g_DoorArrowModels, sizeof(g_DoorArrowModels));
+        return 1;
+    }
     else if (!strcmp(option, "zakljucaj", true))
     {
         g_Doors[slot][dLocked] = !g_Doors[slot][dLocked];
@@ -154,7 +162,7 @@ cmd:izmeniulaz(playerid, params[])
     }
     else
     {
-        Msg_Error(playerid, "Nepoznata opcija. Opcije: ime, ulaz, izlaz, ikona, zakljucaj, svet.");
+        Msg_Error(playerid, "Nepoznata opcija. Opcije: ime, ulaz, izlaz, ikona, strelica, zakljucaj, svet.");
         return 1;
     }
 
@@ -237,4 +245,28 @@ cmd:gotoulaz(playerid, params[])
     Staff_TeleportTo(playerid, g_Doors[slot][dOutX], g_Doors[slot][dOutY], g_Doors[slot][dOutZ], g_Doors[slot][dOutInterior], g_Doors[slot][dOutWorld]);
     Msg_Admin(playerid, "Teleportovani ste do ulaza %d (%s).", g_Doors[slot][dDbId], g_Doors[slot][dName]);
     return 1;
+}
+
+stock Door_OnArrowSelected(playerid, index)
+{
+    // Rank and door are checked again: the menu may be answered after a demotion or after the door was deleted.
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD) || index < 0 || index >= sizeof(g_DoorArrowModels))
+    {
+        return;
+    }
+    new slot = Door_FindSlotByDbId(g_DoorArrowEdit[playerid]);
+    if (slot == -1)
+    {
+        Msg_Error(playerid, "Taj ulaz vise ne postoji.");
+        return;
+    }
+
+    g_Doors[slot][dModel] = g_DoorArrowModels[index];
+    Door_Save(slot);
+    Door_Refresh(slot);
+    Msg_Admin(playerid, "Ulaz %d sada ima strelicu (model %d) na ulazu i izlazu.", g_Doors[slot][dDbId], g_Doors[slot][dModel]);
+
+    new details[64];
+    format(details, sizeof(details), "ulaz %d: strelica %d", g_Doors[slot][dDbId], g_Doors[slot][dModel]);
+    Staff_Log(playerid, "door_edit", INVALID_PLAYER_ID, details);
 }

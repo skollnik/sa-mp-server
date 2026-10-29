@@ -16,8 +16,10 @@ cmd:pomoc(playerid, params[])
         "/stats - statistika    /daj - novac igracu pored vas    /licna - licna karta\n" \
         "/banka, /bankomat, /opstina, /kupi - na salterima i u prodavnicama (oznaka iznad mesta)\n\n" \
         C_SERVER "Inventar i telefon\n" \
-        C_WHITE "/inv - inventar    /podigni - podizanje bacenog predmeta\n" \
-        "/pozovi /javi /prekini /sms /kontakti /telefon (911 - hitne sluzbe)\n\n" \
+        C_WHITE "/inv - inventar    /podigni - podizanje bacenog predmeta    F - baca cigaretu ili flasu iz ruke\n" \
+        "Traka gladi je ispod novca: jedite u prodavnici 24/7, na nuli gubite HP\n" \
+        "/telefon - meni telefona (broj, kredit, imenik)    /pozovi /javi /prekini /sms /kontakti (911 - hitne sluzbe)\n" \
+        "SIM kartica i dopuna kredita se kupuju u prodavnici 24/7 (/kupi)\n\n" \
         C_SERVER "Pomoc i podrska\n" \
         C_WHITE "/n - newbie chat (pitanja novih igraca)    /ask - pitanje helperima\n" \
         "/report - prijava igraca adminima    /admins, /helpers - tim online\n\n" \

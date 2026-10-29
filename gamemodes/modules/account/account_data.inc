@@ -39,6 +39,9 @@ enum E_PLAYER_DATA
     pPaydayMinutes,
     bool:pHasIdCard,
     pPhoneNumber,
+    pPhoneCredit,
+    bool:pPhoneListed,
+    pHunger,
 
     // Runtime only, never saved
     pLastLoginText[24],

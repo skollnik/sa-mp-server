@@ -70,6 +70,11 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 62 | 2026-10-29 | Ista poruka je spam samo ako se ponovi u roku od 10 s; `/pozovi` nije chat komanda (911 tekst ipak prolazi proveru za mute i spam) | Vlasnik je dobio mute za tri obična poziva |
 | 63 | 2026-10-29 | F baca cigaretu ili flašu iz ruke, pre vrata; lična karta se pokazuje u dijalogu | Zahtev vlasnika |
 | 64 | 2026-10-29 | Admin koji posmatra prati enterijer i svet igrača i učitava objekte oko njega; teleport tokom posmatranja prekida posmatranje | Custom enterijeri su objekti; bez toga je admin video prazninu |
+| 65 | 2026-10-29 | Glad: traka 0–100 ispod novca, pada 1 na 3 minuta igre (ne dok je igrač AFK, u zatvoru ili na admin dužnosti); na 0 se gubi 2 HP na minut, ali ne ispod 20 HP; hrana +30/+40, piće +5; iznad 90 se ne jede; posle smrti bar 50 | Odobren predlog vlasnika; dok nema bolnice niko ne umire od gladi |
+| 66 | 2026-10-29 | Telefon i SIM kartica se kupuju odvojeno; broj i kredit su na nalogu, pa davanje telefona ne daje broj; nova SIM kartica menja broj, kredit ostaje | Odobren predlog vlasnika |
+| 67 | 2026-10-29 | Izbor broja: Silver i Gold VIP i admini besplatno, ostali $2.000; SMS, pozivi i javni imenik se plaćaju kreditom (dopuna u 24/7 ili sa računa, najviše $500); javni imenik prikazuje samo one koji su se upisali; broj se gasi posle 180 dana neaktivnosti | Odobren predlog vlasnika; privatnost i odliv novca iz igre |
+| 68 | 2026-10-29 | Respect za sledeći nivo: (sledeći nivo) × 4; happy hour se zadaje u broju plata (1–12) | Uobičajena formula; happy hour u minutima je mogao da ne pogodi nijednu platu |
+| 69 | 2026-10-29 | Strelica na vratima se bira iz menija sa slikama (14 modela) i važi za ulaz i izlaz; otvoreno piće se ne vraća u inventar | Odobren predlog vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -161,6 +166,11 @@ This file records every important decision so it does not get re-discussed. Newe
 | 62 | 2026-10-29 | The same message is spam only if repeated within 10 s; `/pozovi` is not a chat command (911 text still goes through the mute and spam check) | The owner got muted for three ordinary calls |
 | 63 | 2026-10-29 | F throws away a cigarette or bottle in hand, before doors; the ID card is shown in a dialog | Owner's request |
 | 64 | 2026-10-29 | A spectating admin follows the player's interior and world and loads objects around them; teleporting while spectating ends it | Custom interiors are objects; without this the admin saw nothing |
+| 65 | 2026-10-29 | Hunger: a 0–100 bar under the money, drops 1 per 3 minutes played (not while AFK, jailed or on admin duty); at 0 the player loses 2 HP a minute, but not below 20 HP; food +30/+40, drinks +5; no eating above 90; at least 50 after death | Owner approved the proposal; until the hospital exists nobody dies of hunger |
+| 66 | 2026-10-29 | The phone and the SIM card are bought separately; number and credit belong to the account, so giving the phone away does not give the number; a new SIM card changes the number, the credit stays | Owner approved the proposal |
+| 67 | 2026-10-29 | Picking a number: free for Silver and Gold VIP and admins, $2,000 for others; SMS, calls and the public directory are paid with credit (top-up at a 24/7 or from the bank, at most $500); the directory only shows those who listed themselves; a number is freed after 180 days of inactivity | Owner approved the proposal; privacy and money leaving the game |
+| 68 | 2026-10-29 | Respect for the next level: (next level) × 4; happy hour is set in paydays (1–12) | The usual formula; happy hour in minutes could miss every payday |
+| 69 | 2026-10-29 | A door's arrow is picked from a picture menu (14 models) and applies to both sides; an opened drink does not go back to the inventory | Owner approved the proposal |
 
 ### Code architecture (proposal)
 ```

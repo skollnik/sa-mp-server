@@ -1,6 +1,7 @@
 new g_PaydayTimer;
 new g_LastPaydayHour;
-new g_HappyHourUntil;
+// How many of the coming paydays are doubled.
+new g_HappyHourPaydays;
 
 stock Payday_Init()
 {
@@ -32,12 +33,12 @@ stock bool:Payday_IsAfk(playerid)
 
 stock bool:Payday_IsHappyHour()
 {
-    return g_HappyHourUntil > gettime();
+    return g_HappyHourPaydays > 0;
 }
 
 stock Payday_RespectNeeded(playerid)
 {
-    return g_Player[playerid][pLevel] * RESPECT_PER_LEVEL;
+    return (g_Player[playerid][pLevel] + 1) * RESPECT_PER_LEVEL;
 }
 
 stock Payday_CheckLevelUp(playerid)
@@ -96,6 +97,7 @@ public Payday_MinuteTick()
                 Payday_Give(i);
             }
         }
+        Payday_CountHappyHour();
     }
     return 1;
 }
@@ -131,6 +133,30 @@ stock Payday_Give(playerid)
     Account_Save(playerid);
 }
 
+stock Payday_AnnounceHappyHour()
+{
+    new message[128];
+    if (g_HappyHourPaydays > 0)
+    {
+        format(message, sizeof(message), "[HAPPY HOUR] Sledecih %d payday-a donosi duplu platu i respect!", g_HappyHourPaydays);
+    }
+    else
+    {
+        strcopy(message, "[HAPPY HOUR] Happy hour je zavrsen.");
+    }
+    Chat_SendToAll(COLOR_YELLOW, message);
+}
+
+// Called once per full-hour payday, after everyone got paid.
+stock Payday_CountHappyHour()
+{
+    if (g_HappyHourPaydays > 0)
+    {
+        g_HappyHourPaydays--;
+        Payday_AnnounceHappyHour();
+    }
+}
+
 cmd:happyhour(playerid, params[])
 {
     if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_MANAGEMENT))
@@ -138,26 +164,18 @@ cmd:happyhour(playerid, params[])
         return 1;
     }
 
-    new minutes;
-    if (sscanf(params, "d", minutes) || minutes < 0 || minutes > 720)
+    new paydays;
+    if (sscanf(params, "d", paydays) || paydays < 0 || paydays > HAPPY_HOUR_MAX_PAYDAYS)
     {
-        Msg_Usage(playerid, "/happyhour [minuta 1-720, 0 prekida] (dupla plata i respect na payday)");
+        Msg_Usage(playerid, "/happyhour [broj plata 1-%d, 0 prekida] (naredne plate donose duplu platu i respect)", HAPPY_HOUR_MAX_PAYDAYS);
         return 1;
     }
 
-    new message[128], details[16];
-    g_HappyHourUntil = minutes > 0 ? gettime() + minutes * 60 : 0;
-    if (minutes > 0)
-    {
-        format(message, sizeof(message), "[HAPPY HOUR] Sledecih %d minuta payday donosi duplu platu i respect!", minutes);
-    }
-    else
-    {
-        strcopy(message, "[HAPPY HOUR] Happy hour je zavrsen.");
-    }
-    Chat_SendToAll(COLOR_YELLOW, message);
+    g_HappyHourPaydays = paydays;
+    Payday_AnnounceHappyHour();
 
-    format(details, sizeof(details), "%d min", minutes);
+    new details[16];
+    format(details, sizeof(details), "%d plata", paydays);
     Staff_Log(playerid, "happyhour", INVALID_PLAYER_ID, details);
     return 1;
 }

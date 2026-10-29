@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 2 | Odluka vlasnika o predlozima iz „Čeka odluku“ (glad, telefon sa SIM karticom i kreditom, strelice, nivo, happy hour), pa njihova izrada; zatim ACC-9: podešavanja koja se pamte (npr. `/hud`) |
+| 2 | Test gladi, telefona sa SIM karticom, strelica, nivoa i happy hour-a u igri (vlasnik); zatim ACC-9: podešavanja koja se pamte (npr. `/hud`) |
 | 3 | Lična vozila (ključevi, gorivo, parkiranje, gepek), auto pijaca kao admin event, auto škola i dozvole, mehaničar |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
@@ -53,6 +53,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Stavka |
 |--------|
 | Spawn posle smrti u bolnici; admin komanda za podizanje ranjenog igrača |
+| Glad na nuli: kad dođu bolnica i ranjavanje, igrač može da padne ranjen umesto da HP stane na 20 |
 | Poziv 911 ide policiji i hitnoj (sada ide adminima) |
 | Oružje se daje samo preko `AC_GivePlayerWeapon` |
 | Vrata ćelija u zatvorskom enterijeru da se otvaraju i zatvaraju (sada su nepomična i zatvorena) |
@@ -173,15 +174,8 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Čeka odluku vlasnika
 | Stavka |
 |--------|
-| Glad (HEALTH-5): traka gladi, pada s vremenom, na nuli skida HP (predlog poslat 29.10.2026.) |
-| Telefon sa SIM karticom: telefon i SIM se kupuju odvojeno, broj ostaje na nalogu, biranje broja uz proveru, kredit sa dopunom u 24/7 ili sa računa, meni `/telefon`, javni imenik, gašenje broja posle 6 meseci neaktivnosti (predlog poslat 29.10.2026.) |
-| Izbor strelice (modela) na ulazu i izlazu vrata (predlog poslat 29.10.2026.) |
-| Nivo: respect potreban za sledeći nivo po uobičajenoj formuli (sledeći nivo × 4) (predlog poslat 29.10.2026.) |
-| Happy hour po broju plata umesto po minutima (predlog poslat 29.10.2026.) |
-| Piće: da li se otvoreno piće vraća u inventar ako igrač nije pio (sada se troši čim se otvori, a F baca flašu) |
 | Da li vlasnik automatski ima VIP pogodnosti (sada ih nema, `/vc` ima zbog moderacije) |
 | Prodaja vozila državi, taksi kao frakcija ili posao (stara pitanja) |
-
 
 ### Može bilo kada
 | Stavka |
@@ -197,6 +191,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | VIP: `/setvip` za igrača koji nije online; prelazak na viši nivo bez gubitka preostalih dana |
 | VIP: besplatna promena imena jednom mesečno (Gold) |
 | Email i povratak lozinke (uz web panel) |
+| Happy hour da se pamti posle restarta servera (sada se gubi) |
 
 ### Urađeno
 | Datum | Stavka |
@@ -239,6 +234,9 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 29.10.2026. | Inventar (10 mesta + VIP), predmeti, bacanje i podizanje, prodavnice 24/7 |
 | 29.10.2026. | Telefon: broj, pozivi, SMS, kontakti, 911, biranje broja za Silver i Gold VIP |
 | 29.10.2026. | Ispravke posle testa Faze 2: datum na HUD-u iznad sata (išao je preko armora), lična karta u dijalogu, ID-jevi ulaza, mesta i GPS-a se ponovo koriste, brisanje ulaza čisti njegov enterijer, bankomat okrenut ka igraču, F baca cigaretu i flašu, ponovljena poruka je spam samo u 10 s, `/pozovi` više ne daje mute, kontakt se prikazuje kao „Ime (broj)“, spec prati enterijer i svet, učitava objekte i ponovo kači kameru posle teleporta igrača, teleport tokom speca ga prekida, jasnija poruka za VIP komande |
+| 29.10.2026. | Glad (HEALTH-5): traka ispod novca, hrana i piće je pune, na nuli se gubi HP do 20, `/setglad` |
+| 29.10.2026. | Telefon sa SIM karticom: telefon i SIM odvojeno, izbor broja, kredit i dopuna (24/7 i sa računa), meni `/telefon`, javni imenik, 30 kontakata, SMS iz kontakata, gašenje broja posle 6 meseci; `/promenibroj` ukinut |
+| 29.10.2026. | Strelice na vratima (meni sa slikama), nivo po formuli (sledeći nivo × 4), happy hour po broju plata; otvoreno piće se ne vraća u inventar |
 
 ---
 
@@ -249,7 +247,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 2 | Owner decides on the proposals under "Waiting for the owner's decision" (hunger, phone with SIM card and credit, arrows, levels, happy hour), then they are built; then ACC-9: settings that are remembered (e.g. `/hud`) |
+| 2 | Owner tests hunger, the SIM card phone, arrows, levels and happy hour in game; then ACC-9: settings that are remembered (e.g. `/hud`) |
 | 3 | Personal vehicles (keys, fuel, parking, trunk), car market as an admin event, driving school and licenses, mechanic |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
@@ -295,6 +293,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Item |
 |------|
 | Respawn at the hospital after death; admin command to revive a wounded player |
+| Hunger at zero: once the hospital and wounding exist, the player can go down wounded instead of HP stopping at 20 |
 | 911 calls go to police and EMS (now they go to admins) |
 | Weapons are only given through `AC_GivePlayerWeapon` |
 | Cell doors in the prison interior open and close (they are now fixed and closed) |
@@ -415,15 +414,8 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 ### Waiting for the owner's decision
 | Item |
 |------|
-| Hunger (HEALTH-5): a hunger bar that drops over time and takes HP at zero (proposal sent 2026-10-29) |
-| Phone with a SIM card: phone and SIM bought separately, the number stays on the account, picking a number with a check, credit with top-up at a 24/7 or from the bank account, a `/telefon` menu, a public directory, the number is freed after 6 months of inactivity (proposal sent 2026-10-29) |
-| Choice of arrow (model) at a door's entrance and exit (proposal sent 2026-10-29) |
-| Levels: respect needed for the next level by the usual formula (next level × 4) (proposal sent 2026-10-29) |
-| Happy hour counted in paydays instead of minutes (proposal sent 2026-10-29) |
-| Drinks: whether an opened drink goes back to the inventory if the player did not drink (now it is used up when opened, and F throws the bottle away) |
 | Whether the owner automatically gets VIP perks (now they don't; `/vc` works for moderation) |
 | Selling vehicles to the state, taxi as a faction or a job (older questions) |
-
 
 ### Any time
 | Item |
@@ -439,6 +431,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | VIP: `/setvip` for an offline player; upgrading without losing remaining days |
 | VIP: free name change once a month (Gold) |
 | Email and password recovery (with the web panel) |
+| Happy hour kept across a server restart (now it is lost) |
 
 ### Done
 | Date | Item |
@@ -481,3 +474,6 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-29 | Inventory (10 slots + VIP), items, dropping and picking up, 24/7 shops |
 | 2026-10-29 | Phone: number, calls, SMS, contacts, 911, number choice for Silver and Gold VIP |
 | 2026-10-29 | Fixes after the Phase 2 test: HUD date above the clock (it covered the armour bar), ID card in a dialog, door, point and GPS IDs are reused, deleting a door clears its interior, ATM faces the player, F throws away a cigarette or bottle, a repeated message is spam only within 10 s, `/pozovi` no longer mutes, a contact shows as "Name (number)", spectating follows interior and world, loads objects and re-attaches the camera after the player teleports, teleporting while spectating ends it, a clearer message for VIP commands |
+| 2026-10-29 | Hunger (HEALTH-5): a bar under the money, food and drinks fill it, at zero HP drops to 20, `/setglad` |
+| 2026-10-29 | SIM card phone: phone and SIM bought separately, picking a number, credit and top-up (24/7 and from the bank), a `/telefon` menu, public directory, 30 contacts, SMS from contacts, number freed after 6 months; `/promenibroj` removed |
+| 2026-10-29 | Door arrows (picture menu), levels by formula (next level × 4), happy hour counted in paydays; an opened drink does not go back to the inventory |

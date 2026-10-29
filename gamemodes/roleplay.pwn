@@ -30,6 +30,7 @@
 #include "modules/point/point_data.inc"
 #include "modules/money/money_data.inc"
 #include "modules/inventory/inventory_data.inc"
+#include "modules/health/hunger_data.inc"
 #include "modules/world/checkpoint.inc"
 #include "modules/world/zones.inc"
 #include "modules/world/gps.inc"
@@ -68,6 +69,7 @@
 
 #include "modules/world/time.inc"
 #include "modules/world/hud.inc"
+#include "modules/health/hunger.inc"
 
 #include "modules/cityhall/cityhall.inc"
 
@@ -109,6 +111,7 @@ public OnGameModeInit()
     Gps_Init();
     Time_Init();
     Hud_Init();
+    Hunger_Init();
     Inv_Init();
     Phone_Init();
     Maps_Init();
@@ -121,6 +124,7 @@ public OnGameModeExit()
 {
     Phone_Exit();
     Inv_Exit();
+    Hunger_Exit();
     Hud_Exit();
     Time_Exit();
     Payday_Exit();
@@ -142,6 +146,7 @@ public OnPlayerConnect(playerid)
     Checkpoint_OnPlayerConnect(playerid);
     Gps_OnPlayerConnect(playerid);
     Hud_OnPlayerConnect(playerid);
+    Hunger_OnPlayerConnect(playerid);
     Inv_OnPlayerConnect(playerid);
     Phone_OnPlayerConnect(playerid);
     Staff_OnPlayerConnect(playerid);
@@ -203,6 +208,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 {
     AC_OnPlayerDeath(playerid);
     Phone_OnPlayerDeath(playerid);
+    Hunger_OnPlayerDeath(playerid);
     return 1;
 }
 

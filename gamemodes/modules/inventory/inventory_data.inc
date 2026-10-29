@@ -7,7 +7,6 @@
 #define DROP_LIFETIME_S         (15 * 60)
 
 // Food and first aid only restore part of the HP; full health is the hospital's and the medics' job.
-#define FOOD_FULL_MINUTES       (10)
 #define FIRST_AID_HP            (30.0)
 #define FIRST_AID_MAX_HP        (75.0)
 #define FIRST_AID_COMBAT_LOCK_S (60)
@@ -39,23 +38,25 @@ enum E_ITEM_INFO
     itMaxStack,
     itPrice,
     itShopAmount,
-    itModel
+    itModel,
+    itHunger
 }
 
 // itPrice is for one shop purchase of itShopAmount pieces; 0 means it is not sold in 24/7 shops.
+// itHunger is how much one piece fills the hunger bar.
 new const g_ItemInfo[E_ITEM][E_ITEM_INFO] =
 {
-    { "-",                  0,  0,   0,  0 },
-    { "Telefon",            1,  PHONE_PRICE, 1, 18868 },
-    { "Hamburger",          5,  10,  1,  2703 },
-    { "Pica",               5,  15,  1,  2702 },
-    { "Voda",               5,  2,   1,  1484 },
-    { "Sok",                5,  3,   1,  1546 },
-    { "Pivo",               5,  5,   1,  1486 },
-    { "Cigareta",           20, 12,  20, 19896 },
-    { "Upaljac",            1,  3,   1,  19998 },
-    { "Kanister (prazan)",  1,  50,  1,  1650 },
-    { "Prva pomoc",         3,  150, 1,  11738 }
+    { "-",                  0,  0,   0,  0,     0 },
+    { "Telefon",            1,  PHONE_PRICE, 1, 18868, 0 },
+    { "Hamburger",          5,  10,  1,  2703,  30 },
+    { "Pica",               5,  15,  1,  2702,  40 },
+    { "Voda",               5,  2,   1,  1484,  5 },
+    { "Sok",                5,  3,   1,  1546,  5 },
+    { "Pivo",               5,  5,   1,  1486,  5 },
+    { "Cigareta",           20, 12,  20, 19896, 0 },
+    { "Upaljac",            1,  3,   1,  19998, 0 },
+    { "Kanister (prazan)",  1,  50,  1,  1650,  0 },
+    { "Prva pomoc",         3,  150, 1,  11738, 0 }
 };
 
 enum E_INV_SLOT
@@ -68,7 +69,6 @@ new g_Inv[MAX_PLAYERS][INV_MAX_SLOTS][E_INV_SLOT];
 new bool:g_InvLoaded[MAX_PLAYERS];
 new g_InvSelected[MAX_PLAYERS];
 new g_InvListed[MAX_PLAYERS][INV_MAX_SLOTS];
-new g_InvFullUntil[MAX_PLAYERS];
 
 enum E_DROP
 {

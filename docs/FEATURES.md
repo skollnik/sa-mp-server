@@ -91,7 +91,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **INV-4 Inventar kontejnera:** kuća, vozilo, firma i frakcija.
 
 ### PHONE — Telefon
-- **PHONE-1 Broj telefona:** pozivi (`/call`, `/pickup`, `/hangup`), SMS, imenik.
+- **PHONE-1 Broj telefona:** telefon i SIM kartica se kupuju odvojeno, broj je na nalogu; pozivi (`/pozovi`, `/javi`, `/prekini`), SMS i javni imenik se plaćaju kreditom; lični kontakti; meni `/telefon`; broj se gasi posle 6 meseci neaktivnosti.
 - **PHONE-2 Hitni brojevi:** 911 (policija/hitna/vatrogasci), taksi, mehaničar.
 - **PHONE-3 Govornice.**
 - **PHONE-4 Prisluškivanje / praćenje lokacije** (za policiju, sa nalogom).
@@ -257,7 +257,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **INV-4 Container inventories:** house, vehicle, business and faction.
 
 ### PHONE — Phone
-- **PHONE-1 Phone number:** calls (`/call`, `/pickup`, `/hangup`), SMS, contacts.
+- **PHONE-1 Phone number:** the phone and the SIM card are bought separately, the number belongs to the account; calls (`/pozovi`, `/javi`, `/prekini`), SMS and the public directory are paid with credit; personal contacts; a `/telefon` menu; the number is freed after 6 months of inactivity.
 - **PHONE-2 Emergency numbers:** 911 (police/EMS/fire), taxi, mechanic.
 - **PHONE-3 Payphones.**
 - **PHONE-4 Wiretap / location tracking** (police, with a warrant).

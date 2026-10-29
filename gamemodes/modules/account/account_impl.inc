@@ -57,6 +57,9 @@ stock Account_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `payday_minutes` INT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `id_card` TINYINT(1) NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `phone_number` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `phone_credit` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `phone_listed` TINYINT(1) NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `hunger` TINYINT UNSIGNED NOT NULL DEFAULT 100");
 
     // The old per-chat toggle columns are folded into channel_bits (OOC = bit 0, PM = bit 1, newbie = bit 2) and cleared.
     mysql_tquery(g_SQL,
@@ -363,6 +366,9 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_int(0, "payday_minutes", g_Player[playerid][pPaydayMinutes]);
     cache_get_value_name_bool(0, "id_card", g_Player[playerid][pHasIdCard]);
     cache_get_value_name_int(0, "phone_number", g_Player[playerid][pPhoneNumber]);
+    cache_get_value_name_int(0, "phone_credit", g_Player[playerid][pPhoneCredit]);
+    cache_get_value_name_bool(0, "phone_listed", g_Player[playerid][pPhoneListed]);
+    cache_get_value_name_int(0, "hunger", g_Player[playerid][pHunger]);
 
     if (!Account_CheckFreeSlot(playerid))
     {
@@ -770,6 +776,7 @@ stock Account_Create(playerid)
     g_Player[playerid][pVirtualWorld] = 0;
     g_Player[playerid][pHealth] = 100.0;
     g_Player[playerid][pArmour] = 0.0;
+    g_Player[playerid][pHunger] = HUNGER_MAX;
 
     new ip[16], query[640];
     GetPlayerIp(playerid, ip, sizeof(ip));
@@ -898,7 +905,7 @@ stock Account_Save(playerid, bool:sync = false)
         "UPDATE `accounts` SET `admin_level` = %d, `helper_level` = %d, `skin` = %d, `level` = %d, `respect` = %d, `cash` = %d, `bank` = %d, " \
         "`pos_x` = %f, `pos_y` = %f, `pos_z` = %f, `pos_a` = %f, `interior` = %d, `virtual_world` = %d, " \
         "`health` = %f, `armour` = %f, `played_seconds` = %d, `channel_bits` = %d, " \
-        "`payday_minutes` = %d, `id_card` = %d, `phone_number` = %d, " \
+        "`payday_minutes` = %d, `id_card` = %d, `phone_number` = %d, `phone_credit` = %d, `phone_listed` = %d, `hunger` = %d, " \
         "`mute_until` = %d, `newbie_mute_until` = %d, `jail_seconds` = %d, `jail_reason` = '%e' WHERE `id` = %d",
         g_Player[playerid][pAdminLevel], g_Player[playerid][pHelperLevel], g_Player[playerid][pSkin],
         g_Player[playerid][pLevel], g_Player[playerid][pRespect],
@@ -908,6 +915,7 @@ stock Account_Save(playerid, bool:sync = false)
         g_Player[playerid][pHealth], g_Player[playerid][pArmour], g_Player[playerid][pPlayedSeconds],
         g_Player[playerid][pChannelBits],
         g_Player[playerid][pPaydayMinutes], g_Player[playerid][pHasIdCard] ? 1 : 0, g_Player[playerid][pPhoneNumber],
+        g_Player[playerid][pPhoneCredit], g_Player[playerid][pPhoneListed] ? 1 : 0, g_Player[playerid][pHunger],
         g_Player[playerid][pMuteUntil], g_Player[playerid][pNewbieMuteUntil],
         g_Player[playerid][pJailSeconds], g_Player[playerid][pJailReason],
         g_Player[playerid][pDbId]);

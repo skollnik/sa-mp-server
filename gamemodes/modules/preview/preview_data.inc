@@ -12,7 +12,8 @@ forward PlayerText:Preview_CreateButton(playerid, Float:x, const text[]);
 enum E_PREVIEW_MENU
 {
     PREVIEW_NONE,
-    PREVIEW_VIP_SKIN
+    PREVIEW_VIP_SKIN,
+    PREVIEW_DOOR_ARROW
 }
 
 enum E_PREVIEW_KIND
