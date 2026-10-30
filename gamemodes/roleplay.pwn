@@ -65,6 +65,7 @@
 #include "modules/point/point_impl.inc"
 
 #include "modules/money/money_impl.inc"
+#include "modules/money/bank_pin.inc"
 #include "modules/money/money_cmds.inc"
 #include "modules/money/payday.inc"
 
@@ -283,6 +284,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Money_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (BankPin_OnDialogResponse(playerid, dialogid, response, inputtext))
     {
         return 1;
     }

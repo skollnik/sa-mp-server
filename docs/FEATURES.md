@@ -42,7 +42,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### ECO — Ekonomija
 - **ECO-1 Novac:** keš u džepu i račun u banci. Novac je samo serverski, pa anti-cheat ne može da se zaobiđe.
-- **ECO-2 Banka:** filijale i bankomati, uplata, isplata, transfer i štedni račun.
+- **ECO-2 Banka:** filijale i bankomati, uplata, isplata, transfer i štedni račun. PIN kartice za bankomat (blokada posle 3 pogrešna).
 - **ECO-3 Porezi** na imovinu i vozila. Budžet države puni vlada.
 - **ECO-4 Logovi transakcija**, radi borbe protiv duplikacije novca.
 
@@ -208,7 +208,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### ECO — Economy
 - **ECO-1 Money:** cash in pocket and bank account. Money is server-side only, so anti-cheat cannot be bypassed.
-- **ECO-2 Bank:** branches and ATMs, deposit, withdraw, transfer and savings.
+- **ECO-2 Bank:** branches and ATMs, deposit, withdraw, transfer and savings. Card PIN for ATMs (blocked after 3 wrong tries).
 - **ECO-3 Taxes** on property and vehicles. The government fills the state budget.
 - **ECO-4 Transaction logs**, to fight money duplication.
 

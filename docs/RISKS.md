@@ -157,6 +157,8 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Zvonjava kao spam okolini | ✅ | Zvoni najviše 30 s po pozivu, čuje se samo do 15 m, a pozivi se plaćaju kreditom |
 | Sakriven deo HUD-a ostane prikazan ili se pojavi dupli | ✅ | Posle svake promene HUD se ceo sklanja i ponovo crta samo sa uključenim delovima |
 | HUD sa custom teksturama koji igrač na 0.3.7 ne vidi | ✅ | Koriste se samo teksture iz igre |
+| Pogađanje tuđeg PIN-a ili izbegavanje blokade izlaskom iz igre | ✅ | Bankomat isplaćuje samo vlasniku računa; pogrešni pokušaji i blokada se odmah čuvaju u bazi; PIN je šifrovan |
+| Zaobilaženje PIN-a preko menija bankomata | ✅ | Meni bankomata se otvara tek posle tačnog PIN-a; open.mp prihvata odgovor samo za prikazani dijalog |
 | Previše textdraw-ova po igraču | ✅ | HUD koristi 17 po igraču (granica je 256), sat i datum su zajednički za sve |
 
 ---
@@ -318,4 +320,6 @@ Every new system or change goes through these questions, against all existing sy
 | Ringing as spam for people around | ✅ | It rings at most 30 s per call, is heard only within 15 m, and calls cost credit |
 | A hidden HUD part stays on screen or shows up twice | ✅ | After every change the whole HUD is removed and drawn again with only the parts that are on |
 | A custom-texture HUD that a 0.3.7 player cannot see | ✅ | Only textures from the game are used |
+| Guessing a PIN or dodging the block by leaving | ✅ | An ATM only pays the account owner; wrong tries and the block are saved to the DB at once; the PIN is hashed |
+| Skipping the PIN through the ATM menu | ✅ | The ATM menu opens only after a correct PIN; open.mp accepts a response only for the dialog that is shown |
 | Too many textdraws per player | ✅ | The HUD uses 17 per player (the limit is 256); clock and date are shared by everyone |

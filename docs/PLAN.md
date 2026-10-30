@@ -47,7 +47,8 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] PHONE-1 (nadogradnja): telefon i SIM kartica odvojeno, kredit i dopuna, meni `/telefon`, javni imenik
 - [x] Strelice na vratima, nivo po uobičajenoj formuli, happy hour po broju plata
 - [x] HUD od tekstura iz igre (datum na pločici, glad sa ikonom, kvart na pločici, logo sa ID-jem i brojem igrača)
-- [ ] Dodaci: PIN za bankomat i karticu, dodaci na telu, novčić i kockice uz opkladu, prošnja, lutrija (svaki se pre izrade predlaže)
+- [x] PIN za bankomat i karticu
+- [ ] Dodaci: dodaci na telu, novčić i kockice uz opkladu, prošnja, lutrija (svaki se pre izrade predlaže)
 
 ### Faza 3: Vozila i dozvole
 - [ ] VEH-1 – VEH-9: lična vozila, ključevi, gorivo, parkiranje, gepek, rent
@@ -148,7 +149,8 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] PHONE-1 (upgrade): phone and SIM card bought separately, credit and top-up, a `/telefon` menu, a public directory
 - [x] Door arrows, levels by the usual formula, happy hour counted in paydays
 - [x] HUD from in-game textures (date on a plate, hunger with an icon, district on a plate, logo with ID and player count)
-- [ ] Extras: ATM and card PIN, body accessories, coin flip and dice bets, begging, lottery (each is proposed before it is built)
+- [x] ATM and card PIN
+- [ ] Extras: body accessories, coin flip and dice bets, begging, lottery (each is proposed before it is built)
 
 ### Phase 3: Vehicles and licenses
 - [ ] VEH-1 – VEH-9: personal vehicles, keys, fuel, parking, trunk, rentals

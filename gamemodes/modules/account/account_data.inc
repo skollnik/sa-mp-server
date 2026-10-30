@@ -44,6 +44,9 @@ enum E_PLAYER_DATA
     pHunger,
     pSettingBits,
     pRingtone,
+    pBankPin[BCRYPT_HASH_LENGTH],
+    pPinFails,
+    pPinBlockedUntil,
 
     // Runtime only, never saved
     pLastLoginText[24],
@@ -51,6 +54,7 @@ enum E_PLAYER_DATA
     E_ACCOUNT_STATE:pState,
     bool:pAwaitingBcrypt,
     bool:pOldPasswordVerified,
+    bool:pPinPending,
     bool:pFirstSpawn,
     pLoginAttempts,
     pLoginTimer,

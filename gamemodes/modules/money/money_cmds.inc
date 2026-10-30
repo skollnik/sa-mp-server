@@ -47,7 +47,7 @@ cmd:bankomat(playerid, params[])
 {
     if (Point_Require(playerid, POINT_ATM))
     {
-        Money_ShowBank(playerid, true);
+        BankPin_OpenAtm(playerid);
     }
     return 1;
 }

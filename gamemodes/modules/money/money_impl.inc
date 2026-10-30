@@ -82,7 +82,7 @@ stock Money_ShowBank(playerid, bool:atm)
     }
     else
     {
-        ShowPlayerDialog(playerid, DIALOG_BANK_MENU, DIALOG_STYLE_LIST, title, "Stanje racuna\nUplata\nIsplata\nTransfer na drugi racun", "Izaberi", "Zatvori");
+        ShowPlayerDialog(playerid, DIALOG_BANK_MENU, DIALOG_STYLE_LIST, title, "Stanje racuna\nUplata\nIsplata\nTransfer na drugi racun\nPIN kartice (postavi, promeni ili odblokiraj)", "Izaberi", "Zatvori");
     }
 }
 
@@ -224,6 +224,10 @@ stock bool:Money_OnDialogResponse(playerid, dialogid, response, listitem, const 
                 }
                 ShowPlayerDialog(playerid, DIALOG_BANK_TRANSFER_NAME, DIALOG_STYLE_INPUT, SERVER_NAME " - Transfer",
                     C_WHITE "Unesite ime vlasnika racuna (Ime_Prezime).", "Dalje", "Nazad");
+            }
+            else if (!atm && listitem == 4)
+            {
+                BankPin_ShowSet(playerid);
             }
         }
         case DIALOG_BANK_DEPOSIT:
