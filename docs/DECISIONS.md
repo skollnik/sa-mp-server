@@ -82,6 +82,10 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 74 | 2026-10-30 | Opklade `/kockice` i `/novcic`: drugi igrač prihvata u dijalogu (30 s), oba moraju biti pored i od nivoa 2, server uzima oba uloga pre bacanja; kockice: veći zbir dve kocke, nerešeno vraća uloge | Odobren predlog vlasnika; uobičajen način u referencama |
 | 75 | 2026-10-30 | Prošnja: `/prosim` (do nivoa 4, ne kod spawna) stavlja natpis i sedi, `/udeli` daje $1–$100; dnevni limiti se čuvaju u bazi; ista IP adresa ne može da udeli | Odobren predlog vlasnika; limiti sprečavaju prebacivanje novca sa drugih naloga |
 | 76 | 2026-10-30 | Lutrija: izvlačenje svakog sata u :30, broj 1–50, jedan tiket po igraču (ključ u bazi), tiket $50 od čega 70% u fond; fond se pamti u bazi i prenosi kad niko ne pogodi; dobitak ide na račun i igraču koji nije online | Zahtev vlasnika; :30 da se ne poklopi sa platom |
+| 77 | 2026-10-30 | Igračima se za lutriju piše samo „svakog sata“ i koliko minuta je ostalo, ne tačno vreme izvlačenja | Zahtev vlasnika |
+| 78 | 2026-10-30 | Za `/kockice` i `/novcic` onaj ko nudi mora imati kockice ili novčić u inventaru; kupuju se u 24/7 ( i ) i ne troše se | Zahtev vlasnika |
+| 79 | 2026-10-30 | Prošnja se sama prekida kad igrač uđe u vozilo, pomeri se više od 1 m ili ustane iz sedenja; biblioteke animacija se učitavaju pri svakom spawnu | Prijava vlasnika: natpis je ostajao dok igrač vozi |
+| 80 | 2026-10-30 | Dodaci na telu: prodavnica odeće je novo „mesto“ (`/napravimesto odeca`, `/kupi`); dodaci su predmeti u inventaru; po jedan na glavi, licu i leđima/ruci (slotovi 0–2 su rezervisani za dodatke); položaj se podešava mišem i čuva po predmetu, uz granice (0,5 od kosti, veličina 0,5–1,5); kad poslednji komad napusti inventar, skida se sa tela | Odobren predlog vlasnika; uobičajen način u referencama |
 
 ### Arhitektura koda (predlog)
 ```
@@ -185,6 +189,10 @@ This file records every important decision so it does not get re-discussed. Newe
 | 74 | 2026-10-30 | Bets `/kockice` and `/novcic`: the other player accepts in a dialog (30 s), both must be beside each other and level 2+, the server takes both stakes before the roll; dice: higher sum of two dice wins, a tie returns the stakes | Owner approved the proposal; the usual way in the references |
 | 75 | 2026-10-30 | Begging: `/prosim` (up to level 4, not near the spawn) adds a label and sits, `/udeli` gives $1–$100; daily caps are kept in the DB; the same IP cannot give | Owner approved the proposal; the caps stop moving money from alt accounts |
 | 76 | 2026-10-30 | Lottery: a draw every hour at :30, number 1–50, one ticket per player (a DB key), a $50 ticket of which 70% goes into the fund; the fund is kept in the DB and carries over when nobody wins; the prize goes to the bank account, also for offline players | Owner's request; :30 so it never lands on the payday |
+| 77 | 2026-10-30 | Players are only told the lottery runs "every hour" and how many minutes are left, not the exact draw time | Owner's request |
+| 78 | 2026-10-30 | For `/kockice` and `/novcic` the player who offers needs dice or a coin in the inventory; they are sold at a 24/7 ($20 and $5) and are not used up | Owner's request |
+| 79 | 2026-10-30 | Begging ends by itself when the player enters a vehicle, moves more than 1 m or stands up; animation libraries are loaded on every spawn | Owner's report: the label stayed while the player drove |
+| 80 | 2026-10-30 | Body accessories: the clothing shop is a new "point" (`/napravimesto odeca`, `/kupi`); accessories are inventory items; one each on the head, face and back/hand (slots 0–2 are reserved for them); the place is set with the mouse and saved per item, within limits (0.5 from the bone, scale 0.5–1.5); when the last piece leaves the inventory it comes off the body | Owner approved the proposal; the usual way in the references |
 
 ### Code architecture (proposal)
 ```

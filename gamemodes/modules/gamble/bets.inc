@@ -18,6 +18,9 @@ enum E_BET_OFFER
     boExpires
 }
 
+// The one who offers the bet needs the dice or the coin in the inventory.
+new const E_ITEM:g_BetItem[] = { ITEM_DICE, ITEM_COIN };
+
 new g_BetOffer[MAX_PLAYERS][E_BET_OFFER];
 new g_BetLastOffer[MAX_PLAYERS];
 
@@ -72,6 +75,11 @@ static stock Bet_Offer(playerid, targetid, E_BET_GAME:game, stake, bool:heads)
     if (g_BetOffer[targetid][boFrom] != INVALID_PLAYER_ID && g_BetOffer[targetid][boExpires] > now)
     {
         Msg_Error(playerid, "Taj igrac vec ima ponudu za opkladu. Pokusajte za malo.");
+        return;
+    }
+    if (!Inv_Has(playerid, g_BetItem[_:game]))
+    {
+        Msg_Error(playerid, "Za ovu opkladu treba vam: %s (prodavnica 24/7, /kupi).", g_ItemInfo[g_BetItem[_:game]][itName]);
         return;
     }
     if (!Bet_Check(playerid, targetid, stake))
@@ -176,6 +184,12 @@ stock bool:Bet_OnDialogResponse(playerid, dialogid, response)
     if (gettime() > g_BetOffer[playerid][boExpires])
     {
         Msg_Error(playerid, "Ponuda je istekla.");
+        return true;
+    }
+    if (!Inv_Has(fromid, g_BetItem[_:g_BetOffer[playerid][boGame]]))
+    {
+        Msg_Error(playerid, "%s vise nema predmet: %s.", Account_Name(fromid), g_ItemInfo[g_BetItem[_:g_BetOffer[playerid][boGame]]][itName]);
+        Msg_Info(fromid, "Opklada sa %s nije odigrana.", Account_Name(playerid));
         return true;
     }
     if (!Bet_Check(playerid, fromid, g_BetOffer[playerid][boStake]))

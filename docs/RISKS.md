@@ -168,6 +168,15 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Dobitnik na lutriji nije online (njegovo staro stanje prepiše dobitak) | ✅ | Igraču online se dodaje u memoriji, a igraču van igre u bazi |
 | Fond lutrije se izgubi posle restarta | ✅ | Fond je u tabeli `server_vars`; tiketi ostaju u bazi do izvlačenja |
 | Previše textdraw-ova po igraču | ✅ | HUD koristi 17 po igraču (granica je 256), sat i datum su zajednički za sve |
+| Natpis „Prosi“ ostaje dok igrač vozi ili hoda (ušao u vozilo sa F, mimo komande) | ✅ | Prošnja se prekida pri promeni stanja (vozilo) i kad se igrač pomeri više od 1 m ili ustane; provera svake sekunde |
+| Animacija sedenja ne krene prvi put (biblioteka nije učitana), pa se prošnja odmah prekine | ✅ | Biblioteke animacija se učitavaju pri svakom spawnu; poza se proverava tek posle 3 s |
+| Opklada bez kockica ili novčića (dao ih je nekome dok druga strana čeka) | ✅ | Predmet se proverava pri ponudi i ponovo pri prihvatanju |
+| Dodatak ostaje na telu kad ga igrač da ili baci | ✅ | Kad poslednji komad napusti inventar (bilo kojim putem), skida se sa tela i to se pamti |
+| Ogroman ili daleko pomeren dodatak zaklanja ekran drugima ili lebdi | ✅ | Pri čuvanju položaja: najviše 0,5 od kosti, veličina 0,5–1,5; preko granice se vraća i igrač dobija poruku |
+| Dodatak „nosi“ igrač koji ga više nema (stari zapis u bazi) | ✅ | Pri učitavanju se stavlja samo ako je predmet u inventaru |
+| Dodaci zauzmu slot koji koristi drugi sistem (telefon u ruci, oružje na leđima...) | ✅ | Slotovi 0–2 su samo za dodatke; novi sistemi koriste 3 i više (odluka 80) |
+| Dodaci nestanu posle smrti ili spawna | ✅ | Stavljaju se ponovo pri svakom spawnu |
+| Prodavnica 24/7 pokaže predmete koji se tu ne prodaju (dodaci imaju cenu 0) | ✅ | Lista i izbor u dijalogu idu kroz istu funkciju koja preskače predmete bez cene |
 
 ---
 
@@ -339,3 +348,12 @@ Every new system or change goes through these questions, against all existing sy
 | A lottery winner is offline (their old balance overwrites the prize) | ✅ | An online player gets it in memory, an offline one in the DB |
 | The lottery fund is lost after a restart | ✅ | The fund is in the `server_vars` table; tickets stay in the DB until the draw |
 | Too many textdraws per player | ✅ | The HUD uses 17 per player (the limit is 256); clock and date are shared by everyone |
+| The "Prosi" label stays while the player drives or walks (entered a vehicle with F, bypassing the command) | ✅ | Begging ends on a state change (vehicle) and when the player moves more than 1 m or stands up; checked every second |
+| The sitting animation does not start the first time (library not loaded), so begging ends at once | ✅ | Animation libraries are loaded on every spawn; the pose is checked only after 3 s |
+| A bet without dice or a coin (given away while the other side waits) | ✅ | The item is checked at the offer and again at acceptance |
+| An accessory stays on the body after the player gives or drops it | ✅ | When the last piece leaves the inventory (any way), it comes off the body and that is saved |
+| A huge or far-moved accessory covers other players' screens or floats | ✅ | On save: at most 0.5 from the bone, scale 0.5–1.5; beyond that it is pulled back and the player is told |
+| An accessory "worn" by a player who no longer has it (an old DB row) | ✅ | On load it is put on only if the item is in the inventory |
+| Accessories take a slot another system uses (phone in hand, weapon on the back...) | ✅ | Slots 0–2 are only for accessories; new systems use 3 and up (decision 80) |
+| Accessories vanish after death or spawn | ✅ | They are put back on every spawn |
+| The 24/7 shop lists items it does not sell (accessories have price 0) | ✅ | The list and the dialog choice go through the same function that skips items without a price |

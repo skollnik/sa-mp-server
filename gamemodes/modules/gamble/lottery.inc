@@ -163,15 +163,17 @@ public Lottery_MinuteTick()
     return 1;
 }
 
-static stock Lottery_NextDrawText(text[], size = sizeof(text))
+// Players are told "every hour" and the minutes left; the draw minute itself stays internal.
+static stock Lottery_MinutesToDraw()
 {
     new hour, minute, second;
     gettime(hour, minute, second);
-    if (minute >= LOTTERY_DRAW_MINUTE)
+    new left = LOTTERY_DRAW_MINUTE - minute;
+    if (left <= 0)
     {
-        hour = (hour + 1) % 24;
+        left += 60;
     }
-    format(text, size, "%02d:%02d", hour, LOTTERY_DRAW_MINUTE);
+    return left;
 }
 
 forward OnLotteryTicketShown(playerid, race);
@@ -181,8 +183,7 @@ public OnLotteryTicketShown(playerid, race)
     {
         return 1;
     }
-    new next[8], ticket[48];
-    Lottery_NextDrawText(next);
+    new ticket[48];
     if (cache_num_rows() > 0)
     {
         new number;
@@ -193,7 +194,7 @@ public OnLotteryTicketShown(playerid, race)
     {
         strcopy(ticket, "nemate tiket");
     }
-    Msg_Info(playerid, "Lutrija: fond $%d, sledece izvlacenje u %s, %s. Tiket: /loto [1-%d] ($%d) u prodavnici 24/7.", g_LotteryJackpot, next, ticket, LOTTERY_MAX_NUMBER, LOTTERY_TICKET_PRICE);
+    Msg_Info(playerid, "Lutrija (izvlacenje svakog sata, sledece za %d min): fond $%d, %s. Tiket: /loto [1-%d] ($%d) u prodavnici 24/7.", Lottery_MinutesToDraw(), g_LotteryJackpot, ticket, LOTTERY_MAX_NUMBER, LOTTERY_TICKET_PRICE);
     return 1;
 }
 
@@ -230,9 +231,7 @@ public OnLotteryTicketBought(playerid, race, account_id, number)
     Lottery_SaveJackpot();
     Account_Save(playerid);
 
-    new next[8];
-    Lottery_NextDrawText(next);
-    Msg_Success(playerid, "Kupili ste tiket sa brojem %d. Izvlacenje je u %s, fond je $%d.", number, next, g_LotteryJackpot);
+    Msg_Success(playerid, "Kupili ste tiket sa brojem %d. Izvlacenje je za %d min, fond je $%d.", number, Lottery_MinutesToDraw(), g_LotteryJackpot);
     return 1;
 }
 

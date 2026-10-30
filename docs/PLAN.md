@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** HUD, PIN, opklade, prošnja i lutrija napisani, čekaju test vlasnika; sledeći su dodaci na telu (ažurirano 2026-10-30)
+**Trenutni status:** dodaci na telu, kockice i novčić iz 24/7 i popravka prošnje napisani, čekaju test vlasnika; HUD nove generacije i bankovni račun čekaju odobrenje predloga (ažurirano 2026-10-30)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -49,7 +49,10 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] HUD od tekstura iz igre (datum na pločici, glad sa ikonom, kvart na pločici, logo sa ID-jem i brojem igrača)
 - [x] PIN za bankomat i karticu
 - [x] Opklade (kockice, novčić), prošnja, lutrija svakog sata
-- [ ] Dodaci na telu
+- [x] Dodaci na telu: prodavnica odeće (`/kupi`), naočare, šeširi, kapa, kačket, ranac i torba, `/dodaci` sa podešavanjem položaja mišem
+- [x] Kockice i novčić se kupuju u 24/7; prošnja se prekida kad igrač ustane ili uđe u vozilo
+- [ ] HUD nove generacije (čeka odobrenje predloga)
+- [ ] Bankovni račun: otvaranje na šalteru (čeka odluku vlasnika)
 
 ### Faza 3: Vozila i dozvole
 - [ ] VEH-1 – VEH-9: lična vozila, ključevi, gorivo, parkiranje, gepek, rent
@@ -105,7 +108,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** HUD, PIN, bets, begging and lottery written, waiting for the owner's test; body accessories are next (updated 2026-10-30)
+**Current status:** body accessories, dice and coin from the 24/7 and the begging fix written, waiting for the owner's test; the next-generation HUD and the bank account wait for the proposal to be approved (updated 2026-10-30)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -152,7 +155,10 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] HUD from in-game textures (date on a plate, hunger with an icon, district on a plate, logo with ID and player count)
 - [x] ATM and card PIN
 - [x] Bets (dice, coin), begging, hourly lottery
-- [ ] Body accessories
+- [x] Body accessories: clothing shop (`/kupi`), glasses, hats, a knit hat, a cap, a backpack and a bag, `/dodaci` with mouse positioning
+- [x] Dice and coin are bought at a 24/7; begging ends when the player stands up or enters a vehicle
+- [ ] Next-generation HUD (waiting for the proposal to be approved)
+- [ ] Bank account: opened at the counter (waiting for the owner's decision)
 
 ### Phase 3: Vehicles and licenses
 - [ ] VEH-1 – VEH-9: personal vehicles, keys, fuel, parking, trunk, rentals

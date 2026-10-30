@@ -17,10 +17,11 @@ cmd:pomoc(playerid, params[])
         "/stats - statistika    /daj - novac igracu pored vas    /licna - licna karta\n" \
         "/banka, /bankomat, /opstina, /kupi - na salterima i u prodavnicama (oznaka iznad mesta)\n" \
         "Bankomat trazi PIN kartice: postavlja se na salteru banke (/banka)\n" \
-        "/kockice, /novcic - opklada sa igracem pored vas (od nivoa 2)    /loto - lutrija svakog sata u :30\n" \
+        "/kockice, /novcic - opklada sa igracem pored vas (od nivoa 2, kockice ili novcic iz 24/7)    /loto - lutrija, izvlacenje svakog sata\n" \
         "/prosim - prosnja (do nivoa 4)    /udeli - novac igracu koji prosi\n\n" \
         C_SERVER "Inventar i telefon\n" \
         C_WHITE "/inv - inventar    /podigni - podizanje bacenog predmeta    F - baca cigaretu ili flasu iz ruke\n" \
+        "/dodaci - naocare, kape, ranac i torba na telu (kupuju se u prodavnici odece, /kupi)\n" \
         "Traka gladi je ispod novca: jedite u prodavnici 24/7, na nuli gubite HP\n" \
         "/telefon - meni telefona (broj, kredit, imenik)    /pozovi /javi /prekini /sms /kontakti (911 - hitne sluzbe)\n" \
         "SIM kartica i dopuna kredita se kupuju u prodavnici 24/7 (/kupi)\n\n" \

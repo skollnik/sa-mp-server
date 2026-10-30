@@ -2,11 +2,19 @@
 #define BEG_TOGGLE_COOLDOWN     (10)
 // Lower than the staff duty tag so both fit above one head.
 #define BEG_TAG_OFFSET_Z        (0.2)
+// Leaving the spot or the sitting pose ends begging, so the label never follows a player who walks or drives off.
+#define BEG_MAX_DRIFT           (1.0)
+#define BEG_POSE_GRACE_S        (3)
+#define BEG_SIT_LIBRARY         "BEACH"
+#define BEG_SIT_ANIMATION       "ParkSit_M_loop"
 
 new bool:g_Begging[MAX_PLAYERS];
 new STREAMER_TAG_3D_TEXT_LABEL:g_BegTag[MAX_PLAYERS];
 new g_BegLastToggle[MAX_PLAYERS];
 new bool:g_BegPending[MAX_PLAYERS];
+new Float:g_BegPos[MAX_PLAYERS][3];
+new g_BegStartedAt[MAX_PLAYERS];
+new g_BegTimer;
 
 stock Beg_Init()
 {
@@ -19,6 +27,12 @@ stock Beg_Init()
         "`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," \
         "INDEX `beg_beggar_time` (`beggar_id`, `created_at`)" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    g_BegTimer = SetTimer("Beg_Tick", 1000, true);
+}
+
+stock Beg_Exit()
+{
+    KillTimer(g_BegTimer);
 }
 
 stock Beg_OnPlayerConnect(playerid)
@@ -52,6 +66,48 @@ stock Beg_OnPlayerDisconnect(playerid)
 stock Beg_OnPlayerDeath(playerid)
 {
     Beg_Stop(playerid);
+}
+
+static stock Beg_Interrupt(playerid)
+{
+    Beg_Stop(playerid);
+    Msg_Info(playerid, "Ustali ste, vise ne prosite.");
+}
+
+// Entering a vehicle with F skips the command entirely, so the state change ends begging right away.
+stock Beg_OnPlayerStateChange(playerid, PLAYER_STATE:newstate)
+{
+    if (g_Begging[playerid] && newstate != PLAYER_STATE_ONFOOT)
+    {
+        Beg_Interrupt(playerid);
+    }
+}
+
+static stock bool:Beg_IsSitting(playerid)
+{
+    new library[32], animation[32];
+    GetAnimationName(GetPlayerAnimationIndex(playerid), library, sizeof(library), animation, sizeof(animation));
+    return !strcmp(library, BEG_SIT_LIBRARY, true) && !strcmp(animation, BEG_SIT_ANIMATION, true);
+}
+
+forward Beg_Tick();
+public Beg_Tick()
+{
+    new now = gettime();
+    for (new playerid = 0; playerid < MAX_PLAYERS; playerid++)
+    {
+        if (!g_Begging[playerid])
+        {
+            continue;
+        }
+        // The pose needs a moment to start after the command, so it is checked only after a short grace.
+        if (!IsPlayerInRangeOfPoint(playerid, BEG_MAX_DRIFT, g_BegPos[playerid][0], g_BegPos[playerid][1], g_BegPos[playerid][2])
+            || (now - g_BegStartedAt[playerid] >= BEG_POSE_GRACE_S && !Beg_IsSitting(playerid)))
+        {
+            Beg_Interrupt(playerid);
+        }
+    }
+    return 1;
 }
 
 static stock bool:Beg_SameIp(playerid, targetid)
@@ -95,9 +151,11 @@ cmd:prosim(playerid, params[])
     }
 
     g_BegLastToggle[playerid] = now;
+    g_BegStartedAt[playerid] = now;
+    GetPlayerPos(playerid, g_BegPos[playerid][0], g_BegPos[playerid][1], g_BegPos[playerid][2]);
     g_Begging[playerid] = true;
     g_BegTag[playerid] = CreateDynamic3DTextLabel("Prosi\n(/udeli)", 0xC8C8C8FF, 0.0, 0.0, BEG_TAG_OFFSET_Z, 15.0, playerid, INVALID_VEHICLE_ID, 1);
-    ApplyAnimation(playerid, "BEACH", "ParkSit_M_loop", 4.1, true, false, false, false, 0, SYNC_ALL);
+    ApplyAnimation(playerid, BEG_SIT_LIBRARY, BEG_SIT_ANIMATION, 4.1, true, false, false, false, 0, SYNC_ALL);
     Chat_Action(playerid, "seda na zemlju i prosi.");
     Msg_Info(playerid, "Prosite. Drugi vam daju novac sa /udeli (najvise $%d dnevno). Prekid: /prosim", BEG_DAILY_MAX);
     return 1;

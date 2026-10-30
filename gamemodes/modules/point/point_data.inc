@@ -10,7 +10,8 @@ enum E_POINT_TYPE
     POINT_BANK,
     POINT_ATM,
     POINT_CITYHALL,
-    POINT_SHOP
+    POINT_SHOP,
+    POINT_CLOTHES
 }
 
 enum E_POINT_INFO
@@ -25,7 +26,8 @@ new const g_PointInfo[E_POINT_TYPE][E_POINT_INFO] =
     { "banka",      "Banka - salter",   "/banka" },
     { "bankomat",   "Bankomat",         "/bankomat" },
     { "opstina",    "Opstina - salter", "/opstina" },
-    { "prodavnica", "Prodavnica 24/7",  "/kupi" }
+    { "prodavnica", "Prodavnica 24/7",  "/kupi" },
+    { "odeca",      "Prodavnica odece", "/kupi" }
 };
 
 enum E_POINT

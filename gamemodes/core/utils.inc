@@ -41,3 +41,15 @@ stock Float:Utils_FloatMin(Float:a, Float:b)
 {
     return a < b ? a : b;
 }
+
+// The client plays an animation from a library it has not loaded only on the second try, so every library the
+// gamemode uses is loaded once per spawn.
+new const g_AnimLibraries[][] = { "FOOD", "BOMBER", "BEACH" };
+
+stock Utils_PreloadAnimations(playerid)
+{
+    for (new i = 0; i < sizeof(g_AnimLibraries); i++)
+    {
+        ApplyAnimation(playerid, g_AnimLibraries[i], "null", 4.1, false, false, false, false, 0, SYNC_NONE);
+    }
+}

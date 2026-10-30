@@ -23,12 +23,24 @@ enum E_ITEM
     ITEM_CIGARETTE,
     ITEM_LIGHTER,
     ITEM_CANISTER,
-    ITEM_FIRST_AID
+    ITEM_FIRST_AID,
+    ITEM_DICE,
+    ITEM_COIN,
+    ITEM_GLASSES_SUN,
+    ITEM_GLASSES_AVIATOR,
+    ITEM_GLASSES_DARK,
+    ITEM_HAT_BOWLER,
+    ITEM_HAT_PANAMA,
+    ITEM_HAT_KNIT,
+    ITEM_CAP,
+    ITEM_BACKPACK,
+    ITEM_BAG
 }
 
 forward bool:Inv_Add(playerid, E_ITEM:item, amount);
 forward bool:Inv_CanAdd(playerid, E_ITEM:item, amount);
 forward bool:Inv_Remove(playerid, E_ITEM:item, amount);
+forward bool:Inv_Has(playerid, E_ITEM:item);
 forward bool:Inv_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Inv_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
 
@@ -56,7 +68,19 @@ new const g_ItemInfo[E_ITEM][E_ITEM_INFO] =
     { "Cigareta",           20, 12,  20, 19896, 0 },
     { "Upaljac",            1,  3,   1,  19998, 0 },
     { "Kanister (prazan)",  1,  50,  1,  1650,  0 },
-    { "Prva pomoc",         3,  150, 1,  11738, 0 }
+    { "Prva pomoc",         3,  150, 1,  11738, 0 },
+    { "Kockice",            1,  20,  1,  1851,  0 },
+    { "Novcic",             1,  5,   1,  1212,  0 },
+    // Body accessories are sold in clothing shops (accessories.inc), so their 24/7 price is 0.
+    { "Naocare za sunce",   1,  0,   0,  19006, 0 },
+    { "Naocare avijatorke", 1,  0,   0,  19022, 0 },
+    { "Tamne naocare",      1,  0,   0,  19033, 0 },
+    { "Polucilindar",       1,  0,   0,  18947, 0 },
+    { "Panama sesir",       1,  0,   0,  18968, 0 },
+    { "Zimska kapa",        1,  0,   0,  18953, 0 },
+    { "Kacket",             1,  0,   0,  18926, 0 },
+    { "Ranac",              1,  0,   0,  3026,  0 },
+    { "Torba",              1,  0,   0,  11745, 0 }
 };
 
 enum E_INV_SLOT

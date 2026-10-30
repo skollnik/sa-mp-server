@@ -55,6 +55,7 @@ public OnInventoryLoaded(playerid, race)
         cache_get_value_name_int(row, "amount", g_Inv[playerid][slot][isAmount]);
     }
     g_InvLoaded[playerid] = true;
+    Acc_OnInventoryLoaded(playerid);
     return 1;
 }
 
@@ -165,6 +166,10 @@ stock Inv_TakeFromSlot(playerid, slot, amount)
     if (item == ITEM_PHONE && !Inv_Has(playerid, ITEM_PHONE))
     {
         Phone_OnPhoneLost(playerid);
+    }
+    if (Acc_IsAccessory(item) && !Inv_Has(playerid, item))
+    {
+        Acc_OnItemGone(playerid, item);
     }
 }
 
@@ -295,6 +300,11 @@ stock bool:Inv_Use(playerid, slot)
         }
         default:
         {
+            if (Acc_IsAccessory(item))
+            {
+                Acc_Toggle(playerid, item);
+                return false;
+            }
             Msg_Info(playerid, "Ovaj predmet se ne koristi direktno.");
             return false;
         }
@@ -447,8 +457,10 @@ stock bool:Inv_OnDialogResponse(playerid, dialogid, response, listitem, const in
                 return true;
             }
             g_InvSelected[playerid] = slot;
-            ShowPlayerDialog(playerid, DIALOG_INVENTORY_ITEM, DIALOG_STYLE_LIST, g_ItemInfo[g_Inv[playerid][slot][isItem]][itName],
-                "Koristi\nDaj igracu\nBaci", "Izaberi", "Nazad");
+            new E_ITEM:item = g_Inv[playerid][slot][isItem], body[48];
+            format(body, sizeof(body), "%s\nDaj igracu\nBaci",
+                Acc_IsAccessory(item) ? (Acc_IsWorn(playerid, item) ? ("Skini") : ("Stavi na sebe")) : ("Koristi"));
+            ShowPlayerDialog(playerid, DIALOG_INVENTORY_ITEM, DIALOG_STYLE_LIST, g_ItemInfo[item][itName], body, "Izaberi", "Nazad");
         }
         case DIALOG_INVENTORY_ITEM:
         {
@@ -547,8 +559,39 @@ cmd:podigni(playerid, params[])
     return 1;
 }
 
+// The 24/7 list holds only items with a price, so a dialog row maps back to an item by counting them again.
+static stock E_ITEM:Shop_ItemAt(row)
+{
+    for (new E_ITEM:item = ITEM_PHONE; item < E_ITEM; item++)
+    {
+        if (g_ItemInfo[item][itPrice] > 0 && row-- == 0)
+        {
+            return item;
+        }
+    }
+    return ITEM_NONE;
+}
+
+static stock Shop_ItemCount()
+{
+    new count;
+    for (new E_ITEM:item = ITEM_PHONE; item < E_ITEM; item++)
+    {
+        if (g_ItemInfo[item][itPrice] > 0)
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
 cmd:kupi(playerid, params[])
 {
+    if (Point_IsNear(playerid, POINT_CLOTHES))
+    {
+        Acc_ShowShop(playerid);
+        return 1;
+    }
     if (!Point_Require(playerid, POINT_SHOP))
     {
         return 1;
@@ -558,6 +601,7 @@ cmd:kupi(playerid, params[])
     strcopy(body, "Predmet\tCena\n");
     for (new E_ITEM:item = ITEM_PHONE; item < E_ITEM; item++)
     {
+        if (g_ItemInfo[item][itPrice] == 0) continue;
         if (g_ItemInfo[item][itShopAmount] == 1) format(line, sizeof(line), "%s\t$%d\n", g_ItemInfo[item][itName], g_ItemInfo[item][itPrice]);
         else format(line, sizeof(line), "%s (%d kom.)\t$%d\n", g_ItemInfo[item][itName], g_ItemInfo[item][itShopAmount], g_ItemInfo[item][itPrice]);
         strcat(body, line);
@@ -575,23 +619,19 @@ stock bool:Shop_OnDialogResponse(playerid, dialogid, response, listitem)
     {
         return false;
     }
-    if (!response || !Point_Require(playerid, POINT_SHOP))
+    if (!response || !Point_Require(playerid, POINT_SHOP) || listitem < 0)
     {
         return true;
     }
 
-    new E_ITEM:item = E_ITEM:(listitem + _:ITEM_PHONE);
-    if (item >= E_ITEM)
+    new E_ITEM:item = Shop_ItemAt(listitem);
+    if (item == ITEM_NONE)
     {
-        switch (_:item - _:E_ITEM)
+        switch (listitem - Shop_ItemCount())
         {
             case 0: Phone_ShowSimMenu(playerid);
             case 1: Phone_ShowTopup(playerid, false);
         }
-        return true;
-    }
-    if (item <= ITEM_NONE)
-    {
         return true;
     }
     new amount = g_ItemInfo[item][itShopAmount];

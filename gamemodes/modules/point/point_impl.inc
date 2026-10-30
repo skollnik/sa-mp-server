@@ -164,7 +164,7 @@ cmd:napravimesto(playerid, params[])
     }
     if (type == E_POINT_TYPE:-1)
     {
-        Msg_Usage(playerid, "/napravimesto [banka / bankomat / opstina / prodavnica] (stanite tamo gde igrac treba da stoji)");
+        Msg_Usage(playerid, "/napravimesto [banka / bankomat / opstina / prodavnica / odeca] (stanite tamo gde igrac treba da stoji)");
         return 1;
     }
 

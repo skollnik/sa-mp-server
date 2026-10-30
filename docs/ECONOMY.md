@@ -21,7 +21,7 @@
 | Transfer na drugi račun | Od nivoa 2, provizija 1%; bankomat isplaćuje najviše $10.000 odjednom |
 | Opklada (kockice, novčić) | Ulog $10–$5.000 po igraču, od nivoa 2; pobednik uzima oba uloga, nerešeno vraća uloge |
 | Prošnja | Do nivoa 4; jedno davanje $1–$100, jedan davalac najviše $100 dnevno istom prosjaku, prosjak najviše $1.000 dnevno |
-| Lutrija | Tiket $50, broj 1–50, jedan tiket po igraču; izvlačenje svakog sata u :30; 70% ide u fond, 30% nestaje iz igre (kasnije u državnu kasu) |
+| Lutrija | Tiket $50, broj 1–50, jedan tiket po igraču; izvlačenje svakog sata; 70% ide u fond, 30% nestaje iz igre (kasnije u državnu kasu) |
 
 ### Startni paket
 - **$2.000 keš + $3.000 u banci = $5.000.** To pokriva vozačku, telefon i hranu, ali ne i vozilo.
@@ -40,6 +40,10 @@
 | Kredit: SMS / minut poziva / pretraga javnog imenika | $1 / $2 / $2 |
 | Dopuna kredita (24/7 gotovinom ili sa računa preko telefona; najviše $500 na kartici) | $10, $20, $50, $100 |
 | Prva pomoć (leči do 75 HP) | $150 |
+| Kockice / novčić (za opklade, ne troše se) | $20 / $5 |
+| Naočare (3 vrste, prodavnica odeće) | $150 / $200 / $250 |
+| Zimska kapa / kačket / panama šešir / polucilindar | $150 / $200 / $300 / $350 |
+| Torba / ranac | $400 / $600 |
 | Lična karta (opština) | $50 |
 | Radio | $700 |
 | Alat (kit za popravku) | $300 |
@@ -150,7 +154,7 @@
 | Transfer to another account | From level 2, 1% fee; an ATM pays out at most $10,000 at once |
 | Bet (dice, coin) | Stake $10–$5,000 per player, from level 2; the winner takes both stakes, a tie returns them |
 | Begging | Up to level 4; one gift $1–$100, one giver at most $100 a day to the same beggar, a beggar at most $1,000 a day |
-| Lottery | Ticket $50, number 1–50, one ticket per player; a draw every hour at :30; 70% goes into the fund, 30% leaves the game (later the state treasury) |
+| Lottery | Ticket $50, number 1–50, one ticket per player; a draw every hour; 70% goes into the fund, 30% leaves the game (later the state treasury) |
 
 ### Starter pack
 - **$2,000 cash + $3,000 in the bank = $5,000.** That covers a driving license, a phone and food, but not a vehicle.
@@ -169,6 +173,10 @@
 | Credit: SMS / call minute / public directory search | $1 / $2 / $2 |
 | Credit top-up (24/7 in cash or from the bank account through the phone; at most $500 on the card) | $10, $20, $50, $100 |
 | First aid kit (heals up to 75 HP) | $150 |
+| Dice / coin (for bets, not used up) | $20 / $5 |
+| Glasses (3 kinds, clothing shop) | $150 / $200 / $250 |
+| Knit hat / cap / panama hat / bowler | $150 / $200 / $300 / $350 |
+| Bag / backpack | $400 / $600 |
 | ID card (city hall) | $50 |
 | Radio | $700 |
 | Toolkit (repair kit) | $300 |

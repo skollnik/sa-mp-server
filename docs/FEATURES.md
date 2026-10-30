@@ -90,6 +90,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **INV-2 Predmeti:** telefon, radio, hrana, piće, cigarete, alat, kanister, maska, uže, povez za oči, droga, materijali.
 - **INV-3 Oružje kao predmet:** ima serijski broj i municiju, a može da se stavi u futrolu ili gepek.
 - **INV-4 Inventar kontejnera:** kuća, vozilo, firma i frakcija.
+- **INV-5 Dodaci na telu:** naočare, kape, šeširi, ranac i torba iz prodavnice odeće; po jedan na glavi, licu i leđima/ruci; igrač podešava položaj mišem (`/dodaci`).
 
 ### PHONE — Telefon
 - **PHONE-1 Broj telefona:** telefon i SIM kartica se kupuju odvojeno, broj je na nalogu; pozivi (`/pozovi`, `/javi`, `/prekini`), SMS i javni imenik se plaćaju kreditom; lični kontakti; meni `/telefon`; broj se gasi posle 6 meseci neaktivnosti.
@@ -257,6 +258,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **INV-2 Items:** phone, radio, food, drinks, cigarettes, tools, jerry can, mask, rope, blindfold, drugs, materials.
 - **INV-3 Weapons as items:** they have a serial number and ammo, and can be holstered or put in a trunk.
 - **INV-4 Container inventories:** house, vehicle, business and faction.
+- **INV-5 Body accessories:** glasses, caps, hats, a backpack and a bag from the clothing shop; one each on the head, face and back/hand; the player sets the position with the mouse (`/dodaci`).
 
 ### PHONE — Phone
 - **PHONE-1 Phone number:** the phone and the SIM card are bought separately, the number belongs to the account; calls (`/pozovi`, `/javi`, `/prekini`), SMS and the public directory are paid with credit; personal contacts; a `/telefon` menu; the number is freed after 6 months of inactivity.

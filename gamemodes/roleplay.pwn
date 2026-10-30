@@ -31,6 +31,7 @@
 #include "modules/point/point_data.inc"
 #include "modules/money/money_data.inc"
 #include "modules/inventory/inventory_data.inc"
+#include "modules/inventory/accessories_data.inc"
 #include "modules/health/hunger_data.inc"
 #include "modules/world/checkpoint.inc"
 #include "modules/world/zones.inc"
@@ -79,6 +80,7 @@
 #include "modules/cityhall/cityhall.inc"
 
 #include "modules/inventory/inventory_impl.inc"
+#include "modules/inventory/accessories.inc"
 #include "modules/phone/phone.inc"
 #include "modules/settings/settings.inc"
 
@@ -121,6 +123,7 @@ public OnGameModeInit()
     Hud_Init();
     Hunger_Init();
     Inv_Init();
+    Acc_Init();
     Phone_Init();
     Maps_Init();
 
@@ -136,6 +139,7 @@ public OnGameModeExit()
     Hud_Exit();
     Time_Exit();
     Lottery_Exit();
+    Beg_Exit();
     Payday_Exit();
     Vip_Exit();
     AC_Exit();
@@ -157,6 +161,7 @@ public OnPlayerConnect(playerid)
     Hud_OnPlayerConnect(playerid);
     Hunger_OnPlayerConnect(playerid);
     Inv_OnPlayerConnect(playerid);
+    Acc_OnPlayerConnect(playerid);
     Phone_OnPlayerConnect(playerid);
     Bet_OnPlayerConnect(playerid);
     Beg_OnPlayerConnect(playerid);
@@ -194,6 +199,8 @@ public OnPlayerSpawn(playerid)
     Account_OnPlayerSpawn(playerid);
     Staff_OnPlayerSpawn(playerid);
     Punish_OnPlayerSpawn(playerid);
+    Utils_PreloadAnimations(playerid);
+    Acc_OnPlayerSpawn(playerid);
     Time_Apply(playerid);
     Hud_Show(playerid);
     return 1;
@@ -229,6 +236,13 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstate)
 {
     Staff_OnPlayerStateChange(playerid, newstate);
+    Beg_OnPlayerStateChange(playerid, newstate);
+    return 1;
+}
+
+public OnPlayerEditAttachedObject(playerid, EDIT_RESPONSE:response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ)
+{
+    Acc_OnPlayerEditAttached(playerid, response, index, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, fRotZ, fScaleX, fScaleY, fScaleZ);
     return 1;
 }
 
@@ -319,6 +333,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Shop_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (Acc_OnDialogResponse(playerid, dialogid, response, listitem))
     {
         return 1;
     }
