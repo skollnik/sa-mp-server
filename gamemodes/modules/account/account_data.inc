@@ -47,6 +47,10 @@ enum E_PLAYER_DATA
     pBankPin[BCRYPT_HASH_LENGTH],
     pPinFails,
     pPinBlockedUntil,
+    pAccWornBits,
+    bool:pHasBankAccount,
+    // Pay and prizes waiting at the bank counter for a player without an account.
+    pHeldPay,
 
     // Runtime only, never saved
     pLastLoginText[24],

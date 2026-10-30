@@ -49,6 +49,31 @@ stock Money_GiveBank(playerid, amount, const reason[], other_dbid = 0)
     Money_Log(playerid, "bank", amount, g_Player[playerid][pBank], reason, other_dbid);
 }
 
+stock bool:Money_RequireAccount(playerid)
+{
+    if (g_Player[playerid][pHasBankAccount])
+    {
+        return true;
+    }
+    Msg_Error(playerid, "Nemate racun u banci. Otvara se na salteru banke (/banka), uz licnu kartu.");
+    return false;
+}
+
+// Pay and prizes go into the account; without one they wait at the bank counter. Returns true when it went into the account.
+stock bool:Money_PayToBank(playerid, amount, const reason[])
+{
+    if (g_Player[playerid][pHasBankAccount])
+    {
+        Money_GiveBank(playerid, amount, reason);
+        return true;
+    }
+    g_Player[playerid][pHeldPay] += amount;
+    new held_reason[64];
+    format(held_reason, sizeof(held_reason), "%s (ceka na salteru)", reason);
+    Money_Log(playerid, "bank", amount, g_Player[playerid][pHeldPay], held_reason, 0);
+    return false;
+}
+
 // Takes cash for a purchase; prints the error itself and returns false when the player cannot afford it.
 stock bool:Money_Take(playerid, amount, const reason[])
 {
@@ -80,9 +105,17 @@ stock Money_ShowBank(playerid, bool:atm)
     {
         ShowPlayerDialog(playerid, DIALOG_ATM_MENU, DIALOG_STYLE_LIST, title, "Stanje racuna\nIsplata", "Izaberi", "Zatvori");
     }
+    else if (!g_Player[playerid][pHasBankAccount])
+    {
+        new body[192];
+        format(body, sizeof(body), "Otvori racun i karticu ($%d, uz licnu kartu)\nPodigni novac koji vas ceka: " C_GREEN "$%d", BANK_ACCOUNT_PRICE, g_Player[playerid][pHeldPay]);
+        ShowPlayerDialog(playerid, DIALOG_BANK_OPEN, DIALOG_STYLE_LIST, title, body, "Izaberi", "Zatvori");
+    }
     else
     {
-        ShowPlayerDialog(playerid, DIALOG_BANK_MENU, DIALOG_STYLE_LIST, title, "Stanje racuna\nUplata\nIsplata\nTransfer na drugi racun\nPIN kartice (postavi, promeni ili odblokiraj)", "Izaberi", "Zatvori");
+        new body[192];
+        format(body, sizeof(body), "Stanje racuna\nUplata\nIsplata\nTransfer na drugi racun\nNovi PIN kartice ($%d, uz licnu kartu; odblokira karticu)", BANK_PIN_RESET_PRICE);
+        ShowPlayerDialog(playerid, DIALOG_BANK_MENU, DIALOG_STYLE_LIST, title, body, "Izaberi", "Zatvori");
     }
 }
 
@@ -133,6 +166,12 @@ stock Money_Transfer(playerid, amount)
         return;
     }
 
+    if (targetid != INVALID_PLAYER_ID && !g_Player[targetid][pHasBankAccount])
+    {
+        Msg_Error(playerid, "%s nema racun u banci.", g_BankTransferName[playerid]);
+        return;
+    }
+
     Money_GiveBank(playerid, -total, "transfer poslat");
     if (targetid != INVALID_PLAYER_ID)
     {
@@ -143,9 +182,9 @@ stock Money_Transfer(playerid, amount)
         return;
     }
 
-    // The receiver is offline: the balance is raised in the database, and the money comes back if no such account exists.
+    // The receiver is offline: the balance is raised in the database, and the money comes back if no such bank account exists.
     new query[192];
-    mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `bank` = `bank` + %d WHERE `name` = '%e' LIMIT 1", amount, g_BankTransferName[playerid]);
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `bank` = `bank` + %d WHERE `name` = '%e' AND `bank_account` = 1 LIMIT 1", amount, g_BankTransferName[playerid]);
     mysql_tquery(g_SQL, query, "OnBankTransferOffline", "dddd", playerid, g_AccountRace[playerid], amount, fee);
 }
 
@@ -194,7 +233,7 @@ stock bool:Money_OnDialogResponse(playerid, dialogid, response, listitem, const 
         case DIALOG_BANK_MENU, DIALOG_ATM_MENU:
         {
             new bool:atm = dialogid == DIALOG_ATM_MENU;
-            if (!response || !Point_Require(playerid, atm ? POINT_ATM : POINT_BANK))
+            if (!response || !Point_Require(playerid, atm ? POINT_ATM : POINT_BANK) || !Money_RequireAccount(playerid))
             {
                 return true;
             }
@@ -227,7 +266,7 @@ stock bool:Money_OnDialogResponse(playerid, dialogid, response, listitem, const 
             }
             else if (!atm && listitem == 4)
             {
-                BankPin_ShowSet(playerid);
+                BankPin_ShowReset(playerid);
             }
         }
         case DIALOG_BANK_DEPOSIT:

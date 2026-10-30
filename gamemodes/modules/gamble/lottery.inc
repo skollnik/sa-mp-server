@@ -71,14 +71,22 @@ static stock Lottery_Pay(account_id, amount)
     new playerid = Account_FindOnlineByDbId(account_id);
     if (playerid != INVALID_PLAYER_ID)
     {
-        Money_GiveBank(playerid, amount, "dobitak na lutriji");
+        if (Money_PayToBank(playerid, amount, "dobitak na lutriji"))
+        {
+            Msg_Success(playerid, "Dobili ste $%d na lutriji! Novac je na vasem racunu u banci.", amount);
+        }
+        else
+        {
+            Msg_Success(playerid, "Dobili ste $%d na lutriji! Nemate racun, pa novac ceka na salteru banke (/banka).", amount);
+        }
         Account_Save(playerid);
-        Msg_Success(playerid, "Dobili ste $%d na lutriji! Novac je na vasem racunu u banci.", amount);
         return;
     }
 
     new query[256];
-    mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `bank` = `bank` + %d WHERE `id` = %d", amount, account_id);
+    mysql_format(g_SQL, query, sizeof(query),
+        "UPDATE `accounts` SET `bank` = `bank` + IF(`bank_account` = 1, %d, 0), `held_pay` = `held_pay` + IF(`bank_account` = 1, 0, %d) WHERE `id` = %d",
+        amount, amount, account_id);
     mysql_tquery(g_SQL, query);
     mysql_format(g_SQL, query, sizeof(query),
         "INSERT INTO `money_logs` (`account_id`, `kind`, `amount`, `balance`, `reason`) " \

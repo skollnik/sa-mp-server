@@ -172,8 +172,13 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Animacija sedenja ne krene prvi put (biblioteka nije učitana), pa se prošnja odmah prekine | ✅ | Biblioteke animacija se učitavaju pri svakom spawnu; poza se proverava tek posle 3 s |
 | Opklada bez kockica ili novčića (dao ih je nekome dok druga strana čeka) | ✅ | Predmet se proverava pri ponudi i ponovo pri prihvatanju |
 | Dodatak ostaje na telu kad ga igrač da ili baci | ✅ | Kad poslednji komad napusti inventar (bilo kojim putem), skida se sa tela i to se pamti |
-| Ogroman ili daleko pomeren dodatak zaklanja ekran drugima ili lebdi | ✅ | Pri čuvanju položaja: najviše 0,5 od kosti, veličina 0,5–1,5; preko granice se vraća i igrač dobija poruku |
-| Dodatak „nosi“ igrač koji ga više nema (stari zapis u bazi) | ✅ | Pri učitavanju se stavlja samo ako je predmet u inventaru |
+| Ogroman ili daleko pomeren dodatak zaklanja ekran drugima ili lebdi | ✅ | Vlasnik je u testu odvukao ranac pola metra iza tela, pa je pomeranje ukinuto: položaji su fiksni u kodu |
+| Dodatak nosi igrač koji ga više nema (stari bit u nalogu) | ✅ | Pri učitavanju inventara stavlja se samo ako je predmet tu |
+| Igrač bez računa ostane bez plate ili dobitka | ✅ | Novac čeka na šalteru (`held_pay`), i za igrača koji nije online; pri otvaranju računa sam prelazi na račun |
+| Transfer na igrača bez računa | ✅ | Online: odbija se; offline: upit menja samo nalog sa računom, inače se novac vraća |
+| Plaćen novi PIN ili račun, a igrač izađe pre nego što se PIN sačuva | ✅ | Naplata ide tek kad je PIN spreman; ko izađe ranije ne plaća ništa |
+| Neko vidi PIN u chatu | ✅ | PIN se prikazuje samo u dijalogu vlasniku, jednom; u bazi je samo šifrovan |
+| Podizanje tuđeg novca sa šaltera | ✅ | Novac sa šaltera podiže samo vlasnik naloga, uz ličnu kartu |
 | Dodaci zauzmu slot koji koristi drugi sistem (telefon u ruci, oružje na leđima...) | ✅ | Slotovi 0–2 su samo za dodatke; novi sistemi koriste 3 i više (odluka 80) |
 | Dodaci nestanu posle smrti ili spawna | ✅ | Stavljaju se ponovo pri svakom spawnu |
 | Prodavnica 24/7 pokaže predmete koji se tu ne prodaju (dodaci imaju cenu 0) | ✅ | Lista i izbor u dijalogu idu kroz istu funkciju koja preskače predmete bez cene |
@@ -352,8 +357,13 @@ Every new system or change goes through these questions, against all existing sy
 | The sitting animation does not start the first time (library not loaded), so begging ends at once | ✅ | Animation libraries are loaded on every spawn; the pose is checked only after 3 s |
 | A bet without dice or a coin (given away while the other side waits) | ✅ | The item is checked at the offer and again at acceptance |
 | An accessory stays on the body after the player gives or drops it | ✅ | When the last piece leaves the inventory (any way), it comes off the body and that is saved |
-| A huge or far-moved accessory covers other players' screens or floats | ✅ | On save: at most 0.5 from the bone, scale 0.5–1.5; beyond that it is pulled back and the player is told |
-| An accessory "worn" by a player who no longer has it (an old DB row) | ✅ | On load it is put on only if the item is in the inventory |
+| A huge or far-moved accessory covers other players' screens or floats | ✅ | In the test the owner dragged a backpack half a metre behind the body, so moving was removed: places are fixed in the code |
+| An accessory worn by a player who no longer has it (an old bit in the account) | ✅ | When the inventory loads it is put on only if the item is there |
+| A player without an account loses pay or a prize | ✅ | The money waits at the counter (`held_pay`), also for offline players; it moves into the account once one is opened |
+| A transfer to a player without an account | ✅ | Online: refused; offline: the query only changes an account that has one, otherwise the money comes back |
+| A new PIN or account paid, but the player leaves before the PIN is saved | ✅ | The fee is charged only once the PIN is ready; someone who leaves earlier pays nothing |
+| Someone sees the PIN in chat | ✅ | The PIN is shown only in a dialog to its owner, once; the DB only keeps a hash |
+| Taking someone else's money from the counter | ✅ | Counter money is only paid to the account owner, with an ID card |
 | Accessories take a slot another system uses (phone in hand, weapon on the back...) | ✅ | Slots 0–2 are only for accessories; new systems use 3 and up (decision 80) |
 | Accessories vanish after death or spawn | ✅ | They are put back on every spawn |
 | The 24/7 shop lists items it does not sell (accessories have price 0) | ✅ | The list and the dialog choice go through the same function that skips items without a price |

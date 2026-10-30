@@ -66,7 +66,7 @@
 #include "modules/point/point_impl.inc"
 
 #include "modules/money/money_impl.inc"
-#include "modules/money/bank_pin.inc"
+#include "modules/money/bank_account.inc"
 #include "modules/money/begging.inc"
 #include "modules/gamble/bets.inc"
 #include "modules/gamble/lottery.inc"
@@ -123,7 +123,6 @@ public OnGameModeInit()
     Hud_Init();
     Hunger_Init();
     Inv_Init();
-    Acc_Init();
     Phone_Init();
     Maps_Init();
 
@@ -240,12 +239,6 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
     return 1;
 }
 
-public OnPlayerEditAttachedObject(playerid, EDIT_RESPONSE:response, index, modelid, boneid, Float:fOffsetX, Float:fOffsetY, Float:fOffsetZ, Float:fRotX, Float:fRotY, Float:fRotZ, Float:fScaleX, Float:fScaleY, Float:fScaleZ)
-{
-    Acc_OnPlayerEditAttached(playerid, response, index, fOffsetX, fOffsetY, fOffsetZ, fRotX, fRotY, fRotZ, fScaleX, fScaleY, fScaleZ);
-    return 1;
-}
-
 public OnPlayerInteriorChange(playerid, newinteriorid, oldinteriorid)
 {
     Staff_OnPlayerInteriorChange(playerid, newinteriorid);
@@ -312,7 +305,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     {
         return 1;
     }
-    if (BankPin_OnDialogResponse(playerid, dialogid, response, inputtext))
+    if (BankPin_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
     {
         return 1;
     }

@@ -65,6 +65,9 @@ stock Account_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `bank_pin` VARCHAR(61) NOT NULL DEFAULT ''");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `pin_fails` TINYINT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `pin_blocked_until` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `acc_worn` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `bank_account` TINYINT(1) NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `held_pay` INT NOT NULL DEFAULT 0");
 
     // The old per-chat toggle columns are folded into channel_bits (OOC = bit 0, PM = bit 1, newbie = bit 2) and cleared.
     mysql_tquery(g_SQL,
@@ -391,6 +394,9 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name(0, "bank_pin", g_Player[playerid][pBankPin], BCRYPT_HASH_LENGTH);
     cache_get_value_name_int(0, "pin_fails", g_Player[playerid][pPinFails]);
     cache_get_value_name_int(0, "pin_blocked_until", g_Player[playerid][pPinBlockedUntil]);
+    cache_get_value_name_int(0, "acc_worn", g_Player[playerid][pAccWornBits]);
+    cache_get_value_name_bool(0, "bank_account", g_Player[playerid][pHasBankAccount]);
+    cache_get_value_name_int(0, "held_pay", g_Player[playerid][pHeldPay]);
 
     if (!Account_CheckFreeSlot(playerid))
     {
@@ -789,7 +795,9 @@ stock Account_Create(playerid)
     g_Player[playerid][pLevel] = 1;
     g_Player[playerid][pRespect] = 0;
     g_Player[playerid][pCash] = STARTER_CASH;
-    g_Player[playerid][pBank] = STARTER_BANK;
+    // A new player has no bank account yet, so the starting savings wait at the bank counter.
+    g_Player[playerid][pBank] = 0;
+    g_Player[playerid][pHeldPay] = STARTER_BANK;
     g_Player[playerid][pPosX] = NEW_SPAWN_X;
     g_Player[playerid][pPosY] = NEW_SPAWN_Y;
     g_Player[playerid][pPosZ] = NEW_SPAWN_Z;
@@ -803,12 +811,12 @@ stock Account_Create(playerid)
     new ip[16], query[640];
     GetPlayerIp(playerid, ip, sizeof(ip));
     mysql_format(g_SQL, query, sizeof(query),
-        "INSERT INTO `accounts` (`name`, `password`, `admin_level`, `gender`, `age`, `skin`, `level`, `cash`, `bank`, " \
+        "INSERT INTO `accounts` (`name`, `password`, `admin_level`, `gender`, `age`, `skin`, `level`, `cash`, `bank`, `held_pay`, " \
         "`pos_x`, `pos_y`, `pos_z`, `pos_a`, `register_ip`, `last_ip`, `last_login`) " \
-        "VALUES ('%e', '%e', %d, %d, %d, %d, %d, %d, %d, %f, %f, %f, %f, '%e', '%e', NOW())",
+        "VALUES ('%e', '%e', %d, %d, %d, %d, %d, %d, %d, %d, %f, %f, %f, %f, '%e', '%e', NOW())",
         g_Player[playerid][pName], g_Player[playerid][pPasswordHash], g_Player[playerid][pAdminLevel],
         g_Player[playerid][pGender], g_Player[playerid][pAge], g_Player[playerid][pSkin], g_Player[playerid][pLevel],
-        g_Player[playerid][pCash], g_Player[playerid][pBank],
+        g_Player[playerid][pCash], g_Player[playerid][pBank], g_Player[playerid][pHeldPay],
         g_Player[playerid][pPosX], g_Player[playerid][pPosY], g_Player[playerid][pPosZ], g_Player[playerid][pPosA],
         ip, ip);
     mysql_tquery(g_SQL, query, "OnAccountCreated", "dd", playerid, g_AccountRace[playerid]);
@@ -939,6 +947,7 @@ stock Account_Save(playerid, bool:sync = false)
         g_Player[playerid][pPaydayMinutes], g_Player[playerid][pHasIdCard] ? 1 : 0, g_Player[playerid][pPhoneNumber],
         g_Player[playerid][pPhoneCredit], g_Player[playerid][pPhoneListed] ? 1 : 0, g_Player[playerid][pHunger],
         g_Player[playerid][pSettingBits], g_Player[playerid][pRingtone], g_Player[playerid][pPinFails], g_Player[playerid][pPinBlockedUntil],
+        g_Player[playerid][pAccWornBits], g_Player[playerid][pHasBankAccount] ? 1 : 0, g_Player[playerid][pHeldPay],
         g_Player[playerid][pMuteUntil], g_Player[playerid][pNewbieMuteUntil],
         g_Player[playerid][pJailSeconds], g_Player[playerid][pJailReason],
         g_Player[playerid][pDbId]);

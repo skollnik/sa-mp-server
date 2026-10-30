@@ -115,17 +115,24 @@ stock Payday_Give(playerid)
 
     new vip = Vip_GetLevel(playerid), bool:happy = Payday_IsHappyHour();
     new wage = PAYDAY_SOCIAL_WAGE * (happy ? 2 : 1);
-    new interest = min(floatround(float(g_Player[playerid][pBank]) * PAYDAY_INTEREST_RATE, floatround_floor), PAYDAY_INTEREST_MAX);
+    new interest = g_Player[playerid][pHasBankAccount] ? min(floatround(float(g_Player[playerid][pBank]) * PAYDAY_INTEREST_RATE, floatround_floor), PAYDAY_INTEREST_MAX) : 0;
     new bonus = (wage + interest) * g_VipPaydayBonus[vip] / 100;
     new respect = (PAYDAY_RESPECT + (vip == VIP_GOLD ? 1 : 0)) * (happy ? 2 : 1);
     new total = wage + interest + bonus;
 
-    Money_GiveBank(playerid, total, "payday");
+    new bool:to_account = Money_PayToBank(playerid, total, "payday");
     g_Player[playerid][pRespect] += respect;
 
     SendClientMessage(playerid, COLOR_SERVER, "_______________ PLATNI LISTIC _______________");
     SendClientMessage(playerid, COLOR_WHITE, "Plata (socijalna pomoc): $%d%s | Kamata: $%d | VIP bonus: $%d", wage, happy ? (" (happy hour x2)") : (""), interest, bonus);
-    SendClientMessage(playerid, COLOR_WHITE, "Ukupno uplaceno na racun: " C_GREEN "$%d" C_WHITE " | Novo stanje: $%d", total, g_Player[playerid][pBank]);
+    if (to_account)
+    {
+        SendClientMessage(playerid, COLOR_WHITE, "Ukupno uplaceno na racun: " C_GREEN "$%d" C_WHITE " | Novo stanje: $%d", total, g_Player[playerid][pBank]);
+    }
+    else
+    {
+        SendClientMessage(playerid, COLOR_WHITE, "Nemate racun: plata od " C_GREEN "$%d" C_WHITE " ceka na salteru banke (ukupno $%d, /banka).", total, g_Player[playerid][pHeldPay]);
+    }
     SendClientMessage(playerid, COLOR_WHITE, "Respect: +%d (%d/%d do nivoa %d)", respect, g_Player[playerid][pRespect], Payday_RespectNeeded(playerid), g_Player[playerid][pLevel] + 1);
     GameTextForPlayer(playerid, "~y~Payday", 3000, 1);
 

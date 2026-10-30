@@ -387,7 +387,7 @@ static stock Phone_Topup(playerid, amount)
 
     if (g_Phone[playerid][phTopupFromBank])
     {
-        if (!Phone_RequireDevice(playerid))
+        if (!Phone_RequireDevice(playerid) || !Money_RequireAccount(playerid))
         {
             return;
         }

@@ -42,7 +42,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### ECO — Ekonomija
 - **ECO-1 Novac:** keš u džepu i račun u banci. Novac je samo serverski, pa anti-cheat ne može da se zaobiđe.
-- **ECO-2 Banka:** filijale i bankomati, uplata, isplata, transfer i štedni račun. PIN kartice za bankomat (blokada posle 3 pogrešna).
+- **ECO-2 Banka:** filijale i bankomati, uplata, isplata, transfer i štedni račun. Račun se otvara na šalteru uz ličnu kartu ($100), uz karticu i nasumičan PIN; bez računa plata čeka na šalteru. PIN za bankomat (blokada posle 3 pogrešna), novi PIN na šalteru ($50).
 - **ECO-3 Porezi** na imovinu i vozila. Budžet države puni vlada.
 - **ECO-4 Logovi transakcija**, radi borbe protiv duplikacije novca.
 - **ECO-5 Igre na sreću i prošnja:** opklade kockicama i novčićem između igrača, lutrija svakog sata, prošnja za nove igrače.
@@ -90,7 +90,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **INV-2 Predmeti:** telefon, radio, hrana, piće, cigarete, alat, kanister, maska, uže, povez za oči, droga, materijali.
 - **INV-3 Oružje kao predmet:** ima serijski broj i municiju, a može da se stavi u futrolu ili gepek.
 - **INV-4 Inventar kontejnera:** kuća, vozilo, firma i frakcija.
-- **INV-5 Dodaci na telu:** naočare, kape, šeširi, ranac i torba iz prodavnice odeće; po jedan na glavi, licu i leđima/ruci; igrač podešava položaj mišem (`/dodaci`).
+- **INV-5 Dodaci na telu:** naočare, kape, šeširi, ranac i torba iz prodavnice odeće; po jedan na glavi, licu i leđima/ruci; položaji su fiksni, stavljaju se i skidaju u `/dodaci`.
 
 ### PHONE — Telefon
 - **PHONE-1 Broj telefona:** telefon i SIM kartica se kupuju odvojeno, broj je na nalogu; pozivi (`/pozovi`, `/javi`, `/prekini`), SMS i javni imenik se plaćaju kreditom; lični kontakti; meni `/telefon`; broj se gasi posle 6 meseci neaktivnosti.
@@ -210,7 +210,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### ECO — Economy
 - **ECO-1 Money:** cash in pocket and bank account. Money is server-side only, so anti-cheat cannot be bypassed.
-- **ECO-2 Bank:** branches and ATMs, deposit, withdraw, transfer and savings. Card PIN for ATMs (blocked after 3 wrong tries).
+- **ECO-2 Bank:** branches and ATMs, deposit, withdraw, transfer and savings. The account is opened at the counter with an ID card ($100) and comes with a card and a random PIN; without one, pay waits at the counter. ATM PIN (blocked after 3 wrong tries), a new PIN at the counter ($50).
 - **ECO-3 Taxes** on property and vehicles. The government fills the state budget.
 - **ECO-4 Transaction logs**, to fight money duplication.
 - **ECO-5 Games of chance and begging:** dice and coin bets between players, an hourly lottery, begging for new players.
@@ -258,7 +258,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **INV-2 Items:** phone, radio, food, drinks, cigarettes, tools, jerry can, mask, rope, blindfold, drugs, materials.
 - **INV-3 Weapons as items:** they have a serial number and ammo, and can be holstered or put in a trunk.
 - **INV-4 Container inventories:** house, vehicle, business and faction.
-- **INV-5 Body accessories:** glasses, caps, hats, a backpack and a bag from the clothing shop; one each on the head, face and back/hand; the player sets the position with the mouse (`/dodaci`).
+- **INV-5 Body accessories:** glasses, caps, hats, a backpack and a bag from the clothing shop; one each on the head, face and back/hand; places are fixed, worn and taken off in `/dodaci`.
 
 ### PHONE — Phone
 - **PHONE-1 Phone number:** the phone and the SIM card are bought separately, the number belongs to the account; calls (`/pozovi`, `/javi`, `/prekini`), SMS and the public directory are paid with credit; personal contacts; a `/telefon` menu; the number is freed after 6 months of inactivity.
