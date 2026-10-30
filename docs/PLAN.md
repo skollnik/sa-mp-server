@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** ACC-9 (podešavanja) napisan, čeka test vlasnika; zatim lepši HUD i dodaci Faze 2, pa Faza 3 (ažurirano 2026-10-29)
+**Trenutni status:** HUD od tekstura iz igre napisan, čeka test vlasnika; sledeće su PIN, kockice i novčić, prošnja, lutrija i dodaci na telu (ažurirano 2026-10-30)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -46,7 +46,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] HEALTH-5: glad sa trakom
 - [x] PHONE-1 (nadogradnja): telefon i SIM kartica odvojeno, kredit i dopuna, meni `/telefon`, javni imenik
 - [x] Strelice na vratima, nivo po uobičajenoj formuli, happy hour po broju plata
-- [ ] Lepši HUD sa teksturama (predlog čeka odobrenje vlasnika)
+- [x] HUD od tekstura iz igre (datum na pločici, glad sa ikonom, kvart na pločici, logo sa ID-jem i brojem igrača)
 - [ ] Dodaci: PIN za bankomat i karticu, dodaci na telu, novčić i kockice uz opkladu, prošnja, lutrija (svaki se pre izrade predlaže)
 
 ### Faza 3: Vozila i dozvole
@@ -103,7 +103,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** ACC-9 (settings) written, waiting for the owner's test; then a nicer HUD and the Phase 2 extras, then Phase 3 (updated 2026-10-29)
+**Current status:** HUD from in-game textures written, waiting for the owner's test; next are the PIN, dice and coin, begging, lottery and body accessories (updated 2026-10-30)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -147,7 +147,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] HEALTH-5: hunger with a bar
 - [x] PHONE-1 (upgrade): phone and SIM card bought separately, credit and top-up, a `/telefon` menu, a public directory
 - [x] Door arrows, levels by the usual formula, happy hour counted in paydays
-- [ ] A nicer HUD with textures (proposal waiting for the owner's approval)
+- [x] HUD from in-game textures (date on a plate, hunger with an icon, district on a plate, logo with ID and player count)
 - [ ] Extras: ATM and card PIN, body accessories, coin flip and dice bets, begging, lottery (each is proposed before it is built)
 
 ### Phase 3: Vehicles and licenses

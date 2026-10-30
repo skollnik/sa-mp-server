@@ -77,6 +77,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 69 | 2026-10-29 | Strelica na vratima se bira iz menija sa slikama (14 modela) i važi za ulaz i izlaz; otvoreno piće se ne vraća u inventar | Odobren predlog vlasnika |
 | 70 | 2026-10-29 | `/podesavanja` je jedno mesto za izbore igrača: delovi HUD-a (sat i datum, kvart) i kanali; traka gladi ne može da se sakrije; melodija se bira u meniju telefona; sve se čuva u bazi (`setting_bits`, `ringtone`), a `/hud` se sada pamti | Odobren predlog vlasnika (ACC-9); novi sistemi samo dodaju svoj red |
 | 71 | 2026-10-29 | Vozilo se prodaje samo drugom igraču, ne i državi | Odluka vlasnika; novac ne nastaje iz vazduha prodajom državi |
+| 72 | 2026-10-30 | HUD i svi budući prozori se crtaju samo teksturama iz igre (pločice, zaobljene ivice, ikone sa radara), bez custom modela; HUD ima datum na pločici, traku gladi u stilu GTA traka sa ikonom, kvart na pločici sa ikonom i logo sa ID-jem i brojem igrača | Vlasnik želi da svi igrači vide isto, i na 0.3.7 i na 0.3.DL |
 
 ### Arhitektura koda (predlog)
 ```
@@ -175,6 +176,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 69 | 2026-10-29 | A door's arrow is picked from a picture menu (14 models) and applies to both sides; an opened drink does not go back to the inventory | Owner approved the proposal |
 | 70 | 2026-10-29 | `/podesavanja` is one place for player choices: HUD parts (clock and date, district) and channels; the hunger bar cannot be hidden; the ringtone is picked in the phone menu; everything is stored in the DB (`setting_bits`, `ringtone`), and `/hud` is now remembered | Owner approved the proposal (ACC-9); new systems just add their row |
 | 71 | 2026-10-29 | A vehicle can only be sold to another player, not to the state | Owner's decision; selling to the state would create money out of thin air |
+| 72 | 2026-10-30 | The HUD and every future screen are drawn only with textures from the game (plates, round ends, radar icons), no custom models; the HUD has the date on a plate, a GTA-style hunger bar with an icon, the district on a plate with an icon and a logo with the ID and player count | The owner wants every player to see the same, on 0.3.7 and 0.3.DL |
 
 ### Code architecture (proposal)
 ```

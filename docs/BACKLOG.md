@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 2 | Lepši HUD sa teksturama (zahtev vlasnika 29.10, predlog čeka odobrenje); zatim PIN za bankomat i karticu, dodaci na telu, novčić i kockice uz opkladu, prošnja i lutrija (vlasnik odobrio sve, svaki se pre izrade predlaže) |
+| 2 | PIN za bankomat i karticu, novčić i kockice uz opkladu, prošnja, lutrija (svaki sat, brojevi 1–50, jedan tiket po igraču), dodaci na telu (vlasnik odobrio sve 30.10) |
 | 3 | Lična vozila (ključevi, gorivo, parkiranje, gepek), auto pijaca kao admin event, auto škola i dozvole, mehaničar |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
@@ -237,6 +237,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 29.10.2026. | Telefon sa SIM karticom: telefon i SIM odvojeno, izbor broja, kredit i dopuna (24/7 i sa računa), meni `/telefon`, javni imenik, 30 kontakata, SMS iz kontakata, gašenje broja posle 6 meseci; `/promenibroj` ukinut |
 | 29.10.2026. | Strelice na vratima (meni sa slikama), nivo po formuli (sledeći nivo × 4), happy hour po broju plata; otvoreno piće se ne vraća u inventar |
 | 29.10.2026. | Podešavanja (ACC-9): `/podesavanja` sa delovima HUD-a i kanalima (traka gladi se uvek vidi); melodija telefona u meniju `/telefon` (5 melodija, čuje se i okolo); `/hud` se pamti. Odluka: vozilo se prodaje samo drugom igraču |
+| 30.10.2026. | HUD od tekstura iz igre: datum na pločici, traka gladi sa ikonom hamburgera koja trepće kad je igrač gladan, kvart na pločici sa ikonom, logo servera sa ID-jem i brojem igrača (može da se sakrije u `/podesavanja`) |
 
 ---
 
@@ -247,7 +248,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 2 | A nicer HUD with textures (owner's request 2026-10-29, proposal waiting for approval); then ATM and card PIN, body accessories, coin flip and dice bets, begging and the lottery (owner approved all, each is proposed before it is built) |
+| 2 | ATM and card PIN, coin flip and dice bets, begging, lottery (every hour, numbers 1–50, one ticket per player), body accessories (owner approved all on 2026-10-30) |
 | 3 | Personal vehicles (keys, fuel, parking, trunk), car market as an admin event, driving school and licenses, mechanic |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
@@ -477,3 +478,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-29 | SIM card phone: phone and SIM bought separately, picking a number, credit and top-up (24/7 and from the bank), a `/telefon` menu, public directory, 30 contacts, SMS from contacts, number freed after 6 months; `/promenibroj` removed |
 | 2026-10-29 | Door arrows (picture menu), levels by formula (next level × 4), happy hour counted in paydays; an opened drink does not go back to the inventory |
 | 2026-10-29 | Settings (ACC-9): `/podesavanja` with HUD parts and channels (the hunger bar is always shown); the phone ringtone in the `/telefon` menu (5 ringtones, heard nearby too); `/hud` is remembered. Decision: a vehicle is sold only to another player |
+| 2026-10-30 | HUD from in-game textures: date on a plate, hunger bar with a burger icon that blinks when the player is hungry, district on a plate with an icon, server logo with ID and player count (can be hidden in `/podesavanja`) |

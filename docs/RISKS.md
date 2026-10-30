@@ -156,6 +156,8 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Melodija telefona sa nevažećim brojem iz baze | ✅ | Broj melodije se proverava pre upotrebe, nevažeći postaje prva melodija |
 | Zvonjava kao spam okolini | ✅ | Zvoni najviše 30 s po pozivu, čuje se samo do 15 m, a pozivi se plaćaju kreditom |
 | Sakriven deo HUD-a ostane prikazan ili se pojavi dupli | ✅ | Posle svake promene HUD se ceo sklanja i ponovo crta samo sa uključenim delovima |
+| HUD sa custom teksturama koji igrač na 0.3.7 ne vidi | ✅ | Koriste se samo teksture iz igre |
+| Previše textdraw-ova po igraču | ✅ | HUD koristi 17 po igraču (granica je 256), sat i datum su zajednički za sve |
 
 ---
 
@@ -315,3 +317,5 @@ Every new system or change goes through these questions, against all existing sy
 | A phone ringtone with an invalid number from the DB | ✅ | The ringtone number is checked before use; an invalid one becomes the first ringtone |
 | Ringing as spam for people around | ✅ | It rings at most 30 s per call, is heard only within 15 m, and calls cost credit |
 | A hidden HUD part stays on screen or shows up twice | ✅ | After every change the whole HUD is removed and drawn again with only the parts that are on |
+| A custom-texture HUD that a 0.3.7 player cannot see | ✅ | Only textures from the game are used |
+| Too many textdraws per player | ✅ | The HUD uses 17 per player (the limit is 256); clock and date are shared by everyone |

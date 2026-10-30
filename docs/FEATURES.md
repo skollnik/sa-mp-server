@@ -53,7 +53,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **WORLD-4 Opština (City Hall):** uzimanje posla, lična karta, plaćanje kazni.
 - **WORLD-5 Dinamičke kapije i vrata** (frakcijske, privatne).
 - **WORLD-6 Mapiranja i custom enterijeri** (streamer objekti).
-- **WORLD-7 HUD i UI:** brzinomer, prikaz goriva, notifikacije, dijalozi, 3D labele.
+- **WORLD-7 HUD i UI:** HUD od tekstura iz igre (datum, sat, glad sa ikonom, kvart, logo sa ID-jem i brojem igrača); brzinomer, prikaz goriva, notifikacije, dijalozi, 3D labele.
 
 ### LIC — Dozvole
 - **LIC-1 Vozačke dozvole:** auto škola sa teorijskim testom i praktičnom vožnjom po checkpoint-ima. Postoje kategorije auto, motor, kamion.
@@ -219,7 +219,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **WORLD-4 City Hall:** take a job, ID card, pay fines.
 - **WORLD-5 Dynamic gates and doors** (faction, private).
 - **WORLD-6 Mappings and custom interiors** (streamer objects).
-- **WORLD-7 HUD and UI:** speedometer, fuel display, notifications, dialogs, 3D labels.
+- **WORLD-7 HUD and UI:** HUD from in-game textures (date, clock, hunger with an icon, district, logo with ID and player count); speedometer, fuel display, notifications, dialogs, 3D labels.
 
 ### LIC — Licenses
 - **LIC-1 Driving licenses:** driving school with a theory test and a practical checkpoint drive. Categories are car, motorbike and truck.
