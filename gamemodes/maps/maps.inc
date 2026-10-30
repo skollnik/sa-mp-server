@@ -19,7 +19,7 @@ static stock bool:Map_IsFarModel(modelid)
 {
     switch (modelid)
     {
-        case 4600, 19529, 19531, 19536, 19547: return true;
+        case 4600, 4806, 19529, 19531, 19536, 19547: return true;
     }
     return false;
 }
@@ -40,6 +40,7 @@ stock STREAMER_TAG_OBJECT:Map_Interior(modelid, Float:x, Float:y, Float:z, Float
 #include "maps/exteriors/cityhall_parking.inc"
 #include "maps/exteriors/car_market.inc"
 #include "maps/exteriors/bank_exterior.inc"
+#include "maps/exteriors/vehicle_inspection.inc"
 
 #include "maps/interiors/cityhall_a.inc"
 #include "maps/interiors/police_a.inc"
@@ -54,6 +55,7 @@ stock Maps_Init()
     Map_CityHallParking();
     Map_CarMarket();
     Map_BankExterior();
+    Map_VehicleInspection();
 
     Map_CityHallInteriorA();
     Map_PoliceInteriorA();
@@ -68,4 +70,5 @@ stock Maps_OnPlayerConnect(playerid)
     Map_CityHallExterior_Remove(playerid);
     Map_CityHallParking_Remove(playerid);
     Map_BankExterior_Remove(playerid);
+    Map_VehicleInspection_Remove(playerid);
 }

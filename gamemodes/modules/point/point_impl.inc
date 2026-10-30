@@ -147,28 +147,8 @@ stock bool:Point_Require(playerid, E_POINT_TYPE:type)
     return false;
 }
 
-cmd:napravimesto(playerid, params[])
+static stock Point_Create(playerid, E_POINT_TYPE:type)
 {
-    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
-    {
-        return 1;
-    }
-
-    new key[16], E_POINT_TYPE:type = E_POINT_TYPE:-1;
-    sscanf(params, "s[16]", key);
-    for (new E_POINT_TYPE:t; t < E_POINT_TYPE; t++)
-    {
-        if (!strcmp(key, g_PointInfo[t][piKey], true) && key[0])
-        {
-            type = t;
-        }
-    }
-    if (type == E_POINT_TYPE:-1)
-    {
-        Msg_Usage(playerid, "/napravimesto [banka / bankomat / opstina / prodavnica / odeca / pumpa] (stanite tamo gde igrac treba da stoji)");
-        return 1;
-    }
-
     new slot = -1;
     for (new i = 0; i < MAX_POINTS; i++)
     {
@@ -181,7 +161,7 @@ cmd:napravimesto(playerid, params[])
     if (slot == -1)
     {
         Msg_Error(playerid, "Dostignut je najveci broj mesta (%d).", MAX_POINTS);
-        return 1;
+        return;
     }
 
     g_Points[slot][ptDbId] = Point_FreeDbId();
@@ -203,6 +183,53 @@ cmd:napravimesto(playerid, params[])
     format(details, sizeof(details), "mesto %d: %s", g_Points[slot][ptDbId], g_PointInfo[g_Points[slot][ptType]][piKey]);
     Staff_Log(playerid, "point_create", INVALID_PLAYER_ID, details);
     Msg_Admin(playerid, "Napravljeno je %s (%s).", details, g_PointInfo[g_Points[slot][ptType]][piName]);
+}
+
+static stock Point_ShowTypes(playerid)
+{
+    new body[512], line[64];
+    for (new E_POINT_TYPE:t; t < E_POINT_TYPE; t++)
+    {
+        format(line, sizeof(line), "%s\t%s\n", g_PointInfo[t][piName], g_PointInfo[t][piCommand]);
+        strcat(body, line);
+    }
+    ShowPlayerDialog(playerid, DIALOG_POINT_TYPE, DIALOG_STYLE_TABLIST, "Novo mesto (stanite tamo gde igrac treba da stoji)", body, "Napravi", "Zatvori");
+}
+
+stock bool:Point_OnDialogResponse(playerid, dialogid, response, listitem)
+{
+    if (dialogid != DIALOG_POINT_TYPE)
+    {
+        return false;
+    }
+    if (response && listitem >= 0 && listitem < _:E_POINT_TYPE && Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    {
+        Point_Create(playerid, E_POINT_TYPE:listitem);
+    }
+    return true;
+}
+
+// Without a parameter a list of the types opens, so nobody has to remember the keys.
+cmd:napravimesto(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    {
+        return 1;
+    }
+    if (isnull(params))
+    {
+        Point_ShowTypes(playerid);
+        return 1;
+    }
+    for (new E_POINT_TYPE:t; t < E_POINT_TYPE; t++)
+    {
+        if (!strcmp(params, g_PointInfo[t][piKey], true))
+        {
+            Point_Create(playerid, t);
+            return 1;
+        }
+    }
+    Msg_Usage(playerid, "/napravimesto (lista) ili /napravimesto [banka / bankomat / opstina / prodavnica / odeca / pumpa / pregled]");
     return 1;
 }
 

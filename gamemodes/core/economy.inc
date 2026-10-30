@@ -40,6 +40,10 @@
 
 #define VEH_MAX_PER_PLAYER          (2)
 #define FUEL_PRICE_PER_LITRE        (3)
+// Registration at the technical inspection, about an hour of work for a car; valid VEH_REGISTRATION_DAYS.
+#define REG_PRICE_MOTORBIKE         (500)
+#define REG_PRICE_CAR               (1000)
+#define REG_PRICE_LARGE             (2000)
 
 #define PHONE_PRICE                 (500)
 #define PHONE_SIM_PRICE             (50)

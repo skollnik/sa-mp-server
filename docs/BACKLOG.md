@@ -45,13 +45,11 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Kanister (korak 3.3); vožnja bez dozvole (korak 3.4) |
 | Anti-cheat za vozila: HP vozila (repair hack), ulazak u zaključano vozilo |
 | VIP: mesto za još jedno vozilo (Silver+), sopstvena tablica i neon (Gold) |
-| Predlog (čeka odobrenje): lična vozila stalno u svetu, i kad vlasnik nije online; vozila naloga neaktivnih 14 dana se ne pojavljuju dok se vlasnik ne prijavi; kopija ključa radi i dok vlasnik nije online |
-| Predlog (čeka odobrenje): motor se pali 1,5 s uz `/me`, a oštećen motor (ispod 400 HP) ponekad ne upali iz prvog puta |
-| Predlog (čeka odobrenje): upaljeno i otključano vozilo može da vozi i igrač bez ključa; kad ugasi motor, bez ključa ne može ponovo da ga upali |
-| Predlog (čeka odobrenje): `/resetvozila [sekunde]` sa odbrojavanjem i porukom svima; vraća i vozila poslova i frakcija na njihova mesta kad ti sistemi dođu |
-| Predlog (čeka odobrenje): admin `/atune` (meni: felne, spojler, branici, nitro, hidraulika, boja, paintjob); tuning ličnog vozila se pamti i ide u log |
-| Predlog (čeka odobrenje): `/napravimesto` bez parametra otvara dijalog sa listom tipova mesta |
-| Predlog (čeka odobrenje): registracija vozila u opštini (tablice se dobijaju tek posle registracije, važi 30 dana, produžava se; policija proverava kad dođe) |
+| Kad dođe mehaničar (korak 3.5): podići uslov za tehnički pregled sa 650 na oko 900 HP |
+| Kad dođe policija (Faza 5): provera registracije i tablica, kazna i pauk za neregistrovano vozilo ili vozilo sa isteklom registracijom |
+| Kad dođu vozila poslova i frakcija: `/resetvozila` i `/respawnveh` da ih vraćaju na njihova mesta |
+| GTA radionice za tuning (Transfender i ostale) daju besplatan tuning koji se ne pamti: zatvoriti ih ili naplaćivati (mehaničar, anti-cheat) |
+| Kad dođe mehaničar (korak 3.5): ista mapa u Willowfield-u (radionica pored tehničkog pregleda) |
 
 **Posle kuća (Faza 4) i frakcija (Faza 5)**
 | Stavka |
@@ -98,7 +96,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Stavka | Kako radi i sa čim se vezuje | Mapa |
 |--------|------------------------------|------|
 | Limiter brzine (`/limit`) | Vozač zada najveću brzinu | — |
-| Tehnički pregled | Registracija važi X dana, produžava se na tehničkom pregledu; policija proverava | — |
+| ✅ Tehnički pregled | Registracija važi X dana, produžava se na tehničkom pregledu; policija proverava | — |
 | Pay'n'spray i perionica | Plaća se popravka i farbanje ili pranje vozila | Pay'n'spray postoji u GTA; perionica nema mapu |
 | Drive-thru | Naručivanje hrane iz vozila na prolazu restorana brze hrane | Prolazi postoje u GTA |
 | Iznajmljivanje bicikala i skutera | Punkt sa vozilima, plaća se po satu, vozilo nestaje kad istekne | Mapa sa 7 malih punktova (LS: Unity stanica, kod opštine, kod bolnice, Downtown, Conference Center; Dillimore) |
@@ -262,6 +260,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 30.10.2026. | Ranac pomeren unazad i proširen; logo bez oznake (samo ime servera); `/setrespect` i `/setlevel` više ne izazivaju skok za više nivoa |
 | 30.10.2026. | Faza 3, korak 3.1: lična vozila (`/v`, parkiranje, nestajanje 5 min posle odjave), tablice, ključ i jedna kopija, motor N, brava Y, svetla, hauba, gepek, gorivo i benzinske pumpe (`/gorivo`), brzinomer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`; VIP `/vcolor` i `/vfix` samo na svom vozilu; ranac ponovo podešen; dodaci posle restarta servera više ne ostaju vidljivi |
 | 30.10.2026. | Ispravke posle testa 3.1: nalog se ponovo čuva u bazi (pozicija, nivo, račun, dodaci posle izlaska), HUD se više ne duplira posle smrti, rezervoar se toči do punog, obrisani ID-jevi GPS-a, ulaza i mesta se ponovo daju (i vozilima), hamburger pomeren desno, veća slova logoa, urađene stavke u „Odobreni sistemi“ označene sa ✅ |
+| 30.10.2026. | Dopune vozila: vozila stalno u svetu (neaktivni 14 dana se ne pojavljuju), kopija ključa radi i kad vlasnik nije tu, motor se pali 1,5 s, upaljeno vozilo vozi i igrač bez ključa, registracija i tehnički pregled (`/registruj`, 60 dana, mapa u Willowfield-u, `/napravimesto pregled`), admin `/atune`, `/resetvozila [sekunde]` sa odbrojavanjem, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` sa listom, sve komande u `/pomoc` i `/ahelp` |
 
 ---
 
@@ -302,13 +301,6 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Item |
 |------|
 | Talking through a vehicle window (`/cw`) |
-| Proposal (waiting for approval): personal vehicles always in the world, even when the owner is offline; vehicles of accounts inactive for 14 days do not appear until the owner logs in; the key copy works while the owner is offline |
-| Proposal (waiting for approval): the engine starts after 1.5 s with a `/me`, and a damaged engine (under 400 HP) sometimes fails on the first try |
-| Proposal (waiting for approval): a running, unlocked vehicle can be driven by a player without the key; once they switch the engine off, they cannot start it again without a key |
-| Proposal (waiting for approval): `/resetvozila [seconds]` with a countdown and a message to everyone; it also returns job and faction vehicles to their spots once those systems exist |
-| Proposal (waiting for approval): admin `/atune` (menu: wheels, spoiler, bumpers, nitro, hydraulics, colour, paintjob); tuning a personal vehicle is kept and logged |
-| Proposal (waiting for approval): `/napravimesto` without a parameter opens a dialog listing point types |
-| Proposal (waiting for approval): vehicle registration at the city hall (plates come only after registering, valid 30 days, renewable; police checks it once police exist) |
 | The owner places pumps at the GTA gas stations (`/napravimesto pumpa`, where the driver stops) and GPS locations for them |
 | Step 3.2, a bought vehicle (proposal for the owner's question): from a player, the parking spot moves to where the sale happened and the key copy is cancelled; from the market, the parking spot is where it was bought until the new owner parks it (`/v parkiraj`); the buyer must be level 2 |
 | Job and faction vehicles get fuel when they are created, otherwise their engine stops right away |
@@ -317,6 +309,11 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Jerry can (step 3.3); driving without a license (step 3.4) |
 | Vehicle anti-cheat: vehicle HP (repair hack), entering a locked vehicle |
 | VIP: one more vehicle slot (Silver+), custom plate and neon (Gold) |
+| Once the mechanic exists (step 3.5): raise the inspection requirement from 650 to about 900 HP |
+| Once police exist (Phase 5): checking registration and plates, a fine and the tow truck for an unregistered or expired vehicle |
+| Once job and faction vehicles exist: `/resetvozila` and `/respawnveh` return them to their spots |
+| GTA tuning shops (Transfender and others) give free tuning that is not kept: close them or charge for it (mechanic, anti-cheat) |
+| Once the mechanic exists (step 3.5): the same map in Willowfield (the workshop next to the inspection) |
 
 **After houses (Phase 4) and factions (Phase 5)**
 | Item |
@@ -363,7 +360,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Item | How it works and what it ties into | Map |
 |------|------------------------------------|-----|
 | Speed limiter (`/limit`) | The driver sets a top speed | — |
-| Vehicle inspection | Registration is valid for X days and renewed at the inspection; police check it | — |
+| ✅ Vehicle inspection | Registration is valid for X days and renewed at the inspection; police check it | — |
 | Pay'n'spray and car wash | Paid repair and respray, or a car wash | Pay'n'spray exists in GTA; no car wash map |
 | Drive-thru | Ordering food from a vehicle at a fast food drive-thru | Drive-thru lanes exist in GTA |
 | Bike and scooter rental | A rental point with vehicles, paid per hour, the vehicle disappears when time runs out | Map with 7 small points (LS: Unity Station, city hall, hospital, Downtown, Conference Center; Dillimore) |
@@ -526,4 +523,5 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-30 | New HUD (a logo built from shapes top right, a round hunger badge with a percentage); clock, date, ID and player count bottom right. Opening an account is free. Fixed glasses (they sat inside the head) and the knit hat (it was turned) |
 | 2026-10-30 | Backpack moved back and widened; logo without the mark (server name only); `/setrespect` and `/setlevel` no longer cause a multi-level jump |
 | 2026-10-30 | Phase 3, step 3.1: personal vehicles (`/v`, parking, leaving 5 min after logout), plates, a key and one copy, engine N, lock Y, lights, bonnet, boot, fuel and gas stations (`/gorivo`), speedometer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`; VIP `/vcolor` and `/vfix` only on own vehicles; backpack tuned again; accessories no longer stay visible after a server restart |
-| 2026-10-30 | Fixes after the 3.1 test: the account is saved to the database again (position, level, bank account, accessories after logout), the HUD no longer doubles after death, the tank fills to the brim, deleted GPS, door and point IDs are given out again (vehicles too), the burger badge moved right, a bigger logo font, done items in "Approved systems" marked with â |
+| 2026-10-30 | Fixes after the 3.1 test: the account is saved to the database again (position, level, bank account, accessories after logout), the HUD no longer doubles after death, the tank fills to the brim, deleted GPS, door and point IDs are given out again (vehicles too), the burger badge moved right, a bigger logo font, done items in "Approved systems" marked with ✅ |
+| 2026-10-30 | Vehicle additions: vehicles always in the world (inactive for 14 days are not spawned), the key copy works while the owner is away, the engine starts in 1.5 s, a running vehicle can be driven without a key, registration and technical inspection (`/registruj`, 60 days, a map in Willowfield, `/napravimesto pregled`), admin `/atune`, `/resetvozila [seconds]` with a countdown, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` with a list, every command in `/pomoc` and `/ahelp` |

@@ -192,9 +192,19 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 ### Faza 3: vozila
 | Rizik | Status | Kako je rešeno |
 |-------|--------|----------------|
-| Neko odveze tuđe otključano vozilo | ✅ | Bez ključa motor ne može da se upali, a upaljen motor se gasi kad za volan sedne neko bez ključa (krađa dolazi sa VEH-12) |
-| Vozilo se ukrade ili blokira put dok vlasnik nije online | ✅ | Vozilo nestaje 5 minuta posle odjave vlasnika, kad je prazno |
-| Igrač sa kopijom ključa vozi tuđe vozilo dok vlasnik nije online | 👁 | Vozilo ostaje dok neko sedi u njemu, pa nestaje čim izađe; vlasnik kopiju oduzima u `/v` |
+| Neko odveze tuđe otključano vozilo | ✅ | Ugašeno vozilo bez ključa ne može da se upali; upaljeno vozilo može da odveze svako (ključ je u bravi, kao u referentnim gamemode-ovima), ali kad ugasi motor, bez ključa ga ne pali ponovo. Vlasnik zaključava (Y) i nalazi vozilo preko `/v` → GPS |
+| Vozilo blokira put dok vlasnik nije online | 👁 | Vozila su stalno u svetu; admin ga sklanja sa `/respawnveh` ili `/resetvozila` (zabranjena mesta su u BACKLOG-u) |
+| Vozila neaktivnih igrača popune granicu od 2000 vozila | ✅ | Najviše 1000 ličnih vozila, a vozila naloga koji 14 dana nisu ulazili se ne pojavljuju pri pokretanju servera; dok server radi bez restarta, ostaju u svetu |
+| Igrač sa kopijom ključa vozi tuđe vozilo dok vlasnik nije online | ✅ | Dozvoljeno po odluci vlasnika; vlasnik kopiju oduzima bilo kad u `/v` |
+| Spam tastera N dok se motor pali, ili izlazak iz vozila tokom paljenja | ✅ | Dok traje paljenje, N ne radi; posle 1,5 s proverava se da je igrač i dalje vozač istog vozila |
+| Registracija bez plaćanja ili dvaput za istu cenu | ✅ | Novac se uzima tek na kraju pregleda, posle ponovne provere (vozač, svoje vozilo, mesto, ugašen motor, HP); drugi `/registruj` dok pregled traje ne radi; produžava se tek kad ostane manje od 15 dana |
+| Dve iste tablice pri registraciji | ✅ | Tablica se proverava u bazi pre upisa; vozila bez tablica imaju NULL, pa se ne sudaraju |
+| Pregled oštećenog vozila dok mehaničar ne postoji | 👁 | Uslov je 650 HP (VIP `/vfix` i admin `/fixveh` popravljaju); kad dođe mehaničar, uslov raste (BACKLOG) |
+| Nove tablice se ne vide dok se vozilo ponovo ne napravi | ✅ | Vozilo se pravi ponovo na istom mestu, sa istim stanjem, a putnici se vraćaju na svoja mesta (vlasnik proverava u igri) |
+| Admin besplatno tunira vozila prijateljima | ✅ | Admin nivoa 1 i 2 tunira samo admin vozila; lična vozila tek nivo 3+, uz log i poruku vlasniku |
+| Besplatan tuning u GTA radionicama (Transfender) | 👁 | Ne pamti se (pamti se samo `/atune`); zatvaranje radionica je u BACKLOG-u |
+| `/resetvozila` izbaci nekoga ili obriše admin vozilo u upotrebi | ✅ | Pre reseta svi dobijaju poruku i vreme da sednu u vozilo; vozila u kojima neko sedi se ne diraju |
+| Admin premesti vozilo u enterijer ili drugi svet (`/getveh`) | ✅ | Parking se ne menja; `/respawnveh` i reset vraćaju vozilo napolje, u svet 0 |
 | Kopije ključa se dele na sve strane | ✅ | Postoji samo jedna kopija; daje je samo vlasnik, igraču pored sebe |
 | Besplatna popravka uništenog vozila | ✅ | Vraća se na parking sa 500 HP; `/resetvozila` pomera vozilo bez popravke |
 | Vozilo sačuvano kao zapaljeno, pa eksplodira odmah po pojavljivanju | ✅ | HP se čuva najmanje 300 |
@@ -202,7 +212,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Gorivo bez plaćanja: relog ili restart | ✅ | Gorivo se čuva pri odjavi, nestanku vozila, točenju, zaključavanju i restartu |
 | Točenje goriva iz daljine | ✅ | Mora se sedeti za volanom do 6 m od pumpe, uz ugašen motor |
 | Rezervoar se nikad ne napuni do kraja (piše 54/55, a „Rezervoar je pun“) | ✅ | Toči se do punog, a započet litar se plaća kao ceo |
-| Parkiranje vozila u enterijeru ili ispred vrata da smeta drugima | 👁 | U enterijeru ne može; ispred vrata za sada ne štiti ništa, admin može `/resetvozila` ili `/obrisivozilo` (zabranjena mesta su u BACKLOG-u) |
+| Parkiranje vozila u enterijeru ili ispred vrata da smeta drugima | 👁 | U enterijeru ne može; ispred vrata za sada ne štiti ništa, admin može `/respawnveh`, `/resetvozila` ili `/obrisivozilo` (zabranjena mesta su u BACKLOG-u) |
 | Dve iste tablice | ✅ | Tablica se proverava u bazi pre upisa, a kolona je jedinstvena |
 | VIP farba ili popravlja tuđa vozila | ✅ | `/vcolor` samo na svom vozilu, `/vfix` na svom ili vozilu za koje ima ključ |
 | Taster Y ili N smeta drugim sistemima | ✅ | Y radi samo kad je u blizini vozilo sa ključem; N samo za vozača vozila sa motorom; vrata i inventar koriste F |
@@ -401,9 +411,19 @@ Every new system or change goes through these questions, against all existing sy
 ### Phase 3: vehicles
 | Risk | Status | How it is handled |
 |------|--------|-------------------|
-| Someone drives off in another player's unlocked vehicle | ✅ | Without a key the engine cannot start, and a running engine is switched off when someone without a key takes the wheel (theft comes with VEH-12) |
-| A vehicle is stolen or blocks a road while its owner is offline | ✅ | The vehicle leaves 5 minutes after the owner logs out, once it is empty |
-| A key-copy holder drives the vehicle while the owner is offline | 👁 | The vehicle stays while someone sits in it and leaves as soon as they get out; the owner takes the copy back in `/v` |
+| Someone drives off in another player's unlocked vehicle | ✅ | A switched-off vehicle cannot be started without a key; a running one can be driven by anyone (the key is in the ignition, as in the reference gamemodes), but once switched off it cannot be restarted without a key. The owner locks it (Y) and finds it through `/v` → GPS |
+| A vehicle blocks a road while its owner is offline | 👁 | Vehicles are always in the world; an admin moves it with `/respawnveh` or `/resetvozila` (no-parking spots are in the backlog) |
+| Vehicles of inactive players fill the 2000-vehicle limit | ✅ | At most 1000 personal vehicles, and vehicles of accounts that have not logged in for 14 days are not spawned on startup; while the server runs without a restart they stay |
+| A key-copy holder drives the vehicle while the owner is offline | ✅ | Allowed by the owner's decision; the owner takes the copy back any time in `/v` |
+| Spamming N while the engine starts, or leaving the vehicle during the start | ✅ | N does nothing while starting; after 1.5 s the player must still be the driver of the same vehicle |
+| Registering without paying, or twice for one price | ✅ | Money is taken only at the end of the inspection, after checking again (driver, own vehicle, place, engine off, health); a second `/registruj` during the inspection does nothing; renewal only once fewer than 15 days are left |
+| Two identical plates at registration | ✅ | The plate is checked in the DB before it is written; vehicles without plates hold NULL, so they never clash |
+| Inspecting a damaged vehicle while there is no mechanic | 👁 | The requirement is 650 HP (VIP `/vfix` and admin `/fixveh` repair); it goes up once the mechanic exists (backlog) |
+| New plates do not show until the vehicle is created again | ✅ | The vehicle is created again on the same spot with the same state, and passengers are put back in their seats (the owner checks in game) |
+| An admin tunes friends' vehicles for free | ✅ | Admins of level 1 and 2 tune only admin vehicles; personal vehicles need level 3+, logged and the owner is told |
+| Free tuning in GTA shops (Transfender) | 👁 | Not kept (only `/atune` is saved); closing the shops is in the backlog |
+| `/resetvozila` throws someone out or removes an admin vehicle in use | ✅ | Everyone gets a message and time to sit in a vehicle first; vehicles with someone inside are left alone |
+| An admin moves a vehicle into an interior or another world (`/getveh`) | ✅ | The parking spot does not change; `/respawnveh` and the reset bring it back outside, into world 0 |
 | Key copies passed around everywhere | ✅ | There is only one copy; only the owner gives it, to a player standing next to them |
 | A free repair of a destroyed vehicle | ✅ | It comes back to its parking spot with 500 HP; `/resetvozila` moves vehicles without repairing them |
 | A vehicle saved while burning explodes right after spawning | ✅ | Health is saved as at least 300 |

@@ -1,14 +1,28 @@
-// Room for every online owner's vehicles plus the ones still waiting to despawn after their owner left.
-#define MAX_PERSONAL_VEHICLES   (MAX_PLAYERS * VEH_MAX_PER_PLAYER * 2)
+// Every vehicle of an active owner stays in the world; the rest of MAX_VEHICLES is left for admin, job and faction vehicles.
+#define MAX_PERSONAL_VEHICLES   (1000)
+// Vehicles of owners who have not logged in for this long are not spawned on startup, so the vehicle limit is not filled
+// by players who left; they come back as soon as the owner logs in.
+#define VEH_INACTIVE_DAYS       (14)
 #define VEH_PLATE_LENGTH        (12)
 #define VEH_KEY_RANGE           (5.0)
-// A vehicle stays this long after its owner leaves, so a short reconnect or a passenger is not left on foot.
-#define VEH_DESPAWN_DELAY_S     (300)
 #define VEH_DEATH_RESPAWN_S     (10)
 // A destroyed vehicle comes back smoking, so a crash still costs something (repair: mechanic, phase 3.5).
 #define VEH_RESPAWN_HEALTH      (500.0)
 // Saved below this it would catch fire again right after spawning.
 #define VEH_MIN_SAVED_HEALTH    (300.0)
+#define VEH_ENGINE_START_MS     (1500)
+// Below this the engine sometimes fails to start on the first try.
+#define VEH_ENGINE_WEAK_HEALTH  (400.0)
+#define VEH_REGISTRATION_DAYS   (60)
+// Renewing is allowed only near the end, so nobody stacks years of registration in advance.
+#define VEH_REGISTRATION_RENEW_DAYS (15)
+#define VEH_REGISTRATION_WARN_DAYS  (7)
+// Until the mechanic exists (step 3.5) a heavily damaged vehicle could never pass; raise this once repairs can be bought.
+#define VEH_INSPECTION_MIN_HEALTH   (650.0)
+#define VEH_INSPECTION_MS       (5000)
+// One saved component per tuning slot (CARMODTYPE 0-15).
+#define VEH_TUNE_SLOTS          (16)
+#define VEH_PAINTJOB_NONE       (3)
 
 enum E_VEH
 {
@@ -16,11 +30,14 @@ enum E_VEH
     vDbId,
     vOwnerDbId,
     vOwnerId,
+    vOwnerName[MAX_PLAYER_NAME + 1],
     vVehicleId,
     vModel,
     vColor1,
     vColor2,
+    // Empty until the vehicle is registered for the first time.
     vPlate[VEH_PLATE_LENGTH],
+    vRegisteredUntil,
     Float:vParkX,
     Float:vParkY,
     Float:vParkZ,
@@ -34,7 +51,8 @@ enum E_VEH
     bool:vLocked,
     vKeyDbId,
     vKeyName[MAX_PLAYER_NAME + 1],
-    vDespawnAt,
+    vMods[VEH_TUNE_SLOTS],
+    vPaintjob,
     vDiedAt
 }
 
@@ -46,7 +64,11 @@ new Float:g_VehFuel[MAX_VEHICLES];
 new bool:g_VehFuelReserveWarned[MAX_VEHICLES];
 new g_VehListed[MAX_PLAYERS][VEH_MAX_PER_PLAYER * 2];
 new g_VehSelected[MAX_PLAYERS];
+// A running engine start or technical inspection; 0 when none.
+new g_VehStartTimer[MAX_PLAYERS];
+new g_VehInspectTimer[MAX_PLAYERS];
 new g_VehTimer;
+new g_VehResetTimer;
 
 enum E_VEH_PARAM
 {
@@ -66,3 +88,5 @@ forward bool:Veh_HasKey(playerid, vehicleid);
 forward bool:Veh_IsOwner(playerid, vehicleid);
 forward bool:Veh_OnDialogResponse(playerid, dialogid, response, listitem);
 forward bool:Veh_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
+forward bool:Veh_IsRegistered(slot);
+forward bool:Tune_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);

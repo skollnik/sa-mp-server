@@ -63,12 +63,12 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### VEH — Vozila
 - **VEH-1 Lična vozila:** kupuju se samo na auto pijaci (ADM-8) ili od drugog igrača. Postoji maksimalan broj po igraču, a vozila se čuvaju u bazi.
-- **VEH-2 Tablice / registracija:** tablica može da se proveri u MDC-u.
+- **VEH-2 Tablice / registracija:** tablice se dobijaju na tehničkom pregledu (`/registruj`), registracija važi 60 dana; tablica može da se proveri u MDC-u.
 - **VEH-3 Ključevi:** zaključavanje/otključavanje (taster Y), jedna kopija ključa za drugog igrača.
 - **VEH-4 Ručno upravljanje:** motor, svetla, hauba i gepek.
 - **VEH-5 Gorivo:** potrošnja zavisi od tipa vozila. Toči se na benzinskim pumpama, a postoji i kanister.
 - **VEH-6 Oštećenja i popravka:** preko mehaničara. Kilometraža.
-- **VEH-7 Parkiranje** (`/v parkiraj`): vozilo se pojavljuje na mestu gde je parkirano kad se vlasnik prijavi, a nestaje 5 minuta posle odjave.
+- **VEH-7 Parkiranje** (`/v parkiraj`): vozilo je stalno u svetu, a na parking se vraća posle restarta servera, uništenja ili admin reseta.
 - **VEH-8 Gepek / pregradak:** inventar u vozilu.
 - **VEH-9 Rent-a-car i javna vozila** za poslove.
 - **VEH-10 Frakcijska vozila:** dostupna samo članovima, sa sirenama.
@@ -231,12 +231,12 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### VEH — Vehicles
 - **VEH-1 Personal vehicles:** bought only at a car market (ADM-8) or from another player. There is a per-player cap, and vehicles are saved to the DB.
-- **VEH-2 Plates / registration:** a plate can be checked in the MDC.
+- **VEH-2 Plates / registration:** plates come from the technical inspection (`/registruj`), registration lasts 60 days; a plate can be checked in the MDC.
 - **VEH-3 Keys:** lock/unlock (Y key), one key copy for another player.
 - **VEH-4 Manual controls:** engine, lights, hood and trunk.
 - **VEH-5 Fuel:** consumption depends on vehicle type. Refuel at gas stations, or use a jerry can.
 - **VEH-6 Damage and repair:** via mechanics. Mileage.
-- **VEH-7 Parking** (`/v parkiraj`): the vehicle appears where it was parked when its owner logs in, and leaves 5 minutes after logout.
+- **VEH-7 Parking** (`/v parkiraj`): the vehicle is always in the world and goes back to its parking spot after a server restart, destruction or admin reset.
 - **VEH-8 Trunk / glovebox:** in-vehicle inventory.
 - **VEH-9 Rentals and public job vehicles.**
 - **VEH-10 Faction vehicles:** members only, with sirens.

@@ -788,17 +788,7 @@ cmd:dveh(playerid, params[])
 
     if (!isnull(params) && !strcmp(params, "sva", true))
     {
-        new count;
-        for (new i = 1; i < MAX_VEHICLES; i++)
-        {
-            if (g_IsAdminVehicle[i])
-            {
-                DestroyVehicle(i);
-                g_IsAdminVehicle[i] = false;
-                count++;
-            }
-        }
-        Msg_Admin(playerid, "Obrisano admin vozila: %d.", count);
+        Msg_Admin(playerid, "Obrisano admin vozila: %d.", Staff_DestroyAdminVehicles(false));
         return 1;
     }
 
@@ -1139,19 +1129,19 @@ cmd:ahelp(playerid, params[])
 
     new level = g_Player[playerid][pAdminLevel], body[2048];
 
-    strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns /aclog /kanali\n\n");
+    strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns /aclog /kanali\nVozila: /vinfo /gotoveh /atune (admin vozila)\n\n");
     if (level >= ADMIN_LEVEL_ADMIN)
     {
-        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /gotoulaz /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\n\n");
+        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /gotoulaz /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\nVozila: /getveh /respawnveh\n\n");
     }
     if (level >= ADMIN_LEVEL_SENIOR)
     {
-        strcat(body, C_ADMIN "3 - Visi admin\n" C_WHITE "/setskin /setint /setvw /veh /dveh /ann /settime /setweather /gotopos /mypos\n/ban (i trajno) /oban /banip /unban /unwarn\n\n");
+        strcat(body, C_ADMIN "3 - Visi admin\n" C_WHITE "/setskin /setint /setvw /veh /dveh /ann /settime /setweather /gotopos /mypos\n/ban (i trajno) /oban /banip /unban /unwarn\nVozila: /resetvozila [sekunde] /setgorivo /atune (i licna vozila)\n\n");
     }
     if (level >= ADMIN_LEVEL_HEAD)
     {
         strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setglad /setname /pmspy\n" \
-            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps\n\n");
+            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo\n\n");
     }
     if (level >= ADMIN_LEVEL_MANAGEMENT)
     {

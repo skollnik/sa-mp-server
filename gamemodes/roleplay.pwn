@@ -88,6 +88,8 @@
 
 #include "modules/vehicle/vehicle_impl.inc"
 #include "modules/vehicle/fuel.inc"
+#include "modules/vehicle/registration.inc"
+#include "modules/vehicle/tuning.inc"
 #include "modules/vehicle/vehicle_cmds.inc"
 #include "modules/vehicle/speedometer.inc"
 
@@ -174,6 +176,7 @@ public OnPlayerConnect(playerid)
     Acc_OnPlayerConnect(playerid);
     Phone_OnPlayerConnect(playerid);
     Speedo_OnPlayerConnect(playerid);
+    Veh_OnPlayerConnect(playerid);
     Bet_OnPlayerConnect(playerid);
     Beg_OnPlayerConnect(playerid);
     Lottery_OnPlayerConnect(playerid);
@@ -363,6 +366,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Veh_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (Tune_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Point_OnDialogResponse(playerid, dialogid, response, listitem))
     {
         return 1;
     }

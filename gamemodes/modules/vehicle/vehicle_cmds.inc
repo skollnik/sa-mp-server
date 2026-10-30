@@ -118,11 +118,227 @@ cmd:resetvozila(playerid, params[])
         return 1;
     }
 
-    new count = Veh_ReturnAllToParking(), message[144], details[16];
-    format(message, sizeof(message), "[ADMIN] %s je vratio sva prazna licna vozila na njihove parkinge.", Account_Name(playerid));
+    new seconds;
+    if (sscanf(params, "D(15)", seconds) || seconds < 5 || seconds > 60)
+    {
+        Msg_Usage(playerid, "/resetvozila [sekunde 5-60] (bez broja 15 s; vraca prazna vozila na parking)");
+        return 1;
+    }
+    if (!Veh_StartReset(playerid, seconds))
+    {
+        Msg_Error(playerid, "Reset vozila je vec pokrenut.");
+        return 1;
+    }
+    new message[160];
+    format(message, sizeof(message), "[ADMIN] %s vraca sva prazna vozila na parking za %d sekundi. Sedite u svoje vozilo ako zelite da ostane gde je.", Account_Name(playerid), seconds);
     Chat_SendToAll(COLOR_ADMIN, message);
-    Msg_Admin(playerid, "Vraceno vozila: %d (vozila u kojima neko sedi nisu pomerena).", count);
-    format(details, sizeof(details), "%d vozila", count);
-    Staff_Log(playerid, "resetveh", INVALID_PLAYER_ID, details);
+    return 1;
+}
+
+// The vehicle in the admin's own seat, or the nearest one within range, for commands that work on any vehicle.
+static stock Veh_FindNearestAny(playerid, Float:range)
+{
+    new vehicleid = GetPlayerVehicleID(playerid);
+    if (vehicleid != 0)
+    {
+        return vehicleid;
+    }
+    new best = 0, Float:best_distance = range, world = GetPlayerVirtualWorld(playerid), Float:x, Float:y, Float:z;
+    GetPlayerPos(playerid, x, y, z);
+    for (new v = 1; v < MAX_VEHICLES; v++)
+    {
+        if (!IsValidVehicle(v) || GetVehicleVirtualWorld(v) != world)
+        {
+            continue;
+        }
+        new Float:distance = GetVehicleDistanceFromPoint(v, x, y, z);
+        if (distance < best_distance)
+        {
+            best_distance = distance;
+            best = v;
+        }
+    }
+    return best;
+}
+
+// Returns the vehicle ID typed after the command, or 0 with the usage or error already shown.
+static stock Veh_ParseAdminTarget(playerid, const params[], const usage[])
+{
+    new vehicleid;
+    if (sscanf(params, "d", vehicleid))
+    {
+        Msg_Usage(playerid, "%s", usage);
+        return 0;
+    }
+    if (vehicleid < 1 || vehicleid >= MAX_VEHICLES || !IsValidVehicle(vehicleid))
+    {
+        Msg_Error(playerid, "Vozilo sa tim ID-jem ne postoji (ID vozila se vidi sa /vinfo).");
+        return 0;
+    }
+    return vehicleid;
+}
+
+static stock Veh_LogAdmin(playerid, vehicleid, const action[], const extra[] = "")
+{
+    new slot = g_VehSlotOf[vehicleid], details[80], ownerid = INVALID_PLAYER_ID;
+    if (slot != -1)
+    {
+        ownerid = Account_FindOnlineByDbId(g_Veh[slot][vOwnerDbId]);
+        format(details, sizeof(details), "vozilo %d (%s) %s", vehicleid, Veh_Name(slot), extra);
+    }
+    else
+    {
+        format(details, sizeof(details), "vozilo %d %s", vehicleid, extra);
+    }
+    Staff_Log(playerid, action, ownerid, details);
+}
+
+cmd:vinfo(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_TRIAL))
+    {
+        return 1;
+    }
+    new vehicleid = isnull(params) ? Veh_FindNearestAny(playerid, VEH_KEY_RANGE) : Veh_ParseAdminTarget(playerid, params, "/vinfo [id vozila] (bez ID-ja: vozilo u kome sedite ili najblize)");
+    if (vehicleid == 0)
+    {
+        if (isnull(params))
+        {
+            Msg_Error(playerid, "U blizini (5 m) nema vozila.");
+        }
+        return 1;
+    }
+
+    new Float:health, model = GetVehicleModel(vehicleid), slot = g_VehSlotOf[vehicleid];
+    GetVehicleHealth(vehicleid, health);
+    Msg_Admin(playerid, "Vozilo ID %d: %s, HP %.0f, gorivo %.0f l, motor %s.", vehicleid, Veh_ModelName(model), health, g_VehFuel[vehicleid], Veh_IsEngineOn(vehicleid) ? ("radi") : ("ugasen"));
+    if (slot != -1)
+    {
+        new registration[24], key[MAX_PLAYER_NAME + 1] = "nema";
+        Veh_RegistrationText(slot, registration);
+        if (g_Veh[slot][vKeyDbId] != 0)
+        {
+            strcopy(key, g_Veh[slot][vKeyName]);
+        }
+        Msg_Admin(playerid, "Licno vozilo %d u bazi: vlasnik %s, %s, registracija: %s, kopija kljuca: %s.", g_Veh[slot][vDbId], g_Veh[slot][vOwnerName], Veh_Name(slot), registration, key);
+    }
+    else if (g_IsAdminVehicle[vehicleid])
+    {
+        Msg_Admin(playerid, "Admin vozilo (/veh).");
+    }
+    return 1;
+}
+
+cmd:gotoveh(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_TRIAL))
+    {
+        return 1;
+    }
+    new vehicleid = Veh_ParseAdminTarget(playerid, params, "/gotoveh [id vozila]");
+    if (vehicleid == 0)
+    {
+        return 1;
+    }
+    new Float:x, Float:y, Float:z;
+    GetVehiclePos(vehicleid, x, y, z);
+    Staff_TeleportTo(playerid, x + 2.0, y, z + 1.0, GetVehicleInterior(vehicleid), GetVehicleVirtualWorld(vehicleid));
+    Msg_Admin(playerid, "Teleportovani ste do vozila %d.", vehicleid);
+    return 1;
+}
+
+cmd:getveh(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_ADMIN))
+    {
+        return 1;
+    }
+    new vehicleid = Veh_ParseAdminTarget(playerid, params, "/getveh [id vozila] (dovodi prazno vozilo do vas)");
+    if (vehicleid == 0)
+    {
+        return 1;
+    }
+    if (IsVehicleOccupied(vehicleid))
+    {
+        Msg_Error(playerid, "U vozilu neko sedi.");
+        return 1;
+    }
+    new Float:x, Float:y, Float:z;
+    GetPlayerPos(playerid, x, y, z);
+    SetVehicleVelocity(vehicleid, 0.0, 0.0, 0.0);
+    SetVehiclePos(vehicleid, x + 3.0, y, z);
+    LinkVehicleToInterior(vehicleid, GetPlayerInterior(playerid));
+    SetVehicleVirtualWorld(vehicleid, GetPlayerVirtualWorld(playerid));
+    Veh_LogAdmin(playerid, vehicleid, "getveh");
+    Msg_Admin(playerid, "Vozilo %d je dovedeno do vas.", vehicleid);
+    return 1;
+}
+
+cmd:respawnveh(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_ADMIN))
+    {
+        return 1;
+    }
+    new vehicleid = Veh_ParseAdminTarget(playerid, params, "/respawnveh [id vozila] (licno ide na parking, admin vozilo se brise)");
+    if (vehicleid == 0)
+    {
+        return 1;
+    }
+    if (IsVehicleOccupied(vehicleid))
+    {
+        Msg_Error(playerid, "U vozilu neko sedi.");
+        return 1;
+    }
+    Veh_LogAdmin(playerid, vehicleid, "respawnveh");
+    new slot = g_VehSlotOf[vehicleid];
+    if (slot != -1)
+    {
+        if (!Veh_ReturnToParking(slot))
+        {
+            Msg_Error(playerid, "Vozilo se sada ne moze vratiti (unisteno je i vraca se samo).");
+            return 1;
+        }
+        Msg_Admin(playerid, "Vozilo %d je vraceno na parking (bez popravke).", vehicleid);
+    }
+    else if (g_IsAdminVehicle[vehicleid])
+    {
+        DestroyVehicle(vehicleid);
+        g_IsAdminVehicle[vehicleid] = false;
+        Msg_Admin(playerid, "Admin vozilo %d je obrisano.", vehicleid);
+    }
+    else
+    {
+        SetVehicleToRespawn(vehicleid);
+        Msg_Admin(playerid, "Vozilo %d je vraceno na svoje mesto.", vehicleid);
+    }
+    return 1;
+}
+
+cmd:setgorivo(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_SENIOR))
+    {
+        return 1;
+    }
+    new vehicleid, litres;
+    if (sscanf(params, "dd", vehicleid, litres))
+    {
+        Msg_Usage(playerid, "/setgorivo [id vozila] [litara]");
+        return 1;
+    }
+    if (vehicleid < 1 || vehicleid >= MAX_VEHICLES || !IsValidVehicle(vehicleid) || !Fuel_IsUsed(vehicleid))
+    {
+        Msg_Error(playerid, "To vozilo ne postoji ili ne koristi gorivo.");
+        return 1;
+    }
+    new tank = Fuel_TankSize(GetVehicleModel(vehicleid));
+    litres = clamp(litres, 0, tank);
+    Fuel_Set(vehicleid, float(litres));
+    Veh_SaveIfPersonal(vehicleid);
+    new extra[16];
+    format(extra, sizeof(extra), "%d l", litres);
+    Veh_LogAdmin(playerid, vehicleid, "setfuel", extra);
+    Msg_Admin(playerid, "Vozilo %d sada ima %d/%d l goriva.", vehicleid, litres, tank);
     return 1;
 }

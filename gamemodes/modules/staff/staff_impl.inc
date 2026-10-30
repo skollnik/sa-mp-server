@@ -368,6 +368,22 @@ stock Staff_Log(adminid, const action[], targetid, const details[])
     mysql_tquery(g_SQL, query);
 }
 
+// only_empty leaves the ones someone sits in, so a vehicle reset never throws a driver out.
+stock Staff_DestroyAdminVehicles(bool:only_empty)
+{
+    new count;
+    for (new v = 1; v < MAX_VEHICLES; v++)
+    {
+        if (g_IsAdminVehicle[v] && !(only_empty && IsVehicleOccupied(v)))
+        {
+            DestroyVehicle(v);
+            g_IsAdminVehicle[v] = false;
+            count++;
+        }
+    }
+    return count;
+}
+
 stock Staff_TeleportTo(playerid, Float:x, Float:y, Float:z, interior, world)
 {
     // A spectator has no body to move: the camera would stay on the target in the wrong interior.

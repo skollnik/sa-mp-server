@@ -1,6 +1,9 @@
 // Letters used on Serbian plates (no Q, W, X, Y), so plates read as local.
 static const g_PlateLetters[] = "ABCDEFGHIJKLMNOPRSTUVZ";
 
+#define VEH_SELECT "SELECT v.*, IFNULL(v.`plate`, '') AS `plate_text`, IFNULL(o.`name`, '') AS `owner_name`, IFNULL(k.`name`, '') AS `key_name` " \
+    "FROM `vehicles` v LEFT JOIN `accounts` o ON o.`id` = v.`owner_id` LEFT JOIN `accounts` k ON k.`id` = v.`key_holder` "
+
 stock Veh_Init()
 {
     for (new v = 0; v < MAX_VEHICLES; v++)
@@ -14,7 +17,7 @@ stock Veh_Init()
         "`owner_id` INT UNSIGNED NOT NULL," \
         "`model` SMALLINT UNSIGNED NOT NULL," \
         "`color1` TINYINT UNSIGNED NOT NULL DEFAULT 1, `color2` TINYINT UNSIGNED NOT NULL DEFAULT 1," \
-        "`plate` VARCHAR(12) NOT NULL," \
+        "`plate` VARCHAR(12) NULL," \
         "`park_x` FLOAT NOT NULL, `park_y` FLOAT NOT NULL, `park_z` FLOAT NOT NULL, `park_a` FLOAT NOT NULL," \
         "`fuel` FLOAT NOT NULL, `health` FLOAT NOT NULL DEFAULT 1000," \
         "`panels` INT UNSIGNED NOT NULL DEFAULT 0, `doors` INT UNSIGNED NOT NULL DEFAULT 0," \
@@ -24,6 +27,20 @@ stock Veh_Init()
         "`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," \
         "UNIQUE KEY `vehicle_plate` (`plate`), INDEX `vehicle_owner` (`owner_id`)" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    // An unregistered vehicle has no plate; NULL keeps the unique key from clashing between them.
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` MODIFY COLUMN `plate` VARCHAR(12) NULL");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `registered_until` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `mods` VARCHAR(128) NOT NULL DEFAULT ''");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `paintjob` TINYINT UNSIGNED NOT NULL DEFAULT 3");
+    // Vehicles that got a plate before registration existed count as freshly registered.
+    new query[512];
+    mysql_format(g_SQL, query, sizeof(query),
+        "UPDATE `vehicles` SET `registered_until` = UNIX_TIMESTAMP() + %d WHERE `plate` IS NOT NULL AND `registered_until` = 0",
+        VEH_REGISTRATION_DAYS * 86400);
+    mysql_tquery(g_SQL, query);
+
+    mysql_format(g_SQL, query, sizeof(query), VEH_SELECT "WHERE o.`last_login` >= NOW() - INTERVAL %d DAY ORDER BY v.`id`", VEH_INACTIVE_DAYS);
+    mysql_tquery(g_SQL, query, "OnVehiclesLoaded", "ddd", INVALID_PLAYER_ID, 0, false);
 
     g_VehTimer = SetTimer("Veh_Tick", 1000, true);
 }
@@ -31,6 +48,10 @@ stock Veh_Init()
 stock Veh_Exit()
 {
     KillTimer(g_VehTimer);
+    if (g_VehResetTimer != 0)
+    {
+        KillTimer(g_VehResetTimer);
+    }
     for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
     {
         if (g_Veh[slot][vUsed])
@@ -38,6 +59,12 @@ stock Veh_Exit()
             Veh_SaveState(slot);
         }
     }
+}
+
+stock Veh_OnPlayerConnect(playerid)
+{
+    g_VehStartTimer[playerid] = 0;
+    g_VehInspectTimer[playerid] = 0;
 }
 
 stock bool:Veh_GetParam(vehicleid, E_VEH_PARAM:param)
@@ -120,7 +147,7 @@ static stock Veh_FindFreeSlot()
     return -1;
 }
 
-// Every owned vehicle is in the world while its owner is online, so counting slots counts them all.
+// An online owner's vehicles are all loaded (an inactive owner's come back on login), so counting slots counts them all.
 stock Veh_CountOwned(owner_dbid)
 {
     new count;
@@ -137,7 +164,14 @@ stock Veh_CountOwned(owner_dbid)
 stock Veh_Name(slot)
 {
     new name[48];
-    format(name, sizeof(name), "%s (%s)", Veh_ModelName(g_Veh[slot][vModel]), g_Veh[slot][vPlate]);
+    if (g_Veh[slot][vPlate][0])
+    {
+        format(name, sizeof(name), "%s (%s)", Veh_ModelName(g_Veh[slot][vModel]), g_Veh[slot][vPlate]);
+    }
+    else
+    {
+        format(name, sizeof(name), "%s (bez tablica)", Veh_ModelName(g_Veh[slot][vModel]));
+    }
     return name;
 }
 
@@ -146,10 +180,25 @@ static stock Veh_ApplyLock(slot)
     Veh_SetParam(g_Veh[slot][vVehicleId], VEH_PARAM_DOORS, g_Veh[slot][vLocked]);
 }
 
-static stock bool:Veh_Spawn(slot)
+static stock Veh_ApplyTuning(slot)
 {
-    new vehicleid = CreateVehicle(g_Veh[slot][vModel], g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ], g_Veh[slot][vParkA],
-        g_Veh[slot][vColor1], g_Veh[slot][vColor2], -1);
+    new vehicleid = g_Veh[slot][vVehicleId];
+    for (new i = 0; i < VEH_TUNE_SLOTS; i++)
+    {
+        if (g_Veh[slot][vMods][i] != 0)
+        {
+            AddVehicleComponent(vehicleid, g_Veh[slot][vMods][i]);
+        }
+    }
+    if (g_Veh[slot][vPaintjob] != VEH_PAINTJOB_NONE)
+    {
+        ChangeVehiclePaintjob(vehicleid, g_Veh[slot][vPaintjob]);
+    }
+}
+
+static stock bool:Veh_SpawnAt(slot, Float:x, Float:y, Float:z, Float:angle, interior = 0, world = 0)
+{
+    new vehicleid = CreateVehicle(g_Veh[slot][vModel], x, y, z, angle, g_Veh[slot][vColor1], g_Veh[slot][vColor2], -1);
     if (vehicleid == INVALID_VEHICLE_ID)
     {
         printf("[VEHICLES] Vehicle %d could not be created (vehicle limit reached?).", g_Veh[slot][vDbId]);
@@ -159,13 +208,29 @@ static stock bool:Veh_Spawn(slot)
 
     g_Veh[slot][vVehicleId] = vehicleid;
     g_VehSlotOf[vehicleid] = slot;
-    SetVehicleNumberPlate(vehicleid, g_Veh[slot][vPlate]);
+    LinkVehicleToInterior(vehicleid, interior);
+    SetVehicleVirtualWorld(vehicleid, world);
+    // A blank plate instead of the game's default text, which would look like a real registration.
+    if (g_Veh[slot][vPlate][0])
+    {
+        SetVehicleNumberPlate(vehicleid, g_Veh[slot][vPlate]);
+    }
+    else
+    {
+        SetVehicleNumberPlate(vehicleid, " ");
+    }
     SetVehicleHealth(vehicleid, g_Veh[slot][vHealth]);
     UpdateVehicleDamageStatus(vehicleid, g_Veh[slot][vPanels], g_Veh[slot][vDoors], g_Veh[slot][vLights], g_Veh[slot][vTyres]);
+    Veh_ApplyTuning(slot);
     Fuel_Set(vehicleid, g_Veh[slot][vFuel]);
     SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF,
         g_Veh[slot][vLocked] ? VEHICLE_PARAMS_ON : VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF);
     return true;
+}
+
+static stock bool:Veh_Spawn(slot)
+{
+    return Veh_SpawnAt(slot, g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ], g_Veh[slot][vParkA]);
 }
 
 static stock Veh_ReadState(slot)
@@ -182,15 +247,27 @@ static stock Veh_ReadState(slot)
     g_Veh[slot][vFuel] = g_VehFuel[vehicleid];
 }
 
+// Only tuning done through /atune is kept; parts from GTA's own mod shops are not saved.
+static stock Veh_FormatMods(slot, dest[], size = sizeof(dest))
+{
+    dest[0] = '\0';
+    for (new i = 0; i < VEH_TUNE_SLOTS; i++)
+    {
+        format(dest, size, "%s%d,", dest, g_Veh[slot][vMods][i]);
+    }
+}
+
 stock Veh_SaveState(slot)
 {
     Veh_ReadState(slot);
-    new query[320];
+    new mods[128], query[640];
+    Veh_FormatMods(slot, mods);
     mysql_format(g_SQL, query, sizeof(query),
         "UPDATE `vehicles` SET `fuel` = %f, `health` = %f, `panels` = %d, `doors` = %d, `lights` = %d, `tyres` = %d, " \
-        "`locked` = %d, `color1` = %d, `color2` = %d, `key_holder` = %d WHERE `id` = %d",
+        "`locked` = %d, `color1` = %d, `color2` = %d, `key_holder` = %d, `mods` = '%e', `paintjob` = %d, `registered_until` = %d WHERE `id` = %d",
         g_Veh[slot][vFuel], g_Veh[slot][vHealth], _:g_Veh[slot][vPanels], _:g_Veh[slot][vDoors], _:g_Veh[slot][vLights], _:g_Veh[slot][vTyres],
-        g_Veh[slot][vLocked] ? 1 : 0, g_Veh[slot][vColor1], g_Veh[slot][vColor2], g_Veh[slot][vKeyDbId], g_Veh[slot][vDbId]);
+        g_Veh[slot][vLocked] ? 1 : 0, g_Veh[slot][vColor1], g_Veh[slot][vColor2], g_Veh[slot][vKeyDbId], mods, g_Veh[slot][vPaintjob],
+        g_Veh[slot][vRegisteredUntil], g_Veh[slot][vDbId]);
     mysql_tquery(g_SQL, query);
 }
 
@@ -219,20 +296,52 @@ stock Veh_Despawn(slot, bool:save)
     g_Veh[slot] = empty;
 }
 
+// The plate only shows on a freshly created vehicle, so a new plate means building the vehicle again where it stands,
+// with everyone inside put back in their seats.
+stock Veh_Rebuild(slot)
+{
+    new vehicleid = g_Veh[slot][vVehicleId], Float:x, Float:y, Float:z, Float:angle;
+    Veh_ReadState(slot);
+    GetVehiclePos(vehicleid, x, y, z);
+    GetVehicleZAngle(vehicleid, angle);
+    new interior = GetVehicleInterior(vehicleid), world = GetVehicleVirtualWorld(vehicleid);
+
+    new seats[MAX_PLAYERS];
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        seats[i] = IsPlayerInVehicle(i, vehicleid) ? GetPlayerVehicleSeat(i) : -1;
+    }
+
+    DestroyVehicle(vehicleid);
+    g_VehSlotOf[vehicleid] = -1;
+    if (!Veh_SpawnAt(slot, x, y, z, angle, interior, world))
+    {
+        return;
+    }
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (seats[i] != -1)
+        {
+            PutPlayerInVehicle(i, g_Veh[slot][vVehicleId], seats[i]);
+        }
+    }
+}
+
 static stock Veh_LoadRow(slot, row, ownerid)
 {
-    new value;
+    new value, mods[128];
     g_Veh[slot][vUsed] = true;
     g_Veh[slot][vOwnerId] = ownerid;
     g_Veh[slot][vVehicleId] = INVALID_VEHICLE_ID;
-    g_Veh[slot][vDespawnAt] = 0;
     g_Veh[slot][vDiedAt] = 0;
     cache_get_value_name_int(row, "id", g_Veh[slot][vDbId]);
     cache_get_value_name_int(row, "owner_id", g_Veh[slot][vOwnerDbId]);
+    cache_get_value_name(row, "owner_name", g_Veh[slot][vOwnerName], MAX_PLAYER_NAME + 1);
     cache_get_value_name_int(row, "model", g_Veh[slot][vModel]);
     cache_get_value_name_int(row, "color1", g_Veh[slot][vColor1]);
     cache_get_value_name_int(row, "color2", g_Veh[slot][vColor2]);
-    cache_get_value_name(row, "plate", g_Veh[slot][vPlate], VEH_PLATE_LENGTH);
+    cache_get_value_name(row, "plate_text", g_Veh[slot][vPlate], VEH_PLATE_LENGTH);
+    cache_get_value_name_int(row, "registered_until", g_Veh[slot][vRegisteredUntil]);
     cache_get_value_name_float(row, "park_x", g_Veh[slot][vParkX]);
     cache_get_value_name_float(row, "park_y", g_Veh[slot][vParkY]);
     cache_get_value_name_float(row, "park_z", g_Veh[slot][vParkZ]);
@@ -251,40 +360,45 @@ static stock Veh_LoadRow(slot, row, ownerid)
     g_Veh[slot][vLocked] = value != 0;
     cache_get_value_name_int(row, "key_holder", g_Veh[slot][vKeyDbId]);
     cache_get_value_name(row, "key_name", g_Veh[slot][vKeyName], MAX_PLAYER_NAME + 1);
+    cache_get_value_name(row, "mods", mods);
+    for (new i = 0; i < VEH_TUNE_SLOTS; i++)
+    {
+        g_Veh[slot][vMods][i] = 0;
+    }
+    sscanf(mods, "p<,>a<i>[" #VEH_TUNE_SLOTS "]", g_Veh[slot][vMods]);
+    cache_get_value_name_int(row, "paintjob", g_Veh[slot][vPaintjob]);
 }
 
-static stock Veh_QueryOwned(playerid, const where[], id)
+static stock Veh_QueryOwned(playerid, const where[], id, bool:remind)
 {
-    new query[256];
-    mysql_format(g_SQL, query, sizeof(query),
-        "SELECT v.*, IFNULL(a.`name`, '') AS `key_name` FROM `vehicles` v LEFT JOIN `accounts` a ON a.`id` = v.`key_holder` WHERE v.`%e` = %d ORDER BY v.`id`",
-        where, id);
-    mysql_tquery(g_SQL, query, "OnVehiclesLoaded", "dd", playerid, g_AccountRace[playerid]);
+    new query[512];
+    mysql_format(g_SQL, query, sizeof(query), VEH_SELECT "WHERE v.`%e` = %d ORDER BY v.`id`", where, id);
+    mysql_tquery(g_SQL, query, "OnVehiclesLoaded", "ddd", playerid, g_AccountRace[playerid], remind);
 }
 
 stock Veh_OnLogin(playerid)
 {
-    Veh_QueryOwned(playerid, "owner_id", g_Player[playerid][pDbId]);
+    Veh_QueryOwned(playerid, "owner_id", g_Player[playerid][pDbId], true);
 }
 
-forward OnVehiclesLoaded(playerid, race);
-public OnVehiclesLoaded(playerid, race)
+// Called on startup for every active owner (playerid invalid) and on login for the owner's own vehicles.
+forward OnVehiclesLoaded(playerid, race, bool:remind);
+public OnVehiclesLoaded(playerid, race, bool:remind)
 {
-    if (race != g_AccountRace[playerid])
+    if (playerid != INVALID_PLAYER_ID && race != g_AccountRace[playerid])
     {
         return 1;
     }
 
-    new rows = cache_num_rows(), dbid;
+    new rows = cache_num_rows(), dbid, loaded;
     for (new row = 0; row < rows; row++)
     {
         cache_get_value_name_int(row, "id", dbid);
         new slot = Veh_FindByDbId(dbid);
         if (slot != -1)
         {
-            // Still in the world from before a short reconnect: it stays where it was left.
+            // Already in the world (it stays there while the owner is away): only the owner is known again.
             g_Veh[slot][vOwnerId] = playerid;
-            g_Veh[slot][vDespawnAt] = 0;
             continue;
         }
         slot = Veh_FindFreeSlot();
@@ -294,12 +408,23 @@ public OnVehiclesLoaded(playerid, race)
             break;
         }
         Veh_LoadRow(slot, row, playerid);
-        Veh_Spawn(slot);
+        if (Veh_Spawn(slot))
+        {
+            loaded++;
+        }
+    }
+    if (playerid == INVALID_PLAYER_ID)
+    {
+        printf("[VEHICLES] %d personal vehicles loaded.", loaded);
+    }
+    if (remind)
+    {
+        Veh_RemindRegistration(playerid);
     }
     return 1;
 }
 
-// The vehicles stay for a while (a passenger may still be inside, or the owner reconnects) and then leave the world.
+// The vehicles stay in the world; a key copy keeps working while the owner is away.
 stock Veh_OnPlayerDisconnect(playerid)
 {
     for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
@@ -307,7 +432,6 @@ stock Veh_OnPlayerDisconnect(playerid)
         if (g_Veh[slot][vUsed] && g_Veh[slot][vOwnerId] == playerid)
         {
             g_Veh[slot][vOwnerId] = INVALID_PLAYER_ID;
-            g_Veh[slot][vDespawnAt] = gettime() + VEH_DESPAWN_DELAY_S;
             Veh_SaveState(slot);
         }
     }
@@ -356,20 +480,9 @@ public Veh_Tick()
     new now = gettime();
     for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
     {
-        if (!g_Veh[slot][vUsed])
+        if (g_Veh[slot][vUsed] && g_Veh[slot][vDiedAt] != 0 && now - g_Veh[slot][vDiedAt] >= VEH_DEATH_RESPAWN_S)
         {
-            continue;
-        }
-        if (g_Veh[slot][vDiedAt] != 0)
-        {
-            if (now - g_Veh[slot][vDiedAt] >= VEH_DEATH_RESPAWN_S)
-            {
-                Veh_RespawnAfterDeath(slot);
-            }
-        }
-        else if (g_Veh[slot][vDespawnAt] != 0 && now >= g_Veh[slot][vDespawnAt] && !IsVehicleOccupied(g_Veh[slot][vVehicleId]))
-        {
-            Veh_Despawn(slot, true);
+            Veh_RespawnAfterDeath(slot);
         }
     }
     return 1;
@@ -408,6 +521,12 @@ stock Veh_FindNearby(playerid, bool:owner_only)
     return best;
 }
 
+static stock bool:Veh_HasEngine(vehicleid)
+{
+    return Fuel_TankSize(GetVehicleModel(vehicleid)) > 0 || g_IsAdminVehicle[vehicleid];
+}
+
+// Switching off needs no key (it is in the ignition); starting does, and takes a moment like a real engine.
 stock Veh_ToggleEngine(playerid)
 {
     if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
@@ -416,14 +535,13 @@ stock Veh_ToggleEngine(playerid)
         return;
     }
     new vehicleid = GetPlayerVehicleID(playerid);
-    if (Fuel_TankSize(GetVehicleModel(vehicleid)) == 0 && !g_IsAdminVehicle[vehicleid])
+    if (!Veh_HasEngine(vehicleid))
     {
         Msg_Error(playerid, "Ovo vozilo nema motor.");
         return;
     }
-    if (!Veh_HasKey(playerid, vehicleid))
+    if (g_VehStartTimer[playerid] != 0)
     {
-        Msg_Error(playerid, "Nemate kljuc ovog vozila.");
         return;
     }
     if (Veh_IsEngineOn(vehicleid))
@@ -432,13 +550,44 @@ stock Veh_ToggleEngine(playerid)
         Chat_Action(playerid, "gasi motor.");
         return;
     }
+    if (!Veh_HasKey(playerid, vehicleid))
+    {
+        Msg_Error(playerid, "Nemate kljuc ovog vozila, pa ne mozete upaliti motor.");
+        return;
+    }
     if (Fuel_IsUsed(vehicleid) && g_VehFuel[vehicleid] <= 0.0)
     {
         Msg_Error(playerid, "Vozilo nema goriva. Benzinska pumpa se trazi na /gps, a gorivo se toci sa /gorivo.");
         return;
     }
+    Chat_Action(playerid, "okrece kljuc u bravi.");
+    GameTextForPlayer(playerid, "~w~paljenje...", VEH_ENGINE_START_MS, 6);
+    g_VehStartTimer[playerid] = SetTimerEx("Veh_FinishStart", VEH_ENGINE_START_MS, false, "ddd", playerid, vehicleid, g_AccountRace[playerid]);
+}
+
+forward Veh_FinishStart(playerid, vehicleid, race);
+public Veh_FinishStart(playerid, vehicleid, race)
+{
+    if (race != g_AccountRace[playerid])
+    {
+        return 1;
+    }
+    g_VehStartTimer[playerid] = 0;
+    if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER || GetPlayerVehicleID(playerid) != vehicleid || Veh_IsEngineOn(vehicleid))
+    {
+        return 1;
+    }
+    new Float:health;
+    GetVehicleHealth(vehicleid, health);
+    if (health < VEH_ENGINE_WEAK_HEALTH && random(2) == 0)
+    {
+        Chat_Action(playerid, "pokusava da upali motor, ali motor se gusi.");
+        GameTextForPlayer(playerid, "~r~motor nije upalio", 1500, 6);
+        return 1;
+    }
     Veh_SetParam(vehicleid, VEH_PARAM_ENGINE, true);
-    Chat_Action(playerid, "okrece kljuc i pali motor.");
+    GameTextForPlayer(playerid, "~g~motor upaljen", 1500, 6);
+    return 1;
 }
 
 stock Veh_ToggleLock(playerid)
@@ -489,8 +638,7 @@ stock bool:Veh_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
     new PLAYER_STATE:player_state = GetPlayerState(playerid);
     if ((newkeys & KEY_NO) && !(oldkeys & KEY_NO) && player_state == PLAYER_STATE_DRIVER)
     {
-        new vehicleid = GetPlayerVehicleID(playerid);
-        if (Fuel_TankSize(GetVehicleModel(vehicleid)) == 0 && !g_IsAdminVehicle[vehicleid])
+        if (!Veh_HasEngine(GetPlayerVehicleID(playerid)))
         {
             return false;
         }
@@ -522,17 +670,21 @@ stock Veh_OnPlayerStateChange(playerid, PLAYER_STATE:newstate)
     {
         return;
     }
+    new bool:running = Veh_IsEngineOn(vehicleid);
     if (!Veh_HasKey(playerid, vehicleid))
     {
-        // Nobody drives off in someone else's car without the key; hot-wiring comes with vehicle theft.
-        if (Veh_IsEngineOn(vehicleid))
+        // The key is in a running engine, so the vehicle can be driven; without a key it cannot be started again.
+        if (running)
         {
-            Veh_SetParam(vehicleid, VEH_PARAM_ENGINE, false);
+            Msg_Info(playerid, "Motor radi, pa mozete voziti. Ovo vozilo nije vase: kad se motor ugasi, bez kljuca ga ne mozete ponovo upaliti.");
         }
-        Msg_Info(playerid, "Ovo vozilo nije vase i nemate kljuc, pa ne mozete upaliti motor.");
+        else
+        {
+            Msg_Info(playerid, "Ovo vozilo nije vase i nemate kljuc, pa ne mozete upaliti motor.");
+        }
         return;
     }
-    if (!Veh_IsEngineOn(vehicleid) && Fuel_IsUsed(vehicleid))
+    if (!running && Fuel_IsUsed(vehicleid))
     {
         Msg_Info(playerid, "Motor: taster N (/v motor). Brava: taster Y (/v zakljucaj). Ostalo: /v");
     }
@@ -551,13 +703,26 @@ stock Veh_OnColoursChanged(vehicleid, color1, color2)
     Veh_SaveState(slot);
 }
 
+// component 0 removes the part in that slot.
+stock Veh_SetMod(slot, CARMODTYPE:type, component)
+{
+    g_Veh[slot][vMods][_:type] = component;
+    Veh_SaveState(slot);
+}
+
+stock Veh_SetPaintjob(slot, paintjob)
+{
+    g_Veh[slot][vPaintjob] = paintjob;
+    Veh_SaveState(slot);
+}
+
 stock Veh_RandomPlate(plate[], size = sizeof(plate))
 {
     format(plate, size, "LS %03d-%c%c", 100 + random(900),
         g_PlateLetters[random(sizeof(g_PlateLetters) - 1)], g_PlateLetters[random(sizeof(g_PlateLetters) - 1)]);
 }
 
-// A new vehicle stands next to the player; the plate is checked against the database first, since owners can be offline.
+// A new vehicle stands next to the player, without plates: they come with the first registration.
 stock Veh_CreateFor(adminid, targetid, model)
 {
     new Float:x, Float:y, Float:z, Float:angle;
@@ -566,70 +731,39 @@ stock Veh_CreateFor(adminid, targetid, model)
     x += 4.0 * floatcos(angle, degrees);
     y += 4.0 * floatsin(angle, degrees);
 
-    new plate[VEH_PLATE_LENGTH];
-    Veh_RandomPlate(plate);
-    Veh_CheckPlate(adminid, targetid, g_AccountRace[targetid], model, plate, x, y, z, angle);
-}
-
-static stock Veh_CheckPlate(adminid, targetid, race, model, const plate[], Float:x, Float:y, Float:z, Float:angle)
-{
-    new query[96];
-    mysql_format(g_SQL, query, sizeof(query), "SELECT `id` FROM `vehicles` WHERE `plate` = '%e'", plate);
-    mysql_tquery(g_SQL, query, "OnVehiclePlateChecked", "ddddsffff", adminid, targetid, race, model, plate, x, y, z, angle);
-}
-
-forward OnVehiclePlateChecked(adminid, targetid, race, model, const plate[], Float:x, Float:y, Float:z, Float:angle);
-public OnVehiclePlateChecked(adminid, targetid, race, model, const plate[], Float:x, Float:y, Float:z, Float:angle)
-{
-    if (race != g_AccountRace[targetid])
-    {
-        return 1;
-    }
-    if (cache_num_rows() > 0)
-    {
-        new other[VEH_PLATE_LENGTH];
-        Veh_RandomPlate(other);
-        Veh_CheckPlate(adminid, targetid, race, model, other, x, y, z, angle);
-        return 1;
-    }
-    if (Veh_CountOwned(g_Player[targetid][pDbId]) >= VEH_MAX_PER_PLAYER)
-    {
-        return 1;
-    }
-
     new query[640];
     mysql_format(g_SQL, query, sizeof(query),
-        "INSERT INTO `vehicles` (`id`, `owner_id`, `model`, `color1`, `color2`, `plate`, `park_x`, `park_y`, `park_z`, `park_a`, `fuel`) " \
-        "SELECT " DB_FREE_ID("vehicles") ", %d, %d, %d, %d, '%e', %f, %f, %f, %f, %d",
-        g_Player[targetid][pDbId], model, random(127), random(127), plate, x, y, z, angle, Fuel_TankSize(model));
-    mysql_tquery(g_SQL, query, "OnVehicleInserted", "ddds", adminid, targetid, race, plate);
-    return 1;
+        "INSERT INTO `vehicles` (`id`, `owner_id`, `model`, `color1`, `color2`, `park_x`, `park_y`, `park_z`, `park_a`, `fuel`) " \
+        "SELECT " DB_FREE_ID("vehicles") ", %d, %d, %d, %d, %f, %f, %f, %f, %d",
+        g_Player[targetid][pDbId], model, random(127), random(127), x, y, z, angle, Fuel_TankSize(model));
+    mysql_tquery(g_SQL, query, "OnVehicleInserted", "ddd", adminid, targetid, g_AccountRace[targetid]);
 }
 
-forward OnVehicleInserted(adminid, targetid, race, const plate[]);
-public OnVehicleInserted(adminid, targetid, race, const plate[])
+forward OnVehicleInserted(adminid, targetid, race);
+public OnVehicleInserted(adminid, targetid, race)
 {
     if (race != g_AccountRace[targetid])
     {
         return 1;
     }
-    Veh_QueryOwned(targetid, "id", cache_insert_id());
+    new dbid = cache_insert_id();
+    Veh_QueryOwned(targetid, "id", dbid, false);
 
-    new details[48];
-    format(details, sizeof(details), "tablica %s", plate);
+    new details[32];
+    format(details, sizeof(details), "vozilo %d", dbid);
     if (Account_IsLoggedIn(adminid))
     {
-        Msg_Admin(adminid, "Igrac %s je dobio vozilo sa tablicom %s.", Account_Name(targetid), plate);
+        Msg_Admin(adminid, "Igrac %s je dobio vozilo (ID u bazi %d).", Account_Name(targetid), dbid);
         Staff_Log(adminid, "giveveh", targetid, details);
     }
-    Msg_Success(targetid, "Dobili ste vozilo (tablica %s), stoji pored vas. Parkirajte ga gde zelite sa /v parkiraj.", plate);
+    Msg_Success(targetid, "Dobili ste vozilo, stoji pored vas. Parkirajte ga sa /v parkiraj, a tablice dobijate na tehnickom pregledu (/registruj).");
     return 1;
 }
 
 stock Veh_ShowList(playerid)
 {
-    new body[640], line[144], count, dbid = g_Player[playerid][pDbId];
-    strcopy(body, "Vozilo\tGorivo\tGde je\tKopija kljuca\n");
+    new body[768], line[160], count, dbid = g_Player[playerid][pDbId];
+    strcopy(body, "Vozilo\tGorivo\tGde je\tRegistracija\tKopija kljuca\n");
     for (new slot = 0; slot < MAX_PERSONAL_VEHICLES && count < sizeof(g_VehListed[]); slot++)
     {
         if (!g_Veh[slot][vUsed] || g_Veh[slot][vOwnerDbId] != dbid)
@@ -646,7 +780,7 @@ stock Veh_ShowList(playerid)
             strcopy(fuel, "-");
         }
         GetVehiclePos(vehicleid, x, y, z);
-        new zone = Hud_FindZone(x, y), place[32], key[MAX_PLAYER_NAME + 1];
+        new zone = Hud_FindZone(x, y), place[32], key[MAX_PLAYER_NAME + 1], registration[24];
         if (zone == -1)
         {
             strcopy(place, "van grada");
@@ -663,7 +797,8 @@ stock Veh_ShowList(playerid)
         {
             strcopy(key, "nema");
         }
-        format(line, sizeof(line), "%s\t%s\t%s\t%s\n", Veh_Name(slot), fuel, place, key);
+        Veh_RegistrationText(slot, registration);
+        format(line, sizeof(line), "%s\t%s\t%s\t%s\t%s\n", Veh_Name(slot), fuel, place, registration, key);
         strcat(body, line);
         g_VehListed[playerid][count++] = slot;
     }
@@ -796,7 +931,7 @@ stock Veh_GiveKey(playerid, const params[])
     format(action, sizeof(action), "daje kopiju kljuca od vozila igracu %s.", Account_Name(targetid));
     Chat_Action(playerid, action);
     Msg_Success(playerid, "Dali ste kopiju kljuca od vozila %s igracu %s. Oduzima se u /v.", Veh_Name(slot), Account_Name(targetid));
-    Msg_Info(targetid, "Dobili ste kopiju kljuca od vozila %s. Mozete ga otkljucati (Y) i voziti (N).", Veh_Name(slot));
+    Msg_Info(targetid, "Dobili ste kopiju kljuca od vozila %s. Mozete ga otkljucati (Y) i voziti (N), i kad vlasnik nije tu.", Veh_Name(slot));
 }
 
 stock Veh_Park(playerid)
@@ -826,26 +961,61 @@ stock Veh_Park(playerid)
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `park_x` = %f, `park_y` = %f, `park_z` = %f, `park_a` = %f WHERE `id` = %d",
         g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ], g_Veh[slot][vParkA], g_Veh[slot][vDbId]);
     mysql_tquery(g_SQL, query);
-    Msg_Success(playerid, "Vozilo %s je parkirano ovde. Ovde vas ceka posle svake prijave.", Veh_Name(slot));
+    Msg_Success(playerid, "Vozilo %s je parkirano ovde. Ovde se vraca posle restarta servera, unistenja ili admin reseta.", Veh_Name(slot));
 }
 
-// Only empty vehicles move; health, damage and fuel stay as they are, so this is never a free repair.
+// Health, damage and fuel stay as they are, so this is never a free repair. Returns false for an occupied or burning vehicle.
+stock bool:Veh_ReturnToParking(slot)
+{
+    new vehicleid = g_Veh[slot][vVehicleId];
+    if (!g_Veh[slot][vUsed] || vehicleid == INVALID_VEHICLE_ID || g_Veh[slot][vDiedAt] != 0 || IsVehicleOccupied(vehicleid))
+    {
+        return false;
+    }
+    SetVehicleVelocity(vehicleid, 0.0, 0.0, 0.0);
+    SetVehiclePos(vehicleid, g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ]);
+    SetVehicleZAngle(vehicleid, g_Veh[slot][vParkA]);
+    LinkVehicleToInterior(vehicleid, 0);
+    SetVehicleVirtualWorld(vehicleid, 0);
+    return true;
+}
+
 stock Veh_ReturnAllToParking()
 {
     new count;
     for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
     {
-        new vehicleid = g_Veh[slot][vVehicleId];
-        if (!g_Veh[slot][vUsed] || vehicleid == INVALID_VEHICLE_ID || g_Veh[slot][vDiedAt] != 0 || IsVehicleOccupied(vehicleid))
+        if (Veh_ReturnToParking(slot))
         {
-            continue;
+            count++;
         }
-        SetVehicleVelocity(vehicleid, 0.0, 0.0, 0.0);
-        SetVehiclePos(vehicleid, g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ]);
-        SetVehicleZAngle(vehicleid, g_Veh[slot][vParkA]);
-        LinkVehicleToInterior(vehicleid, 0);
-        SetVehicleVirtualWorld(vehicleid, 0);
-        count++;
     }
     return count;
+}
+
+// Everyone gets a warning first, so whoever wants to keep a vehicle where it is can sit in it.
+stock bool:Veh_StartReset(adminid, seconds)
+{
+    if (g_VehResetTimer != 0)
+    {
+        return false;
+    }
+    g_VehResetTimer = SetTimerEx("Veh_FinishReset", seconds * 1000, false, "dd", adminid, g_AccountRace[adminid]);
+    return true;
+}
+
+forward Veh_FinishReset(adminid, race);
+public Veh_FinishReset(adminid, race)
+{
+    g_VehResetTimer = 0;
+    new count = Veh_ReturnAllToParking(), removed = Staff_DestroyAdminVehicles(true), message[144];
+    format(message, sizeof(message), "[ADMIN] Prazna vozila su vracena na parking (licnih: %d, obrisanih admin vozila: %d).", count, removed);
+    Chat_SendToAll(COLOR_ADMIN, message);
+    if (race == g_AccountRace[adminid] && Account_IsLoggedIn(adminid))
+    {
+        new details[48];
+        format(details, sizeof(details), "%d licnih, %d admin", count, removed);
+        Staff_Log(adminid, "resetveh", INVALID_PLAYER_ID, details);
+    }
+    return 1;
 }
