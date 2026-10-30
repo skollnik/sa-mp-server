@@ -26,7 +26,7 @@ enum E_HUD_PART
     PlayerText:hpInfo
 }
 
-new Text:g_HudLogo[15];
+new Text:g_HudLogo[6];
 new Text:g_HudClock = INVALID_TEXT_DRAW;
 new Text:g_HudDate = INVALID_TEXT_DRAW;
 new PlayerText:g_HudParts[MAX_PLAYERS][E_HUD_PART];
@@ -56,32 +56,15 @@ static stock Text:Hud_GlobalText(Float:x, Float:y, const text[], TEXT_DRAW_FONT:
     return td;
 }
 
-// The mark on the left is drawn from boxes and round ends; the server name sits beside it in two lines with a soft glow.
+// The server name in two lines, both centred on one axis, over a soft glow.
 static stock Hud_CreateLogo()
 {
-    g_HudLogo[0] = Hud_GlobalSprite(563.398, 19.542, 14.0, 4.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
-
-    g_HudLogo[1] = TextDrawCreate(572.999, 18.549, "_");
-    TextDrawFont(g_HudLogo[1], TEXT_DRAW_FONT_MODEL_PREVIEW);
-    TextDrawTextSize(g_HudLogo[1], 8.0, 7.0);
-    TextDrawBackgroundColour(g_HudLogo[1], 0x1F000000);
-    TextDrawSetPreviewModel(g_HudLogo[1], 19177);
-    TextDrawSetPreviewRot(g_HudLogo[1], 0.0, 180.0, 0.0, 0.2);
-
-    g_HudLogo[2] = Hud_GlobalSprite(560.098, 18.247, 6.0, 7.0, HUD_SPRITE_ROUND, HUD_TEXT_COLOR);
-    g_HudLogo[3] = Hud_GlobalSprite(561.198, 22.529, 3.0, 15.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
-    g_HudLogo[4] = Hud_GlobalSprite(559.998, 35.267, 5.25, 6.0, HUD_SPRITE_ROUND, HUD_TEXT_COLOR);
-    g_HudLogo[5] = Hud_GlobalSprite(562.998, 36.160, 13.0, 4.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
-    // A mirrored slash (negative letter width) makes the thin line between the mark and the name.
-    g_HudLogo[6] = Hud_GlobalText(579.597, 27.062, "/", TEXT_DRAW_FONT_1, -0.6686, 1.5599, TEXT_DRAW_ALIGN_LEFT, HUD_TEXT_COLOR);
-    g_HudLogo[7] = Hud_GlobalText(579.597, 27.062, "/", TEXT_DRAW_FONT_1, -0.6686, 1.5599, TEXT_DRAW_ALIGN_LEFT, HUD_TEXT_COLOR);
-    g_HudLogo[8] = Hud_GlobalSprite(567.798, 28.904, 6.0, 3.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
-    g_HudLogo[9] = Hud_GlobalText(581.198, 17.004, SERVER_LOGO_TOP, TEXT_DRAW_FONT_2, 0.2231, 1.0325, TEXT_DRAW_ALIGN_LEFT, HUD_TEXT_COLOR);
-    g_HudLogo[10] = Hud_GlobalSprite(578.997, 27.222, 15.0, 8.0, HUD_SPRITE_GLOW, HUD_GLOW_COLOR);
-    g_HudLogo[11] = Hud_GlobalSprite(579.198, 43.918, 15.0, -9.0, HUD_SPRITE_GLOW, HUD_GLOW_COLOR);
-    g_HudLogo[12] = Hud_GlobalText(587.398, 31.260, SERVER_LOGO_BOTTOM, TEXT_DRAW_FONT_2, 0.1439, 0.8981, TEXT_DRAW_ALIGN_CENTER, HUD_TEXT_COLOR);
-    g_HudLogo[13] = Hud_GlobalSprite(582.098, 40.527, 9.0, -5.0, HUD_SPRITE_GLOW, HUD_GLOW_LIGHT_COLOR);
-    g_HudLogo[14] = Hud_GlobalSprite(581.997, 30.771, 9.0, 5.0, HUD_SPRITE_GLOW, HUD_GLOW_LIGHT_COLOR);
+    g_HudLogo[0] = Hud_GlobalSprite(578.997, 27.222, 15.0, 8.0, HUD_SPRITE_GLOW, HUD_GLOW_COLOR);
+    g_HudLogo[1] = Hud_GlobalSprite(579.198, 43.918, 15.0, -9.0, HUD_SPRITE_GLOW, HUD_GLOW_COLOR);
+    g_HudLogo[2] = Hud_GlobalSprite(582.098, 40.527, 9.0, -5.0, HUD_SPRITE_GLOW, HUD_GLOW_LIGHT_COLOR);
+    g_HudLogo[3] = Hud_GlobalSprite(581.997, 30.771, 9.0, 5.0, HUD_SPRITE_GLOW, HUD_GLOW_LIGHT_COLOR);
+    g_HudLogo[4] = Hud_GlobalText(587.398, 17.004, SERVER_LOGO_TOP, TEXT_DRAW_FONT_2, 0.2231, 1.0325, TEXT_DRAW_ALIGN_CENTER, HUD_TEXT_COLOR);
+    g_HudLogo[5] = Hud_GlobalText(587.398, 31.260, SERVER_LOGO_BOTTOM, TEXT_DRAW_FONT_2, 0.1439, 0.8981, TEXT_DRAW_ALIGN_CENTER, HUD_TEXT_COLOR);
 }
 
 stock Hud_Init()

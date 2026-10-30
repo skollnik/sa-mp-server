@@ -903,6 +903,11 @@ cmd:setlevel(playerid, params[])
     }
 
     g_Player[targetid][pLevel] = level;
+    // A lower level needs less respect, so old respect could jump several levels on the next payday.
+    if (g_Player[targetid][pRespect] >= Payday_RespectNeeded(targetid))
+    {
+        g_Player[targetid][pRespect] = 0;
+    }
     SetPlayerScore(targetid, level);
     Account_Save(targetid);
 
@@ -929,6 +934,13 @@ cmd:setrespect(playerid, params[])
     }
     if (!Staff_CheckTarget(playerid, targetid))
     {
+        return 1;
+    }
+
+    // Respect at or above the next level's need would turn into several levels at once on the next payday.
+    if (respect >= Payday_RespectNeeded(targetid))
+    {
+        Msg_Error(playerid, "Respect mora biti manji od %d (koliko treba za nivo %d). Za veci nivo koristite /setlevel.", Payday_RespectNeeded(targetid), g_Player[targetid][pLevel] + 1);
         return 1;
     }
 

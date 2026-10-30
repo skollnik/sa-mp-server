@@ -42,7 +42,7 @@ new const g_AccInfo[][E_ACC_INFO] =
     { ITEM_HAT_PANAMA,      ACC_PART_HEAD, BONE_HEAD,      300, 0.141, 0.016, -0.005, 0.0, 90.0, 93.5, 1.0, 1.0, 1.0 },
     { ITEM_HAT_KNIT,        ACC_PART_HEAD, BONE_HEAD,      150, 0.125, 0.018, 0.0, 2.0, 2.0, 1.0, 1.0, 1.042, 1.079 },
     { ITEM_CAP,             ACC_PART_HEAD, BONE_HEAD,      200, 0.141, 0.016, -0.014, -175.4, 174.0, -178.3, 1.0, 1.0, 1.072 },
-    { ITEM_BACKPACK,        ACC_PART_BACK, BONE_SPINE,     600, -0.058, -0.111, 0.0, 0.0, 0.0, 0.0, 0.759, 0.929, 0.77 },
+    { ITEM_BACKPACK,        ACC_PART_BACK, BONE_SPINE,     600, -0.080, -0.128, 0.0, 0.0, 0.0, 0.0, 0.759, 0.929, 0.86 },
     // Carried in the left hand, so it never clashes with a weapon in the right one.
     { ITEM_BAG,             ACC_PART_BACK, BONE_LEFT_HAND, 400, 0.222, 0.047, -0.017, 60.2, -83.0, 0.0, 0.454, 0.811, 0.9 }
 };

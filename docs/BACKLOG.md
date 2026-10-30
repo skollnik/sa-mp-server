@@ -7,7 +7,6 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 3 | Lična vozila (ključevi, gorivo, parkiranje, gepek) — kad vlasnik kaže |
 | 3 | Lična vozila (ključevi, gorivo, parkiranje, gepek), auto pijaca kao admin event, auto škola i dozvole, mehaničar |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
@@ -247,6 +246,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 30.10.2026. | Dodaci na telu: prodavnica odeće (`/napravimesto odeca`, `/kupi`), 3 naočare, polucilindar, panama šešir, zimska kapa, kačket, ranac i torba; `/dodaci` (stavi/skini, položaj mišem, vrati na početni). Kockice i novčić se kupuju u 24/7 i trebaju za opkladu. Prošnja se prekida kad igrač ustane ili uđe u vozilo. Lutrija piše „svakog sata“ |
 | 30.10.2026. | Bankovni račun: otvaranje na šalteru ($100, lična karta) uz karticu i nasumičan PIN, novi PIN $50; bez računa plata, dobitak i startnih $3.000 čekaju na šalteru. Dodaci na telu imaju fiksne položaje (bez pomeranja mišem) |
 | 30.10.2026. | Novi HUD (logo od oblika gore desno, okrugla oznaka gladi sa procentom); sat, datum, ID i broj igrača dole desno. Otvaranje računa besplatno. Popravljene naočare (bile su u glavi) i zimska kapa (bila je okrenuta) |
+| 30.10.2026. | Ranac pomeren unazad i proširen; logo bez oznake (samo ime servera); `/setrespect` i `/setlevel` više ne izazivaju skok za više nivoa |
 
 ---
 
@@ -257,7 +257,6 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 3 | Personal vehicles (keys, fuel, parking, trunk) — when the owner says so |
 | 3 | Personal vehicles (keys, fuel, parking, trunk), car market as an admin event, driving school and licenses, mechanic |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
@@ -497,3 +496,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-30 | Body accessories: clothing shop (`/napravimesto odeca`, `/kupi`), 3 glasses, a bowler, a panama hat, a knit hat, a cap, a backpack and a bag; `/dodaci` (wear/take off, mouse positioning, reset). Dice and coin are bought at a 24/7 and needed for a bet. Begging ends when the player stands up or enters a vehicle. The lottery says "every hour" |
 | 2026-10-30 | Bank account: opened at the counter ($100, ID card) with a card and a random PIN, a new PIN $50; without an account, pay, prizes and the starting $3,000 wait at the counter. Body accessories have fixed places (no mouse positioning) |
 | 2026-10-30 | New HUD (a logo built from shapes top right, a round hunger badge with a percentage); clock, date, ID and player count bottom right. Opening an account is free. Fixed glasses (they sat inside the head) and the knit hat (it was turned) |
+| 2026-10-30 | Backpack moved back and widened; logo without the mark (server name only); `/setrespect` and `/setlevel` no longer cause a multi-level jump |

@@ -57,6 +57,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Broj reporta se ponovo iskoristi, pa admin prihvati pogrešan report | 👁 | Retko; brojevi se ponovo koriste tek kad se report zatvori |
 | Ban IP-a zaključa sve na istoj mreži | 👁 | Namerno; `127.0.0.1` se nikad ne banuje. `/unban` skida ceo ban |
 | Ban po serijskom broju pogodi sve naloge na istom računaru | 👁 | Namerno (sprečava zaobilaženje bana). Vlasnik je izuzet |
+| Admin postavi respect veći od potrebnog, pa igrač na sledećem payday-u preskoči 20 nivoa | ✅ | `/setrespect` prima samo manje od potrebnog za sledeći nivo; `/setlevel` nuluje respect ako je preko potrebnog za novi nivo |
 
 ### VIP
 | Rizik | Status | Kako je rešeno |
@@ -242,6 +243,7 @@ Every new system or change goes through these questions, against all existing sy
 | A report number is reused, so an admin accepts the wrong report | 👁 | Rare; numbers are reused only after a report is closed |
 | An IP ban locks everyone on the same network | 👁 | By design; `127.0.0.1` is never banned. `/unban` lifts the whole ban |
 | A serial ban hits every account on the same computer | 👁 | By design (stops ban evasion). The owner is exempt |
+| An admin sets more respect than needed, so the player skips 20 levels on the next payday | ✅ | `/setrespect` only takes less than the next level needs; `/setlevel` clears respect when it is over the new level's need |
 
 ### VIP
 | Risk | Status | How it is handled |

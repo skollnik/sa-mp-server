@@ -51,7 +51,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Opklade (kockice, novčić), prošnja, lutrija svakog sata
 - [x] Dodaci na telu: prodavnica odeće (`/kupi`), naočare, šeširi, kapa, kačket, ranac i torba, `/dodaci` (fiksni položaji)
 - [x] Kockice i novčić se kupuju u 24/7; prošnja se prekida kad igrač ustane ili uđe u vozilo
-- [x] Novi HUD: logo od oblika gore desno, okrugla oznaka gladi, sat i ostalo dole desno
+- [x] Novi HUD: logo gore desno, okrugla oznaka gladi, sat i ostalo dole desno
 - [x] Bankovni račun: otvaranje na šalteru uz ličnu kartu, nasumičan PIN, plata bez računa čeka na šalteru
 
 ### Faza 3: Vozila i dozvole
@@ -157,7 +157,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] Bets (dice, coin), begging, hourly lottery
 - [x] Body accessories: clothing shop (`/kupi`), glasses, hats, a knit hat, a cap, a backpack and a bag, `/dodaci` (fixed places)
 - [x] Dice and coin are bought at a 24/7; begging ends when the player stands up or enters a vehicle
-- [x] New HUD: a logo built from shapes top right, a round hunger badge, the clock and the rest bottom right
+- [x] New HUD: a logo top right, a round hunger badge, the clock and the rest bottom right
 - [x] Bank account: opened at the counter with an ID card, a random PIN, pay without an account waits at the counter
 
 ### Phase 3: Vehicles and licenses
