@@ -164,6 +164,17 @@ stock bool:Chat_IsInRange(playerid, targetid, Float:radius)
     return GetPlayerDistanceFromPoint(playerid, x, y, z) <= radius;
 }
 
+// For hand-to-hand actions (money, items, bets). Prints the error itself; a spectating admin is never "beside" anyone.
+stock bool:Chat_CheckBeside(playerid, targetid, Float:radius)
+{
+    if (!Chat_IsInRange(playerid, targetid, radius) || GetPlayerState(targetid) == PLAYER_STATE_SPECTATING)
+    {
+        Msg_Error(playerid, "Taj igrac nije pored vas.");
+        return false;
+    }
+    return true;
+}
+
 stock Chat_ShowBubble(playerid, const message[])
 {
     new text[192];

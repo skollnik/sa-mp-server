@@ -16,7 +16,9 @@ cmd:pomoc(playerid, params[])
         C_WHITE "F ili /udji, /izadji - vrata zgrada    /gps - navigacija    /hud - sat i kvart\n" \
         "/stats - statistika    /daj - novac igracu pored vas    /licna - licna karta\n" \
         "/banka, /bankomat, /opstina, /kupi - na salterima i u prodavnicama (oznaka iznad mesta)\n" \
-        "Bankomat trazi PIN kartice: postavlja se na salteru banke (/banka)\n\n" \
+        "Bankomat trazi PIN kartice: postavlja se na salteru banke (/banka)\n" \
+        "/kockice, /novcic - opklada sa igracem pored vas (od nivoa 2)    /loto - lutrija svakog sata u :30\n" \
+        "/prosim - prosnja (do nivoa 4)    /udeli - novac igracu koji prosi\n\n" \
         C_SERVER "Inventar i telefon\n" \
         C_WHITE "/inv - inventar    /podigni - podizanje bacenog predmeta    F - baca cigaretu ili flasu iz ruke\n" \
         "Traka gladi je ispod novca: jedite u prodavnici 24/7, na nuli gubite HP\n" \

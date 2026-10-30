@@ -64,9 +64,8 @@ cmd:licna(playerid, params[])
     {
         return 1;
     }
-    if (targetid != playerid && !Chat_IsInRange(playerid, targetid, GIVE_CASH_RADIUS))
+    if (targetid != playerid && !Chat_CheckBeside(playerid, targetid, GIVE_CASH_RADIUS))
     {
-        Msg_Error(playerid, "Taj igrac nije pored vas.");
         return 1;
     }
 

@@ -18,6 +18,22 @@
 #define ATM_MAX_WITHDRAW            (10000)
 #define GIVE_CASH_RADIUS            (3.0)
 
+// Dice and coin bets: what each side puts in; from level 2 so fresh alt accounts cannot pass money around.
+#define BET_MIN_STAKE               (10)
+#define BET_MAX_STAKE               (5000)
+#define BET_MIN_LEVEL               (2)
+
+// Begging: only for new players; the daily caps keep it from becoming a way to move money between accounts.
+#define BEG_MAX_LEVEL               (4)
+#define BEG_GIFT_MAX                (100)
+#define BEG_GIVER_DAILY_MAX         (100)
+#define BEG_DAILY_MAX               (1000)
+
+// Lottery: only part of each ticket goes into the prize fund, the rest leaves the game (later: the state treasury).
+#define LOTTERY_TICKET_PRICE        (50)
+#define LOTTERY_POOL_PERCENT        (70)
+#define LOTTERY_MAX_NUMBER          (50)
+
 #define ID_CARD_PRICE               (50)
 
 #define PHONE_PRICE                 (500)

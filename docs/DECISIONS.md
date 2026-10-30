@@ -79,6 +79,9 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 71 | 2026-10-29 | Vozilo se prodaje samo drugom igraču, ne i državi | Odluka vlasnika; novac ne nastaje iz vazduha prodajom državi |
 | 72 | 2026-10-30 | HUD i svi budući prozori se crtaju samo teksturama iz igre (pločice, zaobljene ivice, ikone sa radara), bez custom modela; HUD ima datum na pločici, traku gladi u stilu GTA traka sa ikonom, kvart na pločici sa ikonom i logo sa ID-jem i brojem igrača | Vlasnik želi da svi igrači vide isto, i na 0.3.7 i na 0.3.DL |
 | 73 | 2026-10-30 | PIN kartice: 4 cifre, postavlja se na šalteru banke i čuva šifrovano (bcrypt); bankomat bez PIN-a ne isplaćuje; posle 3 pogrešna PIN-a kartica je blokirana 30 min, a na šalteru se odmah odblokira novim PIN-om; na šalteru PIN ne treba (lična karta) | Odobren predlog vlasnika |
+| 74 | 2026-10-30 | Opklade `/kockice` i `/novcic`: drugi igrač prihvata u dijalogu (30 s), oba moraju biti pored i od nivoa 2, server uzima oba uloga pre bacanja; kockice: veći zbir dve kocke, nerešeno vraća uloge | Odobren predlog vlasnika; uobičajen način u referencama |
+| 75 | 2026-10-30 | Prošnja: `/prosim` (do nivoa 4, ne kod spawna) stavlja natpis i sedi, `/udeli` daje $1–$100; dnevni limiti se čuvaju u bazi; ista IP adresa ne može da udeli | Odobren predlog vlasnika; limiti sprečavaju prebacivanje novca sa drugih naloga |
+| 76 | 2026-10-30 | Lutrija: izvlačenje svakog sata u :30, broj 1–50, jedan tiket po igraču (ključ u bazi), tiket $50 od čega 70% u fond; fond se pamti u bazi i prenosi kad niko ne pogodi; dobitak ide na račun i igraču koji nije online | Zahtev vlasnika; :30 da se ne poklopi sa platom |
 
 ### Arhitektura koda (predlog)
 ```
@@ -179,6 +182,9 @@ This file records every important decision so it does not get re-discussed. Newe
 | 71 | 2026-10-29 | A vehicle can only be sold to another player, not to the state | Owner's decision; selling to the state would create money out of thin air |
 | 72 | 2026-10-30 | The HUD and every future screen are drawn only with textures from the game (plates, round ends, radar icons), no custom models; the HUD has the date on a plate, a GTA-style hunger bar with an icon, the district on a plate with an icon and a logo with the ID and player count | The owner wants every player to see the same, on 0.3.7 and 0.3.DL |
 | 73 | 2026-10-30 | Card PIN: 4 digits, set at the bank counter and stored hashed (bcrypt); an ATM pays nothing without it; after 3 wrong PINs the card is blocked for 30 min, and a new PIN at the counter unblocks it right away; the counter needs no PIN (ID card) | Owner approved the proposal |
+| 74 | 2026-10-30 | Bets `/kockice` and `/novcic`: the other player accepts in a dialog (30 s), both must be beside each other and level 2+, the server takes both stakes before the roll; dice: higher sum of two dice wins, a tie returns the stakes | Owner approved the proposal; the usual way in the references |
+| 75 | 2026-10-30 | Begging: `/prosim` (up to level 4, not near the spawn) adds a label and sits, `/udeli` gives $1–$100; daily caps are kept in the DB; the same IP cannot give | Owner approved the proposal; the caps stop moving money from alt accounts |
+| 76 | 2026-10-30 | Lottery: a draw every hour at :30, number 1–50, one ticket per player (a DB key), a $50 ticket of which 70% goes into the fund; the fund is kept in the DB and carries over when nobody wins; the prize goes to the bank account, also for offline players | Owner's request; :30 so it never lands on the payday |
 
 ### Code architecture (proposal)
 ```

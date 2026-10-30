@@ -159,6 +159,14 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | HUD sa custom teksturama koji igrač na 0.3.7 ne vidi | ✅ | Koriste se samo teksture iz igre |
 | Pogađanje tuđeg PIN-a ili izbegavanje blokade izlaskom iz igre | ✅ | Bankomat isplaćuje samo vlasniku računa; pogrešni pokušaji i blokada se odmah čuvaju u bazi; PIN je šifrovan |
 | Zaobilaženje PIN-a preko menija bankomata | ✅ | Meni bankomata se otvara tek posle tačnog PIN-a; open.mp prihvata odgovor samo za prikazani dijalog |
+| Prebacivanje novca sa lažnih naloga kroz opklade ili prošnju | ✅ | Opklade od nivoa 2 i do $5.000; prošnja sa dnevnim limitima u bazi i bez davanja sa iste IP adrese; sve ide u log novca |
+| Opklada kad jedan igrač u međuvremenu potroši novac ili ode | ✅ | Pri prihvatanju se sve proverava ponovo (novac, blizina, nivo); oba uloga se uzimaju pre bacanja |
+| Spam ponudama za opkladu (dijalog drugom igraču) | ✅ | Pauza 10 s između ponuda i samo jedna ponuda po igraču odjednom; ponuda ističe za 30 s |
+| Natpis „Prosi“ ostane iznad tuđe glave posle izlaska | ✅ | Natpis se briše pri izlasku, smrti i ulasku u zatvor |
+| Dva tiketa u istom izvlačenju | ✅ | Tiket je jedan red po nalogu (primarni ključ); drugi pokušaj vraća novac |
+| Kupovina tiketa tokom izvlačenja | ✅ | Prodaja je zatvorena od upita za izvlačenje do brisanja tiketa |
+| Dobitnik na lutriji nije online (njegovo staro stanje prepiše dobitak) | ✅ | Igraču online se dodaje u memoriji, a igraču van igre u bazi |
+| Fond lutrije se izgubi posle restarta | ✅ | Fond je u tabeli `server_vars`; tiketi ostaju u bazi do izvlačenja |
 | Previše textdraw-ova po igraču | ✅ | HUD koristi 17 po igraču (granica je 256), sat i datum su zajednički za sve |
 
 ---
@@ -322,4 +330,12 @@ Every new system or change goes through these questions, against all existing sy
 | A custom-texture HUD that a 0.3.7 player cannot see | ✅ | Only textures from the game are used |
 | Guessing a PIN or dodging the block by leaving | ✅ | An ATM only pays the account owner; wrong tries and the block are saved to the DB at once; the PIN is hashed |
 | Skipping the PIN through the ATM menu | ✅ | The ATM menu opens only after a correct PIN; open.mp accepts a response only for the dialog that is shown |
+| Moving money from alt accounts through bets or begging | ✅ | Bets from level 2 and up to $5,000; begging with daily caps in the DB and no giving from the same IP; everything goes into the money log |
+| A bet where one player spends the money or leaves meanwhile | ✅ | Everything is checked again on accept (money, distance, level); both stakes are taken before the roll |
+| Spamming bet offers (a dialog for the other player) | ✅ | 10 s between offers and only one offer per player at a time; an offer expires after 30 s |
+| The "Prosi" label stays over someone else's head after leaving | ✅ | The label is removed on leaving, death and jail |
+| Two tickets in the same draw | ✅ | A ticket is one row per account (primary key); a second try returns the money |
+| Buying a ticket during a draw | ✅ | Sales are closed from the draw query until the tickets are deleted |
+| A lottery winner is offline (their old balance overwrites the prize) | ✅ | An online player gets it in memory, an offline one in the DB |
+| The lottery fund is lost after a restart | ✅ | The fund is in the `server_vars` table; tickets stay in the DB until the draw |
 | Too many textdraws per player | ✅ | The HUD uses 17 per player (the limit is 256); clock and date are shared by everyone |

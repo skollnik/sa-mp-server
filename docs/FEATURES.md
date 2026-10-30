@@ -45,6 +45,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **ECO-2 Banka:** filijale i bankomati, uplata, isplata, transfer i štedni račun. PIN kartice za bankomat (blokada posle 3 pogrešna).
 - **ECO-3 Porezi** na imovinu i vozila. Budžet države puni vlada.
 - **ECO-4 Logovi transakcija**, radi borbe protiv duplikacije novca.
+- **ECO-5 Igre na sreću i prošnja:** opklade kockicama i novčićem između igrača, lutrija svakog sata, prošnja za nove igrače.
 
 ### WORLD — Svet
 - **WORLD-1 Dinamički ulazi/izlazi** (enterijeri) sa pickup-om i 3D labelom, plus enter/exit komande.
@@ -211,6 +212,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **ECO-2 Bank:** branches and ATMs, deposit, withdraw, transfer and savings. Card PIN for ATMs (blocked after 3 wrong tries).
 - **ECO-3 Taxes** on property and vehicles. The government fills the state budget.
 - **ECO-4 Transaction logs**, to fight money duplication.
+- **ECO-5 Games of chance and begging:** dice and coin bets between players, an hourly lottery, begging for new players.
 
 ### WORLD — World
 - **WORLD-1 Dynamic entrances/exits** (interiors) with a pickup and 3D label, plus enter/exit commands.

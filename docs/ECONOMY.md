@@ -19,6 +19,9 @@
 | Kamata na banku (payday) | 0.05% stanja, najviše $250 |
 | Payday | Na svaki pun sat, ako je igrač od prošle plate bio aktivan bar 30 min; uplata ide na račun |
 | Transfer na drugi račun | Od nivoa 2, provizija 1%; bankomat isplaćuje najviše $10.000 odjednom |
+| Opklada (kockice, novčić) | Ulog $10–$5.000 po igraču, od nivoa 2; pobednik uzima oba uloga, nerešeno vraća uloge |
+| Prošnja | Do nivoa 4; jedno davanje $1–$100, jedan davalac najviše $100 dnevno istom prosjaku, prosjak najviše $1.000 dnevno |
+| Lutrija | Tiket $50, broj 1–50, jedan tiket po igraču; izvlačenje svakog sata u :30; 70% ide u fond, 30% nestaje iz igre (kasnije u državnu kasu) |
 
 ### Startni paket
 - **$2.000 keš + $3.000 u banci = $5.000.** To pokriva vozačku, telefon i hranu, ali ne i vozilo.
@@ -145,6 +148,9 @@
 | Bank interest (payday) | 0.05% of balance, max $250 |
 | Payday | Every full hour, if the player was active for at least 30 min since the last one; paid into the bank |
 | Transfer to another account | From level 2, 1% fee; an ATM pays out at most $10,000 at once |
+| Bet (dice, coin) | Stake $10–$5,000 per player, from level 2; the winner takes both stakes, a tie returns them |
+| Begging | Up to level 4; one gift $1–$100, one giver at most $100 a day to the same beggar, a beggar at most $1,000 a day |
+| Lottery | Ticket $50, number 1–50, one ticket per player; a draw every hour at :30; 70% goes into the fund, 30% leaves the game (later the state treasury) |
 
 ### Starter pack
 - **$2,000 cash + $3,000 in the bank = $5,000.** That covers a driving license, a phone and food, but not a vehicle.

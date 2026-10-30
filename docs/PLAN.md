@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** HUD od tekstura iz igre napisan, čeka test vlasnika; sledeće su PIN, kockice i novčić, prošnja, lutrija i dodaci na telu (ažurirano 2026-10-30)
+**Trenutni status:** HUD, PIN, opklade, prošnja i lutrija napisani, čekaju test vlasnika; sledeći su dodaci na telu (ažurirano 2026-10-30)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -48,7 +48,8 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Strelice na vratima, nivo po uobičajenoj formuli, happy hour po broju plata
 - [x] HUD od tekstura iz igre (datum na pločici, glad sa ikonom, kvart na pločici, logo sa ID-jem i brojem igrača)
 - [x] PIN za bankomat i karticu
-- [ ] Dodaci: dodaci na telu, novčić i kockice uz opkladu, prošnja, lutrija (svaki se pre izrade predlaže)
+- [x] Opklade (kockice, novčić), prošnja, lutrija svakog sata
+- [ ] Dodaci na telu
 
 ### Faza 3: Vozila i dozvole
 - [ ] VEH-1 – VEH-9: lična vozila, ključevi, gorivo, parkiranje, gepek, rent
@@ -104,7 +105,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** HUD from in-game textures written, waiting for the owner's test; next are the PIN, dice and coin, begging, lottery and body accessories (updated 2026-10-30)
+**Current status:** HUD, PIN, bets, begging and lottery written, waiting for the owner's test; body accessories are next (updated 2026-10-30)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -150,7 +151,8 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] Door arrows, levels by the usual formula, happy hour counted in paydays
 - [x] HUD from in-game textures (date on a plate, hunger with an icon, district on a plate, logo with ID and player count)
 - [x] ATM and card PIN
-- [ ] Extras: body accessories, coin flip and dice bets, begging, lottery (each is proposed before it is built)
+- [x] Bets (dice, coin), begging, hourly lottery
+- [ ] Body accessories
 
 ### Phase 3: Vehicles and licenses
 - [ ] VEH-1 – VEH-9: personal vehicles, keys, fuel, parking, trunk, rentals

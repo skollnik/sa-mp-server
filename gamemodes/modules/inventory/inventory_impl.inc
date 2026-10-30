@@ -336,9 +336,8 @@ stock bool:Inv_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 stock Inv_Give(playerid, slot, targetid, amount)
 {
     new E_ITEM:item = g_Inv[playerid][slot][isItem];
-    if (!Chat_IsInRange(playerid, targetid, INV_GIVE_RADIUS) || GetPlayerState(targetid) == PLAYER_STATE_SPECTATING)
+    if (!Chat_CheckBeside(playerid, targetid, INV_GIVE_RADIUS))
     {
-        Msg_Error(playerid, "Taj igrac nije pored vas.");
         return;
     }
     if (amount < 1 || amount > g_Inv[playerid][slot][isAmount])

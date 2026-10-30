@@ -221,6 +221,18 @@ stock bool:Account_IsLoggedIn(playerid)
     return g_Player[playerid][pState] == ACCOUNT_STATE_LOGGED_IN;
 }
 
+stock Account_FindOnlineByDbId(account_id)
+{
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (Account_IsLoggedIn(i) && g_Player[i][pDbId] == account_id)
+        {
+            return i;
+        }
+    }
+    return INVALID_PLAYER_ID;
+}
+
 stock bool:Account_IsOwnerName(const name[])
 {
     return strcmp(name, OWNER_NAME, true) == 0;

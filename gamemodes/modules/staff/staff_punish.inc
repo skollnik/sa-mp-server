@@ -201,6 +201,7 @@ stock Punish_BanOnline(adminid, targetid, days, const reason[])
 
 stock Punish_PutInJail(playerid)
 {
+    Beg_Stop(playerid);
     SetPlayerInterior(playerid, JAIL_INTERIOR);
     SetPlayerVirtualWorld(playerid, JAIL_WORLD);
     AC_SetPlayerPos(playerid, JAIL_X, JAIL_Y, JAIL_Z);

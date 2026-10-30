@@ -66,6 +66,9 @@
 
 #include "modules/money/money_impl.inc"
 #include "modules/money/bank_pin.inc"
+#include "modules/money/begging.inc"
+#include "modules/gamble/bets.inc"
+#include "modules/gamble/lottery.inc"
 #include "modules/money/money_cmds.inc"
 #include "modules/money/payday.inc"
 
@@ -110,6 +113,8 @@ public OnGameModeInit()
     Door_Init();
     Point_Init();
     Money_Init();
+    Beg_Init();
+    Lottery_Init();
     Payday_Init();
     Gps_Init();
     Time_Init();
@@ -130,6 +135,7 @@ public OnGameModeExit()
     Hunger_Exit();
     Hud_Exit();
     Time_Exit();
+    Lottery_Exit();
     Payday_Exit();
     Vip_Exit();
     AC_Exit();
@@ -152,6 +158,9 @@ public OnPlayerConnect(playerid)
     Hunger_OnPlayerConnect(playerid);
     Inv_OnPlayerConnect(playerid);
     Phone_OnPlayerConnect(playerid);
+    Bet_OnPlayerConnect(playerid);
+    Beg_OnPlayerConnect(playerid);
+    Lottery_OnPlayerConnect(playerid);
     Staff_OnPlayerConnect(playerid);
     Maps_OnPlayerConnect(playerid);
     Account_OnPlayerConnect(playerid);
@@ -162,6 +171,7 @@ public OnPlayerDisconnect(playerid, reason)
 {
     Gps_OnPlayerDisconnect(playerid);
     Phone_OnPlayerDisconnect(playerid);
+    Beg_OnPlayerDisconnect(playerid);
     Staff_OnPlayerDisconnect(playerid);
     Account_OnPlayerDisconnect(playerid);
     return 1;
@@ -212,6 +222,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
     AC_OnPlayerDeath(playerid);
     Phone_OnPlayerDeath(playerid);
     Hunger_OnPlayerDeath(playerid);
+    Beg_OnPlayerDeath(playerid);
     return 1;
 }
 
@@ -288,6 +299,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (BankPin_OnDialogResponse(playerid, dialogid, response, inputtext))
+    {
+        return 1;
+    }
+    if (Bet_OnDialogResponse(playerid, dialogid, response))
     {
         return 1;
     }

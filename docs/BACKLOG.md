@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 2 | Novčić i kockice uz opkladu, prošnja, lutrija (svaki sat, brojevi 1–50, jedan tiket po igraču), dodaci na telu (vlasnik odobrio sve 30.10) |
+| 2 | Dodaci na telu (naočare, kape, torbe; vlasnik odobrio 30.10) |
 | 3 | Lična vozila (ključevi, gorivo, parkiranje, gepek), auto pijaca kao admin event, auto škola i dozvole, mehaničar |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
@@ -190,7 +190,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | VIP: `/setvip` za igrača koji nije online; prelazak na viši nivo bez gubitka preostalih dana |
 | VIP: besplatna promena imena jednom mesečno (Gold) |
 | Email i povratak lozinke (uz web panel) |
-| Happy hour da se pamti posle restarta servera (sada se gubi) |
+| Happy hour da se pamti posle restarta servera (sada se gubi); može da koristi tabelu `server_vars` kao fond lutrije |
 
 ### Urađeno
 | Datum | Stavka |
@@ -239,6 +239,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 29.10.2026. | Podešavanja (ACC-9): `/podesavanja` sa delovima HUD-a i kanalima (traka gladi se uvek vidi); melodija telefona u meniju `/telefon` (5 melodija, čuje se i okolo); `/hud` se pamti. Odluka: vozilo se prodaje samo drugom igraču |
 | 30.10.2026. | HUD od tekstura iz igre: datum na pločici, traka gladi sa ikonom hamburgera koja trepće kad je igrač gladan, kvart na pločici sa ikonom, logo servera sa ID-jem i brojem igrača (može da se sakrije u `/podesavanja`) |
 | 30.10.2026. | PIN kartice: postavlja se u banci, bankomat ga traži, 3 pogrešna = blokada 30 min (šalter odmah odblokira) |
+| 30.10.2026. | Opklade `/kockice` i `/novcic`, prošnja `/prosim` i `/udeli`, lutrija `/loto` (svakog sata u :30, jedan tiket po igraču) |
 
 ---
 
@@ -249,7 +250,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 2 | Coin flip and dice bets, begging, lottery (every hour, numbers 1–50, one ticket per player), body accessories (owner approved all on 2026-10-30) |
+| 2 | Body accessories (glasses, hats, bags; owner approved on 2026-10-30) |
 | 3 | Personal vehicles (keys, fuel, parking, trunk), car market as an admin event, driving school and licenses, mechanic |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
@@ -432,7 +433,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | VIP: `/setvip` for an offline player; upgrading without losing remaining days |
 | VIP: free name change once a month (Gold) |
 | Email and password recovery (with the web panel) |
-| Happy hour kept across a server restart (now it is lost) |
+| Happy hour kept across a server restart (now it is lost); it can use the `server_vars` table like the lottery fund |
 
 ### Done
 | Date | Item |
@@ -481,3 +482,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-29 | Settings (ACC-9): `/podesavanja` with HUD parts and channels (the hunger bar is always shown); the phone ringtone in the `/telefon` menu (5 ringtones, heard nearby too); `/hud` is remembered. Decision: a vehicle is sold only to another player |
 | 2026-10-30 | HUD from in-game textures: date on a plate, hunger bar with a burger icon that blinks when the player is hungry, district on a plate with an icon, server logo with ID and player count (can be hidden in `/podesavanja`) |
 | 2026-10-30 | Card PIN: set at the bank, asked by ATMs, 3 wrong = blocked for 30 min (the counter unblocks at once) |
+| 2026-10-30 | Bets `/kockice` and `/novcic`, begging `/prosim` and `/udeli`, lottery `/loto` (every hour at :30, one ticket per player) |

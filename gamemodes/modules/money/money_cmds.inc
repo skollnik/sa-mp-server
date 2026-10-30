@@ -10,9 +10,8 @@ cmd:daj(playerid, params[])
     {
         return 1;
     }
-    if (!Chat_IsInRange(playerid, targetid, GIVE_CASH_RADIUS) || GetPlayerState(targetid) == PLAYER_STATE_SPECTATING)
+    if (!Chat_CheckBeside(playerid, targetid, GIVE_CASH_RADIUS))
     {
-        Msg_Error(playerid, "Taj igrac nije pored vas.");
         return 1;
     }
     if (amount > g_Player[playerid][pCash])
