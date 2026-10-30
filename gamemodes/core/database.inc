@@ -31,3 +31,8 @@ stock Database_Disconnect()
         g_SQL = MYSQL_INVALID_HANDLE;
     }
 }
+
+// The lowest free `id` of a table, for an INSERT ... SELECT, so the IDs of deleted rows are given out again.
+// LAST_INSERT_ID(expr) makes cache_insert_id() return it, since the row is not given an id by AUTO_INCREMENT.
+#define DB_FREE_ID(%0) "LAST_INSERT_ID(IF(NOT EXISTS (SELECT 1 FROM `" %0 "` WHERE `id` = 1), 1, " \
+    "(SELECT MIN(a.`id`) + 1 FROM `" %0 "` a LEFT JOIN `" %0 "` b ON b.`id` = a.`id` + 1 WHERE b.`id` IS NULL)))"

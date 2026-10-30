@@ -45,6 +45,13 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Kanister (korak 3.3); vožnja bez dozvole (korak 3.4) |
 | Anti-cheat za vozila: HP vozila (repair hack), ulazak u zaključano vozilo |
 | VIP: mesto za još jedno vozilo (Silver+), sopstvena tablica i neon (Gold) |
+| Predlog (čeka odobrenje): lična vozila stalno u svetu, i kad vlasnik nije online; vozila naloga neaktivnih 14 dana se ne pojavljuju dok se vlasnik ne prijavi; kopija ključa radi i dok vlasnik nije online |
+| Predlog (čeka odobrenje): motor se pali 1,5 s uz `/me`, a oštećen motor (ispod 400 HP) ponekad ne upali iz prvog puta |
+| Predlog (čeka odobrenje): upaljeno i otključano vozilo može da vozi i igrač bez ključa; kad ugasi motor, bez ključa ne može ponovo da ga upali |
+| Predlog (čeka odobrenje): `/resetvozila [sekunde]` sa odbrojavanjem i porukom svima; vraća i vozila poslova i frakcija na njihova mesta kad ti sistemi dođu |
+| Predlog (čeka odobrenje): admin `/atune` (meni: felne, spojler, branici, nitro, hidraulika, boja, paintjob); tuning ličnog vozila se pamti i ide u log |
+| Predlog (čeka odobrenje): `/napravimesto` bez parametra otvara dijalog sa listom tipova mesta |
+| Predlog (čeka odobrenje): registracija vozila u opštini (tablice se dobijaju tek posle registracije, važi 30 dana, produžava se; policija proverava kad dođe) |
 
 **Posle kuća (Faza 4) i frakcija (Faza 5)**
 | Stavka |
@@ -72,19 +79,19 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | C-bug, drive-by, spam ulaska u vozilo i promene stanja, tuning van mehaničara |
 
 ### Odobreni sistemi (izbor vlasnika 28.10.2026.)
-Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasniku.
+Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasniku. ✅ ispred stavke znači da je urađena (datum je u „Urađeno“).
 
 **Faza 2: novac, banka, payday, telefon, inventar**
 | Stavka | Kako radi i sa čim se vezuje | Mapa |
 |--------|------------------------------|------|
 | Bankarski kredit | Iznos zavisi od nivoa, rata se skida na payday; ako se ne plaća, dug raste i blokira kupovine, a posle X dana se oduzima imovina | — |
-| PIN za bankomat i karticu | Bez PIN-a nema isplate na bankomatu; posle 3 pogrešna PIN-a kartica se blokira na neko vreme | — |
-| Lutrija | Tiket se kupuje do izvlačenja u zadato vreme; deo uplata ide u državnu kasu | — |
+| ✅ PIN za bankomat i karticu | Bez PIN-a nema isplate na bankomatu; posle 3 pogrešna PIN-a kartica se blokira na neko vreme | — |
+| ✅ Lutrija | Tiket se kupuje do izvlačenja u zadato vreme; deo uplata ide u državnu kasu | — |
 | Državna kasa sa donacijama | Igrači uplaćuju u budžet države (ECO-3, GOV-1), lista najvećih donatora | — |
-| Prošnja (do nivoa 4) | Sitan novac od drugih igrača, ne radi kod spawna; dnevni limit po davaocu i log, da se novac ne prebacuje sa drugih naloga | — |
-| Novčić i kockice uz opkladu | Oba igrača potvrde ulog, novac drži server dok traje bacanje, najveći ulog je ograničen, sve ide u log | — |
+| ✅ Prošnja (do nivoa 4) | Sitan novac od drugih igrača, ne radi kod spawna; dnevni limit po davaocu i log, da se novac ne prebacuje sa drugih naloga | — |
+| ✅ Novčić i kockice uz opkladu | Oba igrača potvrde ulog, novac drži server dok traje bacanje, najveći ulog je ograničen, sve ide u log | — |
 | Meni za ponude između igrača | Jedna komanda za prodaju vozila, kuće i firme: oba igrača blizu, potvrda dijalogom, log protiv prevare | — |
-| Dodaci na telu (naočare, kape, torbe) | Predmeti iz prodavnice u inventaru, nose se na telu, igrač sam podešava položaj | — |
+| ✅ Dodaci na telu (naočare, kape, torbe) | Predmeti iz prodavnice u inventaru, nose se na telu, igrač sam podešava položaj | — |
 | Muzika: radio u vozilu, boombox, muzika sa linka | Radio stanice u vozilu, boombox kao predmet koji svira ljudima oko njega | — |
 
 **Faza 3 i 4: vozila, imovina, firme, poslovi**
@@ -254,6 +261,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 30.10.2026. | Novi HUD (logo od oblika gore desno, okrugla oznaka gladi sa procentom); sat, datum, ID i broj igrača dole desno. Otvaranje računa besplatno. Popravljene naočare (bile su u glavi) i zimska kapa (bila je okrenuta) |
 | 30.10.2026. | Ranac pomeren unazad i proširen; logo bez oznake (samo ime servera); `/setrespect` i `/setlevel` više ne izazivaju skok za više nivoa |
 | 30.10.2026. | Faza 3, korak 3.1: lična vozila (`/v`, parkiranje, nestajanje 5 min posle odjave), tablice, ključ i jedna kopija, motor N, brava Y, svetla, hauba, gepek, gorivo i benzinske pumpe (`/gorivo`), brzinomer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`; VIP `/vcolor` i `/vfix` samo na svom vozilu; ranac ponovo podešen; dodaci posle restarta servera više ne ostaju vidljivi |
+| 30.10.2026. | Ispravke posle testa 3.1: nalog se ponovo čuva u bazi (pozicija, nivo, račun, dodaci posle izlaska), HUD se više ne duplira posle smrti, rezervoar se toči do punog, obrisani ID-jevi GPS-a, ulaza i mesta se ponovo daju (i vozilima), hamburger pomeren desno, veća slova logoa, urađene stavke u „Odobreni sistemi“ označene sa ✅ |
 
 ---
 
@@ -294,6 +302,13 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Item |
 |------|
 | Talking through a vehicle window (`/cw`) |
+| Proposal (waiting for approval): personal vehicles always in the world, even when the owner is offline; vehicles of accounts inactive for 14 days do not appear until the owner logs in; the key copy works while the owner is offline |
+| Proposal (waiting for approval): the engine starts after 1.5 s with a `/me`, and a damaged engine (under 400 HP) sometimes fails on the first try |
+| Proposal (waiting for approval): a running, unlocked vehicle can be driven by a player without the key; once they switch the engine off, they cannot start it again without a key |
+| Proposal (waiting for approval): `/resetvozila [seconds]` with a countdown and a message to everyone; it also returns job and faction vehicles to their spots once those systems exist |
+| Proposal (waiting for approval): admin `/atune` (menu: wheels, spoiler, bumpers, nitro, hydraulics, colour, paintjob); tuning a personal vehicle is kept and logged |
+| Proposal (waiting for approval): `/napravimesto` without a parameter opens a dialog listing point types |
+| Proposal (waiting for approval): vehicle registration at the city hall (plates come only after registering, valid 30 days, renewable; police checks it once police exist) |
 | The owner places pumps at the GTA gas stations (`/napravimesto pumpa`, where the driver stops) and GPS locations for them |
 | Step 3.2, a bought vehicle (proposal for the owner's question): from a player, the parking spot moves to where the sale happened and the key copy is cancelled; from the market, the parking spot is where it was bought until the new owner parks it (`/v parkiraj`); the buyer must be level 2 |
 | Job and faction vehicles get fuel when they are created, otherwise their engine stops right away |
@@ -329,19 +344,19 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | C-bug, drive-by, vehicle entry and state change spam, tuning outside a mechanic |
 
 ### Approved systems (owner's pick, 2026-10-28)
-Map numbers (#) are from the map atlas. Every item is proposed to the owner before it is built.
+Map numbers (#) are from the map atlas. Every item is proposed to the owner before it is built. ✅ before an item means it is done (the date is under "Done").
 
 **Phase 2: money, bank, payday, phone, inventory**
 | Item | How it works and what it ties into | Map |
 |------|------------------------------------|-----|
 | Bank loan | Amount depends on level, an instalment is taken on payday; unpaid debt grows and blocks purchases, after X days property is seized | — |
-| ATM and card PIN | No ATM withdrawal without the PIN; 3 wrong PINs block the card for a while | — |
-| Lottery | Tickets are sold until the draw at a set time; part of the money goes to the state treasury | — |
+| ✅ ATM and card PIN | No ATM withdrawal without the PIN; 3 wrong PINs block the card for a while | — |
+| ✅ Lottery | Tickets are sold until the draw at a set time; part of the money goes to the state treasury | — |
 | State treasury donations | Players pay into the state budget (ECO-3, GOV-1), with a top donors list | — |
-| Begging (up to level 4) | Small money from other players, not near the spawn; daily limit per giver and a log, so money is not moved from alt accounts | — |
-| Coin flip and dice bets | Both players confirm the stake, the server holds the money during the roll, the max stake is capped, everything is logged | — |
+| ✅ Begging (up to level 4) | Small money from other players, not near the spawn; daily limit per giver and a log, so money is not moved from alt accounts | — |
+| ✅ Coin flip and dice bets | Both players confirm the stake, the server holds the money during the roll, the max stake is capped, everything is logged | — |
 | Offer menu between players | One command to sell a vehicle, house or business: both players nearby, dialog confirmation, a log against scams | — |
-| Body accessories (glasses, hats, bags) | Shop items in the inventory, worn on the body, the player adjusts the position | — |
+| ✅ Body accessories (glasses, hats, bags) | Shop items in the inventory, worn on the body, the player adjusts the position | — |
 | Music: car radio, boombox, music from a link | Radio stations in vehicles, a boombox item that plays to people around it | — |
 
 **Phases 3 and 4: vehicles, property, businesses, jobs**
@@ -511,3 +526,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-30 | New HUD (a logo built from shapes top right, a round hunger badge with a percentage); clock, date, ID and player count bottom right. Opening an account is free. Fixed glasses (they sat inside the head) and the knit hat (it was turned) |
 | 2026-10-30 | Backpack moved back and widened; logo without the mark (server name only); `/setrespect` and `/setlevel` no longer cause a multi-level jump |
 | 2026-10-30 | Phase 3, step 3.1: personal vehicles (`/v`, parking, leaving 5 min after logout), plates, a key and one copy, engine N, lock Y, lights, bonnet, boot, fuel and gas stations (`/gorivo`), speedometer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`; VIP `/vcolor` and `/vfix` only on own vehicles; backpack tuned again; accessories no longer stay visible after a server restart |
+| 2026-10-30 | Fixes after the 3.1 test: the account is saved to the database again (position, level, bank account, accessories after logout), the HUD no longer doubles after death, the tank fills to the brim, deleted GPS, door and point IDs are given out again (vehicles too), the burger badge moved right, a bigger logo font, done items in "Approved systems" marked with â |

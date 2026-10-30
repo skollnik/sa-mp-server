@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 3, korak 3.1 (lična vozila, gorivo, brzinomer) napisan, čeka test vlasnika; sledeći je korak 3.2, auto pijaca i prodaja vozila (ažurirano 2026-10-30)
+**Trenutni status:** Faza 3, korak 3.1 (lična vozila, gorivo, brzinomer) napisan, uz ispravke posle prvog testa (čuvanje naloga, HUD, gorivo, ID-jevi); čeka odluke vlasnika o dopunama vozila (parking, ključ, tuning, registracija), pa korak 3.2 (ažurirano 2026-10-30)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -109,7 +109,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** Phase 3, step 3.1 (personal vehicles, fuel, speedometer) written, waiting for the owner's test; next is step 3.2, the car market and vehicle sales (updated 2026-10-30)
+**Current status:** Phase 3, step 3.1 (personal vehicles, fuel, speedometer) written, with fixes after the first test (account saving, HUD, fuel, IDs); waiting for the owner's decisions on vehicle additions (parking, keys, tuning, registration), then step 3.2 (updated 2026-10-30)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.

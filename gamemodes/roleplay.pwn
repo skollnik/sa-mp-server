@@ -214,7 +214,7 @@ public OnPlayerSpawn(playerid)
     Utils_PreloadAnimations(playerid);
     Acc_OnPlayerSpawn(playerid);
     Time_Apply(playerid);
-    Hud_Show(playerid);
+    Hud_Refresh(playerid);
     return 1;
 }
 

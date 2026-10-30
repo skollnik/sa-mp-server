@@ -184,6 +184,10 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Dodaci nestanu posle smrti ili spawna | ✅ | Stavljaju se ponovo pri svakom spawnu |
 | Prodavnica 24/7 pokaže predmete koji se tu ne prodaju (dodaci imaju cenu 0) | ✅ | Lista i izbor u dijalogu idu kroz istu funkciju koja preskače predmete bez cene |
 | Posle restarta servera igrač vidi ranac na leđima, a `/dodaci` kaže da je u inventaru | ✅ | Klijent pamti stare objekte posle restarta; pri spawnu se prazni delovi tela sada i čiste |
+| Upit za čuvanje naloga ima više vrednosti nego mesta u tekstu, pa se nalog uopšte ne čuva (pozicija, nivo, račun, dodaci) | ✅ | Od dodavanja bankovnog računa do 30.10.2026. nalog se nije čuvao; dopisane su kolone `acc_worn`, `bank_account`, `held_pay`, a računu kome je ostao PIN vraćen je račun. Pravilo: nova kolona ide i u tekst upita i u listu vrednosti, pa se u bazi proveri da se stvarno upisala |
+| HUD se duplira posle smrti i pokazuje stare vrednosti | ✅ | Pri svakom spawnu stari delovi HUD-a se brišu pre nego što se naprave novi |
+| Obrisan ID GPS lokacije, ulaza ili mesta se ne koristi ponovo | ✅ | Slobodan ID se traži pre nego što se novo mesto označi kao zauzeto (ranije je novo mesto nosilo ID obrisanog i „zauzimalo“ ga); vozila dobijaju najmanji slobodan ID u bazi. Nalozi, logovi, banovi i upozorenja zadržavaju svoje ID-jeve, jer se istorija veže za njih |
+| Oznaka gladi pomerena desno ispod novca može da se preklopi sa zvezdicama potrage | 👁 | Potraga još ne postoji; kad dođe policija (Faza 5), proveriti položaj |
 
 ### Faza 3: vozila
 | Rizik | Status | Kako je rešeno |
@@ -197,6 +201,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Kratak reconnect vrati vozilo na parking kao besplatan teleport | ✅ | Vozilo koje je još u svetu ostaje gde je |
 | Gorivo bez plaćanja: relog ili restart | ✅ | Gorivo se čuva pri odjavi, nestanku vozila, točenju, zaključavanju i restartu |
 | Točenje goriva iz daljine | ✅ | Mora se sedeti za volanom do 6 m od pumpe, uz ugašen motor |
+| Rezervoar se nikad ne napuni do kraja (piše 54/55, a „Rezervoar je pun“) | ✅ | Toči se do punog, a započet litar se plaća kao ceo |
 | Parkiranje vozila u enterijeru ili ispred vrata da smeta drugima | 👁 | U enterijeru ne može; ispred vrata za sada ne štiti ništa, admin može `/resetvozila` ili `/obrisivozilo` (zabranjena mesta su u BACKLOG-u) |
 | Dve iste tablice | ✅ | Tablica se proverava u bazi pre upisa, a kolona je jedinstvena |
 | VIP farba ili popravlja tuđa vozila | ✅ | `/vcolor` samo na svom vozilu, `/vfix` na svom ili vozilu za koje ima ključ |
@@ -388,6 +393,10 @@ Every new system or change goes through these questions, against all existing sy
 | Accessories vanish after death or spawn | ✅ | They are put back on every spawn |
 | The 24/7 shop lists items it does not sell (accessories have price 0) | ✅ | The list and the dialog choice go through the same function that skips items without a price |
 | After a server restart the player sees a backpack on their back while `/dodaci` says it is in the inventory | ✅ | The client keeps old objects after a restart; empty body parts are now cleared on spawn too |
+| The account save query has more values than placeholders, so the account is not saved at all (position, level, bank account, accessories) | ✅ | From the bank account step until 2026-10-30 accounts were not saved; the `acc_worn`, `bank_account`, `held_pay` columns were added, and the account that still had a PIN got its bank account back. Rule: a new column goes into both the query text and the value list, then check in the DB that it was really written |
+| The HUD doubles after death and shows stale values | ✅ | On every spawn the old HUD parts are destroyed before new ones are made |
+| The ID of a deleted GPS location, door or point is not given out again | ✅ | The free ID is picked before the new slot is marked used (before, the new slot carried the deleted entry's ID and "took" it); vehicles get the lowest free ID in the DB. Accounts, logs, bans and warnings keep their IDs, since history is tied to them |
+| The hunger badge moved right under the money can overlap the wanted stars | 👁 | Wanted levels do not exist yet; check the position once police arrive (Phase 5) |
 
 ### Phase 3: vehicles
 | Risk | Status | How it is handled |
@@ -401,6 +410,7 @@ Every new system or change goes through these questions, against all existing sy
 | A short reconnect sends the vehicle back to its spot as a free teleport | ✅ | A vehicle still in the world stays where it is |
 | Free fuel through a relog or restart | ✅ | Fuel is saved on logout, despawn, refuelling, locking and restart |
 | Refuelling from a distance | ✅ | The player must sit at the wheel within 6 m of a pump, with the engine off |
+| The tank never fills up (shows 54/55, yet "Rezervoar je pun") | ✅ | A top-up fills to the brim, and a started litre is paid as a whole one |
 | Parking in an interior or in front of a door to annoy others | 👁 | Interiors are refused; in front of doors nothing protects yet, admins can use `/resetvozila` or `/obrisivozilo` (no-parking spots are in the BACKLOG) |
 | Two identical plates | ✅ | The plate is checked in the DB before the insert, and the column is unique |
 | VIPs paint or repair other people's vehicles | ✅ | `/vcolor` only on their own vehicle, `/vfix` on their own or one they hold a key for |

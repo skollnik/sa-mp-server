@@ -59,12 +59,12 @@ static stock Text:Hud_GlobalText(Float:x, Float:y, const text[], TEXT_DRAW_FONT:
 // The server name in two lines, both centred on one axis, over a soft glow.
 static stock Hud_CreateLogo()
 {
-    g_HudLogo[0] = Hud_GlobalSprite(578.997, 27.222, 15.0, 8.0, HUD_SPRITE_GLOW, HUD_GLOW_COLOR);
-    g_HudLogo[1] = Hud_GlobalSprite(579.198, 43.918, 15.0, -9.0, HUD_SPRITE_GLOW, HUD_GLOW_COLOR);
-    g_HudLogo[2] = Hud_GlobalSprite(582.098, 40.527, 9.0, -5.0, HUD_SPRITE_GLOW, HUD_GLOW_LIGHT_COLOR);
-    g_HudLogo[3] = Hud_GlobalSprite(581.997, 30.771, 9.0, 5.0, HUD_SPRITE_GLOW, HUD_GLOW_LIGHT_COLOR);
-    g_HudLogo[4] = Hud_GlobalText(587.398, 17.004, SERVER_LOGO_TOP, TEXT_DRAW_FONT_2, 0.2231, 1.0325, TEXT_DRAW_ALIGN_CENTER, HUD_TEXT_COLOR);
-    g_HudLogo[5] = Hud_GlobalText(587.398, 31.260, SERVER_LOGO_BOTTOM, TEXT_DRAW_FONT_2, 0.1439, 0.8981, TEXT_DRAW_ALIGN_CENTER, HUD_TEXT_COLOR);
+    g_HudLogo[0] = Hud_GlobalSprite(576.5, 26.0, 20.0, 10.0, HUD_SPRITE_GLOW, HUD_GLOW_COLOR);
+    g_HudLogo[1] = Hud_GlobalSprite(576.7, 47.0, 20.0, -11.0, HUD_SPRITE_GLOW, HUD_GLOW_COLOR);
+    g_HudLogo[2] = Hud_GlobalSprite(580.6, 43.0, 12.0, -7.0, HUD_SPRITE_GLOW, HUD_GLOW_LIGHT_COLOR);
+    g_HudLogo[3] = Hud_GlobalSprite(580.5, 29.0, 12.0, 7.0, HUD_SPRITE_GLOW, HUD_GLOW_LIGHT_COLOR);
+    g_HudLogo[4] = Hud_GlobalText(587.0, 14.0, SERVER_LOGO_TOP, TEXT_DRAW_FONT_2, 0.30, 1.40, TEXT_DRAW_ALIGN_CENTER, HUD_TEXT_COLOR);
+    g_HudLogo[5] = Hud_GlobalText(587.0, 32.0, SERVER_LOGO_BOTTOM, TEXT_DRAW_FONT_2, 0.20, 1.15, TEXT_DRAW_ALIGN_CENTER, HUD_TEXT_COLOR);
 }
 
 stock Hud_Init()
@@ -152,13 +152,13 @@ static stock Hud_ShowParts(playerid, E_HUD_PART:first, E_HUD_PART:last, bool:sho
 
 static stock Hud_ShowHunger(playerid)
 {
-    Hud_Sprite(playerid, hpHungerCircle, 503.2, 106.813, 21.0, 23.0, HUD_SPRITE_ROUND, HUD_HUNGER_COLOR);
-    Hud_Sprite(playerid, hpBunTop, 508.3, 112.689, 10.0, 5.0, HUD_SPRITE_ROUND, HUD_TEXT_COLOR);
-    Hud_Sprite(playerid, hpFilling, 509.8, 115.271, 7.0, 2.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
-    Hud_Sprite(playerid, hpLineTop, 509.8, 118.171, 7.0, 1.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
-    Hud_Sprite(playerid, hpLineBottom, 509.8, 120.371, 7.0, 1.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
-    Hud_Sprite(playerid, hpBunBottom, 508.3, 120.489, 10.0, 2.0, HUD_SPRITE_ROUND, HUD_TEXT_COLOR);
-    Hud_Text(playerid, hpHungerText, 521.608, 114.338, "100%", TEXT_DRAW_FONT_1, 0.1771, 0.8433, TEXT_DRAW_ALIGN_LEFT, HUD_HUNGER_COLOR);
+    Hud_Sprite(playerid, hpHungerCircle, 573.2, 106.813, 21.0, 23.0, HUD_SPRITE_ROUND, HUD_HUNGER_COLOR);
+    Hud_Sprite(playerid, hpBunTop, 578.3, 112.689, 10.0, 5.0, HUD_SPRITE_ROUND, HUD_TEXT_COLOR);
+    Hud_Sprite(playerid, hpFilling, 579.8, 115.271, 7.0, 2.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
+    Hud_Sprite(playerid, hpLineTop, 579.8, 118.171, 7.0, 1.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
+    Hud_Sprite(playerid, hpLineBottom, 579.8, 120.371, 7.0, 1.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
+    Hud_Sprite(playerid, hpBunBottom, 578.3, 120.489, 10.0, 2.0, HUD_SPRITE_ROUND, HUD_TEXT_COLOR);
+    Hud_Text(playerid, hpHungerText, 591.608, 114.338, "100%", TEXT_DRAW_FONT_1, 0.1771, 0.8433, TEXT_DRAW_ALIGN_LEFT, HUD_HUNGER_COLOR);
     Hud_ShowParts(playerid, hpBunTop, hpBunBottom, true);
     Hud_UpdateHunger(playerid);
 }
@@ -233,7 +233,8 @@ stock Hud_Show(playerid)
     }
 }
 
-// Rebuilt from scratch after a setting changes, so only the parts still switched on come back.
+// Rebuilt from scratch on every spawn and after a setting changes: creating parts again without destroying the old ones
+// left a second copy on screen with stale values, and only the parts still switched on come back.
 stock Hud_Refresh(playerid)
 {
     Hud_Hide(playerid);

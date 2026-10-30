@@ -937,6 +937,7 @@ stock Account_Save(playerid, bool:sync = false)
         "`pos_x` = %f, `pos_y` = %f, `pos_z` = %f, `pos_a` = %f, `interior` = %d, `virtual_world` = %d, " \
         "`health` = %f, `armour` = %f, `played_seconds` = %d, `channel_bits` = %d, " \
         "`payday_minutes` = %d, `id_card` = %d, `phone_number` = %d, `phone_credit` = %d, `phone_listed` = %d, `hunger` = %d, `setting_bits` = %d, `ringtone` = %d, `pin_fails` = %d, `pin_blocked_until` = %d, " \
+        "`acc_worn` = %d, `bank_account` = %d, `held_pay` = %d, " \
         "`mute_until` = %d, `newbie_mute_until` = %d, `jail_seconds` = %d, `jail_reason` = '%e' WHERE `id` = %d",
         g_Player[playerid][pAdminLevel], g_Player[playerid][pHelperLevel], g_Player[playerid][pSkin],
         g_Player[playerid][pLevel], g_Player[playerid][pRespect],

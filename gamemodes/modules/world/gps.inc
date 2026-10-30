@@ -115,7 +115,8 @@ stock Gps_FindSlotByDbId(dbid)
     return -1;
 }
 
-// IDs of deleted locations are given out again, so the IDs admins type stay short.
+// IDs of deleted locations are given out again, so the IDs admins type stay short. Called before the new slot is marked used:
+// a reused slot still holds the deleted entry's ID, which would look taken.
 stock Gps_FreeDbId()
 {
     new dbid = 1;
@@ -306,8 +307,8 @@ cmd:dodajgps(playerid, params[])
         return 1;
     }
 
-    g_Gps[slot][gUsed] = true;
     g_Gps[slot][gDbId] = Gps_FreeDbId();
+    g_Gps[slot][gUsed] = true;
     g_Gps[slot][gCategory] = category - 1;
     strcopy(g_Gps[slot][gName], name, GPS_NAME_LENGTH);
     GetPlayerPos(playerid, g_Gps[slot][gX], g_Gps[slot][gY], g_Gps[slot][gZ]);

@@ -93,6 +93,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 85 | 2026-10-30 | Lična vozila (korak 3.1): najviše 2 po igraču; vozilo je u svetu dok je vlasnik online, a 5 minuta posle odjave nestaje (kad je prazno) i pri sledećoj prijavi čeka na svom parkingu (`/v parkiraj`); kratak reconnect ga ne pomera. Uništeno vozilo se posle 10 s vraća na parking sa 500 HP i dimom. Tablica `LS 123-AB` (slova sa naših tablica). Motor taster N, brava taster Y. Postoji jedna kopija ključa: daje se igraču pored sebe, oduzima se bilo kad u `/v`. Bez ključa motor ne može da se upali | Odobren predlog vlasnika, uz jednu kopiju ključa |
 | 86 | 2026-10-30 | Gorivo: rezervoar po tipu vozila (motor 15 l, auto 55 l, kamion, autobus, brod i letelica 100 l, bicikl bez goriva); pun rezervoar traje oko 45 minuta vožnje, a motor troši i kad radi bez vozača; toči se na pumpi (`/napravimesto pumpa`, `/gorivo`) uz ugašen motor, $3 po litru, gotovinom, odmah | Odobren predlog vlasnika |
 | 87 | 2026-10-30 | VIP `/vcolor` radi samo na svom vozilu i boja se pamti; `/vfix` radi na svom vozilu ili vozilu za koje VIP ima ključ | Stavka iz podsetnika (sada kad postoje lična vozila) |
+| 88 | 2026-10-30 | Najmanji slobodan ID dobijaju GPS lokacije, ulazi, mesta i lična vozila; nalozi, logovi, banovi i upozorenja zadržavaju svoje ID-jeve | Zahtev vlasnika („uvek i za sve“); istorija (logovi, kazne) se veže za ID naloga, pa bi ponovo dat ID pomešao istoriju dva igrača |
 
 ### Arhitektura koda (predlog)
 ```
@@ -207,6 +208,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 85 | 2026-10-30 | Personal vehicles (step 3.1): at most 2 per player; a vehicle is in the world while its owner is online, leaves 5 minutes after logout (when empty) and waits at its parking spot on the next login (`/v parkiraj`); a short reconnect does not move it. A destroyed vehicle comes back to its parking spot after 10 s with 500 HP and smoke. Plate `LS 123-AB` (letters from Serbian plates). Engine on N, lock on Y. There is one key copy: given to a player standing next to you, taken back any time in `/v`. Without a key the engine cannot be started | Owner's approval of the proposal, with one key copy |
 | 86 | 2026-10-30 | Fuel: tank by vehicle type (motorbike 15 l, car 55 l, truck, bus, boat and aircraft 100 l, bicycle no fuel); a full tank lasts about 45 minutes of driving, and an engine burns fuel even without a driver; refuelled at a pump (`/napravimesto pumpa`, `/gorivo`) with the engine off, $3 per litre, in cash, instantly | Owner's approval of the proposal |
 | 87 | 2026-10-30 | VIP `/vcolor` only works on the VIP's own vehicle and the colour is kept; `/vfix` works on their own vehicle or one they hold a key for | Backlog item (now that personal vehicles exist) |
+| 88 | 2026-10-30 | GPS locations, doors, points and personal vehicles get the lowest free ID; accounts, logs, bans and warnings keep their IDs | Owner's request ("always and for everything"); history (logs, punishments) is tied to the account ID, so a reused ID would mix two players' history |
 
 ### Code architecture (proposal)
 ```

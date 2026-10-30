@@ -597,10 +597,10 @@ public OnVehiclePlateChecked(adminid, targetid, race, model, const plate[], Floa
         return 1;
     }
 
-    new query[384];
+    new query[640];
     mysql_format(g_SQL, query, sizeof(query),
-        "INSERT INTO `vehicles` (`owner_id`, `model`, `color1`, `color2`, `plate`, `park_x`, `park_y`, `park_z`, `park_a`, `fuel`) " \
-        "VALUES (%d, %d, %d, %d, '%e', %f, %f, %f, %f, %d)",
+        "INSERT INTO `vehicles` (`id`, `owner_id`, `model`, `color1`, `color2`, `plate`, `park_x`, `park_y`, `park_z`, `park_a`, `fuel`) " \
+        "SELECT " DB_FREE_ID("vehicles") ", %d, %d, %d, %d, '%e', %f, %f, %f, %f, %d",
         g_Player[targetid][pDbId], model, random(127), random(127), plate, x, y, z, angle, Fuel_TankSize(model));
     mysql_tquery(g_SQL, query, "OnVehicleInserted", "ddds", adminid, targetid, race, plate);
     return 1;

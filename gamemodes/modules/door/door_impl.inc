@@ -163,7 +163,8 @@ stock Door_SetInside(slot, playerid)
     SetPlayerVirtualWorld(playerid, g_Doors[slot][dInWorld]);
 }
 
-// IDs of deleted doors are given out again, so the IDs admins type stay short.
+// IDs of deleted doors are given out again, so the IDs admins type stay short. Called before the new slot is marked used:
+// a reused slot still holds the deleted entry's ID, which would look taken.
 stock Door_FreeDbId()
 {
     new dbid = 1;

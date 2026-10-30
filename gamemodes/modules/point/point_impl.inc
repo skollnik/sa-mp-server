@@ -80,7 +80,8 @@ stock Point_FindSlotByDbId(dbid)
     return -1;
 }
 
-// IDs of deleted points are given out again, so the IDs admins see stay short.
+// IDs of deleted points are given out again, so the IDs admins see stay short. Called before the new slot is marked used:
+// a reused slot still holds the deleted entry's ID, which would look taken.
 stock Point_FreeDbId()
 {
     new dbid = 1;
@@ -183,8 +184,8 @@ cmd:napravimesto(playerid, params[])
         return 1;
     }
 
-    g_Points[slot][ptUsed] = true;
     g_Points[slot][ptDbId] = Point_FreeDbId();
+    g_Points[slot][ptUsed] = true;
     g_Points[slot][ptType] = type;
     GetPlayerPos(playerid, g_Points[slot][ptX], g_Points[slot][ptY], g_Points[slot][ptZ]);
     GetPlayerFacingAngle(playerid, g_Points[slot][ptA]);

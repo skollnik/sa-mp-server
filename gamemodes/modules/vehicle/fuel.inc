@@ -115,20 +115,22 @@ cmd:gorivo(playerid, params[])
     }
 
     new tank = Fuel_TankSize(GetVehicleModel(vehicleid));
-    new missing = floatround(float(tank) - g_VehFuel[vehicleid], floatround_floor);
-    if (missing < 1)
+    new Float:missing = float(tank) - g_VehFuel[vehicleid];
+    if (missing < 0.5)
     {
         Msg_Info(playerid, "Rezervoar je pun.");
         return 1;
     }
 
-    new litres = missing;
+    // Driving leaves fractions of a litre; a top-up fills to the brim and a started litre is paid as a whole one.
+    new litres = floatround(missing, floatround_ceil);
     if (!isnull(params) && (sscanf(params, "d", litres) || litres < 1))
     {
         Msg_Usage(playerid, "/gorivo [litara] (bez broja toci do punog, $%d po litru)", FUEL_PRICE_PER_LITRE);
         return 1;
     }
-    litres = min(litres, missing);
+    new Float:poured = float(litres) < missing ? float(litres) : missing;
+    litres = floatround(poured, floatround_ceil);
 
     new reason[32];
     format(reason, sizeof(reason), "gorivo: %d l", litres);
@@ -136,7 +138,7 @@ cmd:gorivo(playerid, params[])
     {
         return 1;
     }
-    Fuel_Set(vehicleid, g_VehFuel[vehicleid] + float(litres));
+    Fuel_Set(vehicleid, g_VehFuel[vehicleid] + poured);
     Chat_Action(playerid, "toci gorivo u vozilo.");
     Msg_Success(playerid, "Natocili ste %d l za $%d. U rezervoaru: %.0f/%d l.", litres, litres * FUEL_PRICE_PER_LITRE, g_VehFuel[vehicleid], tank);
     Veh_SaveIfPersonal(vehicleid);
