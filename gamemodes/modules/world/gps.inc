@@ -24,7 +24,13 @@ new g_Gps[MAX_GPS_LOCATIONS][E_GPS];
 
 enum E_GPS_PLAYER
 {
+    bool:gpActive,
+    // Slot of a saved location, or -1 for any other spot (e.g. a vehicle).
     gpTarget,
+    gpName[GPS_NAME_LENGTH],
+    Float:gpX,
+    Float:gpY,
+    Float:gpZ,
     STREAMER_TAG_MAP_ICON:gpIcon,
     gpCategory,
     gpListed[MAX_GPS_LOCATIONS],
@@ -66,6 +72,7 @@ public OnGpsLoaded()
 
 stock Gps_OnPlayerConnect(playerid)
 {
+    g_GpsPlayer[playerid][gpActive] = false;
     g_GpsPlayer[playerid][gpTarget] = -1;
     g_GpsPlayer[playerid][gpIcon] = STREAMER_TAG_MAP_ICON:INVALID_STREAMER_ID;
 }
@@ -138,31 +145,40 @@ stock Gps_Stop(playerid)
     }
     g_GpsPlayer[playerid][gpIcon] = STREAMER_TAG_MAP_ICON:INVALID_STREAMER_ID;
     g_GpsPlayer[playerid][gpTarget] = -1;
+    g_GpsPlayer[playerid][gpActive] = false;
 }
 
 stock Gps_Start(playerid, slot)
 {
-    Gps_Stop(playerid);
-    g_GpsPlayer[playerid][gpTarget] = slot;
+    Gps_StartAt(playerid, slot, g_Gps[slot][gName], g_Gps[slot][gX], g_Gps[slot][gY], g_Gps[slot][gZ]);
+}
 
-    if (Checkpoint_Set(playerid, CP_OWNER_GPS, g_Gps[slot][gX], g_Gps[slot][gY], g_Gps[slot][gZ], GPS_CHECKPOINT_SIZE))
+stock Gps_StartAt(playerid, slot, const name[], Float:x, Float:y, Float:z)
+{
+    Gps_Stop(playerid);
+    g_GpsPlayer[playerid][gpActive] = true;
+    g_GpsPlayer[playerid][gpTarget] = slot;
+    strcopy(g_GpsPlayer[playerid][gpName], name, GPS_NAME_LENGTH);
+    g_GpsPlayer[playerid][gpX] = x;
+    g_GpsPlayer[playerid][gpY] = y;
+    g_GpsPlayer[playerid][gpZ] = z;
+
+    if (Checkpoint_Set(playerid, CP_OWNER_GPS, x, y, z, GPS_CHECKPOINT_SIZE))
     {
-        Msg_Info(playerid, "GPS: %s je oznacen crvenim checkpointom. Iskljucivanje: /gps", g_Gps[slot][gName]);
+        Msg_Info(playerid, "GPS: %s je oznacen crvenim checkpointom. Iskljucivanje: /gps", name);
         return;
     }
 
     // The checkpoint belongs to another system (e.g. a job), so the destination is only marked on the map.
-    g_GpsPlayer[playerid][gpIcon] = CreateDynamicMapIcon(g_Gps[slot][gX], g_Gps[slot][gY], g_Gps[slot][gZ], GPS_MAP_ICON, 0,
-        -1, -1, playerid, 6000.0, MAPICON_GLOBAL);
-    Msg_Info(playerid, "GPS: %s je oznacen na mapi (checkpoint trenutno koristi drugi sistem).", g_Gps[slot][gName]);
+    g_GpsPlayer[playerid][gpIcon] = CreateDynamicMapIcon(x, y, z, GPS_MAP_ICON, 0, -1, -1, playerid, 6000.0, MAPICON_GLOBAL);
+    Msg_Info(playerid, "GPS: %s je oznacen na mapi (checkpoint trenutno koristi drugi sistem).", name);
 }
 
 stock Gps_OnArrive(playerid)
 {
-    new slot = g_GpsPlayer[playerid][gpTarget];
-    if (slot != -1)
+    if (g_GpsPlayer[playerid][gpActive])
     {
-        Msg_Info(playerid, "GPS: stigli ste na odrediste (%s).", g_Gps[slot][gName]);
+        Msg_Info(playerid, "GPS: stigli ste na odrediste (%s).", g_GpsPlayer[playerid][gpName]);
     }
     Gps_Stop(playerid);
 }
@@ -170,12 +186,11 @@ stock Gps_OnArrive(playerid)
 // Only the map icon fallback needs a distance check; the checkpoint reports arrival by itself.
 stock Gps_Tick(playerid)
 {
-    new slot = g_GpsPlayer[playerid][gpTarget];
-    if (slot == -1 || !IsValidDynamicMapIcon(g_GpsPlayer[playerid][gpIcon]))
+    if (!g_GpsPlayer[playerid][gpActive] || !IsValidDynamicMapIcon(g_GpsPlayer[playerid][gpIcon]))
     {
         return;
     }
-    if (IsPlayerInRangeOfPoint(playerid, GPS_ARRIVE_RADIUS, g_Gps[slot][gX], g_Gps[slot][gY], g_Gps[slot][gZ]))
+    if (IsPlayerInRangeOfPoint(playerid, GPS_ARRIVE_RADIUS, g_GpsPlayer[playerid][gpX], g_GpsPlayer[playerid][gpY], g_GpsPlayer[playerid][gpZ]))
     {
         Gps_OnArrive(playerid);
     }
@@ -184,7 +199,7 @@ stock Gps_Tick(playerid)
 stock Gps_ShowCategories(playerid)
 {
     new list[256];
-    if (g_GpsPlayer[playerid][gpTarget] != -1)
+    if (g_GpsPlayer[playerid][gpActive])
     {
         strcat(list, C_RED "Iskljuci GPS\n");
     }
@@ -206,7 +221,7 @@ stock bool:Gps_OnDialogResponse(playerid, dialogid, response, listitem)
             {
                 return true;
             }
-            if (g_GpsPlayer[playerid][gpTarget] != -1)
+            if (g_GpsPlayer[playerid][gpActive])
             {
                 if (listitem == 0)
                 {

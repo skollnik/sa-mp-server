@@ -32,6 +32,8 @@
 #include "modules/money/money_data.inc"
 #include "modules/inventory/inventory_data.inc"
 #include "modules/inventory/accessories_data.inc"
+#include "modules/vehicle/vehicle_data.inc"
+#include "modules/vehicle/vehicle_names.inc"
 #include "modules/health/hunger_data.inc"
 #include "modules/world/checkpoint.inc"
 #include "modules/world/zones.inc"
@@ -84,6 +86,11 @@
 #include "modules/phone/phone.inc"
 #include "modules/settings/settings.inc"
 
+#include "modules/vehicle/vehicle_impl.inc"
+#include "modules/vehicle/fuel.inc"
+#include "modules/vehicle/vehicle_cmds.inc"
+#include "modules/vehicle/speedometer.inc"
+
 #include "modules/help/help_cmds.inc"
 
 #include "maps/maps.inc"
@@ -124,6 +131,8 @@ public OnGameModeInit()
     Hunger_Init();
     Inv_Init();
     Phone_Init();
+    Veh_Init();
+    Speedo_Init();
     Maps_Init();
 
     printf("[SERVER] %s gamemode loaded.", SERVER_NAME);
@@ -132,6 +141,8 @@ public OnGameModeInit()
 
 public OnGameModeExit()
 {
+    Speedo_Exit();
+    Veh_Exit();
     Phone_Exit();
     Inv_Exit();
     Hunger_Exit();
@@ -162,6 +173,7 @@ public OnPlayerConnect(playerid)
     Inv_OnPlayerConnect(playerid);
     Acc_OnPlayerConnect(playerid);
     Phone_OnPlayerConnect(playerid);
+    Speedo_OnPlayerConnect(playerid);
     Bet_OnPlayerConnect(playerid);
     Beg_OnPlayerConnect(playerid);
     Lottery_OnPlayerConnect(playerid);
@@ -177,6 +189,7 @@ public OnPlayerDisconnect(playerid, reason)
     Phone_OnPlayerDisconnect(playerid);
     Beg_OnPlayerDisconnect(playerid);
     Staff_OnPlayerDisconnect(playerid);
+    Veh_OnPlayerDisconnect(playerid);
     Account_OnPlayerDisconnect(playerid);
     return 1;
 }
@@ -223,6 +236,12 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bod
     return 1;
 }
 
+public OnVehicleDeath(vehicleid, killerid)
+{
+    Veh_OnVehicleDeath(vehicleid);
+    return 1;
+}
+
 public OnPlayerDeath(playerid, killerid, WEAPON:reason)
 {
     AC_OnPlayerDeath(playerid);
@@ -236,6 +255,8 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
 {
     Staff_OnPlayerStateChange(playerid, newstate);
     Beg_OnPlayerStateChange(playerid, newstate);
+    Veh_OnPlayerStateChange(playerid, newstate);
+    Speedo_OnPlayerStateChange(playerid, newstate);
     return 1;
 }
 
@@ -249,7 +270,7 @@ public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
     if (Account_IsLoggedIn(playerid))
     {
-        if (!Inv_OnPlayerKeyStateChange(playerid, newkeys, oldkeys))
+        if (!Veh_OnPlayerKeyStateChange(playerid, newkeys, oldkeys) && !Inv_OnPlayerKeyStateChange(playerid, newkeys, oldkeys))
         {
             Door_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
         }
@@ -338,6 +359,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Settings_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (Veh_OnDialogResponse(playerid, dialogid, response, listitem))
     {
         return 1;
     }

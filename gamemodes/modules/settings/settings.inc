@@ -8,6 +8,7 @@ stock Setting_Toggle(playerid, E_SETTING:setting)
 {
     g_Player[playerid][pSettingBits] ^= (1 << _:setting);
     Hud_Refresh(playerid);
+    Speedo_Refresh(playerid);
 }
 
 stock Settings_Show(playerid)

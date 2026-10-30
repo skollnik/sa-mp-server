@@ -161,6 +161,11 @@ cmd:vfix(playerid, params[])
         Msg_Error(playerid, "/vfix radi samo dok vozite i ne minut posle primljene stete.");
         return 1;
     }
+    if (!Veh_HasKey(playerid, GetPlayerVehicleID(playerid)))
+    {
+        Msg_Error(playerid, "/vfix radi samo na vasem vozilu ili vozilu za koje imate kljuc.");
+        return 1;
+    }
 
     RepairVehicle(GetPlayerVehicleID(playerid));
     g_Vip[playerid][vLastFix] = gettime();
@@ -262,13 +267,15 @@ cmd:vcolor(playerid, params[])
         Msg_Usage(playerid, "/vcolor [boja 1] [boja 2] (0-255, dok vozite)");
         return 1;
     }
-    if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
+    new vehicleid = GetPlayerVehicleID(playerid);
+    if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER || !Veh_IsOwner(playerid, vehicleid))
     {
-        Msg_Error(playerid, "Morate voziti vozilo.");
+        Msg_Error(playerid, "Morate voziti svoje vozilo.");
         return 1;
     }
 
-    ChangeVehicleColours(GetPlayerVehicleID(playerid), color1, color2);
+    ChangeVehicleColours(vehicleid, color1, color2);
+    Veh_OnColoursChanged(vehicleid, color1, color2);
     Msg_Info(playerid, "Vozilo je ofarbano.");
     return 1;
 }

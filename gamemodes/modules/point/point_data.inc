@@ -1,8 +1,8 @@
 #define MAX_POINTS              (150)
-#define POINT_USE_RADIUS        (2.0)
 #define POINT_LABEL_DISTANCE    (8.0)
 #define POINT_PICKUP_MODEL      (1239)
 #define POINT_ATM_MODEL         (19324)
+#define POINT_FUEL_PICKUP_MODEL (1650)
 
 // Places where a service is used: standing next to one unlocks its command.
 enum E_POINT_TYPE
@@ -11,23 +11,28 @@ enum E_POINT_TYPE
     POINT_ATM,
     POINT_CITYHALL,
     POINT_SHOP,
-    POINT_CLOTHES
+    POINT_CLOTHES,
+    POINT_FUEL
 }
 
 enum E_POINT_INFO
 {
     piKey[16],
     piName[32],
-    piCommand[16]
+    piCommand[16],
+    // How close the player must stand; a pump is used from the driver's seat, so it reaches further.
+    Float:piRadius,
+    piPickup
 }
 
 new const g_PointInfo[E_POINT_TYPE][E_POINT_INFO] =
 {
-    { "banka",      "Banka - salter",   "/banka" },
-    { "bankomat",   "Bankomat",         "/bankomat" },
-    { "opstina",    "Opstina - salter", "/opstina" },
-    { "prodavnica", "Prodavnica 24/7",  "/kupi" },
-    { "odeca",      "Prodavnica odece", "/kupi" }
+    { "banka",      "Banka - salter",   "/banka",    2.0, POINT_PICKUP_MODEL },
+    { "bankomat",   "Bankomat",         "/bankomat", 2.0, POINT_PICKUP_MODEL },
+    { "opstina",    "Opstina - salter", "/opstina",  2.0, POINT_PICKUP_MODEL },
+    { "prodavnica", "Prodavnica 24/7",  "/kupi",     2.0, POINT_PICKUP_MODEL },
+    { "odeca",      "Prodavnica odece", "/kupi",     2.0, POINT_PICKUP_MODEL },
+    { "pumpa",      "Benzinska pumpa",  "/gorivo",   6.0, POINT_FUEL_PICKUP_MODEL }
 };
 
 enum E_POINT

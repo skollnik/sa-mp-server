@@ -48,7 +48,7 @@ stock Point_CreateVisuals(slot)
     }
     else
     {
-        g_Points[slot][ptPickup] = CreateDynamicPickup(POINT_PICKUP_MODEL, 1, x, y, z, g_Points[slot][ptWorld], g_Points[slot][ptInterior]);
+        g_Points[slot][ptPickup] = CreateDynamicPickup(g_PointInfo[type][piPickup], 1, x, y, z, g_Points[slot][ptWorld], g_Points[slot][ptInterior]);
     }
     g_Points[slot][ptLabel] = CreateDynamic3DTextLabel(text, COLOR_WHITE, x, y, z + 0.5, POINT_LABEL_DISTANCE,
         INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, g_Points[slot][ptWorld], g_Points[slot][ptInterior]);
@@ -127,7 +127,7 @@ stock bool:Point_IsNear(playerid, E_POINT_TYPE:type)
     for (new i = 0; i < MAX_POINTS; i++)
     {
         if (g_Points[i][ptUsed] && g_Points[i][ptType] == type && g_Points[i][ptInterior] == interior && g_Points[i][ptWorld] == world
-            && IsPlayerInRangeOfPoint(playerid, POINT_USE_RADIUS, g_Points[i][ptX], g_Points[i][ptY], g_Points[i][ptZ]))
+            && IsPlayerInRangeOfPoint(playerid, g_PointInfo[type][piRadius], g_Points[i][ptX], g_Points[i][ptY], g_Points[i][ptZ]))
         {
             return true;
         }
@@ -164,7 +164,7 @@ cmd:napravimesto(playerid, params[])
     }
     if (type == E_POINT_TYPE:-1)
     {
-        Msg_Usage(playerid, "/napravimesto [banka / bankomat / opstina / prodavnica / odeca] (stanite tamo gde igrac treba da stoji)");
+        Msg_Usage(playerid, "/napravimesto [banka / bankomat / opstina / prodavnica / odeca / pumpa] (stanite tamo gde igrac treba da stoji)");
         return 1;
     }
 

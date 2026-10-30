@@ -25,6 +25,11 @@ cmd:pomoc(playerid, params[])
         "Traka gladi je ispod novca: jedite u prodavnici 24/7, na nuli gubite HP\n" \
         "/telefon - meni telefona (broj, kredit, imenik)    /pozovi /javi /prekini /sms /kontakti (911 - hitne sluzbe)\n" \
         "SIM kartica i dopuna kredita se kupuju u prodavnici 24/7 (/kupi)\n\n" \
+        C_SERVER "Vozila\n" \
+        C_WHITE "N - motor (vozac sa kljucem)    Y - zakljucavanje najblizeg vaseg vozila\n" \
+        "/v - vasa vozila (GPS do vozila, oduzimanje kopije kljuca)    /v parkiraj - mesto gde vas vozilo ceka\n" \
+        "/v [motor / zakljucaj / svetla / hauba / gepek]    /v kljuc - kopija kljuca igracu pored vas\n" \
+        "/gorivo - tocenje na benzinskoj pumpi (ugasen motor)\n\n" \
         C_SERVER "Pomoc i podrska\n" \
         C_WHITE "/n - newbie chat (pitanja novih igraca)    /ask - pitanje helperima\n" \
         "/report - prijava igraca adminima    /admins, /helpers - tim online\n\n" \

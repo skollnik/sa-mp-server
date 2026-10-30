@@ -355,7 +355,7 @@ cmd:hud(playerid, params[])
     }
     else
     {
-        Msg_Info(playerid, "HUD (sat, datum, kvart i logo) je sakriven i ostaje sakriven i posle izlaska. Glad se uvek vidi. Ponovo: /hud");
+        Msg_Info(playerid, "HUD (sat, datum, kvart, logo i brzinomer) je sakriven i ostaje sakriven i posle izlaska. Glad se uvek vidi. Ponovo: /hud");
     }
     return 1;
 }

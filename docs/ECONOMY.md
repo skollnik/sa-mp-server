@@ -32,7 +32,7 @@
 | Voda / sok / pivo (traka gladi +5) | $2 / $3 / $5 |
 | Hamburger / pica (traka gladi +30 / +40) | $10 / $15 |
 | Cigarete (kutija, 20 komada) / upaljač | $12 / $3 |
-| Gorivo | $3 po litru (pun rezervoar ~$150–200) |
+| Gorivo (benzinska pumpa, `/gorivo`) | $3 po litru: motor 15 l ($45), auto 55 l ($165), kamion, autobus, brod i letelica 100 l ($300); pun rezervoar traje oko 45 min vožnje |
 | Kanister (prazan) | $50 |
 | Telefon (aparat) | $500 |
 | SIM kartica (nasumičan broj) | $50 |
@@ -166,7 +166,7 @@
 | Water / juice / beer (hunger bar +5) | $2 / $3 / $5 |
 | Burger / pizza (hunger bar +30 / +40) | $10 / $15 |
 | Cigarettes (pack of 20) / lighter | $12 / $3 |
-| Fuel | $3 per liter (full tank ~$150–200) |
+| Fuel (gas station, `/gorivo`) | $3 per litre: motorbike 15 l ($45), car 55 l ($165), truck, bus, boat and aircraft 100 l ($300); a full tank lasts about 45 min of driving |
 | Jerry can (empty) | $50 |
 | Phone (device) | $500 |
 | SIM card (random number) | $50 |

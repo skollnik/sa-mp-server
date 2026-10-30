@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 3 | Lična vozila (ključevi, gorivo, parkiranje, gepek), auto pijaca kao admin event, auto škola i dozvole, mehaničar |
+| 3 | Ostatak faze 3: auto pijaca i prodaja vozila (3.2), gepek i kanister (3.3), auto škola i dozvole (3.4), šteta, mehaničar i rent (3.5) |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -23,6 +23,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Uređenje spawna ispred aerodroma |
 | VIP klub (enterijer za Silver i Gold VIP) |
 | Bolnica, auto škola, mehaničar, novinari: još nema izabrane mape |
+| Auto pijaca (korak 3.2): prostor sa parkingom gde admin postavlja vozila; punktovi za iznajmljivanje bicikala i rent-a-car (korak 3.5) |
 
 **Posle opštine, banke i ostalih mesta (Faza 2)**
 | Stavka |
@@ -35,10 +36,15 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 **Posle sistema vozila (Faza 3)**
 | Stavka |
 |--------|
-| `/respawnveh`, chat kroz prozor vozila (`/cw`) |
+| Chat kroz prozor vozila (`/cw`) |
+| Vlasnik postavlja pumpe na benzinskim stanicama iz GTA (`/napravimesto pumpa`, gde vozač staje) i GPS lokacije za njih |
+| Korak 3.2, kupljeno vozilo (predlog na pitanje vlasnika): od igrača, parking se prebacuje na mesto gde je prodaja obavljena i kopija ključa se poništava; sa pijace, parking je mesto kupovine dok ga novi vlasnik ne parkira (`/v parkiraj`); kupac mora biti nivo 2 |
+| Vozila poslova i frakcija dobijaju gorivo kad se naprave, inače im se motor odmah gasi |
+| Mesta gde se ne sme parkirati (ispred vrata, na putu, na pijaci) |
+| Popravka vozila koje se posle uništenja vrati sa 500 HP i dimom (mehaničar, korak 3.5) |
+| Kanister (korak 3.3); vožnja bez dozvole (korak 3.4) |
 | Anti-cheat za vozila: HP vozila (repair hack), ulazak u zaključano vozilo |
 | VIP: mesto za još jedno vozilo (Silver+), sopstvena tablica i neon (Gold) |
-| VIP: `/vcolor` i `/vfix` samo za sopstvena vozila (sada rade na svakom vozilu koje VIP vozi) |
 
 **Posle kuća (Faza 4) i frakcija (Faza 5)**
 | Stavka |
@@ -247,6 +253,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 30.10.2026. | Bankovni račun: otvaranje na šalteru ($100, lična karta) uz karticu i nasumičan PIN, novi PIN $50; bez računa plata, dobitak i startnih $3.000 čekaju na šalteru. Dodaci na telu imaju fiksne položaje (bez pomeranja mišem) |
 | 30.10.2026. | Novi HUD (logo od oblika gore desno, okrugla oznaka gladi sa procentom); sat, datum, ID i broj igrača dole desno. Otvaranje računa besplatno. Popravljene naočare (bile su u glavi) i zimska kapa (bila je okrenuta) |
 | 30.10.2026. | Ranac pomeren unazad i proširen; logo bez oznake (samo ime servera); `/setrespect` i `/setlevel` više ne izazivaju skok za više nivoa |
+| 30.10.2026. | Faza 3, korak 3.1: lična vozila (`/v`, parkiranje, nestajanje 5 min posle odjave), tablice, ključ i jedna kopija, motor N, brava Y, svetla, hauba, gepek, gorivo i benzinske pumpe (`/gorivo`), brzinomer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`; VIP `/vcolor` i `/vfix` samo na svom vozilu; ranac ponovo podešen; dodaci posle restarta servera više ne ostaju vidljivi |
 
 ---
 
@@ -257,7 +264,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 3 | Personal vehicles (keys, fuel, parking, trunk), car market as an admin event, driving school and licenses, mechanic |
+| 3 | Rest of phase 3: car market and vehicle sales (3.2), trunk and jerry can (3.3), driving school and licenses (3.4), damage, mechanic and rentals (3.5) |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
@@ -273,6 +280,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Decorating the spawn in front of the airport |
 | VIP club (interior for Silver and Gold VIP) |
 | Hospital, driving school, mechanic, news: no map picked yet |
+| Car market (step 3.2): an area with parking where the admin puts the vehicles; bike rental and rent-a-car points (step 3.5) |
 
 **After city hall, bank and other places (Phase 2)**
 | Item |
@@ -285,10 +293,15 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 **After the vehicle system (Phase 3)**
 | Item |
 |------|
-| `/respawnveh`, talking through a vehicle window (`/cw`) |
+| Talking through a vehicle window (`/cw`) |
+| The owner places pumps at the GTA gas stations (`/napravimesto pumpa`, where the driver stops) and GPS locations for them |
+| Step 3.2, a bought vehicle (proposal for the owner's question): from a player, the parking spot moves to where the sale happened and the key copy is cancelled; from the market, the parking spot is where it was bought until the new owner parks it (`/v parkiraj`); the buyer must be level 2 |
+| Job and faction vehicles get fuel when they are created, otherwise their engine stops right away |
+| No-parking spots (in front of doors, on the road, at the market) |
+| Repairing a vehicle that comes back after being destroyed with 500 HP and smoke (mechanic, step 3.5) |
+| Jerry can (step 3.3); driving without a license (step 3.4) |
 | Vehicle anti-cheat: vehicle HP (repair hack), entering a locked vehicle |
 | VIP: one more vehicle slot (Silver+), custom plate and neon (Gold) |
-| VIP: `/vcolor` and `/vfix` only for own vehicles (they now work on any vehicle the VIP drives) |
 
 **After houses (Phase 4) and factions (Phase 5)**
 | Item |
@@ -497,3 +510,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-30 | Bank account: opened at the counter ($100, ID card) with a card and a random PIN, a new PIN $50; without an account, pay, prizes and the starting $3,000 wait at the counter. Body accessories have fixed places (no mouse positioning) |
 | 2026-10-30 | New HUD (a logo built from shapes top right, a round hunger badge with a percentage); clock, date, ID and player count bottom right. Opening an account is free. Fixed glasses (they sat inside the head) and the knit hat (it was turned) |
 | 2026-10-30 | Backpack moved back and widened; logo without the mark (server name only); `/setrespect` and `/setlevel` no longer cause a multi-level jump |
+| 2026-10-30 | Phase 3, step 3.1: personal vehicles (`/v`, parking, leaving 5 min after logout), plates, a key and one copy, engine N, lock Y, lights, bonnet, boot, fuel and gas stations (`/gorivo`), speedometer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`; VIP `/vcolor` and `/vfix` only on own vehicles; backpack tuned again; accessories no longer stay visible after a server restart |

@@ -38,6 +38,7 @@ static stock Acc_Attach(playerid, index)
 }
 
 // Attachments are put back on every spawn, since the client can drop them while the player is not spawned yet.
+// Empty parts are cleared too: after a server restart the client keeps showing what was worn before.
 stock Acc_ApplyAll(playerid)
 {
     for (new E_ACC_PART:part; part < E_ACC_PART; part++)
@@ -45,6 +46,10 @@ stock Acc_ApplyAll(playerid)
         if (g_AccWorn[playerid][part] != -1)
         {
             Acc_Attach(playerid, g_AccWorn[playerid][part]);
+        }
+        else
+        {
+            RemovePlayerAttachedObject(playerid, ACC_FIRST_SLOT + _:part);
         }
     }
 }

@@ -22,8 +22,8 @@
 | Besplatan izbor broja telefona (SIM kartica u 24/7, „Promeni broj“ u `/telefon`; ostali plaćaju $2.000) | – | ✅ | ✅ |
 | Kraća pauza za `/report`, `/ask` i `/n` | 25% | 50% | 50% |
 | Rezervisano mesto kad je server pun (poslednja 2 mesta) | ✅ | ✅ | ✅ |
-| `/vfix`: popravka vozila koje voziš (pauza 10 min) | – | ✅ | ✅ |
-| `/vcolor`: farbanje vozila koje voziš | – | ✅ | ✅ |
+| `/vfix`: popravka svog vozila ili vozila za koje imaš ključ (pauza 10 min) | – | ✅ | ✅ |
+| `/vcolor`: farbanje svog vozila (boja se pamti) | – | ✅ | ✅ |
 | `/vgoto`: teleport do igrača napolju (pauza 5 min) | – | – | ✅ |
 | `/vheal`: HP na 100 (pauza 15 min) | – | – | ✅ |
 
@@ -69,8 +69,8 @@
 | Free choice of phone number (SIM card at a 24/7, "Promeni broj" in `/telefon`; others pay $2,000) | – | ✅ | ✅ |
 | Shorter cooldown for `/report`, `/ask` and `/n` | 25% | 50% | 50% |
 | Reserved slot when the server is full (last 2 slots) | ✅ | ✅ | ✅ |
-| `/vfix`: repair the vehicle you drive (10 min cooldown) | – | ✅ | ✅ |
-| `/vcolor`: paint the vehicle you drive | – | ✅ | ✅ |
+| `/vfix`: repair your own vehicle or one you hold a key for (10 min cooldown) | – | ✅ | ✅ |
+| `/vcolor`: paint your own vehicle (the colour is kept) | – | ✅ | ✅ |
 | `/vgoto`: teleport to a player outdoors (5 min cooldown) | – | – | ✅ |
 | `/vheal`: HP to 100 (15 min cooldown) | – | – | ✅ |
 

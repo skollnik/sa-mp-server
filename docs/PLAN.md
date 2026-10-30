@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** novi HUD, besplatan račun i popravljeni položaji naočara i kape napisani, čekaju test vlasnika; posle toga Faza 3 kad vlasnik kaže (ažurirano 2026-10-30)
+**Trenutni status:** Faza 3, korak 3.1 (lična vozila, gorivo, brzinomer) napisan, čeka test vlasnika; sledeći je korak 3.2, auto pijaca i prodaja vozila (ažurirano 2026-10-30)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -55,10 +55,11 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Bankovni račun: otvaranje na šalteru uz ličnu kartu, nasumičan PIN, plata bez računa čeka na šalteru
 
 ### Faza 3: Vozila i dozvole
-- [ ] VEH-1 – VEH-9: lična vozila, ključevi, gorivo, parkiranje, gepek, rent
-- [ ] ADM-8: auto pijaca (event)
-- [ ] LIC-1, LIC-2: auto škola i dozvole
-- [ ] JOB-3: mehaničar (VEH-6)
+- [x] Korak 3.1: VEH-1, VEH-2, VEH-3, VEH-4, VEH-5, VEH-7: lična vozila, tablice, ključ i jedna kopija, motor (N), brava (Y), svetla, hauba, gepek, gorivo i benzinske pumpe, parkiranje, brzinomer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`
+- [ ] Korak 3.2: ADM-8 auto pijaca (event) i prodaja vozila između igrača
+- [ ] Korak 3.3: VEH-8 gepek kao inventar, kanister
+- [ ] Korak 3.4: LIC-1, LIC-2 auto škola i dozvole
+- [ ] Korak 3.5: VEH-6 šteta i kilometraža, JOB-3 mehaničar, VEH-9 rent-a-car i bicikli, pay'n'spray
 
 ### Faza 4: Imovina
 - [ ] PROP-1 – PROP-5: kuće, iznajmljivanje, sef, nameštaj, garaže
@@ -108,7 +109,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** the new HUD, the free account and fixed glasses and hat places written, waiting for the owner's test; then Phase 3 when the owner says so (updated 2026-10-30)
+**Current status:** Phase 3, step 3.1 (personal vehicles, fuel, speedometer) written, waiting for the owner's test; next is step 3.2, the car market and vehicle sales (updated 2026-10-30)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -161,10 +162,11 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] Bank account: opened at the counter with an ID card, a random PIN, pay without an account waits at the counter
 
 ### Phase 3: Vehicles and licenses
-- [ ] VEH-1 – VEH-9: personal vehicles, keys, fuel, parking, trunk, rentals
-- [ ] ADM-8: car market (event)
-- [ ] LIC-1, LIC-2: driving school and licenses
-- [ ] JOB-3: mechanic (VEH-6)
+- [x] Step 3.1: VEH-1, VEH-2, VEH-3, VEH-4, VEH-5, VEH-7: personal vehicles, plates, a key and one copy, engine (N), lock (Y), lights, bonnet, boot, fuel and gas stations, parking, speedometer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`
+- [ ] Step 3.2: ADM-8 car market (event) and vehicle sales between players
+- [ ] Step 3.3: VEH-8 trunk as inventory, jerry can
+- [ ] Step 3.4: LIC-1, LIC-2 driving school and licenses
+- [ ] Step 3.5: VEH-6 damage and mileage, JOB-3 mechanic, VEH-9 car and bike rental, pay'n'spray
 
 ### Phase 4: Property
 - [ ] PROP-1 – PROP-5: houses, renting, safe, furniture, garages

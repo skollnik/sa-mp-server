@@ -38,6 +38,9 @@
 
 #define ID_CARD_PRICE               (50)
 
+#define VEH_MAX_PER_PLAYER          (2)
+#define FUEL_PRICE_PER_LITRE        (3)
+
 #define PHONE_PRICE                 (500)
 #define PHONE_SIM_PRICE             (50)
 // Silver and Gold VIP and admins pick a number for free.

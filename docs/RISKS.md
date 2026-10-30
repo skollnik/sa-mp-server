@@ -183,6 +183,24 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Dodaci zauzmu slot koji koristi drugi sistem (telefon u ruci, oružje na leđima...) | ✅ | Slotovi 0–2 su samo za dodatke; novi sistemi koriste 3 i više (odluka 80) |
 | Dodaci nestanu posle smrti ili spawna | ✅ | Stavljaju se ponovo pri svakom spawnu |
 | Prodavnica 24/7 pokaže predmete koji se tu ne prodaju (dodaci imaju cenu 0) | ✅ | Lista i izbor u dijalogu idu kroz istu funkciju koja preskače predmete bez cene |
+| Posle restarta servera igrač vidi ranac na leđima, a `/dodaci` kaže da je u inventaru | ✅ | Klijent pamti stare objekte posle restarta; pri spawnu se prazni delovi tela sada i čiste |
+
+### Faza 3: vozila
+| Rizik | Status | Kako je rešeno |
+|-------|--------|----------------|
+| Neko odveze tuđe otključano vozilo | ✅ | Bez ključa motor ne može da se upali, a upaljen motor se gasi kad za volan sedne neko bez ključa (krađa dolazi sa VEH-12) |
+| Vozilo se ukrade ili blokira put dok vlasnik nije online | ✅ | Vozilo nestaje 5 minuta posle odjave vlasnika, kad je prazno |
+| Igrač sa kopijom ključa vozi tuđe vozilo dok vlasnik nije online | 👁 | Vozilo ostaje dok neko sedi u njemu, pa nestaje čim izađe; vlasnik kopiju oduzima u `/v` |
+| Kopije ključa se dele na sve strane | ✅ | Postoji samo jedna kopija; daje je samo vlasnik, igraču pored sebe |
+| Besplatna popravka uništenog vozila | ✅ | Vraća se na parking sa 500 HP; `/resetvozila` pomera vozilo bez popravke |
+| Vozilo sačuvano kao zapaljeno, pa eksplodira odmah po pojavljivanju | ✅ | HP se čuva najmanje 300 |
+| Kratak reconnect vrati vozilo na parking kao besplatan teleport | ✅ | Vozilo koje je još u svetu ostaje gde je |
+| Gorivo bez plaćanja: relog ili restart | ✅ | Gorivo se čuva pri odjavi, nestanku vozila, točenju, zaključavanju i restartu |
+| Točenje goriva iz daljine | ✅ | Mora se sedeti za volanom do 6 m od pumpe, uz ugašen motor |
+| Parkiranje vozila u enterijeru ili ispred vrata da smeta drugima | 👁 | U enterijeru ne može; ispred vrata za sada ne štiti ništa, admin može `/resetvozila` ili `/obrisivozilo` (zabranjena mesta su u BACKLOG-u) |
+| Dve iste tablice | ✅ | Tablica se proverava u bazi pre upisa, a kolona je jedinstvena |
+| VIP farba ili popravlja tuđa vozila | ✅ | `/vcolor` samo na svom vozilu, `/vfix` na svom ili vozilu za koje ima ključ |
+| Taster Y ili N smeta drugim sistemima | ✅ | Y radi samo kad je u blizini vozilo sa ključem; N samo za vozača vozila sa motorom; vrata i inventar koriste F |
 
 ---
 
@@ -369,3 +387,21 @@ Every new system or change goes through these questions, against all existing sy
 | Accessories take a slot another system uses (phone in hand, weapon on the back...) | ✅ | Slots 0–2 are only for accessories; new systems use 3 and up (decision 80) |
 | Accessories vanish after death or spawn | ✅ | They are put back on every spawn |
 | The 24/7 shop lists items it does not sell (accessories have price 0) | ✅ | The list and the dialog choice go through the same function that skips items without a price |
+| After a server restart the player sees a backpack on their back while `/dodaci` says it is in the inventory | ✅ | The client keeps old objects after a restart; empty body parts are now cleared on spawn too |
+
+### Phase 3: vehicles
+| Risk | Status | How it is handled |
+|------|--------|-------------------|
+| Someone drives off in another player's unlocked vehicle | ✅ | Without a key the engine cannot start, and a running engine is switched off when someone without a key takes the wheel (theft comes with VEH-12) |
+| A vehicle is stolen or blocks a road while its owner is offline | ✅ | The vehicle leaves 5 minutes after the owner logs out, once it is empty |
+| A key-copy holder drives the vehicle while the owner is offline | 👁 | The vehicle stays while someone sits in it and leaves as soon as they get out; the owner takes the copy back in `/v` |
+| Key copies passed around everywhere | ✅ | There is only one copy; only the owner gives it, to a player standing next to them |
+| A free repair of a destroyed vehicle | ✅ | It comes back to its parking spot with 500 HP; `/resetvozila` moves vehicles without repairing them |
+| A vehicle saved while burning explodes right after spawning | ✅ | Health is saved as at least 300 |
+| A short reconnect sends the vehicle back to its spot as a free teleport | ✅ | A vehicle still in the world stays where it is |
+| Free fuel through a relog or restart | ✅ | Fuel is saved on logout, despawn, refuelling, locking and restart |
+| Refuelling from a distance | ✅ | The player must sit at the wheel within 6 m of a pump, with the engine off |
+| Parking in an interior or in front of a door to annoy others | 👁 | Interiors are refused; in front of doors nothing protects yet, admins can use `/resetvozila` or `/obrisivozilo` (no-parking spots are in the BACKLOG) |
+| Two identical plates | ✅ | The plate is checked in the DB before the insert, and the column is unique |
+| VIPs paint or repair other people's vehicles | ✅ | `/vcolor` only on their own vehicle, `/vfix` on their own or one they hold a key for |
+| The Y or N key clashes with other systems | ✅ | Y only acts when a vehicle with a key is nearby; N only for the driver of a vehicle with an engine; doors and the inventory use F |
