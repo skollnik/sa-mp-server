@@ -2,6 +2,9 @@
 // the server browser shows SERVER_HOSTNAME (set on startup, overriding config.json).
 #define SERVER_NAME         "Test Server"
 #define SERVER_HOSTNAME     "SA-MP Test Server"
+// The two lines of the HUD logo (top right); an underscore is a space in a textdraw.
+#define SERVER_LOGO_TOP     "TEST"
+#define SERVER_LOGO_BOTTOM  "SERVER"
 #define SERVER_MODE_TEXT    "Roleplay"
 
 // The owner always gets the highest admin level and may use a non Firstname_Lastname name.

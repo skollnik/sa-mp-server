@@ -1,39 +1,32 @@
-// Everything is drawn from textures already inside GTA (LD_SPAC, LD_BEAT, hud), so every client version sees the same HUD.
+// Everything is drawn from textures already inside GTA (LD_SPAC, LD_BEAT, particle, hud), so every client version sees the same HUD.
 #define HUD_SPRITE_BOX          "LD_SPAC:white"
 #define HUD_SPRITE_ROUND        "LD_BEAT:chit"
-#define HUD_PANEL_COLOR         (0x000000A0)
+#define HUD_SPRITE_GLOW         "particle:lamp_shad_64"
 
-#define HUD_HUNGER_X            (546.5)
-#define HUD_HUNGER_Y            (102.0)
-#define HUD_HUNGER_WIDTH        (60.0)
-#define HUD_HUNGER_HEIGHT       (8.0)
-#define HUD_HUNGER_BORDER       (1.5)
-#define HUD_HUNGER_COLOR        (0xE0892AFF)
-#define HUD_HUNGER_LOW_COLOR    (0xB4191DFF)
-#define HUD_HUNGER_TRACK_COLOR  (0x5C3A12FF)
+#define HUD_HUNGER_COLOR        (0x16A085FF)
+#define HUD_HUNGER_LOW_COLOR    (0xC0392BFF)
+#define HUD_GLOW_COLOR          (0x2980B9FF)
+#define HUD_GLOW_LIGHT_COLOR    (0x7FB3D5FF)
+#define HUD_TEXT_COLOR          (0xFFFFFFFF)
+#define HUD_INFO_COLOR          (0xC8C8C8FF)
 
-// Parts in a row (a pill's three pieces, a group shown together) must stay next to each other.
+// The hunger badge sits under the money: a round badge with a burger drawn from shapes and the level in percent.
+// Parts shown together must stay next to each other.
 enum E_HUD_PART
 {
-    PlayerText:hpDateLeft,
-    PlayerText:hpDateMid,
-    PlayerText:hpDateRight,
-    PlayerText:hpHungerIcon,
-    PlayerText:hpHungerBorder,
-    PlayerText:hpHungerTrack,
-    PlayerText:hpHungerFill,
-    PlayerText:hpZoneLeft,
-    PlayerText:hpZoneMid,
-    PlayerText:hpZoneRight,
+    PlayerText:hpHungerCircle,
+    PlayerText:hpBunTop,
+    PlayerText:hpFilling,
+    PlayerText:hpLineTop,
+    PlayerText:hpLineBottom,
+    PlayerText:hpBunBottom,
+    PlayerText:hpHungerText,
     PlayerText:hpZoneIcon,
     PlayerText:hpZoneText,
-    PlayerText:hpLogoLeft,
-    PlayerText:hpLogoMid,
-    PlayerText:hpLogoRight,
-    PlayerText:hpLogoText,
     PlayerText:hpInfo
 }
 
+new Text:g_HudLogo[15];
 new Text:g_HudClock = INVALID_TEXT_DRAW;
 new Text:g_HudDate = INVALID_TEXT_DRAW;
 new PlayerText:g_HudParts[MAX_PLAYERS][E_HUD_PART];
@@ -42,21 +35,64 @@ new g_HudOnline;
 new bool:g_HudBlink;
 new g_HudTimer;
 
+static stock Text:Hud_GlobalSprite(Float:x, Float:y, Float:width, Float:height, const sprite[], colour)
+{
+    new Text:td = TextDrawCreate(x, y, sprite);
+    TextDrawFont(td, TEXT_DRAW_FONT_SPRITE_DRAW);
+    TextDrawTextSize(td, width, height);
+    TextDrawColour(td, colour);
+    return td;
+}
+
+static stock Text:Hud_GlobalText(Float:x, Float:y, const text[], TEXT_DRAW_FONT:font, Float:width, Float:height, TEXT_DRAW_ALIGN:align, colour)
+{
+    new Text:td = TextDrawCreate(x, y, text);
+    TextDrawFont(td, font);
+    TextDrawLetterSize(td, width, height);
+    TextDrawAlignment(td, align);
+    TextDrawColour(td, colour);
+    TextDrawSetShadow(td, 0);
+    TextDrawSetProportional(td, true);
+    return td;
+}
+
+// The mark on the left is drawn from boxes and round ends; the server name sits beside it in two lines with a soft glow.
+static stock Hud_CreateLogo()
+{
+    g_HudLogo[0] = Hud_GlobalSprite(563.398, 19.542, 14.0, 4.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
+
+    g_HudLogo[1] = TextDrawCreate(572.999, 18.549, "_");
+    TextDrawFont(g_HudLogo[1], TEXT_DRAW_FONT_MODEL_PREVIEW);
+    TextDrawTextSize(g_HudLogo[1], 8.0, 7.0);
+    TextDrawBackgroundColour(g_HudLogo[1], 0x1F000000);
+    TextDrawSetPreviewModel(g_HudLogo[1], 19177);
+    TextDrawSetPreviewRot(g_HudLogo[1], 0.0, 180.0, 0.0, 0.2);
+
+    g_HudLogo[2] = Hud_GlobalSprite(560.098, 18.247, 6.0, 7.0, HUD_SPRITE_ROUND, HUD_TEXT_COLOR);
+    g_HudLogo[3] = Hud_GlobalSprite(561.198, 22.529, 3.0, 15.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
+    g_HudLogo[4] = Hud_GlobalSprite(559.998, 35.267, 5.25, 6.0, HUD_SPRITE_ROUND, HUD_TEXT_COLOR);
+    g_HudLogo[5] = Hud_GlobalSprite(562.998, 36.160, 13.0, 4.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
+    // A mirrored slash (negative letter width) makes the thin line between the mark and the name.
+    g_HudLogo[6] = Hud_GlobalText(579.597, 27.062, "/", TEXT_DRAW_FONT_1, -0.6686, 1.5599, TEXT_DRAW_ALIGN_LEFT, HUD_TEXT_COLOR);
+    g_HudLogo[7] = Hud_GlobalText(579.597, 27.062, "/", TEXT_DRAW_FONT_1, -0.6686, 1.5599, TEXT_DRAW_ALIGN_LEFT, HUD_TEXT_COLOR);
+    g_HudLogo[8] = Hud_GlobalSprite(567.798, 28.904, 6.0, 3.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
+    g_HudLogo[9] = Hud_GlobalText(581.198, 17.004, SERVER_LOGO_TOP, TEXT_DRAW_FONT_2, 0.2231, 1.0325, TEXT_DRAW_ALIGN_LEFT, HUD_TEXT_COLOR);
+    g_HudLogo[10] = Hud_GlobalSprite(578.997, 27.222, 15.0, 8.0, HUD_SPRITE_GLOW, HUD_GLOW_COLOR);
+    g_HudLogo[11] = Hud_GlobalSprite(579.198, 43.918, 15.0, -9.0, HUD_SPRITE_GLOW, HUD_GLOW_COLOR);
+    g_HudLogo[12] = Hud_GlobalText(587.398, 31.260, SERVER_LOGO_BOTTOM, TEXT_DRAW_FONT_2, 0.1439, 0.8981, TEXT_DRAW_ALIGN_CENTER, HUD_TEXT_COLOR);
+    g_HudLogo[13] = Hud_GlobalSprite(582.098, 40.527, 9.0, -5.0, HUD_SPRITE_GLOW, HUD_GLOW_LIGHT_COLOR);
+    g_HudLogo[14] = Hud_GlobalSprite(581.997, 30.771, 9.0, 5.0, HUD_SPRITE_GLOW, HUD_GLOW_LIGHT_COLOR);
+}
+
 stock Hud_Init()
 {
-    g_HudClock = TextDrawCreate(577.0, 22.0, "00:00");
-    TextDrawFont(g_HudClock, TEXT_DRAW_FONT_3);
-    TextDrawLetterSize(g_HudClock, 0.55, 2.2);
-    TextDrawAlignment(g_HudClock, TEXT_DRAW_ALIGN_CENTER);
-    TextDrawSetOutline(g_HudClock, 2);
-    TextDrawColour(g_HudClock, 0xC2C2C2FF);
+    Hud_CreateLogo();
 
-    // The date sits above the clock: right under it is where GTA draws the armour bar.
-    g_HudDate = TextDrawCreate(577.0, 10.0, "01.01.2026.");
-    TextDrawFont(g_HudDate, TEXT_DRAW_FONT_1);
-    TextDrawLetterSize(g_HudDate, 0.25, 1.0);
-    TextDrawAlignment(g_HudDate, TEXT_DRAW_ALIGN_CENTER);
-    TextDrawSetShadow(g_HudDate, 0);
+    // Bottom right is free of GTA's own HUD, so the clock and date live there in the logo's lettering.
+    g_HudClock = Hud_GlobalText(632.0, 396.0, "00:00", TEXT_DRAW_FONT_3, 0.45, 1.8, TEXT_DRAW_ALIGN_RIGHT, HUD_TEXT_COLOR);
+    TextDrawSetOutline(g_HudClock, 1);
+    g_HudDate = Hud_GlobalText(632.0, 414.0, "01.01.2026.", TEXT_DRAW_FONT_2, 0.17, 0.85, TEXT_DRAW_ALIGN_RIGHT, HUD_TEXT_COLOR);
+    TextDrawSetOutline(g_HudDate, 1);
 
     Hud_UpdateClock();
     g_HudTimer = SetTimer("Hud_Tick", 1000, true);
@@ -65,6 +101,10 @@ stock Hud_Init()
 stock Hud_Exit()
 {
     KillTimer(g_HudTimer);
+    for (new i = 0; i < sizeof(g_HudLogo); i++)
+    {
+        TextDrawDestroy(g_HudLogo[i]);
+    }
     TextDrawDestroy(g_HudClock);
     TextDrawDestroy(g_HudDate);
 }
@@ -96,22 +136,14 @@ static stock Hud_Sprite(playerid, E_HUD_PART:part, Float:x, Float:y, Float:width
     g_HudParts[playerid][part] = td;
 }
 
-// A box with round ends: two circles of the box's height and a plain box between them.
-static stock Hud_Pill(playerid, E_HUD_PART:first, Float:x, Float:y, Float:width, Float:height, colour)
-{
-    new Float:radius = height / 2.0;
-    Hud_Sprite(playerid, first, x, y, height, height, HUD_SPRITE_ROUND, colour);
-    Hud_Sprite(playerid, first + E_HUD_PART:1, x + radius, y, width - height, height, HUD_SPRITE_BOX, colour);
-    Hud_Sprite(playerid, first + E_HUD_PART:2, x + width - height, y, height, height, HUD_SPRITE_ROUND, colour);
-}
-
-static stock Hud_Text(playerid, E_HUD_PART:part, Float:x, Float:y, const text[], Float:size, TEXT_DRAW_ALIGN:align, colour)
+static stock Hud_Text(playerid, E_HUD_PART:part, Float:x, Float:y, const text[], TEXT_DRAW_FONT:font, Float:width, Float:height, TEXT_DRAW_ALIGN:align, colour)
 {
     new PlayerText:td = CreatePlayerTextDraw(playerid, x, y, text);
-    PlayerTextDrawFont(playerid, td, TEXT_DRAW_FONT_1);
-    PlayerTextDrawLetterSize(playerid, td, size, size * 4.5);
+    PlayerTextDrawFont(playerid, td, font);
+    PlayerTextDrawLetterSize(playerid, td, width, height);
     PlayerTextDrawAlignment(playerid, td, align);
     PlayerTextDrawSetShadow(playerid, td, 0);
+    PlayerTextDrawSetProportional(playerid, td, true);
     PlayerTextDrawColour(playerid, td, colour);
     g_HudParts[playerid][part] = td;
 }
@@ -135,65 +167,56 @@ static stock Hud_ShowParts(playerid, E_HUD_PART:first, E_HUD_PART:last, bool:sho
     }
 }
 
-static stock Hud_ShowClock(playerid)
-{
-    Hud_Pill(playerid, hpDateLeft, 545.0, 9.0, 64.0, 11.0, HUD_PANEL_COLOR);
-    Hud_ShowParts(playerid, hpDateLeft, hpDateRight, true);
-    TextDrawShowForPlayer(playerid, g_HudDate);
-    TextDrawShowForPlayer(playerid, g_HudClock);
-}
-
-// Built like the GTA health bar above it: a black border, a dark track and the coloured fill.
 static stock Hud_ShowHunger(playerid)
 {
-    Hud_Sprite(playerid, hpHungerIcon, HUD_HUNGER_X - 14.5, HUD_HUNGER_Y - 1.5, 11.0, 11.0, "hud:radar_burgerShot", 0xFFFFFFFF);
-    Hud_Sprite(playerid, hpHungerBorder, HUD_HUNGER_X, HUD_HUNGER_Y, HUD_HUNGER_WIDTH, HUD_HUNGER_HEIGHT, HUD_SPRITE_BOX, 0x000000FF);
-    Hud_Sprite(playerid, hpHungerTrack, HUD_HUNGER_X + HUD_HUNGER_BORDER, HUD_HUNGER_Y + HUD_HUNGER_BORDER,
-        HUD_HUNGER_WIDTH - 2.0 * HUD_HUNGER_BORDER, HUD_HUNGER_HEIGHT - 2.0 * HUD_HUNGER_BORDER, HUD_SPRITE_BOX, HUD_HUNGER_TRACK_COLOR);
-    Hud_Sprite(playerid, hpHungerFill, HUD_HUNGER_X + HUD_HUNGER_BORDER, HUD_HUNGER_Y + HUD_HUNGER_BORDER,
-        HUD_HUNGER_WIDTH - 2.0 * HUD_HUNGER_BORDER, HUD_HUNGER_HEIGHT - 2.0 * HUD_HUNGER_BORDER, HUD_SPRITE_BOX, HUD_HUNGER_COLOR);
-    Hud_ShowParts(playerid, hpHungerIcon, hpHungerTrack, true);
+    Hud_Sprite(playerid, hpHungerCircle, 503.2, 106.813, 21.0, 23.0, HUD_SPRITE_ROUND, HUD_HUNGER_COLOR);
+    Hud_Sprite(playerid, hpBunTop, 508.3, 112.689, 10.0, 5.0, HUD_SPRITE_ROUND, HUD_TEXT_COLOR);
+    Hud_Sprite(playerid, hpFilling, 509.8, 115.271, 7.0, 2.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
+    Hud_Sprite(playerid, hpLineTop, 509.8, 118.171, 7.0, 1.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
+    Hud_Sprite(playerid, hpLineBottom, 509.8, 120.371, 7.0, 1.0, HUD_SPRITE_BOX, HUD_TEXT_COLOR);
+    Hud_Sprite(playerid, hpBunBottom, 508.3, 120.489, 10.0, 2.0, HUD_SPRITE_ROUND, HUD_TEXT_COLOR);
+    Hud_Text(playerid, hpHungerText, 521.608, 114.338, "100%", TEXT_DRAW_FONT_1, 0.1771, 0.8433, TEXT_DRAW_ALIGN_LEFT, HUD_HUNGER_COLOR);
+    Hud_ShowParts(playerid, hpBunTop, hpBunBottom, true);
     Hud_UpdateHunger(playerid);
 }
 
-// A sprite only takes a new size or colour when it is shown again.
+// A sprite only takes a new colour when it is shown again; red means the player should eat soon.
 stock Hud_UpdateHunger(playerid)
 {
-    new PlayerText:fill = g_HudParts[playerid][hpHungerFill];
-    if (fill == INVALID_PLAYER_TEXT_DRAW)
+    new PlayerText:text = g_HudParts[playerid][hpHungerText];
+    if (text == INVALID_PLAYER_TEXT_DRAW)
     {
         return;
     }
-
-    new hunger = g_Player[playerid][pHunger];
-    PlayerTextDrawShow(playerid, g_HudParts[playerid][hpHungerIcon]);
-    if (hunger == 0)
-    {
-        PlayerTextDrawHide(playerid, fill);
-        return;
-    }
-    PlayerTextDrawTextSize(playerid, fill, (HUD_HUNGER_WIDTH - 2.0 * HUD_HUNGER_BORDER) * float(hunger) / float(HUNGER_MAX), HUD_HUNGER_HEIGHT - 2.0 * HUD_HUNGER_BORDER);
-    PlayerTextDrawColour(playerid, fill, hunger <= HUNGER_WARNING ? HUD_HUNGER_LOW_COLOR : HUD_HUNGER_COLOR);
-    PlayerTextDrawShow(playerid, fill);
+    new hunger = g_Player[playerid][pHunger], colour = hunger <= HUNGER_WARNING ? HUD_HUNGER_LOW_COLOR : HUD_HUNGER_COLOR;
+    PlayerTextDrawColour(playerid, g_HudParts[playerid][hpHungerCircle], colour);
+    PlayerTextDrawColour(playerid, text, colour);
+    PlayerTextDrawSetString(playerid, text, "%d%%", hunger * 100 / HUNGER_MAX);
+    PlayerTextDrawShow(playerid, g_HudParts[playerid][hpHungerCircle]);
+    PlayerTextDrawShow(playerid, text);
+    // The circle is drawn after the burger, so the burger has to come back on top of it.
+    Hud_ShowParts(playerid, hpBunTop, hpBunBottom, true);
 }
 
 // Shown once the first district is known; Hud_UpdateZone hides it again inside interiors.
 static stock Hud_ShowZone(playerid)
 {
-    Hud_Pill(playerid, hpZoneLeft, 20.0, 314.0, 140.0, 13.0, HUD_PANEL_COLOR);
-    Hud_Sprite(playerid, hpZoneIcon, 24.0, 316.0, 9.0, 9.0, "hud:radar_waypoint", 0xFFFFFFFF);
-    Hud_Text(playerid, hpZoneText, 95.0, 315.6, "_", 0.19, TEXT_DRAW_ALIGN_CENTER, 0xFFFFFFFF);
+    Hud_Sprite(playerid, hpZoneIcon, 22.0, 316.0, 8.0, 8.0, "hud:radar_waypoint", HUD_TEXT_COLOR);
+    Hud_Text(playerid, hpZoneText, 33.0, 315.5, "_", TEXT_DRAW_FONT_2, 0.19, 0.95, TEXT_DRAW_ALIGN_LEFT, HUD_TEXT_COLOR);
+    PlayerTextDrawSetOutline(playerid, g_HudParts[playerid][hpZoneText], 1);
     g_HudZoneIndex[playerid] = -2;
 }
 
 static stock Hud_ShowLogo(playerid)
 {
-    Hud_Pill(playerid, hpLogoLeft, 552.0, 428.0, 82.0, 13.0, HUD_PANEL_COLOR);
-    Hud_Text(playerid, hpLogoText, 593.0, 429.6, SERVER_NAME, 0.2, TEXT_DRAW_ALIGN_CENTER, COLOR_SERVER);
-    Hud_Text(playerid, hpInfo, 632.0, 417.0, "_", 0.17, TEXT_DRAW_ALIGN_RIGHT, 0xC8C8C8FF);
+    for (new i = 0; i < sizeof(g_HudLogo); i++)
+    {
+        TextDrawShowForPlayer(playerid, g_HudLogo[i]);
+    }
+    Hud_Text(playerid, hpInfo, 632.0, 425.0, "_", TEXT_DRAW_FONT_2, 0.15, 0.75, TEXT_DRAW_ALIGN_RIGHT, HUD_INFO_COLOR);
     PlayerTextDrawSetOutline(playerid, g_HudParts[playerid][hpInfo], 1);
     Hud_UpdateInfo(playerid);
-    Hud_ShowParts(playerid, hpLogoLeft, hpInfo, true);
+    PlayerTextDrawShow(playerid, g_HudParts[playerid][hpInfo]);
 }
 
 static stock Hud_UpdateInfo(playerid)
@@ -206,7 +229,7 @@ static stock Hud_UpdateInfo(playerid)
 
 stock Hud_Show(playerid)
 {
-    // The hunger bar is game state, not decoration, so no setting hides it.
+    // The hunger badge is game state, not decoration, so no setting hides it.
     Hud_ShowHunger(playerid);
     if (!Setting_IsOn(playerid, SETTING_HUD))
     {
@@ -214,7 +237,8 @@ stock Hud_Show(playerid)
     }
     if (Setting_IsOn(playerid, SETTING_HUD_CLOCK))
     {
-        Hud_ShowClock(playerid);
+        TextDrawShowForPlayer(playerid, g_HudClock);
+        TextDrawShowForPlayer(playerid, g_HudDate);
     }
     if (Setting_IsOn(playerid, SETTING_HUD_ZONE))
     {
@@ -237,6 +261,10 @@ stock Hud_Hide(playerid)
 {
     TextDrawHideForPlayer(playerid, g_HudClock);
     TextDrawHideForPlayer(playerid, g_HudDate);
+    for (new i = 0; i < sizeof(g_HudLogo); i++)
+    {
+        TextDrawHideForPlayer(playerid, g_HudLogo[i]);
+    }
     for (new E_HUD_PART:part; part < E_HUD_PART; part++)
     {
         if (g_HudParts[playerid][part] != INVALID_PLAYER_TEXT_DRAW)
@@ -266,7 +294,7 @@ stock Hud_UpdateZone(playerid)
         return;
     }
 
-    // Interiors have no district; the whole plate is hidden inside.
+    // Interiors have no district; the name and icon are hidden inside.
     new zone = -1;
     if (GetPlayerInterior(playerid) == 0)
     {
@@ -282,11 +310,11 @@ stock Hud_UpdateZone(playerid)
     g_HudZoneIndex[playerid] = zone;
     if (zone == -1)
     {
-        Hud_ShowParts(playerid, hpZoneLeft, hpZoneText, false);
+        Hud_ShowParts(playerid, hpZoneIcon, hpZoneText, false);
         return;
     }
     PlayerTextDrawSetString(playerid, g_HudParts[playerid][hpZoneText], "%s", g_Zones[zone][zName]);
-    Hud_ShowParts(playerid, hpZoneLeft, hpZoneText, true);
+    Hud_ShowParts(playerid, hpZoneIcon, hpZoneText, true);
 }
 
 static stock Hud_CountOnline()
@@ -322,10 +350,14 @@ public Hud_Tick()
         {
             Hud_UpdateInfo(i);
         }
-        // A blinking burger is easier to notice than a red bar when the player is starving.
-        if (g_Player[i][pHunger] <= HUNGER_WARNING && g_HudParts[i][hpHungerIcon] != INVALID_PLAYER_TEXT_DRAW)
+        // A blinking badge is easier to notice than a colour change when the player is starving.
+        if (g_Player[i][pHunger] <= HUNGER_WARNING && g_HudParts[i][hpHungerCircle] != INVALID_PLAYER_TEXT_DRAW)
         {
-            Hud_ShowParts(i, hpHungerIcon, hpHungerIcon, g_HudBlink);
+            Hud_ShowParts(i, hpHungerCircle, hpHungerCircle, g_HudBlink);
+            if (g_HudBlink)
+            {
+                Hud_ShowParts(i, hpBunTop, hpBunBottom, true);
+            }
         }
     }
     return 1;
@@ -340,7 +372,7 @@ cmd:hud(playerid, params[])
     }
     else
     {
-        Msg_Info(playerid, "HUD (sat, datum, kvart i logo) je sakriven i ostaje sakriven i posle izlaska. Traka gladi se uvek vidi. Ponovo: /hud");
+        Msg_Info(playerid, "HUD (sat, datum, kvart i logo) je sakriven i ostaje sakriven i posle izlaska. Glad se uvek vidi. Ponovo: /hud");
     }
     return 1;
 }

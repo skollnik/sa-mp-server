@@ -17,8 +17,7 @@
 #define TRANSFER_FEE_PERCENT        (1)
 #define ATM_MAX_WITHDRAW            (10000)
 #define GIVE_CASH_RADIUS            (3.0)
-// Both need the ID card at the counter; the PIN is random and a new one is the only way back from a forgotten PIN.
-#define BANK_ACCOUNT_PRICE          (100)
+// Opening an account is free but needs the ID card; the PIN is random and a new one is the only way back from a forgotten PIN.
 #define BANK_PIN_RESET_PRICE        (50)
 
 // Dice and coin bets: what each side puts in; from level 2 so fresh alt accounts cannot pass money around.

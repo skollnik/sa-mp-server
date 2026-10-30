@@ -24,7 +24,7 @@
 | Lutrija | Tiket $50, broj 1–50, jedan tiket po igraču; izvlačenje svakog sata; 70% ide u fond, 30% nestaje iz igre (kasnije u državnu kasu) |
 
 ### Startni paket
-- **$2.000 keš + $3.000 koji čekaju na šalteru banke = $5.000.** Novi igrač nema račun: $3.000 podiže na šalteru ili mu prelaze na račun kad ga otvori ($100, uz ličnu kartu). To pokriva vozačku, telefon i hranu, ali ne i vozilo.
+- **$2.000 keš + $3.000 koji čekaju na šalteru banke = $5.000.** Novi igrač nema račun: $3.000 podiže na šalteru ili mu prelaze na račun kad ga otvori (besplatno, uz ličnu kartu). To pokriva vozačku, telefon i hranu, ali ne i vozilo.
 
 ### Svakodnevne stvari
 | Stvar | Cena |
@@ -40,7 +40,7 @@
 | Kredit: SMS / minut poziva / pretraga javnog imenika | $1 / $2 / $2 |
 | Dopuna kredita (24/7 gotovinom ili sa računa preko telefona; najviše $500 na kartici) | $10, $20, $50, $100 |
 | Prva pomoć (leči do 75 HP) | $150 |
-| Otvaranje bankovnog računa (uz ličnu kartu, dobija se kartica i PIN) / novi PIN | $100 / $50 |
+| Otvaranje bankovnog računa (uz ličnu kartu, dobija se kartica i PIN) / novi PIN | besplatno / $50 |
 | Kockice / novčić (za opklade, ne troše se) | $20 / $5 |
 | Naočare (3 vrste, prodavnica odeće) | $150 / $200 / $250 |
 | Zimska kapa / kačket / panama šešir / polucilindar | $150 / $200 / $300 / $350 |
@@ -158,7 +158,7 @@
 | Lottery | Ticket $50, number 1–50, one ticket per player; a draw every hour; 70% goes into the fund, 30% leaves the game (later the state treasury) |
 
 ### Starter pack
-- **$2,000 cash + $3,000 waiting at the bank counter = $5,000.** A new player has no account: the $3,000 is picked up at the counter or moves into the account once it is opened ($100, with an ID card). That covers a driving license, a phone and food, but not a vehicle.
+- **$2,000 cash + $3,000 waiting at the bank counter = $5,000.** A new player has no account: the $3,000 is picked up at the counter or moves into the account once it is opened (free, with an ID card). That covers a driving license, a phone and food, but not a vehicle.
 
 ### Everyday items
 | Item | Price |

@@ -167,7 +167,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Kupovina tiketa tokom izvlačenja | ✅ | Prodaja je zatvorena od upita za izvlačenje do brisanja tiketa |
 | Dobitnik na lutriji nije online (njegovo staro stanje prepiše dobitak) | ✅ | Igraču online se dodaje u memoriji, a igraču van igre u bazi |
 | Fond lutrije se izgubi posle restarta | ✅ | Fond je u tabeli `server_vars`; tiketi ostaju u bazi do izvlačenja |
-| Previše textdraw-ova po igraču | ✅ | HUD koristi 17 po igraču (granica je 256), sat i datum su zajednički za sve |
+| Previše textdraw-ova po igraču | ✅ | HUD koristi 10 po igraču (logo, sat i datum su zajednički) (granica je 256), sat i datum su zajednički za sve |
 | Natpis „Prosi“ ostaje dok igrač vozi ili hoda (ušao u vozilo sa F, mimo komande) | ✅ | Prošnja se prekida pri promeni stanja (vozilo) i kad se igrač pomeri više od 1 m ili ustane; provera svake sekunde |
 | Animacija sedenja ne krene prvi put (biblioteka nije učitana), pa se prošnja odmah prekine | ✅ | Biblioteke animacija se učitavaju pri svakom spawnu; poza se proverava tek posle 3 s |
 | Opklada bez kockica ili novčića (dao ih je nekome dok druga strana čeka) | ✅ | Predmet se proverava pri ponudi i ponovo pri prihvatanju |
@@ -352,7 +352,7 @@ Every new system or change goes through these questions, against all existing sy
 | Buying a ticket during a draw | ✅ | Sales are closed from the draw query until the tickets are deleted |
 | A lottery winner is offline (their old balance overwrites the prize) | ✅ | An online player gets it in memory, an offline one in the DB |
 | The lottery fund is lost after a restart | ✅ | The fund is in the `server_vars` table; tickets stay in the DB until the draw |
-| Too many textdraws per player | ✅ | The HUD uses 17 per player (the limit is 256); clock and date are shared by everyone |
+| Too many textdraws per player | ✅ | The HUD uses 10 per player (logo, clock and date are shared) (the limit is 256); clock and date are shared by everyone |
 | The "Prosi" label stays while the player drives or walks (entered a vehicle with F, bypassing the command) | ✅ | Begging ends on a state change (vehicle) and when the player moves more than 1 m or stands up; checked every second |
 | The sitting animation does not start the first time (library not loaded), so begging ends at once | ✅ | Animation libraries are loaded on every spawn; the pose is checked only after 3 s |
 | A bet without dice or a coin (given away while the other side waits) | ✅ | The item is checked at the offer and again at acceptance |

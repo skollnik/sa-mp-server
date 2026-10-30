@@ -132,7 +132,7 @@ static stock bool:BankPin_ChargeIssue(playerid)
     {
         return Money_Take(playerid, BANK_PIN_RESET_PRICE, "novi PIN kartice");
     }
-    if (g_Player[playerid][pHasBankAccount] || !Money_Take(playerid, BANK_ACCOUNT_PRICE, "otvaranje racuna"))
+    if (g_Player[playerid][pHasBankAccount])
     {
         return false;
     }
@@ -240,11 +240,6 @@ stock bool:BankPin_OnDialogResponse(playerid, dialogid, response, listitem, cons
             if (listitem == 1)
             {
                 Bank_CollectHeld(playerid);
-                return true;
-            }
-            if (g_Player[playerid][pCash] < BANK_ACCOUNT_PRICE)
-            {
-                Msg_Error(playerid, "Otvaranje racuna kosta $%d (gotovinom).", BANK_ACCOUNT_PRICE);
                 return true;
             }
             BankPin_Issue(playerid, PIN_ISSUE_OPEN);

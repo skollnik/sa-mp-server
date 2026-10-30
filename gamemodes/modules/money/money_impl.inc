@@ -108,7 +108,7 @@ stock Money_ShowBank(playerid, bool:atm)
     else if (!g_Player[playerid][pHasBankAccount])
     {
         new body[192];
-        format(body, sizeof(body), "Otvori racun i karticu ($%d, uz licnu kartu)\nPodigni novac koji vas ceka: " C_GREEN "$%d", BANK_ACCOUNT_PRICE, g_Player[playerid][pHeldPay]);
+        format(body, sizeof(body), "Otvori racun i karticu (besplatno, uz licnu kartu)\nPodigni novac koji vas ceka: " C_GREEN "$%d", g_Player[playerid][pHeldPay]);
         ShowPlayerDialog(playerid, DIALOG_BANK_OPEN, DIALOG_STYLE_LIST, title, body, "Izaberi", "Zatvori");
     }
     else

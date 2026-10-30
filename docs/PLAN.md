@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** bankovni račun i fiksni položaji dodataka napisani, čekaju test vlasnika; HUD nove generacije čeka odobrenje predloga (ažurirano 2026-10-30)
+**Trenutni status:** novi HUD, besplatan račun i popravljeni položaji naočara i kape napisani, čekaju test vlasnika; posle toga Faza 3 kad vlasnik kaže (ažurirano 2026-10-30)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -51,7 +51,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Opklade (kockice, novčić), prošnja, lutrija svakog sata
 - [x] Dodaci na telu: prodavnica odeće (`/kupi`), naočare, šeširi, kapa, kačket, ranac i torba, `/dodaci` (fiksni položaji)
 - [x] Kockice i novčić se kupuju u 24/7; prošnja se prekida kad igrač ustane ili uđe u vozilo
-- [ ] HUD nove generacije (čeka odobrenje predloga)
+- [x] Novi HUD: logo od oblika gore desno, okrugla oznaka gladi, sat i ostalo dole desno
 - [x] Bankovni račun: otvaranje na šalteru uz ličnu kartu, nasumičan PIN, plata bez računa čeka na šalteru
 
 ### Faza 3: Vozila i dozvole
@@ -108,7 +108,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** bank account and fixed accessory places written, waiting for the owner's test; the next-generation HUD waits for the proposal to be approved (updated 2026-10-30)
+**Current status:** the new HUD, the free account and fixed glasses and hat places written, waiting for the owner's test; then Phase 3 when the owner says so (updated 2026-10-30)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -157,7 +157,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] Bets (dice, coin), begging, hourly lottery
 - [x] Body accessories: clothing shop (`/kupi`), glasses, hats, a knit hat, a cap, a backpack and a bag, `/dodaci` (fixed places)
 - [x] Dice and coin are bought at a 24/7; begging ends when the player stands up or enters a vehicle
-- [ ] Next-generation HUD (waiting for the proposal to be approved)
+- [x] New HUD: a logo built from shapes top right, a round hunger badge, the clock and the rest bottom right
 - [x] Bank account: opened at the counter with an ID card, a random PIN, pay without an account waits at the counter
 
 ### Phase 3: Vehicles and licenses

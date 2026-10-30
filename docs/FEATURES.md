@@ -42,7 +42,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### ECO — Ekonomija
 - **ECO-1 Novac:** keš u džepu i račun u banci. Novac je samo serverski, pa anti-cheat ne može da se zaobiđe.
-- **ECO-2 Banka:** filijale i bankomati, uplata, isplata, transfer i štedni račun. Račun se otvara na šalteru uz ličnu kartu ($100), uz karticu i nasumičan PIN; bez računa plata čeka na šalteru. PIN za bankomat (blokada posle 3 pogrešna), novi PIN na šalteru ($50).
+- **ECO-2 Banka:** filijale i bankomati, uplata, isplata, transfer i štedni račun. Račun se otvara na šalteru uz ličnu kartu (besplatno), uz karticu i nasumičan PIN; bez računa plata čeka na šalteru. PIN za bankomat (blokada posle 3 pogrešna), novi PIN na šalteru ($50).
 - **ECO-3 Porezi** na imovinu i vozila. Budžet države puni vlada.
 - **ECO-4 Logovi transakcija**, radi borbe protiv duplikacije novca.
 - **ECO-5 Igre na sreću i prošnja:** opklade kockicama i novčićem između igrača, lutrija svakog sata, prošnja za nove igrače.
@@ -54,7 +54,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **WORLD-4 Opština (City Hall):** uzimanje posla, lična karta, plaćanje kazni.
 - **WORLD-5 Dinamičke kapije i vrata** (frakcijske, privatne).
 - **WORLD-6 Mapiranja i custom enterijeri** (streamer objekti).
-- **WORLD-7 HUD i UI:** HUD od tekstura iz igre (datum, sat, glad sa ikonom, kvart, logo sa ID-jem i brojem igrača); brzinomer, prikaz goriva, notifikacije, dijalozi, 3D labele.
+- **WORLD-7 HUD i UI:** HUD od tekstura iz igre: logo gore desno, okrugla oznaka gladi sa procentom ispod novca, sat, datum, ID i broj igrača dole desno, kvart iznad radara; brzinomer, prikaz goriva, notifikacije, dijalozi, 3D labele.
 
 ### LIC — Dozvole
 - **LIC-1 Vozačke dozvole:** auto škola sa teorijskim testom i praktičnom vožnjom po checkpoint-ima. Postoje kategorije auto, motor, kamion.
@@ -210,7 +210,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### ECO — Economy
 - **ECO-1 Money:** cash in pocket and bank account. Money is server-side only, so anti-cheat cannot be bypassed.
-- **ECO-2 Bank:** branches and ATMs, deposit, withdraw, transfer and savings. The account is opened at the counter with an ID card ($100) and comes with a card and a random PIN; without one, pay waits at the counter. ATM PIN (blocked after 3 wrong tries), a new PIN at the counter ($50).
+- **ECO-2 Bank:** branches and ATMs, deposit, withdraw, transfer and savings. The account is opened at the counter with an ID card (free) and comes with a card and a random PIN; without one, pay waits at the counter. ATM PIN (blocked after 3 wrong tries), a new PIN at the counter ($50).
 - **ECO-3 Taxes** on property and vehicles. The government fills the state budget.
 - **ECO-4 Transaction logs**, to fight money duplication.
 - **ECO-5 Games of chance and begging:** dice and coin bets between players, an hourly lottery, begging for new players.
@@ -222,7 +222,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **WORLD-4 City Hall:** take a job, ID card, pay fines.
 - **WORLD-5 Dynamic gates and doors** (faction, private).
 - **WORLD-6 Mappings and custom interiors** (streamer objects).
-- **WORLD-7 HUD and UI:** HUD from in-game textures (date, clock, hunger with an icon, district, logo with ID and player count); speedometer, fuel display, notifications, dialogs, 3D labels.
+- **WORLD-7 HUD and UI:** HUD from in-game textures: logo top right, a round hunger badge with a percentage under the money, clock, date, ID and player count bottom right, district above the radar; speedometer, fuel display, notifications, dialogs, 3D labels.
 
 ### LIC — Licenses
 - **LIC-1 Driving licenses:** driving school with a theory test and a practical checkpoint drive. Categories are car, motorbike and truck.
