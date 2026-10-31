@@ -52,6 +52,9 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Kad dođu vozila poslova i frakcija: `/resetvozila` i `/respawnveh` da ih vraćaju na njihova mesta |
 | GTA radionice za tuning (Transfender i ostale) daju besplatan tuning koji se ne pamti: zatvoriti ih ili naplaćivati (mehaničar, anti-cheat) |
 | Kad dođe mehaničar (korak 3.5): ista mapa u Willowfield-u (radionica pored tehničkog pregleda) |
+| Predlog (čeka odobrenje): mehaničar na dva načina, radionica u Willowfield-u (popravka bez igrača, skuplja) i posao mehaničara (ponudi popravku vozaču pored sebe, cena do limita, dopuna goriva na putu) |
+| Predlog (čeka odobrenje): tablice se vade na šalteru u policiji posle tehničkog pregleda i postavljaju pored vozila (`/v tablice`); promena tablica na nove nasumične i sopstvena tablica (skupo); veza sa Gold VIP pogodnošću „sopstvena tablica“ |
+| Predlog (čeka odobrenje): kamere po gradu (admin ih postavlja u igri): snimaju brzinu i registraciju vozila koje prođe, kazna stiže vlasniku vozila i plaća se u opštini ili policiji; neplaćene kazne blokiraju produženje registracije, a policija ih kasnije vidi u MDC-u |
 
 **Posle kuća (Faza 4) i frakcija (Faza 5)**
 | Stavka |
@@ -319,6 +322,9 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Once job and faction vehicles exist: `/resetvozila` and `/respawnveh` return them to their spots |
 | GTA tuning shops (Transfender and others) give free tuning that is not kept: close them or charge for it (mechanic, anti-cheat) |
 | Once the mechanic exists (step 3.5): the same map in Willowfield (the workshop next to the inspection) |
+| Proposal (waiting for approval): the mechanic in two ways, a workshop in Willowfield (repair without a player, more expensive) and the mechanic job (offers a repair to a driver next to them, price up to a cap, refuelling on the road) |
+| Proposal (waiting for approval): plates are issued at the police counter after the technical inspection and mounted next to the vehicle (`/v tablice`); changing plates to new random ones and a custom plate (expensive); tie-in with the Gold VIP perk "custom plate" |
+| Proposal (waiting for approval): cameras around the city (the admin places them in game): they record the speed and registration of a vehicle passing by, the fine goes to the vehicle's owner and is paid at the city hall or police; unpaid fines block renewing the registration, and police later see them in the MDC |
 
 **After houses (Phase 4) and factions (Phase 5)**
 | Item |
