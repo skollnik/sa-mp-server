@@ -106,11 +106,12 @@ static stock Cam_CreateVisuals(slot)
     g_Cameras[slot][camObject] = CreateDynamicObject(CAMERA_MODEL, g_Cameras[slot][camX], g_Cameras[slot][camY], g_Cameras[slot][camZ],
         0.0, 0.0, g_Cameras[slot][camA], 0, 0, -1, CAMERA_STREAM_DISTANCE, CAMERA_STREAM_DISTANCE);
     g_Cameras[slot][camArea] = CreateDynamicSphere(g_Cameras[slot][camX], g_Cameras[slot][camY], g_Cameras[slot][camZ], CAMERA_RADIUS, 0, 0);
-    // The limit is shown like a road sign, so a fine never comes from a limit nobody could know.
+    // The limit is shown like a road sign, so a fine never comes from a limit nobody could know. No line-of-sight test:
+    // the label sits by the pole, and the pole itself would hide it.
     new text[48];
     format(text, sizeof(text), "Kamera\n" C_WHITE "Ogranicenje %d km/h", g_Cameras[slot][camLimit]);
-    g_Cameras[slot][camLabel] = CreateDynamic3DTextLabel(text, COLOR_SERVER, g_Cameras[slot][camX], g_Cameras[slot][camY], g_Cameras[slot][camZ] + 3.5,
-        CAMERA_LABEL_DISTANCE, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, 0, 0);
+    g_Cameras[slot][camLabel] = CreateDynamic3DTextLabel(text, COLOR_SERVER, g_Cameras[slot][camX], g_Cameras[slot][camY], g_Cameras[slot][camZ] + 5.5,
+        CAMERA_LABEL_DISTANCE, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, 0, 0);
 }
 
 static stock Cam_Destroy(slot)
