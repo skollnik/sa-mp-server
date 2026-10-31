@@ -34,6 +34,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 
 ### Faza 2: Svet i ekonomija
 - [x] WORLD-6 (deo 1): prve mape, i to opština spolja i parking ispred nje, ograđena auto pijaca, banka spolja i enterijeri opštine, policije, zatvora i banke. Ulazi u enterijere se postavljaju u igri (`/napraviulaz`)
+- [x] WORLD-6 (deo 2): bolnica spolja sa parkom ispred nje i enterijer bolnice
 - [x] WORLD-1: ulazi i izlazi (F, `/udji`, `/izadji`), admin ih pravi u igri; „mesta“ za šaltere, bankomate i prodavnice
 - [x] WORLD-2, WORLD-3, WORLD-7: stvarno vreme, GPS sa upravljačem checkpoint-a, HUD (sat, datum, kvart)
 - [x] ECO-1, ECO-2, ECO-4: novac sa logovima, banka, bankomat, transfer, `/daj`
@@ -142,6 +143,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 
 ### Phase 2: World and economy
 - [x] WORLD-6 (part 1): first maps, namely the city hall exterior and the parking in front of it, the fenced car market, the bank exterior and the interiors of the city hall, the police, the prison and the bank. Doors into the interiors are set up in game (`/napraviulaz`)
+- [x] WORLD-6 (part 2): the hospital exterior with the park in front of it and the hospital interior
 - [x] WORLD-1: doors (F, `/udji`, `/izadji`), created by admins in game; "points" for counters, ATMs and shops
 - [x] WORLD-2, WORLD-3, WORLD-7: real time, GPS with a checkpoint manager, HUD (clock, date, district)
 - [x] ECO-1, ECO-2, ECO-4: money with logs, bank, ATM, transfers, `/daj`

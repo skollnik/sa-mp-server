@@ -110,6 +110,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Izdaleka nestanu objekti nove mape, a GTA modeli za daljinu su uklonjeni, pa ostane rupa (tlo opštine i trga, pozorište pored banke) | ✅ | Objekti mapa se vide do 300 m, a velike ploče tla i ponovo napravljeno pozorište do 800 m |
 | Natpis „BANKA“ se ne uklapa u banere pozorišta (jedan materijal pokriva dva banera) | ✅ | Svaki baner dobija reč odozgo nadole; provereno u igri |
 | Staklene ploče ispred banke se razbiju kod jednog igrača (GTA staklo puca od metka), a kod drugih ostanu cele | 👁 | Samo izgled, ne utiče na igru; proverava se u igri, a staklo se menja drugim modelom ako smeta |
+| Igrač propadne kroz pod enterijera bolnice (prva izabrana mapa je imala pod samo ispod dela plafona) | ✅ | Ta mapa je izbačena; nove mape se pre ubacivanja proveravaju da li pod postoji ispod nameštaja, po stvarnim dimenzijama modela; izabrani enterijer je proveren u igri |
 
 ### Faza 2: vrata, novac, inventar, telefon
 | Rizik | Status | Kako je rešeno |
@@ -329,6 +330,7 @@ Every new system or change goes through these questions, against all existing sy
 | Map objects vanish at a distance while the GTA LOD models are removed, leaving a hole (city hall and square ground, the theatre next to the bank) | ✅ | Map objects are visible up to 300 m, large ground planes and the recreated theatre up to 800 m |
 | The "BANKA" text does not fit the theatre banners (one material covers two banners) | ✅ | Each banner gets the word top to bottom; checked in game |
 | The glass panels in front of the bank break for one player (GTA glass shatters when shot) but stay whole for others | 👁 | Visual only, no gameplay effect; checked in game, the glass is swapped for another model if it matters |
+| A player falls through the floor of the hospital interior (the first chosen map had floor only under part of the ceiling) | ✅ | That map is dropped; new maps are checked before they go in for a floor under the furniture, using the real model sizes; the chosen interior was checked in game |
 
 ### Phase 2: doors, money, inventory, phone
 | Risk | Status | How it is handled |

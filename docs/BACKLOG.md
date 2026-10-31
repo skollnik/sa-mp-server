@@ -22,7 +22,9 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Baze bandi, mafija i frakcija |
 | Uređenje spawna ispred aerodroma |
 | VIP klub (enterijer za Silver i Gold VIP) |
-| Bolnica, auto škola, mehaničar, novinari: još nema izabrane mape |
+| Svlačionica za doktore u bolnici (izabrani enterijer je nema): posebna prostorija iza vrata |
+| Vrata u bolnici koja otvaraju samo doktori (izbačena su iz mape dok ne dođe frakcija bolnice) |
+| Auto škola, mehaničar, novinari: još nema izabrane mape |
 | Auto pijaca (korak 3.2): prostor sa parkingom gde admin postavlja vozila; punktovi za iznajmljivanje bicikala i rent-a-car (korak 3.5) |
 
 **Posle opštine, banke i ostalih mesta (Faza 2)**
@@ -261,6 +263,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 30.10.2026. | Faza 3, korak 3.1: lična vozila (`/v`, parkiranje, nestajanje 5 min posle odjave), tablice, ključ i jedna kopija, motor N, brava Y, svetla, hauba, gepek, gorivo i benzinske pumpe (`/gorivo`), brzinomer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`; VIP `/vcolor` i `/vfix` samo na svom vozilu; ranac ponovo podešen; dodaci posle restarta servera više ne ostaju vidljivi |
 | 30.10.2026. | Ispravke posle testa 3.1: nalog se ponovo čuva u bazi (pozicija, nivo, račun, dodaci posle izlaska), HUD se više ne duplira posle smrti, rezervoar se toči do punog, obrisani ID-jevi GPS-a, ulaza i mesta se ponovo daju (i vozilima), hamburger pomeren desno, veća slova logoa, urađene stavke u „Odobreni sistemi“ označene sa ✅ |
 | 30.10.2026. | Dopune vozila: vozila stalno u svetu (neaktivni 14 dana se ne pojavljuju), kopija ključa radi i kad vlasnik nije tu, motor se pali 1,5 s, upaljeno vozilo vozi i igrač bez ključa, registracija i tehnički pregled (`/registruj`, 60 dana, mapa u Willowfield-u, `/napravimesto pregled`), admin `/atune`, `/resetvozila [sekunde]` sa odbrojavanjem, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` sa listom, sve komande u `/pomoc` i `/ahelp` |
+| 31.10.2026. | Bolnica spolja sa parkom ispred nje i enterijer bolnice |
 
 ---
 
@@ -286,7 +289,9 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Bases for gangs, mafias and factions |
 | Decorating the spawn in front of the airport |
 | VIP club (interior for Silver and Gold VIP) |
-| Hospital, driving school, mechanic, news: no map picked yet |
+| Doctors' locker room in the hospital (the chosen interior has none): a separate room behind a door |
+| Hospital doors only doctors can open (removed from the map until the hospital faction exists) |
+| Driving school, mechanic, news: no map picked yet |
 | Car market (step 3.2): an area with parking where the admin puts the vehicles; bike rental and rent-a-car points (step 3.5) |
 
 **After city hall, bank and other places (Phase 2)**
@@ -525,3 +530,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-30 | Phase 3, step 3.1: personal vehicles (`/v`, parking, leaving 5 min after logout), plates, a key and one copy, engine N, lock Y, lights, bonnet, boot, fuel and gas stations (`/gorivo`), speedometer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`; VIP `/vcolor` and `/vfix` only on own vehicles; backpack tuned again; accessories no longer stay visible after a server restart |
 | 2026-10-30 | Fixes after the 3.1 test: the account is saved to the database again (position, level, bank account, accessories after logout), the HUD no longer doubles after death, the tank fills to the brim, deleted GPS, door and point IDs are given out again (vehicles too), the burger badge moved right, a bigger logo font, done items in "Approved systems" marked with ✅ |
 | 2026-10-30 | Vehicle additions: vehicles always in the world (inactive for 14 days are not spawned), the key copy works while the owner is away, the engine starts in 1.5 s, a running vehicle can be driven without a key, registration and technical inspection (`/registruj`, 60 days, a map in Willowfield, `/napravimesto pregled`), admin `/atune`, `/resetvozila [seconds]` with a countdown, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` with a list, every command in `/pomoc` and `/ahelp` |
+| 2026-10-31 | Hospital exterior with the park in front of it and the hospital interior |
