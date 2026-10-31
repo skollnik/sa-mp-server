@@ -29,7 +29,8 @@ cmd:pomoc(playerid, params[])
         C_WHITE "N - motor (pali se uz kljuc; upaljeno vozilo moze da vozi svako)    Y - zakljucavanje najblizeg vaseg vozila\n" \
         "/v - vasa vozila (GPS, registracija, oduzimanje kopije kljuca)    /v parkiraj - mesto gde se vozilo vraca\n" \
         "/v [motor / zakljucaj / svetla / hauba / gepek]    /v kljuc - kopija kljuca igracu pored vas\n" \
-        "/gorivo - tocenje na benzinskoj pumpi (ugasen motor)    /registruj - tehnicki pregled i tablice (vazi 60 dana)\n\n" \
+        "/gorivo - tocenje na benzinskoj pumpi (ugasen motor)    /registruj - tehnicki pregled (vazi 60 dana)\n" \
+        "/tablice - tablice na salteru u policiji    /v tablice - postavljanje tablica    /kazne - kazne sa kamera (placaju se u opstini ili policiji)\n\n" \
         C_SERVER "Pomoc i podrska\n" \
         C_WHITE "/n - newbie chat (pitanja novih igraca)    /ask - pitanje helperima\n" \
         "/report - prijava igraca adminima    /admins, /helpers - tim online    /ahelp, /hhelp - komande tima\n\n" \

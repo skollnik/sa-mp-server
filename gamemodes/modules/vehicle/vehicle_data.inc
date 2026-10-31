@@ -37,6 +37,8 @@ enum E_VEH
     vColor2,
     // Empty until the vehicle is registered for the first time.
     vPlate[VEH_PLATE_LENGTH],
+    // Issued at the police counter but not mounted yet (/v tablice).
+    vPendingPlate[VEH_PLATE_LENGTH],
     vRegisteredUntil,
     Float:vParkX,
     Float:vParkY,
@@ -53,7 +55,10 @@ enum E_VEH
     vKeyName[MAX_PLAYER_NAME + 1],
     vMods[VEH_TUNE_SLOTS],
     vPaintjob,
-    vDiedAt
+    vDiedAt,
+    // The last camera that photographed the vehicle and when, so one camera fines a vehicle only once in a while.
+    vCameraSlot,
+    vCameraAt
 }
 
 new g_Veh[MAX_PERSONAL_VEHICLES][E_VEH];
@@ -89,4 +94,6 @@ forward bool:Veh_IsOwner(playerid, vehicleid);
 forward bool:Veh_OnDialogResponse(playerid, dialogid, response, listitem);
 forward bool:Veh_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
 forward bool:Veh_IsRegistered(slot);
+forward bool:Plate_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Fine_OnDialogResponse(playerid, dialogid, response);
 forward bool:Tune_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);

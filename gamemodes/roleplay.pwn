@@ -90,6 +90,9 @@
 #include "modules/vehicle/fuel.inc"
 #include "modules/vehicle/registration.inc"
 #include "modules/vehicle/tuning.inc"
+#include "modules/vehicle/plates.inc"
+#include "modules/vehicle/fines.inc"
+#include "modules/vehicle/cameras.inc"
 #include "modules/vehicle/vehicle_cmds.inc"
 #include "modules/vehicle/speedometer.inc"
 
@@ -134,6 +137,8 @@ public OnGameModeInit()
     Inv_Init();
     Phone_Init();
     Veh_Init();
+    Fine_Init();
+    Cam_Init();
     Speedo_Init();
     Maps_Init();
 
@@ -177,6 +182,7 @@ public OnPlayerConnect(playerid)
     Phone_OnPlayerConnect(playerid);
     Speedo_OnPlayerConnect(playerid);
     Veh_OnPlayerConnect(playerid);
+    Fine_OnPlayerConnect(playerid);
     Bet_OnPlayerConnect(playerid);
     Beg_OnPlayerConnect(playerid);
     Lottery_OnPlayerConnect(playerid);
@@ -236,6 +242,12 @@ public OnPlayerEnterCheckpoint(playerid)
 public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bodypart)
 {
     Account_OnPlayerTakeDamage(playerid);
+    return 1;
+}
+
+public OnPlayerEnterDynamicArea(playerid, STREAMER_TAG_AREA:areaid)
+{
+    Cam_OnPlayerEnterArea(playerid, areaid);
     return 1;
 }
 
@@ -374,6 +386,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Point_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (Plate_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Fine_OnDialogResponse(playerid, dialogid, response))
     {
         return 1;
     }

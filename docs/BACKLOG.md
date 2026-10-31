@@ -52,9 +52,9 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Kad dođu vozila poslova i frakcija: `/resetvozila` i `/respawnveh` da ih vraćaju na njihova mesta |
 | GTA radionice za tuning (Transfender i ostale) daju besplatan tuning koji se ne pamti: zatvoriti ih ili naplaćivati (mehaničar, anti-cheat) |
 | Kad dođe mehaničar (korak 3.5): ista mapa u Willowfield-u (radionica pored tehničkog pregleda) |
-| Predlog (čeka odobrenje): mehaničar na dva načina, radionica u Willowfield-u (popravka bez igrača, skuplja) i posao mehaničara (ponudi popravku vozaču pored sebe, cena do limita, dopuna goriva na putu) |
-| Predlog (čeka odobrenje): tablice se vade na šalteru u policiji posle tehničkog pregleda i postavljaju pored vozila (`/v tablice`); promena tablica na nove nasumične i sopstvena tablica (skupo); veza sa Gold VIP pogodnošću „sopstvena tablica“ |
-| Predlog (čeka odobrenje): kamere po gradu (admin ih postavlja u igri): snimaju brzinu i registraciju vozila koje prođe, kazna stiže vlasniku vozila i plaća se u opštini ili policiji; neplaćene kazne blokiraju produženje registracije, a policija ih kasnije vidi u MDC-u |
+| Mehaničar (korak 3.5, odobreno): radionica u Willowfield-u za popravku; mehaničar ne dolazi na teren, osim da odvuče vozilo koje ne može da se upali do radionice |
+| Kad dođu vozila poslova i frakcija: kamere za njih (policija i hitna sa rotacijom izuzete) |
+| Kad dođe policija (Faza 5): neplaćene kazne u MDC-u, policija piše kazne ručno (`/ticket`) |
 
 **Posle kuća (Faza 4) i frakcija (Faza 5)**
 | Stavka |
@@ -266,6 +266,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 30.10.2026. | Faza 3, korak 3.1: lična vozila (`/v`, parkiranje, nestajanje 5 min posle odjave), tablice, ključ i jedna kopija, motor N, brava Y, svetla, hauba, gepek, gorivo i benzinske pumpe (`/gorivo`), brzinomer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`; VIP `/vcolor` i `/vfix` samo na svom vozilu; ranac ponovo podešen; dodaci posle restarta servera više ne ostaju vidljivi |
 | 30.10.2026. | Ispravke posle testa 3.1: nalog se ponovo čuva u bazi (pozicija, nivo, račun, dodaci posle izlaska), HUD se više ne duplira posle smrti, rezervoar se toči do punog, obrisani ID-jevi GPS-a, ulaza i mesta se ponovo daju (i vozilima), hamburger pomeren desno, veća slova logoa, urađene stavke u „Odobreni sistemi“ označene sa ✅ |
 | 30.10.2026. | Dopune vozila: vozila stalno u svetu (neaktivni 14 dana se ne pojavljuju), kopija ključa radi i kad vlasnik nije tu, motor se pali 1,5 s, upaljeno vozilo vozi i igrač bez ključa, registracija i tehnički pregled (`/registruj`, 60 dana, mapa u Willowfield-u, `/napravimesto pregled`), admin `/atune`, `/resetvozila [sekunde]` sa odbrojavanjem, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` sa listom, sve komande u `/pomoc` i `/ahelp` |
+| 31.10.2026. | Tablice u policiji (`/tablice`: prve , nove nasumične .500, sopstvena .000, Gold VIP upola), postavljanje pored vozila (`/v tablice`), admin `/resettablice`; tehnički pregled sada samo registruje; 42 kamere po Los Santosu sa svojim ograničenjem (`/napravikameru`, `/obrisikameru`, `/kamere`), kazne vlasniku vozila (`/kazne`, plaćaju se u opštini ili policiji, blokiraju registraciju) |
 | 31.10.2026. | Bolnica spolja sa parkom ispred nje i enterijer bolnice |
 
 ---
@@ -322,9 +323,9 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Once job and faction vehicles exist: `/resetvozila` and `/respawnveh` return them to their spots |
 | GTA tuning shops (Transfender and others) give free tuning that is not kept: close them or charge for it (mechanic, anti-cheat) |
 | Once the mechanic exists (step 3.5): the same map in Willowfield (the workshop next to the inspection) |
-| Proposal (waiting for approval): the mechanic in two ways, a workshop in Willowfield (repair without a player, more expensive) and the mechanic job (offers a repair to a driver next to them, price up to a cap, refuelling on the road) |
-| Proposal (waiting for approval): plates are issued at the police counter after the technical inspection and mounted next to the vehicle (`/v tablice`); changing plates to new random ones and a custom plate (expensive); tie-in with the Gold VIP perk "custom plate" |
-| Proposal (waiting for approval): cameras around the city (the admin places them in game): they record the speed and registration of a vehicle passing by, the fine goes to the vehicle's owner and is paid at the city hall or police; unpaid fines block renewing the registration, and police later see them in the MDC |
+| Mechanic (step 3.5, approved): a workshop in Willowfield for repairs; the mechanic does not come out to players, except to tow a vehicle that will not start to the workshop |
+| Once job and faction vehicles exist: cameras for them (police and EMS with sirens exempt) |
+| Once police exist (Phase 5): unpaid fines in the MDC, police write fines by hand (`/ticket`) |
 
 **After houses (Phase 4) and factions (Phase 5)**
 | Item |
@@ -536,4 +537,5 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-30 | Phase 3, step 3.1: personal vehicles (`/v`, parking, leaving 5 min after logout), plates, a key and one copy, engine N, lock Y, lights, bonnet, boot, fuel and gas stations (`/gorivo`), speedometer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`; VIP `/vcolor` and `/vfix` only on own vehicles; backpack tuned again; accessories no longer stay visible after a server restart |
 | 2026-10-30 | Fixes after the 3.1 test: the account is saved to the database again (position, level, bank account, accessories after logout), the HUD no longer doubles after death, the tank fills to the brim, deleted GPS, door and point IDs are given out again (vehicles too), the burger badge moved right, a bigger logo font, done items in "Approved systems" marked with ✅ |
 | 2026-10-30 | Vehicle additions: vehicles always in the world (inactive for 14 days are not spawned), the key copy works while the owner is away, the engine starts in 1.5 s, a running vehicle can be driven without a key, registration and technical inspection (`/registruj`, 60 days, a map in Willowfield, `/napravimesto pregled`), admin `/atune`, `/resetvozila [seconds]` with a countdown, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` with a list, every command in `/pomoc` and `/ahelp` |
+| 2026-10-31 | Plates at the police station (`/tablice`: first , new random ,500, custom ,000, Gold VIP half price), mounting next to the vehicle (`/v tablice`), admin `/resettablice`; the inspection now only registers; 42 cameras around Los Santos with their own limits (`/napravikameru`, `/obrisikameru`, `/kamere`), fines to the vehicle owner (`/kazne`, paid at the city hall or police, they block registration) |
 | 2026-10-31 | Hospital exterior with the park in front of it and the hospital interior |

@@ -13,7 +13,8 @@ enum E_POINT_TYPE
     POINT_SHOP,
     POINT_CLOTHES,
     POINT_FUEL,
-    POINT_INSPECTION
+    POINT_INSPECTION,
+    POINT_POLICE
 }
 
 enum E_POINT_INFO
@@ -34,7 +35,8 @@ new const g_PointInfo[E_POINT_TYPE][E_POINT_INFO] =
     { "prodavnica", "Prodavnica 24/7",  "/kupi",     2.0, POINT_PICKUP_MODEL },
     { "odeca",      "Prodavnica odece", "/kupi",     2.0, POINT_PICKUP_MODEL },
     { "pumpa",      "Benzinska pumpa",  "/gorivo",   6.0, POINT_FUEL_PICKUP_MODEL },
-    { "pregled",    "Tehnicki pregled", "/registruj", 6.0, POINT_PICKUP_MODEL }
+    { "pregled",    "Tehnicki pregled", "/registruj", 6.0, POINT_PICKUP_MODEL },
+    { "policija",   "Policija - salter", "/tablice", 2.0, POINT_PICKUP_MODEL }
 };
 
 enum E_POINT

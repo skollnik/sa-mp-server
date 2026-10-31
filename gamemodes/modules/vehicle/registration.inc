@@ -50,7 +50,7 @@ stock Veh_RemindRegistration(playerid)
         }
         if (g_Veh[slot][vRegisteredUntil] == 0)
         {
-            Msg_Info(playerid, "Vozilo %s nije registrovano. Tablice dobijate na tehnickom pregledu (/registruj, mesto na /gps).", Veh_Name(slot));
+            Msg_Info(playerid, "Vozilo %s nije registrovano. Registruje se na tehnickom pregledu (/registruj, mesto na /gps), a tablice se vade u policiji (/tablice).", Veh_Name(slot));
         }
         else if (!Veh_IsRegistered(slot))
         {
@@ -118,6 +118,12 @@ cmd:registruj(playerid, params[])
         Msg_Info(playerid, "Registracija vazi jos %d dana. Produzava se kad ostane manje od %d dana.", Veh_RegistrationDaysLeft(slot), VEH_REGISTRATION_RENEW_DAYS);
         return 1;
     }
+    // Unpaid fines block registration, so camera fines cannot simply be ignored.
+    if (Fine_Count(playerid) > 0)
+    {
+        Msg_Error(playerid, "Imate neplacene kazne ($%d). Platite ih u opstini ili policiji (/kazne).", Fine_Total(playerid));
+        return 1;
+    }
     new price = Veh_RegistrationPrice(g_Veh[slot][vModel]);
     if (g_Player[playerid][pCash] < price)
     {
@@ -153,60 +159,13 @@ public Veh_FinishInspection(playerid, dbid, race)
     {
         return 1;
     }
-    if (g_Veh[slot][vPlate][0])
-    {
-        Veh_CompleteRegistration(playerid, slot, "");
-        return 1;
-    }
-    new plate[VEH_PLATE_LENGTH];
-    Veh_RandomPlate(plate);
-    Veh_CheckRegistrationPlate(playerid, race, dbid, plate);
-    return 1;
-}
-
-// Owners of other plates can be offline, so a new plate is checked against the database.
-static stock Veh_CheckRegistrationPlate(playerid, race, dbid, const plate[])
-{
-    new query[96];
-    mysql_format(g_SQL, query, sizeof(query), "SELECT `id` FROM `vehicles` WHERE `plate` = '%e'", plate);
-    mysql_tquery(g_SQL, query, "OnRegistrationPlateChecked", "ddds", playerid, race, dbid, plate);
-}
-
-forward OnRegistrationPlateChecked(playerid, race, dbid, const plate[]);
-public OnRegistrationPlateChecked(playerid, race, dbid, const plate[])
-{
-    if (cache_num_rows() > 0)
-    {
-        new other[VEH_PLATE_LENGTH];
-        Veh_RandomPlate(other);
-        Veh_CheckRegistrationPlate(playerid, race, dbid, other);
-        return 1;
-    }
-    new slot = Veh_FindByDbId(dbid);
-    if (slot == -1)
-    {
-        return 1;
-    }
-    Veh_CompleteRegistration(race == g_AccountRace[playerid] ? playerid : INVALID_PLAYER_ID, slot, plate);
-    return 1;
-}
-
-// plate is empty for a renewal; a first registration also gets its plates mounted.
-static stock Veh_CompleteRegistration(playerid, slot, const plate[])
-{
     new now = gettime();
     g_Veh[slot][vRegisteredUntil] = (g_Veh[slot][vRegisteredUntil] > now ? g_Veh[slot][vRegisteredUntil] : now) + VEH_REGISTRATION_DAYS * 86400;
-    if (plate[0])
-    {
-        strcopy(g_Veh[slot][vPlate], plate, VEH_PLATE_LENGTH);
-        new query[96];
-        mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `plate` = '%e' WHERE `id` = %d", plate, g_Veh[slot][vDbId]);
-        mysql_tquery(g_SQL, query);
-        Veh_Rebuild(slot);
-    }
     Veh_SaveState(slot);
-    if (playerid != INVALID_PLAYER_ID)
+    Msg_Success(playerid, "Vozilo %s je proslo tehnicki pregled i registrovano je na %d dana.", Veh_Name(slot), VEH_REGISTRATION_DAYS);
+    if (!g_Veh[slot][vPlate][0] && !g_Veh[slot][vPendingPlate][0])
     {
-        Msg_Success(playerid, "Vozilo %s je proslo tehnicki pregled i registrovano je na %d dana.", Veh_Name(slot), VEH_REGISTRATION_DAYS);
+        Msg_Info(playerid, "Tablice izvadite na salteru u policiji (/tablice), pa ih postavite pored vozila (/v tablice).");
     }
+    return 1;
 }

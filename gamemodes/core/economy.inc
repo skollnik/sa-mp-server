@@ -44,6 +44,15 @@
 #define REG_PRICE_MOTORBIKE         (500)
 #define REG_PRICE_CAR               (1000)
 #define REG_PRICE_LARGE             (2000)
+// Plates come from the police counter; a custom plate is a luxury, and Gold VIP pays half.
+#define PLATE_FIRST_PRICE           (300)
+#define PLATE_NEW_PRICE             (1500)
+#define PLATE_CUSTOM_PRICE          (60000)
+// Camera fines go to the vehicle owner and leave the game when paid (later: the state treasury).
+#define FINE_UNREGISTERED           (500)
+#define FINE_SPEED_LOW              (150)
+#define FINE_SPEED_MID              (400)
+#define FINE_SPEED_HIGH             (800)
 
 #define PHONE_PRICE                 (500)
 #define PHONE_SIM_PRICE             (50)

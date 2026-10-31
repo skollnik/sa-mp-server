@@ -26,6 +26,7 @@
 | `/vcolor`: farbanje svog vozila (boja se pamti) | – | ✅ | ✅ |
 | `/vgoto`: teleport do igrača napolju (pauza 5 min) | – | – | ✅ |
 | `/vheal`: HP na 100 (pauza 15 min) | – | – | ✅ |
+| Sopstvena tablica u policiji (`/tablice`) upola cene | – | – | ✅ |
 
 **Oznaka iznad glave:** prikazuje se samo jedna, po prioritetu: admin na dužnosti, pa helper na dužnosti, pa VIP. Kad admin koji je VIP izađe sa dužnosti, vidi se [VIP].
 
@@ -35,7 +36,7 @@
 | Pogodnost | Bronze | Silver | Gold | Sistem |
 |-----------|:------:|:------:|:----:|--------|
 | Mesto za još jedno vozilo | – | +1 | +1 | Faza 3 |
-| Sopstvena registarska tablica i neon | – | – | ✅ | Faza 3 |
+| Neon | – | – | ✅ | Faza 3 |
 | Popust na oglase | 10% | 20% | 30% | Faza 5 |
 | Besplatna promena imena jednom mesečno | – | – | ✅ | bilo kada |
 | VIP klub (enterijer) | – | ✅ | ✅ | kad vlasnik napravi mapu |
@@ -73,6 +74,7 @@
 | `/vcolor`: paint your own vehicle (the colour is kept) | – | ✅ | ✅ |
 | `/vgoto`: teleport to a player outdoors (5 min cooldown) | – | – | ✅ |
 | `/vheal`: HP to 100 (15 min cooldown) | – | – | ✅ |
+| Custom plate at the police (`/tablice`) at half price | – | – | ✅ |
 
 **Tag above the head:** only one is shown, by priority: admin on duty, then helper on duty, then VIP. When an admin who is VIP goes off duty, [VIP] shows.
 
@@ -82,7 +84,7 @@
 | Perk | Bronze | Silver | Gold | System |
 |------|:------:|:------:|:----:|--------|
 | One more vehicle slot | – | +1 | +1 | Phase 3 |
-| Custom number plate and neon | – | – | ✅ | Phase 3 |
+| Neon | – | – | ✅ | Phase 3 |
 | Discount on ads | 10% | 20% | 30% | Phase 5 |
 | Free name change once a month | – | – | ✅ | any time |
 | VIP club (interior) | – | ✅ | ✅ | once the owner makes the map |

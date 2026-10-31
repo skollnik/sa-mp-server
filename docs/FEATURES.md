@@ -63,7 +63,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### VEH — Vozila
 - **VEH-1 Lična vozila:** kupuju se samo na auto pijaci (ADM-8) ili od drugog igrača. Postoji maksimalan broj po igraču, a vozila se čuvaju u bazi.
-- **VEH-2 Tablice / registracija:** tablice se dobijaju na tehničkom pregledu (`/registruj`), registracija važi 60 dana; tablica može da se proveri u MDC-u.
+- **VEH-2 Tablice / registracija:** registracija na tehničkom pregledu (`/registruj`, 60 dana), tablice u policiji (`/tablice`, i sopstvene), kamere po gradu kažnjavaju brzinu i neregistrovano vozilo (`/kazne`); tablica može da se proveri u MDC-u.
 - **VEH-3 Ključevi:** zaključavanje/otključavanje (taster Y), jedna kopija ključa za drugog igrača.
 - **VEH-4 Ručno upravljanje:** motor, svetla, hauba i gepek.
 - **VEH-5 Gorivo:** potrošnja zavisi od tipa vozila. Toči se na benzinskim pumpama, a postoji i kanister.
@@ -231,7 +231,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### VEH — Vehicles
 - **VEH-1 Personal vehicles:** bought only at a car market (ADM-8) or from another player. There is a per-player cap, and vehicles are saved to the DB.
-- **VEH-2 Plates / registration:** plates come from the technical inspection (`/registruj`), registration lasts 60 days; a plate can be checked in the MDC.
+- **VEH-2 Plates / registration:** registration at the technical inspection (`/registruj`, 60 days), plates at the police (`/tablice`, custom ones too), city cameras fine speeding and unregistered vehicles (`/kazne`); a plate can be checked in the MDC.
 - **VEH-3 Keys:** lock/unlock (Y key), one key copy for another player.
 - **VEH-4 Manual controls:** engine, lights, hood and trunk.
 - **VEH-5 Fuel:** consumption depends on vehicle type. Refuel at gas stations, or use a jerry can.

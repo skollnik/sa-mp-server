@@ -193,13 +193,21 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 ### Faza 3: vozila
 | Rizik | Status | Kako je rešeno |
 |-------|--------|----------------|
-| Neko odveze tuđe otključano vozilo | ✅ | Ugašeno vozilo bez ključa ne može da se upali; upaljeno vozilo može da odveze svako (ključ je u bravi, kao u referentnim gamemode-ovima), ali kad ugasi motor, bez ključa ga ne pali ponovo. Vlasnik zaključava (Y) i nalazi vozilo preko `/v` → GPS |
+| Neko odveze tuđe otključano vozilo | ✅ | Ugašeno vozilo bez ključa ne može da se upali; upaljeno vozilo može da odveze svako (ključ je u bravi), ali kad ugasi motor, bez ključa ga ne pali ponovo. Vlasnik zaključava (Y) i nalazi vozilo preko `/v` → GPS |
 | Vozilo blokira put dok vlasnik nije online | 👁 | Vozila su stalno u svetu; admin ga sklanja sa `/respawnveh` ili `/resetvozila` (zabranjena mesta su u BACKLOG-u) |
 | Vozila neaktivnih igrača popune granicu od 2000 vozila | ✅ | Najviše 1000 ličnih vozila, a vozila naloga koji 14 dana nisu ulazili se ne pojavljuju pri pokretanju servera; dok server radi bez restarta, ostaju u svetu |
 | Igrač sa kopijom ključa vozi tuđe vozilo dok vlasnik nije online | ✅ | Dozvoljeno po odluci vlasnika; vlasnik kopiju oduzima bilo kad u `/v` |
 | Spam tastera N dok se motor pali, ili izlazak iz vozila tokom paljenja | ✅ | Dok traje paljenje, N ne radi; posle 1,5 s proverava se da je igrač i dalje vozač istog vozila |
 | Registracija bez plaćanja ili dvaput za istu cenu | ✅ | Novac se uzima tek na kraju pregleda, posle ponovne provere (vozač, svoje vozilo, mesto, ugašen motor, HP); drugi `/registruj` dok pregled traje ne radi; produžava se tek kad ostane manje od 15 dana |
 | Dve iste tablice pri registraciji | ✅ | Tablica se proverava u bazi pre upisa; vozila bez tablica imaju NULL, pa se ne sudaraju |
+| Tablice za neregistrovano vozilo ili dve tablice odjednom | ✅ | Policija izdaje tablice samo registrovanom vozilu, i nove tek kad se izvađene postave; provera se ponavlja posle izbora u dijalogu |
+| Sopstvena tablica sa uvredljivim tekstom ili bojama | ✅ | Samo slova bez naših, brojevi, razmak i crtica (bez `{}` i `~`); admin je menja sa `/resettablice` |
+| Ista tablica izdata dvaput | ✅ | Proverava se i među postavljenim i među izvađenim tablicama, a obe kolone su jedinstvene u bazi |
+| Kamera kazni isto vozilo više puta u prolazu | ✅ | Ista kamera isto vozilo najviše jednom u 10 minuta; tolerancija 5 km/h |
+| Kazna za vožnju tuđeg vozila ide vlasniku, a ne vozaču | 👁 | Namerno, kao u stvarnosti; vlasnik ne daje ključ ni upaljeno vozilo nepoznatima |
+| Kazne se ignorišu | ✅ | Neplaćene kazne blokiraju registraciju; policija ih kasnije vidi (BACKLOG) |
+| Plaćanje kazni koje su stigle posle otvaranja liste | ✅ | Plaća se tačno ono što je lista pokazala (do poslednjeg ID-ja sa liste) |
+| Kamera stoji na kolovozu i smeta vožnji | 👁 | Početne kamere su postavljene unapred; vlasnik proverava u igri i pomera ih (`/obrisikameru`, `/napravikameru`) |
 | Pregled oštećenog vozila dok mehaničar ne postoji | 👁 | Uslov je 650 HP (VIP `/vfix` i admin `/fixveh` popravljaju); kad dođe mehaničar, uslov raste (BACKLOG) |
 | Nove tablice se ne vide dok se vozilo ponovo ne napravi | ✅ | Vozilo se pravi ponovo na istom mestu, sa istim stanjem, a putnici se vraćaju na svoja mesta (vlasnik proverava u igri) |
 | Admin besplatno tunira vozila prijateljima | ✅ | Admin nivoa 1 i 2 tunira samo admin vozila; lična vozila tek nivo 3+, uz log i poruku vlasniku |
@@ -413,13 +421,21 @@ Every new system or change goes through these questions, against all existing sy
 ### Phase 3: vehicles
 | Risk | Status | How it is handled |
 |------|--------|-------------------|
-| Someone drives off in another player's unlocked vehicle | ✅ | A switched-off vehicle cannot be started without a key; a running one can be driven by anyone (the key is in the ignition, as in the reference gamemodes), but once switched off it cannot be restarted without a key. The owner locks it (Y) and finds it through `/v` → GPS |
+| Someone drives off in another player's unlocked vehicle | ✅ | A switched-off vehicle cannot be started without a key; a running one can be driven by anyone (the key is in the ignition), but once switched off it cannot be restarted without a key. The owner locks it (Y) and finds it through `/v` → GPS |
 | A vehicle blocks a road while its owner is offline | 👁 | Vehicles are always in the world; an admin moves it with `/respawnveh` or `/resetvozila` (no-parking spots are in the backlog) |
 | Vehicles of inactive players fill the 2000-vehicle limit | ✅ | At most 1000 personal vehicles, and vehicles of accounts that have not logged in for 14 days are not spawned on startup; while the server runs without a restart they stay |
 | A key-copy holder drives the vehicle while the owner is offline | ✅ | Allowed by the owner's decision; the owner takes the copy back any time in `/v` |
 | Spamming N while the engine starts, or leaving the vehicle during the start | ✅ | N does nothing while starting; after 1.5 s the player must still be the driver of the same vehicle |
 | Registering without paying, or twice for one price | ✅ | Money is taken only at the end of the inspection, after checking again (driver, own vehicle, place, engine off, health); a second `/registruj` during the inspection does nothing; renewal only once fewer than 15 days are left |
 | Two identical plates at registration | ✅ | The plate is checked in the DB before it is written; vehicles without plates hold NULL, so they never clash |
+| Plates for an unregistered vehicle, or two plates at once | ✅ | The police issue plates only to a registered vehicle, and new ones only once the issued ones are mounted; the check is repeated after the dialog choice |
+| A custom plate with offensive text or colours | ✅ | Only letters without Serbian ones, digits, space and dash (no `{}` or `~`); an admin replaces it with `/resettablice` |
+| The same plate issued twice | ✅ | Checked among mounted and issued plates, and both columns are unique in the DB |
+| A camera fines the same vehicle several times while passing | ✅ | One camera fines one vehicle at most once in 10 minutes; 5 km/h tolerance |
+| A fine for driving someone else's vehicle goes to the owner, not the driver | 👁 | On purpose, as in real life; the owner does not hand out keys or running vehicles to strangers |
+| Fines are ignored | ✅ | Unpaid fines block registration; police see them later (backlog) |
+| Paying fines that arrived after the list was opened | ✅ | Exactly what the list showed is paid (up to the last ID on it) |
+| A camera stands on the road and gets in the way | 👁 | The starting cameras are placed in advance; the owner checks in game and moves them (`/obrisikameru`, `/napravikameru`) |
 | Inspecting a damaged vehicle while there is no mechanic | 👁 | The requirement is 650 HP (VIP `/vfix` and admin `/fixveh` repair); it goes up once the mechanic exists (backlog) |
 | New plates do not show until the vehicle is created again | ✅ | The vehicle is created again on the same spot with the same state, and passengers are put back in their seats (the owner checks in game) |
 | An admin tunes friends' vehicles for free | ✅ | Admins of level 1 and 2 tune only admin vehicles; personal vehicles need level 3+, logged and the owner is told |

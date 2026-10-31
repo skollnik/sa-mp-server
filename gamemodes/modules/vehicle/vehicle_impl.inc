@@ -1,7 +1,7 @@
 // Letters used on Serbian plates (no Q, W, X, Y), so plates read as local.
 static const g_PlateLetters[] = "ABCDEFGHIJKLMNOPRSTUVZ";
 
-#define VEH_SELECT "SELECT v.*, IFNULL(v.`plate`, '') AS `plate_text`, IFNULL(o.`name`, '') AS `owner_name`, IFNULL(k.`name`, '') AS `key_name` " \
+#define VEH_SELECT "SELECT v.*, IFNULL(v.`plate`, '') AS `plate_text`, IFNULL(v.`pending_plate`, '') AS `pending_text`, IFNULL(o.`name`, '') AS `owner_name`, IFNULL(k.`name`, '') AS `key_name` " \
     "FROM `vehicles` v LEFT JOIN `accounts` o ON o.`id` = v.`owner_id` LEFT JOIN `accounts` k ON k.`id` = v.`key_holder` "
 
 stock Veh_Init()
@@ -32,6 +32,8 @@ stock Veh_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `registered_until` INT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `mods` VARCHAR(128) NOT NULL DEFAULT ''");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `paintjob` TINYINT UNSIGNED NOT NULL DEFAULT 3");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `pending_plate` VARCHAR(12) NULL");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD UNIQUE INDEX IF NOT EXISTS `vehicle_pending_plate` (`pending_plate`)");
     // Vehicles that got a plate before registration existed count as freshly registered.
     new query[512];
     mysql_format(g_SQL, query, sizeof(query),
@@ -334,6 +336,7 @@ static stock Veh_LoadRow(slot, row, ownerid)
     g_Veh[slot][vOwnerId] = ownerid;
     g_Veh[slot][vVehicleId] = INVALID_VEHICLE_ID;
     g_Veh[slot][vDiedAt] = 0;
+    g_Veh[slot][vCameraSlot] = -1;
     cache_get_value_name_int(row, "id", g_Veh[slot][vDbId]);
     cache_get_value_name_int(row, "owner_id", g_Veh[slot][vOwnerDbId]);
     cache_get_value_name(row, "owner_name", g_Veh[slot][vOwnerName], MAX_PLAYER_NAME + 1);
@@ -341,6 +344,7 @@ static stock Veh_LoadRow(slot, row, ownerid)
     cache_get_value_name_int(row, "color1", g_Veh[slot][vColor1]);
     cache_get_value_name_int(row, "color2", g_Veh[slot][vColor2]);
     cache_get_value_name(row, "plate_text", g_Veh[slot][vPlate], VEH_PLATE_LENGTH);
+    cache_get_value_name(row, "pending_text", g_Veh[slot][vPendingPlate], VEH_PLATE_LENGTH);
     cache_get_value_name_int(row, "registered_until", g_Veh[slot][vRegisteredUntil]);
     cache_get_value_name_float(row, "park_x", g_Veh[slot][vParkX]);
     cache_get_value_name_float(row, "park_y", g_Veh[slot][vParkY]);
@@ -756,7 +760,7 @@ public OnVehicleInserted(adminid, targetid, race)
         Msg_Admin(adminid, "Igrac %s je dobio vozilo (ID u bazi %d).", Account_Name(targetid), dbid);
         Staff_Log(adminid, "giveveh", targetid, details);
     }
-    Msg_Success(targetid, "Dobili ste vozilo, stoji pored vas. Parkirajte ga sa /v parkiraj, a tablice dobijate na tehnickom pregledu (/registruj).");
+    Msg_Success(targetid, "Dobili ste vozilo, stoji pored vas. Parkirajte ga sa /v parkiraj; registruje se na tehnickom pregledu (/registruj), a tablice se vade u policiji (/tablice).");
     return 1;
 }
 

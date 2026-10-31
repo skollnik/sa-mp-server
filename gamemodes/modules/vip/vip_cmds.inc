@@ -17,7 +17,7 @@ cmd:vip(playerid, params[])
         "- VIP chat (/vc), spisak VIP igraca (/vips)\n- /vskin (VIP skinovi), /vtime i /vweather (licno vreme i vremenske prilike)\n" \
         "- 25%% kraca pauza za /report, /ask i /n, rezervisano mesto kad je server pun\n- +5%% na payday, +2 mesta u inventaru\n\n" \
         "{C0C0C0}Silver VIP\n" C_WHITE "- sve iz Bronze VIP\n- /vfix (popravka vozila, na 10 min), /vcolor (farbanje vozila)\n- 50%% kraca pauza za /report, /ask i /n\n- +10%% na payday, +4 mesta u inventaru, besplatan izbor broja telefona (SIM u 24/7 i /telefon)\n\n" \
-        "{FFD700}Gold VIP\n" C_WHITE "- sve iz Silver VIP\n- /vgoto (do igraca, na 5 min), /vheal (HP na 100, na 15 min)\n- +15%% na payday i +1 respect, +6 mesta u inventaru\n\n" \
+        "{FFD700}Gold VIP\n" C_WHITE "- sve iz Silver VIP\n- /vgoto (do igraca, na 5 min), /vheal (HP na 100, na 15 min)\n- +15%% na payday i +1 respect, +6 mesta u inventaru\n- 50%% popusta na sopstvenu tablicu (/tablice u policiji)\n\n" \
         C_GREY "/vgoto, /vfix i /vheal ne rade minut posle primljene stete i ne rade u zatvoru.\n" \
         "Nove pogodnosti stizu sa novim sistemima. VIP ne daje admin ovlascenja.\nZa VIP se javite vlasniku servera.",
         status);

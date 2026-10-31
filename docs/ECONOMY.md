@@ -34,6 +34,8 @@
 | Cigarete (kutija, 20 komada) / upaljač | $12 / $3 |
 | Gorivo (benzinska pumpa, `/gorivo`) | $3 po litru: motor 15 l ($45), auto 55 l ($165), kamion, autobus, brod i letelica 100 l ($300); pun rezervoar traje oko 45 min vožnje |
 | Tehnički pregled i registracija (`/registruj`, 60 dana) | motor $500, auto $1.000, kamion, autobus, brod i letelica $2.000; bicikl se ne registruje |
+| Tablice (policija, `/tablice`) | prve $300, nove nasumične $1.500, sopstvena $60.000 (Gold VIP $30.000) |
+| Kazne sa kamera (`/kazne`, opština ili policija) | brzina do 20 km/h preko $150, do 40 km/h $400, više $800; neregistrovano vozilo $500 |
 | Kanister (prazan) | $50 |
 | Telefon (aparat) | $500 |
 | SIM kartica (nasumičan broj) | $50 |
@@ -169,6 +171,8 @@
 | Cigarettes (pack of 20) / lighter | $12 / $3 |
 | Fuel (gas station, `/gorivo`) | $3 per litre: motorbike 15 l ($45), car 55 l ($165), truck, bus, boat and aircraft 100 l ($300); a full tank lasts about 45 min of driving |
 | Technical inspection and registration (`/registruj`, 60 days) | motorbike $500, car $1,000, truck, bus, boat and aircraft $2,000; bicycles are not registered |
+| Plates (police, `/tablice`) | first $300, new random $1,500, custom $60,000 (Gold VIP $30,000) |
+| Camera fines (`/kazne`, city hall or police) | speeding up to 20 km/h over $150, up to 40 km/h $400, more $800; unregistered vehicle $500 |
 | Jerry can (empty) | $50 |
 | Phone (device) | $500 |
 | SIM card (random number) | $50 |

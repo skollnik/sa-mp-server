@@ -35,9 +35,13 @@ cmd:v(playerid, params[])
     {
         Veh_GiveKey(playerid, rest);
     }
+    else if (!strcmp(action, "tablice", true))
+    {
+        Plate_MountPending(playerid);
+    }
     else
     {
-        Msg_Usage(playerid, "/v (lista, GPS i kljucevi) ili /v [motor / zakljucaj / svetla / hauba / gepek / parkiraj / kljuc]");
+        Msg_Usage(playerid, "/v (lista, GPS i kljucevi) ili /v [motor / zakljucaj / svetla / hauba / gepek / parkiraj / kljuc / tablice]");
     }
     return 1;
 }

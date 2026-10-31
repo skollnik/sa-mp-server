@@ -1132,7 +1132,7 @@ cmd:ahelp(playerid, params[])
     strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns /aclog /kanali\nVozila: /vinfo /gotoveh /atune (admin vozila)\n\n");
     if (level >= ADMIN_LEVEL_ADMIN)
     {
-        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /gotoulaz /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\nVozila: /getveh /respawnveh\n\n");
+        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /gotoulaz /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\nVozila: /getveh /respawnveh /resettablice (uvredljiva tablica)\n\n");
     }
     if (level >= ADMIN_LEVEL_SENIOR)
     {
@@ -1141,7 +1141,7 @@ cmd:ahelp(playerid, params[])
     if (level >= ADMIN_LEVEL_HEAD)
     {
         strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setglad /setname /pmspy\n" \
-            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo\n\n");
+            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo\nKamere: /napravikameru /obrisikameru /kamere\n\n");
     }
     if (level >= ADMIN_LEVEL_MANAGEMENT)
     {
