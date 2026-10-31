@@ -27,6 +27,7 @@
 | `/vgoto`: teleport do igrača napolju (pauza 5 min) | – | – | ✅ |
 | `/vheal`: HP na 100 (pauza 15 min) | – | – | ✅ |
 | Sopstvena tablica u policiji (`/tablice`) upola cene | – | – | ✅ |
+| Mesto za još jedno vozilo (kad VIP istekne, vozila ostaju, ali novo ne može dok ste na limitu) | – | +1 | +1 |
 
 **Oznaka iznad glave:** prikazuje se samo jedna, po prioritetu: admin na dužnosti, pa helper na dužnosti, pa VIP. Kad admin koji je VIP izađe sa dužnosti, vidi se [VIP].
 
@@ -35,7 +36,6 @@
 ### Pogodnosti koje dolaze sa drugim sistemima (odobrene)
 | Pogodnost | Bronze | Silver | Gold | Sistem |
 |-----------|:------:|:------:|:----:|--------|
-| Mesto za još jedno vozilo | – | +1 | +1 | Faza 3 |
 | Neon | – | – | ✅ | Faza 3 |
 | Popust na oglase | 10% | 20% | 30% | Faza 5 |
 | Besplatna promena imena jednom mesečno | – | – | ✅ | bilo kada |
@@ -75,6 +75,7 @@
 | `/vgoto`: teleport to a player outdoors (5 min cooldown) | – | – | ✅ |
 | `/vheal`: HP to 100 (15 min cooldown) | – | – | ✅ |
 | Custom plate at the police (`/tablice`) at half price | – | – | ✅ |
+| One more vehicle slot (when VIP ends the vehicles stay, but no new one while you are at the limit) | – | +1 | +1 |
 
 **Tag above the head:** only one is shown, by priority: admin on duty, then helper on duty, then VIP. When an admin who is VIP goes off duty, [VIP] shows.
 
@@ -83,7 +84,6 @@
 ### Perks coming with other systems (approved)
 | Perk | Bronze | Silver | Gold | System |
 |------|:------:|:------:|:----:|--------|
-| One more vehicle slot | – | +1 | +1 | Phase 3 |
 | Neon | – | – | ✅ | Phase 3 |
 | Discount on ads | 10% | 20% | 30% | Phase 5 |
 | Free name change once a month | – | – | ✅ | any time |

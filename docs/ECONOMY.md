@@ -90,7 +90,7 @@
 | Sportski | Elegy, Jester, ZR-350, Buffalo, Banshee, Comet, Super GT | $80.000–200.000 |
 | **Top 5** | Sultan $350.000, Cheetah $450.000, Bullet $550.000, Turismo $700.000, Infernus $900.000 | $350.000–900.000 |
 
-**Trgovina između igrača:** prodaja ide preko komande (prodavac zadaje cenu, kupac prihvata), pa je razmena novca i vozila sigurna. Država uzima **taksu od 5%** na prenos vlasništva.
+**Trgovina između igrača:** prodaja ide preko komande (prodavac zadaje cenu, kupac prihvata), pa je razmena novca i vozila sigurna. Država uzima **taksu od 5%** na prenos vlasništva: prodavac dobija 95% cene, a kod zamene taksu od doplate plaća onaj ko je prima. Najmanja cena je $1.000. Na pijaci se plaća cela cena gotovinom ili sa računa, a novo vozilo dobija pola rezervoara.
 
 ### Nekretnine
 | Tip | Cena |
@@ -227,7 +227,7 @@
 | Sports | Elegy, Jester, ZR-350, Buffalo, Banshee, Comet, Super GT | $80,000–200,000 |
 | **Top 5** | Sultan $350,000, Cheetah $450,000, Bullet $550,000, Turismo $700,000, Infernus $900,000 | $350,000–900,000 |
 
-**Player-to-player trades:** a sale goes through a command (the seller sets the price, the buyer accepts), so the money/vehicle exchange is safe. The state takes a **5% fee** on the ownership transfer.
+**Player-to-player trades:** a sale goes through a command (the seller sets the price, the buyer accepts), so the money/vehicle exchange is safe. The state takes a **5% fee** on the ownership transfer: the seller gets 95% of the price, and in a trade the fee on the surcharge is paid by whoever receives it. The lowest price is $1,000. At the market the whole price is paid in cash or from the account, and a new vehicle comes with half a tank.
 
 ### Property
 | Type | Price |

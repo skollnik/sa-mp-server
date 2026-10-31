@@ -16,7 +16,7 @@ cmd:vip(playerid, params[])
         "{CD7F32}Bronze VIP\n" C_WHITE "- oznaka [VIP] iznad glave (/vtag sakriva) i ime u boji u OOC chatovima\n" \
         "- VIP chat (/vc), spisak VIP igraca (/vips)\n- /vskin (VIP skinovi), /vtime i /vweather (licno vreme i vremenske prilike)\n" \
         "- 25%% kraca pauza za /report, /ask i /n, rezervisano mesto kad je server pun\n- +5%% na payday, +2 mesta u inventaru\n\n" \
-        "{C0C0C0}Silver VIP\n" C_WHITE "- sve iz Bronze VIP\n- /vfix (popravka vozila, na 10 min), /vcolor (farbanje vozila)\n- 50%% kraca pauza za /report, /ask i /n\n- +10%% na payday, +4 mesta u inventaru, besplatan izbor broja telefona (SIM u 24/7 i /telefon)\n\n" \
+        "{C0C0C0}Silver VIP\n" C_WHITE "- sve iz Bronze VIP\n- /vfix (popravka vozila, na 10 min), /vcolor (farbanje vozila)\n- 50%% kraca pauza za /report, /ask i /n\n- +10%% na payday, +4 mesta u inventaru, besplatan izbor broja telefona (SIM u 24/7 i /telefon)\n- +1 mesto za vozilo (kad VIP istekne, vozila ostaju, ali novo ne mozete dok ste na limitu)\n\n" \
         "{FFD700}Gold VIP\n" C_WHITE "- sve iz Silver VIP\n- /vgoto (do igraca, na 5 min), /vheal (HP na 100, na 15 min)\n- +15%% na payday i +1 respect, +6 mesta u inventaru\n- 50%% popusta na sopstvenu tablicu (/tablice u policiji)\n\n" \
         C_GREY "/vgoto, /vfix i /vheal ne rade minut posle primljene stete i ne rade u zatvoru.\n" \
         "Nove pogodnosti stizu sa novim sistemima. VIP ne daje admin ovlascenja.\nZa VIP se javite vlasniku servera.",
@@ -82,6 +82,22 @@ cmd:setvip(playerid, params[])
     }
 
     new targetid, level, days;
+    // Only the player: the level is picked from a list and the days are asked for.
+    if (!sscanf(params, "u", targetid) && sscanf(params, "ud", targetid, level) && Staff_CheckTarget(playerid, targetid))
+    {
+        static const menu[][E_MENU_ITEM] =
+        {
+            { ADMIN_LEVEL_OWNER, "Bronze VIP", "setvip %s 1", "Broj dana (1-365):" },
+            { ADMIN_LEVEL_OWNER, "Silver VIP", "setvip %s 2", "Broj dana (1-365):" },
+            { ADMIN_LEVEL_OWNER, "Gold VIP", "setvip %s 3", "Broj dana (1-365):" },
+            { ADMIN_LEVEL_OWNER, "Skini VIP", "setvip %s 0", "" }
+        };
+        new title[48], subject[8];
+        format(title, sizeof(title), "VIP: %s", Account_Name(targetid));
+        valstr(subject, targetid);
+        Menu_Show(playerid, title, menu, sizeof(menu), subject);
+        return 1;
+    }
     if (sscanf(params, "udD(30)", targetid, level, days) || level < 0 || level > VIP_MAX_LEVEL || days < 1 || days > 365)
     {
         Msg_Usage(playerid, "/setvip [id ili ime] [nivo 0-3] [dana, podrazumevano 30] (1 Bronze, 2 Silver, 3 Gold, 0 skida VIP)");

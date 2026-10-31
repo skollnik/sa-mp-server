@@ -881,6 +881,7 @@ stock Account_CompleteLogin(playerid, bool:is_new)
     Phone_OnLogin(playerid);
     Veh_OnLogin(playerid);
     Fine_OnLogin(playerid);
+    Plate_OnLogin(playerid);
 
     SetSpawnInfo(playerid, NO_TEAM, g_Player[playerid][pSkin],
         g_Player[playerid][pPosX], g_Player[playerid][pPosY], g_Player[playerid][pPosZ], g_Player[playerid][pPosA]);

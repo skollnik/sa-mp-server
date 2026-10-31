@@ -1,7 +1,7 @@
 #define MAX_CAMERAS             (100)
 #define CAMERA_MODEL            (18880)
 #define CAMERA_RADIUS           (10.0)
-#define CAMERA_LABEL_DISTANCE   (25.0)
+#define CAMERA_LABEL_DISTANCE   (40.0)
 // A few km/h over the limit is measuring error, as with real cameras.
 #define CAMERA_SPEED_TOLERANCE  (5)
 #define CAMERA_COOLDOWN_S       (600)
@@ -114,11 +114,16 @@ static stock Cam_CreateVisuals(slot)
         CAMERA_LABEL_DISTANCE, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 0, 0, 0);
 }
 
-static stock Cam_Destroy(slot)
+static stock Cam_DestroyVisuals(slot)
 {
     DestroyDynamicObject(g_Cameras[slot][camObject]);
     DestroyDynamicArea(g_Cameras[slot][camArea]);
     DestroyDynamic3DTextLabel(g_Cameras[slot][camLabel]);
+}
+
+static stock Cam_Destroy(slot)
+{
+    Cam_DestroyVisuals(slot);
     g_Cameras[slot][camUsed] = false;
 }
 
@@ -360,5 +365,71 @@ cmd:kamere(playerid, params[])
         return 1;
     }
     ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_TABLIST_HEADERS, "Kamere (/gotopos do kamere, /obrisikameru pored nje)", body, "Zatvori", "");
+    return 1;
+}
+
+static const g_CameraEditMenu[][E_MENU_ITEM] =
+{
+    { ADMIN_LEVEL_HEAD, "Ogranicenje brzine", "izmenikameru %s ogranicenje", "Ogranicenje (20-200 km/h):" },
+    { ADMIN_LEVEL_HEAD, "Pomeri ovde (gde stojite)", "izmenikameru %s ovde", "" }
+};
+
+cmd:izmenikameru(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    {
+        return 1;
+    }
+    new dbid, option[16], value;
+    if (sscanf(params, "dS()[16]D(0)", dbid, option, value))
+    {
+        Msg_Usage(playerid, "/izmenikameru [id] (meni) ili /izmenikameru [id] [ogranicenje / ovde] [km/h] (ID: /kamere)");
+        return 1;
+    }
+    new slot = Cam_FindByDbId(dbid);
+    if (slot == -1)
+    {
+        Msg_Error(playerid, "Kamera sa tim ID-jem ne postoji. Spisak: /kamere");
+        return 1;
+    }
+    if (isnull(option))
+    {
+        new title[48], subject[8];
+        format(title, sizeof(title), "Kamera %d (%d km/h)", dbid, g_Cameras[slot][camLimit]);
+        valstr(subject, dbid);
+        Menu_Show(playerid, title, g_CameraEditMenu, sizeof(g_CameraEditMenu), subject);
+        return 1;
+    }
+
+    if (!strcmp(option, "ogranicenje", true) && value >= 20 && value <= 200)
+    {
+        g_Cameras[slot][camLimit] = value;
+    }
+    else if (!strcmp(option, "ovde", true))
+    {
+        if (GetPlayerInterior(playerid) != 0 || GetPlayerVirtualWorld(playerid) != 0)
+        {
+            Msg_Error(playerid, "Kamera mora biti napolju.");
+            return 1;
+        }
+        GetPlayerPos(playerid, g_Cameras[slot][camX], g_Cameras[slot][camY], g_Cameras[slot][camZ]);
+        GetPlayerFacingAngle(playerid, g_Cameras[slot][camA]);
+        g_Cameras[slot][camZ] -= 1.0;
+    }
+    else
+    {
+        Msg_Error(playerid, "Opcije: ogranicenje [20-200], ovde.");
+        return 1;
+    }
+
+    Cam_DestroyVisuals(slot);
+    Cam_CreateVisuals(slot);
+    new query[192], details[48];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `cameras` SET `x` = %f, `y` = %f, `z` = %f, `a` = %f, `speed_limit` = %d WHERE `id` = %d",
+        g_Cameras[slot][camX], g_Cameras[slot][camY], g_Cameras[slot][camZ], g_Cameras[slot][camA], g_Cameras[slot][camLimit], dbid);
+    mysql_tquery(g_SQL, query);
+    format(details, sizeof(details), "kamera %d: %s (%d km/h)", dbid, option, g_Cameras[slot][camLimit]);
+    Staff_Log(playerid, "camera_edit", INVALID_PLAYER_ID, details);
+    Msg_Admin(playerid, "Izmenjena je %s.", details);
     return 1;
 }

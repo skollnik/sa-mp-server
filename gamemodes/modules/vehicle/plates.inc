@@ -1,5 +1,6 @@
 #define PLATE_CUSTOM_MIN        (2)
 #define PLATE_CUSTOM_MAX        (8)
+#define PLATE_STORED_MAX        (3)
 
 enum E_PLATE_PURPOSE
 {
@@ -10,8 +11,81 @@ enum E_PLATE_PURPOSE
     PLATE_ADMIN
 }
 
-new g_PlateListed[MAX_PLAYERS][VEH_MAX_PER_PLAYER * 2];
+new g_PlateListed[MAX_PLAYERS][VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA + 1];
 new g_PlateSlot[MAX_PLAYERS];
+// Plates an owner kept when selling a vehicle, waiting at the police counter for another vehicle.
+new g_StoredPlates[MAX_PLAYERS][PLATE_STORED_MAX][VEH_PLATE_LENGTH];
+
+stock Plate_Init()
+{
+    mysql_tquery(g_SQL,
+        "CREATE TABLE IF NOT EXISTS `stored_plates` (" \
+        "`plate` VARCHAR(12) NOT NULL PRIMARY KEY," \
+        "`account_id` INT UNSIGNED NOT NULL," \
+        "`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP," \
+        "INDEX `stored_plate_account` (`account_id`)" \
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+stock Plate_OnPlayerConnect(playerid)
+{
+    for (new i = 0; i < PLATE_STORED_MAX; i++)
+    {
+        g_StoredPlates[playerid][i][0] = '\0';
+    }
+}
+
+stock Plate_OnLogin(playerid)
+{
+    new query[96];
+    mysql_format(g_SQL, query, sizeof(query), "SELECT `plate` FROM `stored_plates` WHERE `account_id` = %d LIMIT %d", g_Player[playerid][pDbId], PLATE_STORED_MAX);
+    mysql_tquery(g_SQL, query, "OnStoredPlatesLoaded", "dd", playerid, g_AccountRace[playerid]);
+}
+
+forward OnStoredPlatesLoaded(playerid, race);
+public OnStoredPlatesLoaded(playerid, race)
+{
+    if (race != g_AccountRace[playerid])
+    {
+        return 1;
+    }
+    for (new row = 0; row < cache_num_rows() && row < PLATE_STORED_MAX; row++)
+    {
+        cache_get_value_name(row, "plate", g_StoredPlates[playerid][row], VEH_PLATE_LENGTH);
+    }
+    return 1;
+}
+
+stock Plate_FreeStoredSlot(playerid)
+{
+    for (new i = 0; i < PLATE_STORED_MAX; i++)
+    {
+        if (!g_StoredPlates[playerid][i][0])
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// The seller keeps the plate: it leaves the vehicle and waits at the police counter for another one.
+stock bool:Plate_StoreFromVehicle(playerid, slot)
+{
+    new free = Plate_FreeStoredSlot(playerid);
+    if (free == -1 || !g_Veh[slot][vPlate][0])
+    {
+        return false;
+    }
+    strcopy(g_StoredPlates[playerid][free], g_Veh[slot][vPlate], VEH_PLATE_LENGTH);
+    new query[128];
+    mysql_format(g_SQL, query, sizeof(query), "INSERT INTO `stored_plates` (`plate`, `account_id`) VALUES ('%e', %d)", g_Veh[slot][vPlate], g_Player[playerid][pDbId]);
+    mysql_tquery(g_SQL, query);
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `plate` = NULL WHERE `id` = %d", g_Veh[slot][vDbId]);
+    mysql_tquery(g_SQL, query);
+    g_Veh[slot][vPlate][0] = '\0';
+    Veh_Rebuild(slot);
+    return true;
+}
 
 static stock Plate_Price(playerid, E_PLATE_PURPOSE:purpose)
 {
@@ -28,8 +102,8 @@ static stock Plate_Price(playerid, E_PLATE_PURPOSE:purpose)
 // Plates of offline owners and plates waiting at the counter both count, so a plate is checked in the database.
 static stock Plate_Check(playerid, dbid, E_PLATE_PURPOSE:purpose, const plate[])
 {
-    new query[160];
-    mysql_format(g_SQL, query, sizeof(query), "SELECT `id` FROM `vehicles` WHERE `plate` = '%e' OR `pending_plate` = '%e'", plate, plate);
+    new query[256];
+    mysql_format(g_SQL, query, sizeof(query), "SELECT `id` FROM `vehicles` WHERE `plate` = '%e' OR `pending_plate` = '%e' UNION SELECT 1 FROM `stored_plates` WHERE `plate` = '%e'", plate, plate, plate);
     mysql_tquery(g_SQL, query, "OnPlateChecked", "dddds", playerid, g_AccountRace[playerid], dbid, _:purpose, plate);
 }
 
@@ -157,7 +231,7 @@ static stock Plate_ShowActions(playerid, slot)
         Msg_Info(playerid, "Tablice %s vec cekaju: postavite ih pored vozila (/v tablice).", g_Veh[slot][vPendingPlate]);
         return;
     }
-    new body[192], line[96];
+    new body[512], line[96];
     if (g_Veh[slot][vPlate][0])
     {
         format(body, sizeof(body), "Nove nasumicne tablice ($%d)\n", Plate_Price(playerid, PLATE_NEW));
@@ -168,6 +242,14 @@ static stock Plate_ShowActions(playerid, slot)
     }
     format(line, sizeof(line), "Sopstvena tablica ($%d%s)", Plate_Price(playerid, PLATE_CUSTOM), Vip_GetLevel(playerid) >= VIP_GOLD ? (", Gold VIP popust") : (""));
     strcat(body, line);
+    for (new i = 0; i < PLATE_STORED_MAX; i++)
+    {
+        if (g_StoredPlates[playerid][i][0])
+        {
+            format(line, sizeof(line), "\nSacuvana tablica %s (besplatno%s)", g_StoredPlates[playerid][i], g_Veh[slot][vPlate][0] ? (", trenutna se vraca policiji") : (""));
+            strcat(body, line);
+        }
+    }
     g_PlateSlot[playerid] = slot;
     ShowPlayerDialog(playerid, DIALOG_PLATE_ACTION, DIALOG_STYLE_LIST, Veh_Name(slot), body, "Izaberi", "Nazad");
 }
@@ -235,10 +317,14 @@ stock bool:Plate_OnDialogResponse(playerid, dialogid, response, listitem, const 
                 }
                 Plate_RequestRandom(playerid, g_Veh[slot][vDbId], purpose);
             }
+            else if (listitem >= 2)
+            {
+                Plate_UseStored(playerid, slot, listitem - 2);
+            }
             else if (listitem == 1)
             {
                 ShowPlayerDialog(playerid, DIALOG_PLATE_CUSTOM, DIALOG_STYLE_INPUT, "Sopstvena tablica",
-                    "Upisite tablicu: 2 do 8 znakova, slova (bez nasih), brojevi, razmak i crtica.\nAdmin moze da zameni uvredljivu tablicu bez povracaja novca.", "Izvadi", "Nazad");
+                    "Upisite tablicu: 2 do 8 znakova, slova A-Z, brojevi 0-9, razmak i crtica.\nAdmin moze da zameni uvredljivu tablicu bez povracaja novca.", "Izvadi", "Nazad");
             }
         }
         case DIALOG_PLATE_CUSTOM:
@@ -256,7 +342,7 @@ stock bool:Plate_OnDialogResponse(playerid, dialogid, response, listitem, const 
             new plate[VEH_PLATE_LENGTH];
             if (!Plate_ParseCustom(inputtext, plate))
             {
-                Msg_Error(playerid, "Tablica mora imati 2 do 8 znakova: slova bez nasih, brojevi, razmak i crtica.");
+                Msg_Error(playerid, "Tablica mora imati 2 do 8 znakova: slova A-Z, brojevi 0-9, razmak i crtica.");
                 Plate_ShowActions(playerid, slot);
                 return true;
             }
@@ -277,6 +363,27 @@ stock bool:Plate_OnDialogResponse(playerid, dialogid, response, listitem, const 
         }
     }
     return true;
+}
+
+// The n-th filled storage slot, in the order the dialog listed them.
+static stock Plate_UseStored(playerid, slot, nth)
+{
+    for (new i = 0; i < PLATE_STORED_MAX; i++)
+    {
+        if (!g_StoredPlates[playerid][i][0] || nth-- > 0)
+        {
+            continue;
+        }
+        strcopy(g_Veh[slot][vPendingPlate], g_StoredPlates[playerid][i], VEH_PLATE_LENGTH);
+        new query[128];
+        mysql_format(g_SQL, query, sizeof(query), "DELETE FROM `stored_plates` WHERE `plate` = '%e'", g_StoredPlates[playerid][i]);
+        mysql_tquery(g_SQL, query);
+        mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `pending_plate` = '%e' WHERE `id` = %d", g_StoredPlates[playerid][i], g_Veh[slot][vDbId]);
+        mysql_tquery(g_SQL, query);
+        Msg_Success(playerid, "Tablica %s ceka postavljanje na vozilo %s: /v tablice pored vozila.", g_StoredPlates[playerid][i], Veh_ModelName(g_Veh[slot][vModel]));
+        g_StoredPlates[playerid][i][0] = '\0';
+        return;
+    }
 }
 
 cmd:tablice(playerid, params[])

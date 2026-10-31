@@ -340,4 +340,4 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **LOG-1** Money, property, admin actions, connections (IP, serial) and deaths, in the DB.
 
 ### WEB — Web / UCP (later)
-- **WEB-1** Web panel: registration, character overview, faction applications, forum.
+- **WEB-1** Web panel: registration, character overview, faction applications, forum. Komande: `/pijaca` (admin meni, za igrače GPS), `/kupivozilo`; prodaja i zamena između igrača: `/ponudi`. Commands: `/pijaca` (admin menu, GPS for players), `/kupivozilo`; sales and trades between players: `/ponudi`.

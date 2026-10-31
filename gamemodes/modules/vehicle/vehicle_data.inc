@@ -5,6 +5,8 @@
 #define VEH_INACTIVE_DAYS       (14)
 #define VEH_PLATE_LENGTH        (12)
 #define VEH_KEY_RANGE           (5.0)
+// Extra vehicle slot for Silver and Gold VIP.
+#define VEH_VIP_EXTRA           (1)
 #define VEH_DEATH_RESPAWN_S     (10)
 // A destroyed vehicle comes back smoking, so a crash still costs something (repair: mechanic, phase 3.5).
 #define VEH_RESPAWN_HEALTH      (500.0)
@@ -44,6 +46,8 @@ enum E_VEH
     Float:vParkY,
     Float:vParkZ,
     Float:vParkA,
+    // False for a market vehicle until the owner leaves it somewhere (its spot is the market exit until then).
+    bool:vParked,
     Float:vFuel,
     Float:vHealth,
     VEHICLE_PANEL_STATUS:vPanels,
@@ -67,7 +71,7 @@ new g_VehSlotOf[MAX_VEHICLES];
 // Fuel is kept for every vehicle ID, so job and faction vehicles can use it later.
 new Float:g_VehFuel[MAX_VEHICLES];
 new bool:g_VehFuelReserveWarned[MAX_VEHICLES];
-new g_VehListed[MAX_PLAYERS][VEH_MAX_PER_PLAYER * 2];
+new g_VehListed[MAX_PLAYERS][VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA + 1];
 new g_VehSelected[MAX_PLAYERS];
 // A running engine start or technical inspection; 0 when none.
 new g_VehStartTimer[MAX_PLAYERS];
@@ -94,6 +98,11 @@ forward bool:Veh_IsOwner(playerid, vehicleid);
 forward bool:Veh_OnDialogResponse(playerid, dialogid, response, listitem);
 forward bool:Veh_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
 forward bool:Veh_IsRegistered(slot);
+forward bool:Veh_HasFreeSlot(playerid);
+forward bool:Market_IsNearExit(vehicleid);
+forward bool:Market_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Offer_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Plate_StoreFromVehicle(playerid, slot);
 forward bool:Plate_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Fine_OnDialogResponse(playerid, dialogid, response);
 forward bool:Tune_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);

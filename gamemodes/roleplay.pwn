@@ -35,6 +35,7 @@
 #include "modules/vehicle/vehicle_data.inc"
 #include "modules/vehicle/vehicle_names.inc"
 #include "modules/health/hunger_data.inc"
+#include "modules/help/cmd_menu.inc"
 #include "modules/world/checkpoint.inc"
 #include "modules/world/zones.inc"
 #include "modules/world/gps.inc"
@@ -50,6 +51,7 @@
 #include "modules/staff/staff_cmds_helper.inc"
 #include "modules/staff/staff_cmds_admin.inc"
 #include "modules/staff/staff_punish.inc"
+#include "modules/staff/staff_menu.inc"
 
 #include "modules/anticheat/ac_impl.inc"
 #include "modules/anticheat/ac_cmds.inc"
@@ -83,6 +85,7 @@
 
 #include "modules/inventory/inventory_impl.inc"
 #include "modules/inventory/accessories.inc"
+#include "modules/inventory/inventory_admin.inc"
 #include "modules/phone/phone.inc"
 #include "modules/settings/settings.inc"
 
@@ -93,6 +96,8 @@
 #include "modules/vehicle/plates.inc"
 #include "modules/vehicle/fines.inc"
 #include "modules/vehicle/cameras.inc"
+#include "modules/vehicle/market.inc"
+#include "modules/vehicle/offers.inc"
 #include "modules/vehicle/vehicle_cmds.inc"
 #include "modules/vehicle/speedometer.inc"
 
@@ -139,6 +144,9 @@ public OnGameModeInit()
     Veh_Init();
     Fine_Init();
     Cam_Init();
+    Plate_Init();
+    Market_Init();
+    Offer_Init();
     Speedo_Init();
     Maps_Init();
 
@@ -183,6 +191,8 @@ public OnPlayerConnect(playerid)
     Speedo_OnPlayerConnect(playerid);
     Veh_OnPlayerConnect(playerid);
     Fine_OnPlayerConnect(playerid);
+    Plate_OnPlayerConnect(playerid);
+    Offer_OnPlayerConnect(playerid);
     Bet_OnPlayerConnect(playerid);
     Beg_OnPlayerConnect(playerid);
     Lottery_OnPlayerConnect(playerid);
@@ -251,9 +261,16 @@ public OnPlayerEnterDynamicArea(playerid, STREAMER_TAG_AREA:areaid)
     return 1;
 }
 
+public OnPlayerExitVehicle(playerid, vehicleid)
+{
+    Veh_OnPlayerExitVehicle(playerid, vehicleid);
+    return 1;
+}
+
 public OnVehicleDeath(vehicleid, killerid)
 {
     Veh_OnVehicleDeath(vehicleid);
+    Market_OnVehicleDeath(vehicleid);
     return 1;
 }
 
@@ -272,6 +289,7 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
     Beg_OnPlayerStateChange(playerid, newstate);
     Veh_OnPlayerStateChange(playerid, newstate);
     Speedo_OnPlayerStateChange(playerid, newstate);
+    Market_OnPlayerStateChange(playerid, newstate);
     return 1;
 }
 
@@ -394,6 +412,18 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Fine_OnDialogResponse(playerid, dialogid, response))
+    {
+        return 1;
+    }
+    if (Market_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Offer_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Menu_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
     {
         return 1;
     }

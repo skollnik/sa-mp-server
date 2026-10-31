@@ -81,6 +81,19 @@ cmd:napraviulaz(playerid, params[])
     return 1;
 }
 
+static const g_DoorMenu[][E_MENU_ITEM] =
+{
+    { ADMIN_LEVEL_HEAD, "Ime",                          "izmeniulaz %s ime",       "Novo ime ulaza:" },
+    { ADMIN_LEVEL_HEAD, "Spoljna strana: ovde",         "izmeniulaz %s ulaz",      "" },
+    { ADMIN_LEVEL_HEAD, "Izlaz (unutra): ovde",         "izmeniulaz %s izlaz",     "" },
+    { ADMIN_LEVEL_HEAD, "Ikona na mapi",                "izmeniulaz %s ikona",     "Ikona 0-63 (0 uklanja ikonu):" },
+    { ADMIN_LEVEL_HEAD, "Strelica (slike)",             "izmeniulaz %s strelica",  "" },
+    { ADMIN_LEVEL_HEAD, "Zakljucaj / otkljucaj",        "izmeniulaz %s zakljucaj", "" },
+    { ADMIN_LEVEL_HEAD, "Svet unutrasnjosti",           "izmeniulaz %s svet",      "Broj sveta (isti broj deli enterijer sa drugim ulazom):" },
+    { ADMIN_LEVEL_ADMIN, "Teleport do ulaza",           "gotoulaz %s",             "" },
+    { ADMIN_LEVEL_HEAD, "Obrisi ulaz",                  "obrisiulaz %s",           "" }
+};
+
 cmd:izmeniulaz(playerid, params[])
 {
     if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
@@ -89,9 +102,23 @@ cmd:izmeniulaz(playerid, params[])
     }
 
     new dbid, option[16], value[DOOR_NAME_LENGTH];
+    // Only the ID: every option is offered in a menu.
+    if (!sscanf(params, "d", dbid) && sscanf(params, "ds[16]", dbid, option))
+    {
+        if (Door_FindSlotByDbId(dbid) == -1)
+        {
+            Msg_Error(playerid, "Ulaz sa tim ID-jem ne postoji. Spisak: /ulazi");
+            return 1;
+        }
+        new title[48], subject[8];
+        format(title, sizeof(title), "Ulaz %d: %s", dbid, g_Doors[Door_FindSlotByDbId(dbid)][dName]);
+        valstr(subject, dbid);
+        Menu_Show(playerid, title, g_DoorMenu, sizeof(g_DoorMenu), subject);
+        return 1;
+    }
     if (sscanf(params, "ds[16]S()[48]", dbid, option, value))
     {
-        Msg_Usage(playerid, "/izmeniulaz [id] [ime / ulaz / izlaz / ikona / strelica / zakljucaj / svet] [vrednost]");
+        Msg_Usage(playerid, "/izmeniulaz [id] (meni) ili /izmeniulaz [id] [ime / ulaz / izlaz / ikona / strelica / zakljucaj / svet] [vrednost]");
         Msg_Info(playerid, "ulaz i izlaz se postavljaju na mesto gde stojite; ikona 0-63 (0 bez ikone); svet deli enterijer sa drugim ulazom.");
         return 1;
     }

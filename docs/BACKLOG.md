@@ -40,7 +40,6 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 |--------|
 | Chat kroz prozor vozila (`/cw`) |
 | Vlasnik postavlja pumpe na benzinskim stanicama iz GTA (`/napravimesto pumpa`, gde vozač staje) i GPS lokacije za njih |
-| Korak 3.2, kupljeno vozilo (predlog na pitanje vlasnika): od igrača, parking se prebacuje na mesto gde je prodaja obavljena i kopija ključa se poništava; sa pijace, parking je mesto kupovine dok ga novi vlasnik ne parkira (`/v parkiraj`); kupac mora biti nivo 2 |
 | Vozila poslova i frakcija dobijaju gorivo kad se naprave, inače im se motor odmah gasi |
 | Mesta gde se ne sme parkirati (ispred vrata, na putu, na pijaci) |
 | Popravka vozila koje se posle uništenja vrati sa 500 HP i dimom (mehaničar, korak 3.5) |
@@ -52,6 +51,9 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Kad dođu vozila poslova i frakcija: `/resetvozila` i `/respawnveh` da ih vraćaju na njihova mesta |
 | GTA radionice za tuning (Transfender i ostale) daju besplatan tuning koji se ne pamti: zatvoriti ih ili naplaćivati (mehaničar, anti-cheat) |
 | Kad dođe mehaničar (korak 3.5): ista mapa u Willowfield-u (radionica pored tehničkog pregleda) |
+| Kad dođu kuće i firme (Faza 4): prodaja i zamena kroz `/ponudi` |
+| Brisanje neaktivnog naloga (6 meseci): oslobađanje sačuvanih tablica |
+| Izložbena vozila na pijaci mogu da se guraju; ako bude problem, vraćati ih na mesto kad se pomere |
 | Mehaničar (korak 3.5, odobreno): radionica u Willowfield-u za popravku; mehaničar ne dolazi na teren, osim da odvuče vozilo koje ne može da se upali do radionice |
 | Kad dođu vozila poslova i frakcija: kamere za njih (policija i hitna sa rotacijom izuzete) |
 | Kad dođe policija (Faza 5): neplaćene kazne u MDC-u, policija piše kazne ručno (`/ticket`) |
@@ -93,7 +95,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Državna kasa sa donacijama | Igrači uplaćuju u budžet države (ECO-3, GOV-1), lista najvećih donatora | — |
 | ✅ Prošnja (do nivoa 4) | Sitan novac od drugih igrača, ne radi kod spawna; dnevni limit po davaocu i log, da se novac ne prebacuje sa drugih naloga | — |
 | ✅ Novčić i kockice uz opkladu | Oba igrača potvrde ulog, novac drži server dok traje bacanje, najveći ulog je ograničen, sve ide u log | — |
-| Meni za ponude između igrača | Jedna komanda za prodaju vozila, kuće i firme: oba igrača blizu, potvrda dijalogom, log protiv prevare | — |
+| ✅ Meni za ponude između igrača (vozila; kuće i firme dolaze sa Fazom 4) | Jedna komanda za prodaju vozila, kuće i firme: oba igrača blizu, potvrda dijalogom, log protiv prevare | — |
 | ✅ Dodaci na telu (naočare, kape, torbe) | Predmeti iz prodavnice u inventaru, nose se na telu, igrač sam podešava položaj | — |
 | Muzika: radio u vozilu, boombox, muzika sa linka | Radio stanice u vozilu, boombox kao predmet koji svira ljudima oko njega | — |
 
@@ -267,6 +269,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 30.10.2026. | Ispravke posle testa 3.1: nalog se ponovo čuva u bazi (pozicija, nivo, račun, dodaci posle izlaska), HUD se više ne duplira posle smrti, rezervoar se toči do punog, obrisani ID-jevi GPS-a, ulaza i mesta se ponovo daju (i vozilima), hamburger pomeren desno, veća slova logoa, urađene stavke u „Odobreni sistemi“ označene sa ✅ |
 | 30.10.2026. | Dopune vozila: vozila stalno u svetu (neaktivni 14 dana se ne pojavljuju), kopija ključa radi i kad vlasnik nije tu, motor se pali 1,5 s, upaljeno vozilo vozi i igrač bez ključa, registracija i tehnički pregled (`/registruj`, 60 dana, mapa u Willowfield-u, `/napravimesto pregled`), admin `/atune`, `/resetvozila [sekunde]` sa odbrojavanjem, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` sa listom, sve komande u `/pomoc` i `/ahelp` |
 | 31.10.2026. | Tablice u policiji (`/tablice`: prve , nove nasumične .500, sopstvena .000, Gold VIP upola), postavljanje pored vozila (`/v tablice`), admin `/resettablice`; tehnički pregled sada samo registruje; 42 kamere po Los Santosu sa svojim ograničenjem (`/napravikameru`, `/obrisikameru`, `/kamere`), kazne vlasniku vozila (`/kazne`, plaćaju se u opštini ili policiji, blokiraju registraciju) |
+| 31.10.2026. | Korak 3.2: auto pijaca (`/pijaca`, `/kupivozilo`; gotovina ili račun, pola rezervoara), prodaja i zamena vozila (`/ponudi`, 5% takse, najmanje $1.000), sačuvane tablice pri prodaji, VIP mesto za vozilo; admin meniji (`/aigrac`, `/izmenivozilo`, `/izmeniulaz [id]`, `/izmenimesto`, `/izmenigps`, `/izmenikameru`, `/dodajgps`, `/setvip`), nove admin komande (`/proveriinv`, `/dajpredmet`, `/uzmipredmet`, `/kazne [igrac]`, `/ponistikazne`, `/setlicna`, `/odblokirajpin`, `/givebank`); meni vozila u `/v`; natpis kamere 40 m; provera svih komandi u pomoći |
 | 31.10.2026. | Bolnica spolja sa parkom ispred nje i enterijer bolnice |
 
 ---
@@ -311,7 +314,6 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 |------|
 | Talking through a vehicle window (`/cw`) |
 | The owner places pumps at the GTA gas stations (`/napravimesto pumpa`, where the driver stops) and GPS locations for them |
-| Step 3.2, a bought vehicle (proposal for the owner's question): from a player, the parking spot moves to where the sale happened and the key copy is cancelled; from the market, the parking spot is where it was bought until the new owner parks it (`/v parkiraj`); the buyer must be level 2 |
 | Job and faction vehicles get fuel when they are created, otherwise their engine stops right away |
 | No-parking spots (in front of doors, on the road, at the market) |
 | Repairing a vehicle that comes back after being destroyed with 500 HP and smoke (mechanic, step 3.5) |
@@ -323,6 +325,9 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Once job and faction vehicles exist: `/resetvozila` and `/respawnveh` return them to their spots |
 | GTA tuning shops (Transfender and others) give free tuning that is not kept: close them or charge for it (mechanic, anti-cheat) |
 | Once the mechanic exists (step 3.5): the same map in Willowfield (the workshop next to the inspection) |
+| Once houses and businesses exist (Phase 4): selling and trading them through `/ponudi` |
+| Deleting an inactive account (6 months): free its kept plates |
+| Market display vehicles can be pushed around; if it becomes a problem, put them back when they move |
 | Mechanic (step 3.5, approved): a workshop in Willowfield for repairs; the mechanic does not come out to players, except to tow a vehicle that will not start to the workshop |
 | Once job and faction vehicles exist: cameras for them (police and EMS with sirens exempt) |
 | Once police exist (Phase 5): unpaid fines in the MDC, police write fines by hand (`/ticket`) |
@@ -364,7 +369,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | State treasury donations | Players pay into the state budget (ECO-3, GOV-1), with a top donors list | — |
 | ✅ Begging (up to level 4) | Small money from other players, not near the spawn; daily limit per giver and a log, so money is not moved from alt accounts | — |
 | ✅ Coin flip and dice bets | Both players confirm the stake, the server holds the money during the roll, the max stake is capped, everything is logged | — |
-| Offer menu between players | One command to sell a vehicle, house or business: both players nearby, dialog confirmation, a log against scams | — |
+| ✅ Offer menu between players (vehicles; houses and businesses come with Phase 4) | One command to sell a vehicle, house or business: both players nearby, dialog confirmation, a log against scams | — |
 | ✅ Body accessories (glasses, hats, bags) | Shop items in the inventory, worn on the body, the player adjusts the position | — |
 | Music: car radio, boombox, music from a link | Radio stations in vehicles, a boombox item that plays to people around it | — |
 
@@ -538,4 +543,5 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-30 | Fixes after the 3.1 test: the account is saved to the database again (position, level, bank account, accessories after logout), the HUD no longer doubles after death, the tank fills to the brim, deleted GPS, door and point IDs are given out again (vehicles too), the burger badge moved right, a bigger logo font, done items in "Approved systems" marked with ✅ |
 | 2026-10-30 | Vehicle additions: vehicles always in the world (inactive for 14 days are not spawned), the key copy works while the owner is away, the engine starts in 1.5 s, a running vehicle can be driven without a key, registration and technical inspection (`/registruj`, 60 days, a map in Willowfield, `/napravimesto pregled`), admin `/atune`, `/resetvozila [seconds]` with a countdown, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` with a list, every command in `/pomoc` and `/ahelp` |
 | 2026-10-31 | Plates at the police station (`/tablice`: first , new random ,500, custom ,000, Gold VIP half price), mounting next to the vehicle (`/v tablice`), admin `/resettablice`; the inspection now only registers; 42 cameras around Los Santos with their own limits (`/napravikameru`, `/obrisikameru`, `/kamere`), fines to the vehicle owner (`/kazne`, paid at the city hall or police, they block registration) |
+| 2026-10-31 | Step 3.2: car market (`/pijaca`, `/kupivozilo`; cash or account, half a tank), vehicle sales and trades (`/ponudi`, 5% tax, at least $1,000), kept plates on a sale, VIP vehicle slot; admin menus (`/aigrac`, `/izmenivozilo`, `/izmeniulaz [id]`, `/izmenimesto`, `/izmenigps`, `/izmenikameru`, `/dodajgps`, `/setvip`), new admin commands (`/proveriinv`, `/dajpredmet`, `/uzmipredmet`, `/kazne [player]`, `/ponistikazne`, `/setlicna`, `/odblokirajpin`, `/givebank`); the vehicle menu in `/v`; camera label 40 m; every command checked in the help |
 | 2026-10-31 | Hospital exterior with the park in front of it and the hospital interior |

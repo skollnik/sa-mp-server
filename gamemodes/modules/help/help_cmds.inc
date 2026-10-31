@@ -30,6 +30,7 @@ cmd:pomoc(playerid, params[])
         "/v - vasa vozila (GPS, registracija, oduzimanje kopije kljuca)    /v parkiraj - mesto gde se vozilo vraca\n" \
         "/v [motor / zakljucaj / svetla / hauba / gepek]    /v kljuc - kopija kljuca igracu pored vas\n" \
         "/gorivo - tocenje na benzinskoj pumpi (ugasen motor)    /registruj - tehnicki pregled (vazi 60 dana)\n" \
+        "/pijaca - auto pijaca (kad je otvorena)    /kupivozilo - kupovina na pijaci    /ponudi - prodaja ili zamena vozila igracu pored vas\n" \
         "/tablice - tablice na salteru u policiji    /v tablice - postavljanje tablica    /kazne - kazne sa kamera (placaju se u opstini ili policiji)\n\n" \
         C_SERVER "Pomoc i podrska\n" \
         C_WHITE "/n - newbie chat (pitanja novih igraca)    /ask - pitanje helperima\n" \

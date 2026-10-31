@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 3: korak 3.1 sa dopunama, tablicama u policiji i kamerama napisan, čeka test vlasnika; sledeći je korak 3.2, auto pijaca i prodaja vozila (ažurirano 2026-10-31)
+**Trenutni status:** Faza 3: korak 3.2 (auto pijaca, prodaja i zamena vozila, sačuvane tablice, VIP mesto za vozilo) i admin meniji napisani, čekaju test vlasnika; sledeći je korak 3.3, gepek kao inventar i kanister (ažurirano 2026-10-31)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -59,7 +59,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Korak 3.1: VEH-1, VEH-2, VEH-3, VEH-4, VEH-5, VEH-7: lična vozila, tablice, ključ i jedna kopija, motor (N), brava (Y), svetla, hauba, gepek, gorivo i benzinske pumpe, parkiranje, brzinomer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`
 - [x] Dopune 3.1: vozila stalno u svetu, paljenje motora 1,5 s, upaljeno vozilo vozi i igrač bez ključa, VEH-2 registracija i tehnički pregled (mapa u Willowfield-u), admin `/atune`, `/resetvozila` sa odbrojavanjem, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` sa listom
 - [x] Tablice u policiji (prve, nove, sopstvene), kamere po gradu sa kaznama (`/kazne`)
-- [ ] Korak 3.2: ADM-8 auto pijaca (event) i prodaja vozila između igrača
+- [x] Korak 3.2: ADM-8 auto pijaca (event), prodaja i zamena vozila između igrača (`/ponudi`), sačuvane tablice, VIP mesto za vozilo; admin meniji (`/aigrac`, `/izmenivozilo` i ostali)
 - [ ] Korak 3.3: VEH-8 gepek kao inventar, kanister
 - [ ] Korak 3.4: LIC-1, LIC-2 auto škola i dozvole
 - [ ] Korak 3.5: VEH-6 šteta i kilometraža, JOB-3 mehaničar, VEH-9 rent-a-car i bicikli, pay'n'spray
@@ -112,7 +112,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** Phase 3: step 3.1 with its additions, plates at the police station and cameras written, waiting for the owner's test; next is step 3.2, the car market and vehicle sales (updated 2026-10-31)
+**Current status:** Phase 3: step 3.2 (car market, vehicle sales and trades, kept plates, VIP vehicle slot) and admin menus written, waiting for the owner's test; next is step 3.3, the trunk as inventory and the jerry can (updated 2026-10-31)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -169,7 +169,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] Step 3.1: VEH-1, VEH-2, VEH-3, VEH-4, VEH-5, VEH-7: personal vehicles, plates, a key and one copy, engine (N), lock (Y), lights, bonnet, boot, fuel and gas stations, parking, speedometer, `/dajvozilo`, `/obrisivozilo`, `/resetvozila`
 - [x] 3.1 additions: vehicles always in the world, a 1.5 s engine start, a running vehicle can be driven without a key, VEH-2 registration and technical inspection (a map in Willowfield), admin `/atune`, `/resetvozila` with a countdown, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` with a list
 - [x] Plates at the police station (first, new, custom), city cameras with fines (`/kazne`)
-- [ ] Step 3.2: ADM-8 car market (event) and vehicle sales between players
+- [x] Step 3.2: ADM-8 car market (event), vehicle sales and trades between players (`/ponudi`), kept plates, VIP vehicle slot; admin menus (`/aigrac`, `/izmenivozilo` and others)
 - [ ] Step 3.3: VEH-8 trunk as inventory, jerry can
 - [ ] Step 3.4: LIC-1, LIC-2 driving school and licenses
 - [ ] Step 3.5: VEH-6 damage and mileage, JOB-3 mechanic, VEH-9 car and bike rental, pay'n'spray

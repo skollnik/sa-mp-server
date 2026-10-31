@@ -254,3 +254,24 @@ stock bool:BankPin_OnDialogResponse(playerid, dialogid, response, listitem, cons
     }
     return true;
 }
+
+// A player who forgot the PIN would otherwise wait out the block; the counter also unblocks, this is the admin way.
+cmd:odblokirajpin(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_ADMIN))
+    {
+        return 1;
+    }
+    new targetid = Staff_ParseTarget(playerid, params, "/odblokirajpin [id ili ime] (skida blokadu kartice posle pogresnih PIN-ova)");
+    if (targetid == INVALID_PLAYER_ID)
+    {
+        return 1;
+    }
+    g_Player[targetid][pPinFails] = 0;
+    g_Player[targetid][pPinBlockedUntil] = 0;
+    Account_Save(targetid);
+    Staff_NotifyTarget(playerid, targetid, "vam je odblokirao karticu.");
+    Staff_Log(playerid, "unblockpin", targetid, "");
+    Msg_Admin(playerid, "Kartica igraca %s je odblokirana.", Account_Name(targetid));
+    return 1;
+}

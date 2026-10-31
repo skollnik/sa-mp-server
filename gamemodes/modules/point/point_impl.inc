@@ -54,15 +54,22 @@ stock Point_CreateVisuals(slot)
         INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, g_Points[slot][ptWorld], g_Points[slot][ptInterior]);
 }
 
+static stock Point_DestroyVisuals(slot)
+{
+    if (IsValidDynamicPickup(g_Points[slot][ptPickup])) DestroyDynamicPickup(g_Points[slot][ptPickup]);
+    if (IsValidDynamic3DTextLabel(g_Points[slot][ptLabel])) DestroyDynamic3DTextLabel(g_Points[slot][ptLabel]);
+    if (IsValidDynamicObject(g_Points[slot][ptObject])) DestroyDynamicObject(g_Points[slot][ptObject]);
+    g_Points[slot][ptPickup] = STREAMER_TAG_PICKUP:INVALID_STREAMER_ID;
+    g_Points[slot][ptLabel] = STREAMER_TAG_3D_TEXT_LABEL:INVALID_STREAMER_ID;
+    g_Points[slot][ptObject] = STREAMER_TAG_OBJECT:INVALID_STREAMER_ID;
+}
+
 stock Point_Destroy(slot)
 {
     new query[64];
     mysql_format(g_SQL, query, sizeof(query), "DELETE FROM `points` WHERE `id` = %d", g_Points[slot][ptDbId]);
     mysql_tquery(g_SQL, query);
-
-    if (IsValidDynamicPickup(g_Points[slot][ptPickup])) DestroyDynamicPickup(g_Points[slot][ptPickup]);
-    if (IsValidDynamic3DTextLabel(g_Points[slot][ptLabel])) DestroyDynamic3DTextLabel(g_Points[slot][ptLabel]);
-    if (IsValidDynamicObject(g_Points[slot][ptObject])) DestroyDynamicObject(g_Points[slot][ptObject]);
+    Point_DestroyVisuals(slot);
 
     static const empty[E_POINT];
     g_Points[slot] = empty;
@@ -285,5 +292,80 @@ cmd:mesta(playerid, params[])
         return 1;
     }
     ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_TABLIST, SERVER_NAME " - Mesta", body, "Zatvori", "");
+    return 1;
+}
+
+static const g_PointEditMenu[][E_MENU_ITEM] =
+{
+    { ADMIN_LEVEL_HEAD, "Pomeri ovde (gde stojite)", "izmenimesto %s ovde", "" },
+    { ADMIN_LEVEL_HEAD, "Promeni tip", "izmenimesto %s tip", "Tip (banka, bankomat, opstina, prodavnica, odeca, pumpa...):" }
+};
+
+cmd:izmenimesto(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    {
+        return 1;
+    }
+    new dbid, option[16], value[16];
+    if (sscanf(params, "dS()[16]S()[16]", dbid, option, value))
+    {
+        Msg_Usage(playerid, "/izmenimesto [id] (meni) ili /izmenimesto [id] [ovde / tip] [tip] (ID: /mesta)");
+        return 1;
+    }
+    new slot = Point_FindSlotByDbId(dbid);
+    if (slot == -1)
+    {
+        Msg_Error(playerid, "Mesto sa tim ID-jem ne postoji. Spisak: /mesta");
+        return 1;
+    }
+    if (isnull(option))
+    {
+        new title[48], subject[8];
+        format(title, sizeof(title), "Mesto %d: %s", dbid, g_PointInfo[g_Points[slot][ptType]][piName]);
+        valstr(subject, dbid);
+        Menu_Show(playerid, title, g_PointEditMenu, sizeof(g_PointEditMenu), subject);
+        return 1;
+    }
+
+    if (!strcmp(option, "ovde", true))
+    {
+        GetPlayerPos(playerid, g_Points[slot][ptX], g_Points[slot][ptY], g_Points[slot][ptZ]);
+        GetPlayerFacingAngle(playerid, g_Points[slot][ptA]);
+        g_Points[slot][ptInterior] = GetPlayerInterior(playerid);
+        g_Points[slot][ptWorld] = GetPlayerVirtualWorld(playerid);
+    }
+    else if (!strcmp(option, "tip", true))
+    {
+        new E_POINT_TYPE:type = E_POINT_TYPE:-1;
+        for (new E_POINT_TYPE:t; t < E_POINT_TYPE; t++)
+        {
+            if (!strcmp(value, g_PointInfo[t][piKey], true) && value[0])
+            {
+                type = t;
+            }
+        }
+        if (type == E_POINT_TYPE:-1)
+        {
+            Msg_Error(playerid, "Nepoznat tip. Tipovi: banka, bankomat, opstina, prodavnica, odeca, pumpa, pregled, policija.");
+            return 1;
+        }
+        g_Points[slot][ptType] = type;
+    }
+    else
+    {
+        Msg_Error(playerid, "Opcije: ovde, tip.");
+        return 1;
+    }
+
+    Point_DestroyVisuals(slot);
+    Point_CreateVisuals(slot);
+    new query[224], details[48];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `points` SET `type` = %d, `x` = %f, `y` = %f, `z` = %f, `a` = %f, `interior` = %d, `world` = %d WHERE `id` = %d",
+        _:g_Points[slot][ptType], g_Points[slot][ptX], g_Points[slot][ptY], g_Points[slot][ptZ], g_Points[slot][ptA], g_Points[slot][ptInterior], g_Points[slot][ptWorld], dbid);
+    mysql_tquery(g_SQL, query);
+    format(details, sizeof(details), "mesto %d: %s %s", dbid, option, value);
+    Staff_Log(playerid, "point_edit", INVALID_PLAYER_ID, details);
+    Msg_Admin(playerid, "Izmenjeno je %s.", details);
     return 1;
 }

@@ -21,6 +21,8 @@ stock Fine_Init()
         "`paid_at` DATETIME NULL," \
         "INDEX `fine_account` (`account_id`, `paid_at`)" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    // An admin who cancels a fine is recorded instead of deleting it, so the history stays.
+    mysql_tquery(g_SQL, "ALTER TABLE `fines` ADD COLUMN IF NOT EXISTS `cancelled_by` INT UNSIGNED NOT NULL DEFAULT 0");
 }
 
 stock Fine_OnPlayerConnect(playerid)
@@ -82,20 +84,63 @@ stock Fine_Add(owner_dbid, vehicle_dbid, const plate[], const reason[], amount)
     return ownerid;
 }
 
-cmd:kazne(playerid, params[])
+// own = false is an admin looking at someone else's fines: the list is shown without paying.
+static stock Fine_ShowList(playerid, account_id, bool:own)
 {
     new query[256];
     mysql_format(g_SQL, query, sizeof(query),
         "SELECT `id`, `plate`, `reason`, `amount`, DATE_FORMAT(`created_at`, '%%d.%%m. %%H:%%i') AS `time` FROM `fines` " \
         "WHERE `account_id` = %d AND `paid_at` IS NULL ORDER BY `id` LIMIT %d",
-        g_Player[playerid][pDbId], FINE_LIST_LIMIT);
-    mysql_tquery(g_SQL, query, "OnFinesListed", "dd", playerid, g_AccountRace[playerid]);
+        account_id, FINE_LIST_LIMIT);
+    mysql_tquery(g_SQL, query, "OnFinesListed", "ddd", playerid, g_AccountRace[playerid], own);
+}
+
+cmd:kazne(playerid, params[])
+{
+    if (isnull(params))
+    {
+        Fine_ShowList(playerid, g_Player[playerid][pDbId], true);
+        return 1;
+    }
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_ADMIN))
+    {
+        return 1;
+    }
+    new targetid = Staff_ParseTarget(playerid, params, "/kazne [id ili ime] (pregled kazni igraca)");
+    if (targetid != INVALID_PLAYER_ID)
+    {
+        Fine_ShowList(playerid, g_Player[targetid][pDbId], false);
+    }
     return 1;
 }
 alias:kazne("fines")
 
-forward OnFinesListed(playerid, race);
-public OnFinesListed(playerid, race)
+cmd:ponistikazne(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    {
+        return 1;
+    }
+    new targetid = Staff_ParseTarget(playerid, params, "/ponistikazne [id ili ime] (ponistava sve neplacene kazne)");
+    if (targetid == INVALID_PLAYER_ID)
+    {
+        return 1;
+    }
+    new query[192], details[48];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `fines` SET `paid_at` = NOW(), `cancelled_by` = %d WHERE `account_id` = %d AND `paid_at` IS NULL",
+        g_Player[playerid][pDbId], g_Player[targetid][pDbId]);
+    mysql_tquery(g_SQL, query);
+    format(details, sizeof(details), "%d kazni, $%d", g_FineCount[targetid], g_FineTotal[targetid]);
+    Staff_Log(playerid, "cancelfines", targetid, details);
+    Msg_Admin(playerid, "Ponistene su kazne igraca %s (%s).", Account_Name(targetid), details);
+    Staff_NotifyTarget(playerid, targetid, "vam je ponistio kazne sa kamera.");
+    g_FineCount[targetid] = 0;
+    g_FineTotal[targetid] = 0;
+    return 1;
+}
+
+forward OnFinesListed(playerid, race, bool:own);
+public OnFinesListed(playerid, race, bool:own)
 {
     if (race != g_AccountRace[playerid])
     {
@@ -104,7 +149,14 @@ public OnFinesListed(playerid, race)
     new rows = cache_num_rows();
     if (rows == 0)
     {
-        Msg_Info(playerid, "Nemate neplacenih kazni.");
+        if (own)
+        {
+            Msg_Info(playerid, "Nemate neplacenih kazni.");
+        }
+        else
+        {
+            Msg_Info(playerid, "Igrac nema neplacenih kazni.");
+        }
         return 1;
     }
 
@@ -125,6 +177,12 @@ public OnFinesListed(playerid, race)
         strcat(body, line);
         total += amount;
         max_id = id;
+    }
+    if (!own)
+    {
+        g_FineShownTotal[playerid] = 0;
+        ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_TABLIST_HEADERS, "Neplacene kazne igraca", body, "Zatvori", "");
+        return 1;
     }
     g_FineShownMaxId[playerid] = max_id;
     g_FineShownTotal[playerid] = total;

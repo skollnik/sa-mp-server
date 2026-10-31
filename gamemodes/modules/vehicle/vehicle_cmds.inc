@@ -74,9 +74,9 @@ cmd:dajvozilo(playerid, params[])
         Msg_Error(playerid, "Igrac mora biti napolju, jer se vozilo pojavljuje pored njega.");
         return 1;
     }
-    if (Veh_CountOwned(g_Player[targetid][pDbId]) >= VEH_MAX_PER_PLAYER)
+    if (!Veh_HasFreeSlot(targetid))
     {
-        Msg_Error(playerid, "Igrac vec ima najvise vozila (%d).", VEH_MAX_PER_PLAYER);
+        Msg_Error(playerid, "Igrac vec ima najvise vozila (%d).", Veh_MaxFor(targetid));
         return 1;
     }
 
@@ -84,20 +84,8 @@ cmd:dajvozilo(playerid, params[])
     return 1;
 }
 
-cmd:obrisivozilo(playerid, params[])
+static stock Veh_DeleteForever(playerid, slot)
 {
-    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
-    {
-        return 1;
-    }
-
-    new vehicleid = GetPlayerVehicleID(playerid), slot = g_VehSlotOf[vehicleid];
-    if (vehicleid == 0 || slot == -1)
-    {
-        Msg_Usage(playerid, "/obrisivozilo (dok sedite u licnom vozilu; brise ga zauvek)");
-        return 1;
-    }
-
     new query[64], details[64];
     mysql_format(g_SQL, query, sizeof(query), "DELETE FROM `vehicles` WHERE `id` = %d", g_Veh[slot][vDbId]);
     mysql_tquery(g_SQL, query);
@@ -112,6 +100,148 @@ cmd:obrisivozilo(playerid, params[])
         Msg_Admin(ownerid, "Admin %s je obrisao vase vozilo %s.", Account_Name(playerid), Veh_Name(slot));
     }
     Veh_Despawn(slot, false);
+}
+
+cmd:obrisivozilo(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    {
+        return 1;
+    }
+
+    new vehicleid = GetPlayerVehicleID(playerid), slot = g_VehSlotOf[vehicleid];
+    if (vehicleid == 0 || slot == -1)
+    {
+        Msg_Usage(playerid, "/obrisivozilo (dok sedite u licnom vozilu; brise ga zauvek) ili /izmenivozilo [id] obrisi");
+        return 1;
+    }
+    Veh_DeleteForever(playerid, slot);
+    return 1;
+}
+
+static const g_VehEditMenu[][E_MENU_ITEM] =
+{
+    { ADMIN_LEVEL_HEAD, "Novi vlasnik (igrac online)", "izmenivozilo %s vlasnik", "ID ili ime novog vlasnika:" },
+    { ADMIN_LEVEL_HEAD, "Parking: tamo gde vozilo sada stoji", "izmenivozilo %s parking", "" },
+    { ADMIN_LEVEL_HEAD, "Boja", "izmenivozilo %s boja", "Dve boje (0-255), npr: 1 0" },
+    { ADMIN_LEVEL_HEAD, "Popravi", "izmenivozilo %s popravi", "" },
+    { ADMIN_LEVEL_SENIOR, "Gorivo", "setgorivo %s", "Litara:" },
+    { ADMIN_LEVEL_HEAD, "Registracija", "izmenivozilo %s registracija", "Dana od danas (0 ponistava):" },
+    { ADMIN_LEVEL_HEAD, "Ukloni kopiju kljuca", "izmenivozilo %s kljuc", "" },
+    { ADMIN_LEVEL_HEAD, "Zakljucaj / otkljucaj", "izmenivozilo %s zakljucaj", "" },
+    { ADMIN_LEVEL_ADMIN, "Nove nasumicne tablice", "resettablice %s", "" },
+    { ADMIN_LEVEL_TRIAL, "Teleport do vozila", "gotoveh %s", "" },
+    { ADMIN_LEVEL_ADMIN, "Dovedi vozilo", "getveh %s", "" },
+    { ADMIN_LEVEL_ADMIN, "Vrati na parking", "respawnveh %s", "" },
+    { ADMIN_LEVEL_HEAD, "Obrisi zauvek", "izmenivozilo %s obrisi", "Upisite DA za potvrdu:" }
+};
+
+cmd:izmenivozilo(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_TRIAL))
+    {
+        return 1;
+    }
+    new vehicleid, option[16], value[32];
+    if (sscanf(params, "dS()[16]S()[32]", vehicleid, option, value) || vehicleid < 1 || vehicleid >= MAX_VEHICLES || g_VehSlotOf[vehicleid] == -1)
+    {
+        Msg_Usage(playerid, "/izmenivozilo [id vozila] (meni za licno vozilo; ID se vidi sa /vinfo)");
+        return 1;
+    }
+    new slot = g_VehSlotOf[vehicleid];
+    if (isnull(option))
+    {
+        new title[64], subject[8];
+        format(title, sizeof(title), "%s, vlasnik %s", Veh_Name(slot), g_Veh[slot][vOwnerName]);
+        valstr(subject, vehicleid);
+        Menu_Show(playerid, title, g_VehEditMenu, sizeof(g_VehEditMenu), subject);
+        return 1;
+    }
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    {
+        return 1;
+    }
+
+    new details[64];
+    format(details, sizeof(details), "%s %s", option, value);
+    if (!strcmp(option, "vlasnik", true))
+    {
+        new targetid;
+        if (sscanf(value, "u", targetid) || !Staff_CheckTarget(playerid, targetid))
+        {
+            return 1;
+        }
+        if (!Veh_HasFreeSlot(targetid))
+        {
+            Msg_Error(playerid, "Igrac vec ima najvise vozila (%d).", Veh_MaxFor(targetid));
+            return 1;
+        }
+        Veh_TransferTo(slot, targetid);
+        Msg_Info(targetid, "Admin %s vam je dodelio vozilo %s.", Account_Name(playerid), Veh_Name(slot));
+    }
+    else if (!strcmp(option, "parking", true))
+    {
+        Veh_SetParkingHere(slot);
+    }
+    else if (!strcmp(option, "boja", true))
+    {
+        new colour1, colour2;
+        if (sscanf(value, "dd", colour1, colour2) || colour1 < 0 || colour1 > 255 || colour2 < 0 || colour2 > 255)
+        {
+            Msg_Error(playerid, "Upisite dve boje od 0 do 255.");
+            return 1;
+        }
+        ChangeVehicleColours(vehicleid, colour1, colour2);
+        Veh_OnColoursChanged(vehicleid, colour1, colour2);
+    }
+    else if (!strcmp(option, "popravi", true))
+    {
+        RepairVehicle(vehicleid);
+        Veh_SaveState(slot);
+    }
+    else if (!strcmp(option, "registracija", true))
+    {
+        new days = strval(value);
+        if (isnull(value) || days < 0 || days > 365)
+        {
+            Msg_Error(playerid, "Upisite broj dana od 0 do 365 (0 ponistava registraciju).");
+            return 1;
+        }
+        g_Veh[slot][vRegisteredUntil] = days == 0 ? 0 : gettime() + days * 86400;
+        Veh_SaveState(slot);
+    }
+    else if (!strcmp(option, "kljuc", true))
+    {
+        g_Veh[slot][vKeyDbId] = 0;
+        g_Veh[slot][vKeyName][0] = '\0';
+        Veh_SaveState(slot);
+    }
+    else if (!strcmp(option, "zakljucaj", true))
+    {
+        g_Veh[slot][vLocked] = !g_Veh[slot][vLocked];
+        Veh_SetParam(vehicleid, VEH_PARAM_DOORS, g_Veh[slot][vLocked]);
+        Veh_SaveState(slot);
+    }
+    else if (!strcmp(option, "obrisi", true))
+    {
+        if (strcmp(value, "DA", true))
+        {
+            Msg_Error(playerid, "Brisanje nije potvrdjeno (upisite DA).");
+            return 1;
+        }
+        Veh_DeleteForever(playerid, slot);
+        return 1;
+    }
+    else
+    {
+        Msg_Error(playerid, "Opcije: vlasnik, parking, boja, popravi, registracija, kljuc, zakljucaj, obrisi.");
+        return 1;
+    }
+
+    new log[80];
+    format(log, sizeof(log), "vozilo %d (%s): %s", g_Veh[slot][vDbId], Veh_Name(slot), details);
+    Staff_Log(playerid, "editveh", INVALID_PLAYER_ID, log);
+    Msg_Admin(playerid, "Vozilo %d: %s.", vehicleid, details);
     return 1;
 }
 

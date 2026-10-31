@@ -39,6 +39,15 @@ enum E_GPS_PLAYER
 
 new g_GpsPlayer[MAX_PLAYERS][E_GPS_PLAYER];
 
+static const g_GpsAddMenu[][E_MENU_ITEM] =
+{
+    { ADMIN_LEVEL_HEAD, "Javne sluzbe", "dodajgps 1", "Ime lokacije:" },
+    { ADMIN_LEVEL_HEAD, "Banke i bankomati", "dodajgps 2", "Ime lokacije:" },
+    { ADMIN_LEVEL_HEAD, "Prodavnice", "dodajgps 3", "Ime lokacije:" },
+    { ADMIN_LEVEL_HEAD, "Posao", "dodajgps 4", "Ime lokacije:" },
+    { ADMIN_LEVEL_HEAD, "Ostalo", "dodajgps 5", "Ime lokacije:" }
+};
+
 stock Gps_Init()
 {
     mysql_tquery(g_SQL,
@@ -283,7 +292,12 @@ cmd:dodajgps(playerid, params[])
     new category, name[GPS_NAME_LENGTH];
     if (sscanf(params, "ds[48]", category, name) || category < 1 || category > sizeof(g_GpsCategories))
     {
-        Msg_Usage(playerid, "/dodajgps [kategorija] [ime] (1 javne sluzbe, 2 banke, 3 prodavnice, 4 posao, 5 ostalo)");
+        if (isnull(params))
+        {
+            Menu_Show(playerid, "Nova GPS lokacija (stanite ispred ulaza)", g_GpsAddMenu, sizeof(g_GpsAddMenu));
+            return 1;
+        }
+        Msg_Usage(playerid, "/dodajgps (meni) ili /dodajgps [kategorija] [ime] (1 javne sluzbe, 2 banke, 3 prodavnice, 4 posao, 5 ostalo)");
         return 1;
     }
     if (GetPlayerInterior(playerid) != 0 || GetPlayerVirtualWorld(playerid) != 0)
@@ -363,3 +377,71 @@ cmd:obrisigps(playerid, params[])
     return 1;
 }
 
+
+static const g_GpsEditMenu[][E_MENU_ITEM] =
+{
+    { ADMIN_LEVEL_HEAD, "Ime", "izmenigps %s ime", "Novo ime lokacije:" },
+    { ADMIN_LEVEL_HEAD, "Kategorija", "izmenigps %s kategorija", "1 javne sluzbe, 2 banke, 3 prodavnice, 4 posao, 5 ostalo:" },
+    { ADMIN_LEVEL_HEAD, "Pomeri ovde (gde stojite)", "izmenigps %s ovde", "" },
+    { ADMIN_LEVEL_HEAD, "Obrisi", "obrisigps %s", "" }
+};
+
+cmd:izmenigps(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    {
+        return 1;
+    }
+    new dbid, option[16], value[GPS_NAME_LENGTH];
+    if (sscanf(params, "dS()[16]S()[48]", dbid, option, value))
+    {
+        Msg_Usage(playerid, "/izmenigps [id] (meni) ili /izmenigps [id] [ime / kategorija / ovde] [vrednost] (ID se vidi u /gps na duznosti)");
+        return 1;
+    }
+    new slot = Gps_FindSlotByDbId(dbid);
+    if (slot == -1)
+    {
+        Msg_Error(playerid, "GPS lokacija sa tim ID-jem ne postoji.");
+        return 1;
+    }
+    if (isnull(option))
+    {
+        new title[64], subject[8];
+        format(title, sizeof(title), "GPS %d: %s", dbid, g_Gps[slot][gName]);
+        valstr(subject, dbid);
+        Menu_Show(playerid, title, g_GpsEditMenu, sizeof(g_GpsEditMenu), subject);
+        return 1;
+    }
+
+    if (!strcmp(option, "ime", true) && value[0])
+    {
+        strcopy(g_Gps[slot][gName], value, GPS_NAME_LENGTH);
+    }
+    else if (!strcmp(option, "kategorija", true) && strval(value) >= 1 && strval(value) <= sizeof(g_GpsCategories))
+    {
+        g_Gps[slot][gCategory] = strval(value) - 1;
+    }
+    else if (!strcmp(option, "ovde", true))
+    {
+        if (GetPlayerInterior(playerid) != 0 || GetPlayerVirtualWorld(playerid) != 0)
+        {
+            Msg_Error(playerid, "GPS lokacija mora biti napolju.");
+            return 1;
+        }
+        GetPlayerPos(playerid, g_Gps[slot][gX], g_Gps[slot][gY], g_Gps[slot][gZ]);
+    }
+    else
+    {
+        Msg_Error(playerid, "Opcije: ime [ime], kategorija [1-5], ovde.");
+        return 1;
+    }
+
+    new query[256], details[80];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `gps_locations` SET `category` = %d, `name` = '%e', `x` = %f, `y` = %f, `z` = %f WHERE `id` = %d",
+        g_Gps[slot][gCategory], g_Gps[slot][gName], g_Gps[slot][gX], g_Gps[slot][gY], g_Gps[slot][gZ], dbid);
+    mysql_tquery(g_SQL, query);
+    format(details, sizeof(details), "gps %d: %s", dbid, option);
+    Staff_Log(playerid, "gps_edit", INVALID_PLAYER_ID, details);
+    Msg_Admin(playerid, "GPS lokacija %d je izmenjena (%s): %s.", dbid, option, g_Gps[slot][gName]);
+    return 1;
+}

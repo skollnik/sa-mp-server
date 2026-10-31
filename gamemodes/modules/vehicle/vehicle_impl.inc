@@ -33,6 +33,7 @@ stock Veh_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `mods` VARCHAR(128) NOT NULL DEFAULT ''");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `paintjob` TINYINT UNSIGNED NOT NULL DEFAULT 3");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `pending_plate` VARCHAR(12) NULL");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `parked` TINYINT UNSIGNED NOT NULL DEFAULT 1");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD UNIQUE INDEX IF NOT EXISTS `vehicle_pending_plate` (`pending_plate`)");
     // Vehicles that got a plate before registration existed count as freshly registered.
     new query[512];
@@ -350,6 +351,8 @@ static stock Veh_LoadRow(slot, row, ownerid)
     cache_get_value_name_float(row, "park_y", g_Veh[slot][vParkY]);
     cache_get_value_name_float(row, "park_z", g_Veh[slot][vParkZ]);
     cache_get_value_name_float(row, "park_a", g_Veh[slot][vParkA]);
+    cache_get_value_name_int(row, "parked", value);
+    g_Veh[slot][vParked] = value != 0;
     cache_get_value_name_float(row, "fuel", g_Veh[slot][vFuel]);
     cache_get_value_name_float(row, "health", g_Veh[slot][vHealth]);
     cache_get_value_name_int(row, "panels", value);
@@ -726,7 +729,30 @@ stock Veh_RandomPlate(plate[], size = sizeof(plate))
         g_PlateLetters[random(sizeof(g_PlateLetters) - 1)], g_PlateLetters[random(sizeof(g_PlateLetters) - 1)]);
 }
 
-// A new vehicle stands next to the player, without plates: they come with the first registration.
+// Silver and Gold VIP get one more vehicle. When VIP ends nothing is taken away: the vehicles stay,
+// but no new one can be bought or received until the owner is back under the limit.
+stock Veh_MaxFor(playerid)
+{
+    return VEH_MAX_PER_PLAYER + (Vip_GetLevel(playerid) >= VIP_SILVER ? VEH_VIP_EXTRA : 0);
+}
+
+stock bool:Veh_HasFreeSlot(playerid)
+{
+    return Veh_CountOwned(g_Player[playerid][pDbId]) < Veh_MaxFor(playerid);
+}
+
+// A new vehicle has no plates (they come with the first registration). adminid is INVALID_PLAYER_ID for a market purchase.
+// parked = false: the spot is only temporary (the market exit) until the owner leaves the vehicle somewhere else.
+stock Veh_Insert(adminid, targetid, model, Float:x, Float:y, Float:z, Float:angle, Float:fuel, bool:parked)
+{
+    new query[640];
+    mysql_format(g_SQL, query, sizeof(query),
+        "INSERT INTO `vehicles` (`id`, `owner_id`, `model`, `color1`, `color2`, `park_x`, `park_y`, `park_z`, `park_a`, `fuel`, `parked`) " \
+        "SELECT " DB_FREE_ID("vehicles") ", %d, %d, %d, %d, %f, %f, %f, %f, %f, %d",
+        g_Player[targetid][pDbId], model, random(127), random(127), x, y, z, angle, fuel, parked ? 1 : 0);
+    mysql_tquery(g_SQL, query, "OnVehicleInserted", "ddd", adminid, targetid, g_AccountRace[targetid]);
+}
+
 stock Veh_CreateFor(adminid, targetid, model)
 {
     new Float:x, Float:y, Float:z, Float:angle;
@@ -734,13 +760,7 @@ stock Veh_CreateFor(adminid, targetid, model)
     GetPlayerFacingAngle(targetid, angle);
     x += 4.0 * floatcos(angle, degrees);
     y += 4.0 * floatsin(angle, degrees);
-
-    new query[640];
-    mysql_format(g_SQL, query, sizeof(query),
-        "INSERT INTO `vehicles` (`id`, `owner_id`, `model`, `color1`, `color2`, `park_x`, `park_y`, `park_z`, `park_a`, `fuel`) " \
-        "SELECT " DB_FREE_ID("vehicles") ", %d, %d, %d, %d, %f, %f, %f, %f, %d",
-        g_Player[targetid][pDbId], model, random(127), random(127), x, y, z, angle, Fuel_TankSize(model));
-    mysql_tquery(g_SQL, query, "OnVehicleInserted", "ddd", adminid, targetid, g_AccountRace[targetid]);
+    Veh_Insert(adminid, targetid, model, x, y, z, angle, float(Fuel_TankSize(model)), true);
 }
 
 forward OnVehicleInserted(adminid, targetid, race);
@@ -752,6 +772,10 @@ public OnVehicleInserted(adminid, targetid, race)
     }
     new dbid = cache_insert_id();
     Veh_QueryOwned(targetid, "id", dbid, false);
+    if (adminid == INVALID_PLAYER_ID)
+    {
+        return 1;
+    }
 
     new details[32];
     format(details, sizeof(details), "vozilo %d", dbid);
@@ -762,6 +786,48 @@ public OnVehicleInserted(adminid, targetid, race)
     }
     Msg_Success(targetid, "Dobili ste vozilo, stoji pored vas. Parkirajte ga sa /v parkiraj; registruje se na tehnickom pregledu (/registruj), a tablice se vade u policiji (/tablice).");
     return 1;
+}
+
+// Called when a driver leaves a vehicle: a market vehicle that was never parked takes the first spot away from the market,
+// so bought vehicles do not all come back to the market exit after a restart.
+stock Veh_OnPlayerExitVehicle(playerid, vehicleid)
+{
+    new slot = g_VehSlotOf[vehicleid];
+    if (slot == -1 || g_Veh[slot][vParked] || !Veh_IsOwner(playerid, vehicleid) || Market_IsNearExit(vehicleid))
+    {
+        return;
+    }
+    Veh_SetParkingHere(slot);
+    Msg_Info(playerid, "Vozilo %s je parkirano ovde i ovde se vraca posle restarta. Drugo mesto: /v parkiraj.", Veh_Name(slot));
+}
+
+// The vehicle's current spot becomes its parking spot.
+stock Veh_SetParkingHere(slot)
+{
+    new vehicleid = g_Veh[slot][vVehicleId];
+    GetVehiclePos(vehicleid, g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ]);
+    GetVehicleZAngle(vehicleid, g_Veh[slot][vParkA]);
+    g_Veh[slot][vParked] = true;
+
+    new query[224];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `park_x` = %f, `park_y` = %f, `park_z` = %f, `park_a` = %f, `parked` = 1 WHERE `id` = %d",
+        g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ], g_Veh[slot][vParkA], g_Veh[slot][vDbId]);
+    mysql_tquery(g_SQL, query);
+}
+
+// A sold vehicle stays where it stands, and that becomes the new owner's parking spot; the old key copy stops working.
+stock Veh_TransferTo(slot, buyerid)
+{
+    g_Veh[slot][vOwnerDbId] = g_Player[buyerid][pDbId];
+    g_Veh[slot][vOwnerId] = buyerid;
+    strcopy(g_Veh[slot][vOwnerName], g_Player[buyerid][pName], MAX_PLAYER_NAME + 1);
+    g_Veh[slot][vKeyDbId] = 0;
+    g_Veh[slot][vKeyName][0] = '\0';
+    new query[96];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `owner_id` = %d WHERE `id` = %d", g_Veh[slot][vOwnerDbId], g_Veh[slot][vDbId]);
+    mysql_tquery(g_SQL, query);
+    Veh_SetParkingHere(slot);
+    Veh_SaveState(slot);
 }
 
 stock Veh_ShowList(playerid)
@@ -821,13 +887,15 @@ static stock bool:Veh_IsOwnSlot(playerid, slot)
 
 static stock Veh_ShowActions(playerid, slot)
 {
-    new body[128], line[64];
+    new body[384], line[64];
     strcopy(body, "Oznaci na GPS-u\n");
     if (g_Veh[slot][vKeyDbId] != 0)
     {
         format(line, sizeof(line), "Oduzmi kopiju kljuca (%s)\n", g_Veh[slot][vKeyName]);
         strcat(body, line);
     }
+    // The rest works on the vehicle the player sits in or stands next to, like the /v commands they run.
+    strcat(body, "Zakljucaj / otkljucaj (pored vozila)\nParkiraj ovde (za volanom)\nPostavi izvadjene tablice (pored vozila)\nDaj kopiju kljuca igracu pored vas\nProdaj ili zameni (/ponudi)");
     g_VehSelected[playerid] = slot;
     ShowPlayerDialog(playerid, DIALOG_VEH_ACTION, DIALOG_STYLE_LIST, Veh_Name(slot), body, "Izaberi", "Nazad");
 }
@@ -882,6 +950,17 @@ stock bool:Veh_OnDialogResponse(playerid, dialogid, response, listitem)
             else if (listitem == 1 && g_Veh[slot][vKeyDbId] != 0)
             {
                 Veh_TakeKey(playerid, slot);
+            }
+            else
+            {
+                switch (listitem - (g_Veh[slot][vKeyDbId] != 0 ? 2 : 1))
+                {
+                    case 0: PC_EmulateCommand(playerid, "/v zakljucaj");
+                    case 1: PC_EmulateCommand(playerid, "/v parkiraj");
+                    case 2: PC_EmulateCommand(playerid, "/v tablice");
+                    case 3: Menu_AskInput(playerid, "v kljuc", "ID ili ime igraca pored vas:");
+                    case 4: Menu_AskInput(playerid, "ponudi", "ID ili ime igraca pored vas:");
+                }
             }
         }
         default:
@@ -957,14 +1036,14 @@ stock Veh_Park(playerid)
         return;
     }
 
-    new slot = g_VehSlotOf[vehicleid];
-    GetVehiclePos(vehicleid, g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ]);
-    GetVehicleZAngle(vehicleid, g_Veh[slot][vParkA]);
+    if (Market_IsNearExit(vehicleid))
+    {
+        Msg_Error(playerid, "Na izlazu sa auto pijace se ne parkira; tu se pojavljuju kupljena vozila.");
+        return;
+    }
 
-    new query[192];
-    mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `park_x` = %f, `park_y` = %f, `park_z` = %f, `park_a` = %f WHERE `id` = %d",
-        g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ], g_Veh[slot][vParkA], g_Veh[slot][vDbId]);
-    mysql_tquery(g_SQL, query);
+    new slot = g_VehSlotOf[vehicleid];
+    Veh_SetParkingHere(slot);
     Msg_Success(playerid, "Vozilo %s je parkirano ovde. Ovde se vraca posle restarta servera, unistenja ili admin reseta.", Veh_Name(slot));
 }
 

@@ -208,6 +208,16 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Kazne se ignorišu | ✅ | Neplaćene kazne blokiraju registraciju; policija ih kasnije vidi (BACKLOG) |
 | Plaćanje kazni koje su stigle posle otvaranja liste | ✅ | Plaća se tačno ono što je lista pokazala (do poslednjeg ID-ja sa liste) |
 | Kamera stoji na kolovozu i smeta vožnji | 👁 | Početne kamere su postavljene unapred; vlasnik proverava u igri i pomera ih (`/obrisikameru`, `/napravikameru`) |
+| Kupljena vozila se gomilaju na izlazu pijace i eksplodiraju posle restarta | ✅ | Kupovina ne radi dok je izlaz zauzet; parking kupljenog vozila postaje prvo mesto gde ga vlasnik ostavi van pijace, a na izlazu se ne može parkirati |
+| Neko odveze ili uništi izložbeno vozilo | ✅ | Izložbena vozila su zaključana, vozač se izbacuje, a uništeno vozilo se vraća novo posle 5 s; guranje je u BACKLOG-u |
+| Plaćanje pijace delom gotovinom, delom sa računa, ili kupovina rasprodatog vozila | ✅ | Cela cena iz jednog izvora; komadi i blizina se proveravaju ponovo pri plaćanju |
+| Prevara pri prodaji („dao sam pare, nije mi dao auto“) | ✅ | Novac i vozilo se menjaju u istom trenutku, samo preko `/ponudi`; kupac vidi model, tablicu, registraciju, gorivo, stanje i cenu |
+| Vozilo se prebaci na drugi nalog „za $1“ | ✅ | Najmanja cena $1.000 i taksa 5%; sve ide u `vehicle_trades` i novčani log |
+| Ponuda prihvaćena kad se nešto promenilo (vozilo pomereno, igrač otišao, nema novca) | ✅ | Sve se proverava ponovo pri prihvatanju; ponuda važi 60 s |
+| Prodaja vozila sa kopijom ključa ili sa izvađenim tablicama | ✅ | Kopija se poništava; dok izvađene tablice nisu postavljene, vozilo se ne prodaje |
+| VIP kupi dodatno vozilo pa VIP istekne | 👁 | Vozilo ostaje (odluka vlasnika); novo ne može dok je na limitu |
+| Meni pokreće komandu kojoj admin nema pravo | ✅ | Meni prikazuje samo opcije do nivoa admina, a pokrenuta komanda ionako proverava nivo |
+| Admin poklanja predmete, novac ili popravke | 👁 | Sve je po nivoima (predmeti i izmene vozila nivo 4, novac vlasnik) i ide u admin log |
 | Pregled oštećenog vozila dok mehaničar ne postoji | 👁 | Uslov je 650 HP (VIP `/vfix` i admin `/fixveh` popravljaju); kad dođe mehaničar, uslov raste (BACKLOG) |
 | Nove tablice se ne vide dok se vozilo ponovo ne napravi | ✅ | Vozilo se pravi ponovo na istom mestu, sa istim stanjem, a putnici se vraćaju na svoja mesta (vlasnik proverava u igri) |
 | Admin besplatno tunira vozila prijateljima | ✅ | Admin nivoa 1 i 2 tunira samo admin vozila; lična vozila tek nivo 3+, uz log i poruku vlasniku |
@@ -436,6 +446,16 @@ Every new system or change goes through these questions, against all existing sy
 | Fines are ignored | ✅ | Unpaid fines block registration; police see them later (backlog) |
 | Paying fines that arrived after the list was opened | ✅ | Exactly what the list showed is paid (up to the last ID on it) |
 | A camera stands on the road and gets in the way | 👁 | The starting cameras are placed in advance; the owner checks in game and moves them (`/obrisikameru`, `/napravikameru`) |
+| Bought vehicles pile up at the market exit and explode after a restart | ✅ | Buying does not work while the exit is taken; a bought vehicle's parking spot becomes the first place the owner leaves it away from the market, and parking at the exit is not allowed |
+| Someone drives off with or destroys a display vehicle | ✅ | Display vehicles are locked, a driver is thrown out, and a destroyed one comes back new after 5 s; pushing is in the backlog |
+| Paying the market partly in cash, partly from the account, or buying a sold-out vehicle | ✅ | The whole price from one source; pieces and distance are checked again when paying |
+| A sale scam ("I paid but got no car") | ✅ | Money and vehicle change hands at the same moment, only through `/ponudi`; the buyer sees the model, plate, registration, fuel, condition and price |
+| A vehicle moved to an alt account "for $1" | ✅ | At least $1,000 and a 5% tax; everything goes to `vehicle_trades` and the money log |
+| An offer accepted after something changed (vehicle moved, player left, no money) | ✅ | Everything is checked again on accept; an offer lasts 60 s |
+| Selling a vehicle with a key copy or with issued plates not mounted | ✅ | The copy is cancelled; until issued plates are mounted the vehicle cannot be sold |
+| A VIP buys an extra vehicle and VIP ends | 👁 | The vehicle stays (owner's decision); no new one while at the limit |
+| A menu runs a command the admin has no right to | ✅ | The menu shows only options up to the admin's level, and the command checks the level anyway |
+| An admin gives away items, money or repairs | 👁 | Everything is by level (items and vehicle edits level 4, money the owner) and logged |
 | Inspecting a damaged vehicle while there is no mechanic | 👁 | The requirement is 650 HP (VIP `/vfix` and admin `/fixveh` repair); it goes up once the mechanic exists (backlog) |
 | New plates do not show until the vehicle is created again | ✅ | The vehicle is created again on the same spot with the same state, and passengers are put back in their seats (the owner checks in game) |
 | An admin tunes friends' vehicles for free | ✅ | Admins of level 1 and 2 tune only admin vehicles; personal vehicles need level 3+, logged and the owner is told |

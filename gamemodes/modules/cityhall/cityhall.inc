@@ -87,3 +87,27 @@ cmd:licna(playerid, params[])
     }
     return 1;
 }
+
+cmd:setlicna(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    {
+        return 1;
+    }
+    new targetid, value;
+    if (sscanf(params, "ud", targetid, value) || (value != 0 && value != 1))
+    {
+        Msg_Usage(playerid, "/setlicna [id ili ime] [1 daje, 0 oduzima licnu kartu]");
+        return 1;
+    }
+    if (!Staff_CheckTarget(playerid, targetid))
+    {
+        return 1;
+    }
+    g_Player[targetid][pHasIdCard] = value == 1;
+    Account_Save(targetid);
+    Staff_NotifyTarget(playerid, targetid, value == 1 ? ("vam je dao licnu kartu.") : ("vam je oduzeo licnu kartu."));
+    Staff_Log(playerid, "setidcard", targetid, value == 1 ? ("daje") : ("oduzima"));
+    Msg_Admin(playerid, "Igrac %s %s licnu kartu.", Account_Name(targetid), value == 1 ? ("sada ima") : ("vise nema"));
+    return 1;
+}

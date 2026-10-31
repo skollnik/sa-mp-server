@@ -1089,33 +1089,52 @@ cmd:gmx(playerid, params[])
     return 1;
 }
 
-cmd:givemoney(playerid, params[])
+// Cash or the bank account; the owner can also take money away with a negative amount.
+static stock Staff_GiveMoney(playerid, const params[], bool:bank)
 {
     if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_OWNER))
     {
-        return 1;
+        return;
     }
 
     new targetid, amount;
     if (sscanf(params, "ud", targetid, amount) || amount == 0)
     {
-        Msg_Usage(playerid, "/givemoney [id ili ime] [iznos] (negativan iznos oduzima)");
-        return 1;
+        Msg_Usage(playerid, "/%s [id ili ime] [iznos] (negativan iznos oduzima)", bank ? ("givebank") : ("givemoney"));
+        return;
     }
     if (!Staff_CheckTarget(playerid, targetid))
     {
-        return 1;
+        return;
     }
 
-    Money_GiveCash(targetid, amount, "admin /givemoney", g_Player[playerid][pDbId]);
+    if (bank)
+    {
+        Money_GiveBank(targetid, amount, "admin /givebank", g_Player[playerid][pDbId]);
+    }
+    else
+    {
+        Money_GiveCash(targetid, amount, "admin /givemoney", g_Player[playerid][pDbId]);
+    }
     Account_Save(targetid);
 
-    new details[48];
-    Msg_Admin(playerid, "Dali ste $%d igracu %s. Sada ima $%d.", amount, Account_Name(targetid), g_Player[targetid][pCash]);
-    format(details, sizeof(details), "vam je %s $%d.", amount > 0 ? ("dao") : ("oduzeo"), amount > 0 ? amount : -amount);
+    new details[64];
+    Msg_Admin(playerid, "Dali ste $%d igracu %s (%s). Sada ima $%d.", amount, Account_Name(targetid), bank ? ("racun") : ("gotovina"), bank ? g_Player[targetid][pBank] : g_Player[targetid][pCash]);
+    format(details, sizeof(details), "vam je %s $%d%s.", amount > 0 ? ("dao") : ("oduzeo"), amount > 0 ? amount : -amount, bank ? (" na racunu") : (""));
     Staff_NotifyTarget(playerid, targetid, details);
-    format(details, sizeof(details), "%d", amount);
-    Staff_Log(playerid, "givemoney", targetid, details);
+    format(details, sizeof(details), "%d%s", amount, bank ? (" banka") : (""));
+    Staff_Log(playerid, bank ? ("givebank") : ("givemoney"), targetid, details);
+}
+
+cmd:givemoney(playerid, params[])
+{
+    Staff_GiveMoney(playerid, params, false);
+    return 1;
+}
+
+cmd:givebank(playerid, params[])
+{
+    Staff_GiveMoney(playerid, params, true);
     return 1;
 }
 
@@ -1129,10 +1148,10 @@ cmd:ahelp(playerid, params[])
 
     new level = g_Player[playerid][pAdminLevel], body[2048];
 
-    strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns /aclog /kanali\nVozila: /vinfo /gotoveh /atune (admin vozila)\n\n");
+    strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns /aclog /kanali\nVozila: /vinfo /gotoveh /atune (admin vozila) /izmenivozilo [id] (meni)\n" C_SERVER "/aigrac [igrac]" C_WHITE " - sve opcije za igraca u jednom meniju\n\n");
     if (level >= ADMIN_LEVEL_ADMIN)
     {
-        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /gotoulaz /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\nVozila: /getveh /respawnveh /resettablice (uvredljiva tablica)\n\n");
+        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /gotoulaz /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\nVozila: /getveh /respawnveh /resettablice (uvredljiva tablica)\nIgrac: /proveriinv (inventar) /kazne [igrac] /odblokirajpin\n\n");
     }
     if (level >= ADMIN_LEVEL_SENIOR)
     {
@@ -1141,7 +1160,9 @@ cmd:ahelp(playerid, params[])
     if (level >= ADMIN_LEVEL_HEAD)
     {
         strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setglad /setname /pmspy\n" \
-            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo\nKamere: /napravikameru /obrisikameru /kamere\n\n");
+            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo\nKamere: /napravikameru /obrisikameru /kamere /izmenikameru [id]\n" \
+            "Izmene: /izmenivozilo (sve opcije) /izmenimesto [id] /izmenigps [id]    Auto pijaca: /pijaca (meni)\n" \
+            "Igrac: /dajpredmet /uzmipredmet /setlicna /ponistikazne\n" C_GREY "/izmeniulaz [id], /dodajgps i /setvip [igrac] bez ostalih parametara otvaraju meni\n\n");
     }
     if (level >= ADMIN_LEVEL_MANAGEMENT)
     {
@@ -1149,7 +1170,7 @@ cmd:ahelp(playerid, params[])
     }
     if (level >= ADMIN_LEVEL_OWNER)
     {
-        strcat(body, C_ADMIN "6 - Vlasnik\n" C_WHITE "/givemoney /dozvoliime /zabraniime /setvip\n\n");
+        strcat(body, C_ADMIN "6 - Vlasnik\n" C_WHITE "/givemoney (gotovina) /givebank (racun) /dozvoliime /zabraniime /setvip\n\n");
     }
     if (level < ADMIN_LEVEL_OWNER)
     {
