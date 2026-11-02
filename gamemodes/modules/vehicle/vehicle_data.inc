@@ -105,4 +105,4 @@ forward bool:Offer_OnDialogResponse(playerid, dialogid, response, listitem, cons
 forward bool:Plate_StoreFromVehicle(playerid, slot);
 forward bool:Plate_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Fine_OnDialogResponse(playerid, dialogid, response);
-forward bool:Tune_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Tune_OnDialogResponse(playerid, dialogid, response, const inputtext[]);

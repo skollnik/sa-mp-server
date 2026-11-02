@@ -1151,7 +1151,7 @@ cmd:ahelp(playerid, params[])
     strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns /aclog /kanali\nVozila: /vinfo /gotoveh /atune (admin vozila) /izmenivozilo [id] (meni)\n" C_SERVER "/aigrac [igrac]" C_WHITE " - sve opcije za igraca u jednom meniju\n\n");
     if (level >= ADMIN_LEVEL_ADMIN)
     {
-        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /gotoulaz /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\nVozila: /getveh /respawnveh /resettablice (uvredljiva tablica)\nIgrac: /proveriinv (inventar) /kazne [igrac] /odblokirajpin\n\n");
+        strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /gotoulaz /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\nVozila: /getveh /respawnveh /resettablice [id] [tablica] (nasumicne ili sopstvene)\nIgrac: /proveriinv (inventar) /kazne [igrac] /odblokirajpin\n\n");
     }
     if (level >= ADMIN_LEVEL_SENIOR)
     {

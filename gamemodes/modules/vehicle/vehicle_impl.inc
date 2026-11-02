@@ -199,6 +199,45 @@ static stock Veh_ApplyTuning(slot)
     }
 }
 
+// GTA's mod shops and Pay'n'Spray would change a personal vehicle for free, and the change was lost the next time the vehicle
+// was built again (plates, restart), which looked like a colour change out of nowhere. Other players never see the change,
+// and the driver gets the saved look back on leaving the shop.
+new bool:g_VehShopChanged[MAX_VEHICLES];
+
+stock bool:Veh_OnShopChange(vehicleid)
+{
+    if (g_VehSlotOf[vehicleid] == -1)
+    {
+        return true;
+    }
+    g_VehShopChanged[vehicleid] = true;
+    return false;
+}
+
+stock bool:Veh_OnRespray(playerid, vehicleid)
+{
+    new slot = g_VehSlotOf[vehicleid];
+    if (slot == -1)
+    {
+        return true;
+    }
+    ChangeVehicleColours(vehicleid, g_Veh[slot][vColor1], g_Veh[slot][vColor2]);
+    Msg_Info(playerid, "Licno vozilo se ne farba u GTA radionicama; boja je vracena.");
+    return false;
+}
+
+stock Veh_OnExitModShop(playerid)
+{
+    new vehicleid = GetPlayerVehicleID(playerid), slot = g_VehSlotOf[vehicleid];
+    if (vehicleid == 0 || slot == -1 || !g_VehShopChanged[vehicleid])
+    {
+        return;
+    }
+    g_VehShopChanged[vehicleid] = false;
+    Veh_Rebuild(slot);
+    Msg_Info(playerid, "GTA radionice ne menjaju licno vozilo; vraceno je kako je bilo.");
+}
+
 static stock bool:Veh_SpawnAt(slot, Float:x, Float:y, Float:z, Float:angle, interior = 0, world = 0)
 {
     new vehicleid = CreateVehicle(g_Veh[slot][vModel], x, y, z, angle, g_Veh[slot][vColor1], g_Veh[slot][vColor2], -1);
@@ -211,6 +250,7 @@ static stock bool:Veh_SpawnAt(slot, Float:x, Float:y, Float:z, Float:angle, inte
 
     g_Veh[slot][vVehicleId] = vehicleid;
     g_VehSlotOf[vehicleid] = slot;
+    g_VehShopChanged[vehicleid] = false;
     LinkVehicleToInterior(vehicleid, interior);
     SetVehicleVirtualWorld(vehicleid, world);
     // A blank plate instead of the game's default text, which would look like a real registration.
@@ -872,12 +912,23 @@ stock Veh_ShowList(playerid)
         strcat(body, line);
         g_VehListed[playerid][count++] = slot;
     }
-    if (count == 0)
+    // Free places are listed too, so the owner sees how many vehicles they can have and which place comes with VIP.
+    new limit = Veh_MaxFor(playerid), owned = count;
+    for (new place = owned; place < VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA && count < sizeof(g_VehListed[]); place++)
     {
-        Msg_Info(playerid, "Nemate vozilo. Vozila se kupuju na auto pijaci (kad je admin otvori) ili od drugog igraca.");
-        return;
+        strcat(body, place < limit ? ("Slobodno mesto\t-\t-\t-\t-\n") : ("VIP mesto (Silver i Gold VIP)\t-\t-\t-\t-\n"));
+        g_VehListed[playerid][count++] = -1;
     }
-    ShowPlayerDialog(playerid, DIALOG_VEH_LIST, DIALOG_STYLE_TABLIST_HEADERS, "Vasa vozila (klik za opcije)", body, "Izaberi", "Zatvori");
+    new title[64];
+    if (owned > limit)
+    {
+        format(title, sizeof(title), "Vasa vozila: %d od %d mesta (VIP je istekao)", owned, limit);
+    }
+    else
+    {
+        format(title, sizeof(title), "Vasa vozila: %d od %d mesta (klik za opcije)", owned, limit);
+    }
+    ShowPlayerDialog(playerid, DIALOG_VEH_LIST, DIALOG_STYLE_TABLIST_HEADERS, title, body, "Izaberi", "Zatvori");
 }
 
 static stock bool:Veh_IsOwnSlot(playerid, slot)
@@ -924,6 +975,11 @@ stock bool:Veh_OnDialogResponse(playerid, dialogid, response, listitem)
                 return true;
             }
             new slot = g_VehListed[playerid][listitem];
+            if (slot == -1)
+            {
+                Msg_Info(playerid, "Vozilo se kupuje na auto pijaci (/pijaca, kad je otvorena) ili od drugog igraca (/ponudi).");
+                return true;
+            }
             if (Veh_IsOwnSlot(playerid, slot))
             {
                 Veh_ShowActions(playerid, slot);

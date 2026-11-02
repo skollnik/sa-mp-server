@@ -1,10 +1,14 @@
 #define TUNE_COMPONENT_FIRST    (1000)
 #define TUNE_COMPONENT_LAST     (1193)
-#define TUNE_MAX_PARTS          (24)
 // Menu entries after the part slots.
 #define TUNE_MENU_COLOUR        (100)
 #define TUNE_MENU_PAINTJOB      (101)
 #define TUNE_MENU_CLEAR         (102)
+// GTA's own menu sits on the left of the screen, so the vehicle stays in view while it is tuned; a dialog would cover it.
+// It holds at most 12 rows, so longer lists get a last row that turns the page.
+#define TUNE_MENU_ROWS          (12)
+#define TUNE_MAX_ENTRIES        (24)
+#define TUNE_LABEL_LENGTH       (32)
 
 static const g_TuneSlotNames[VEH_TUNE_SLOTS][] =
 {
@@ -20,9 +24,21 @@ static const g_TuneWheelNames[][] =
     "Grove", "Import", "Dollar", "Trance", "Atomic", "Ahab", "Virtual", "Access"
 };
 
-new g_TuneMenu[MAX_PLAYERS][VEH_TUNE_SLOTS + 3];
-new g_TuneParts[MAX_PLAYERS][TUNE_MAX_PARTS];
-new g_TunePartCount[MAX_PLAYERS];
+enum E_TUNE_VIEW
+{
+    TUNE_VIEW_MAIN,
+    TUNE_VIEW_PARTS,
+    TUNE_VIEW_PAINTJOB
+}
+
+new Menu:g_TuneMenuId[MAX_PLAYERS] = { INVALID_MENU, ... };
+new bool:g_TuneActive[MAX_PLAYERS];
+new E_TUNE_VIEW:g_TuneView[MAX_PLAYERS];
+new g_TuneTitle[MAX_PLAYERS][TUNE_LABEL_LENGTH];
+new g_TuneLabels[MAX_PLAYERS][TUNE_MAX_ENTRIES][TUNE_LABEL_LENGTH];
+new g_TuneValues[MAX_PLAYERS][TUNE_MAX_ENTRIES];
+new g_TuneCount[MAX_PLAYERS];
+new g_TunePage[MAX_PLAYERS];
 new g_TuneSlot[MAX_PLAYERS];
 
 // Admin vehicles are for any admin; a personal vehicle is someone's property, so free tuning on it is for senior admins.
@@ -75,47 +91,145 @@ static stock Tune_PartName(component, number, dest[], size = sizeof(dest))
     }
 }
 
-static stock Tune_ShowMenu(playerid, vehicleid)
+// The camera looks at the vehicle from its front right corner and is aimed a little to the left of it,
+// so the vehicle shows on the right half of the screen, away from the menu.
+static stock Tune_FocusCamera(playerid, vehicleid)
 {
-    new body[512], count, model = GetVehicleModel(vehicleid);
+    new Float:x, Float:y, Float:z, Float:angle;
+    GetVehiclePos(vehicleid, x, y, z);
+    GetVehicleZAngle(vehicleid, angle);
+    new Float:cam_x = x - 5.0 * floatsin(angle, degrees) + 4.5 * floatcos(angle, degrees);
+    new Float:cam_y = y + 5.0 * floatcos(angle, degrees) + 4.5 * floatsin(angle, degrees);
+    new Float:dx = x - cam_x, Float:dy = y - cam_y, Float:length = floatsqroot(dx * dx + dy * dy);
+    SetPlayerCameraPos(playerid, cam_x, cam_y, z + 1.6);
+    SetPlayerCameraLookAt(playerid, x - 1.6 * dy / length, y + 1.6 * dx / length, z + 0.3);
+}
+
+static stock Tune_DestroyMenu(playerid)
+{
+    if (g_TuneMenuId[playerid] != INVALID_MENU)
+    {
+        HideMenuForPlayer(g_TuneMenuId[playerid], playerid);
+        DestroyMenu(g_TuneMenuId[playerid]);
+        g_TuneMenuId[playerid] = INVALID_MENU;
+    }
+}
+
+// Also called when the admin leaves the vehicle, dies or disconnects, so the camera and controls always come back.
+stock Tune_Close(playerid)
+{
+    if (!g_TuneActive[playerid])
+    {
+        return;
+    }
+    g_TuneActive[playerid] = false;
+    Tune_DestroyMenu(playerid);
+    if (IsPlayerConnected(playerid))
+    {
+        SetCameraBehindPlayer(playerid);
+        if (!g_Staff[playerid][sFrozen])
+        {
+            TogglePlayerControllable(playerid, true);
+        }
+    }
+}
+
+static stock Tune_RowsOnPage(playerid)
+{
+    return g_TuneCount[playerid] <= TUNE_MENU_ROWS ? g_TuneCount[playerid] : TUNE_MENU_ROWS - 1;
+}
+
+static stock Tune_Present(playerid)
+{
+    Tune_DestroyMenu(playerid);
+    new rows = Tune_RowsOnPage(playerid), first = g_TunePage[playerid] * rows;
+    new Menu:menu = CreateMenu(g_TuneTitle[playerid], 1, 30.0, 150.0, 200.0);
+    if (menu == INVALID_MENU)
+    {
+        Msg_Error(playerid, "Meni trenutno nije dostupan, pokusajte ponovo.");
+        Tune_Close(playerid);
+        return;
+    }
+    for (new i = first; i < first + rows && i < g_TuneCount[playerid]; i++)
+    {
+        AddMenuItem(menu, 0, g_TuneLabels[playerid][i]);
+    }
+    if (g_TuneCount[playerid] > TUNE_MENU_ROWS)
+    {
+        AddMenuItem(menu, 0, "Sledeca strana >>");
+    }
+    g_TuneMenuId[playerid] = menu;
+    ShowMenuForPlayer(menu, playerid);
+}
+
+static stock Tune_Begin(playerid, E_TUNE_VIEW:view, const title[])
+{
+    g_TuneView[playerid] = view;
+    g_TuneCount[playerid] = 0;
+    g_TunePage[playerid] = 0;
+    strcopy(g_TuneTitle[playerid], title, TUNE_LABEL_LENGTH);
+}
+
+static stock Tune_Add(playerid, const label[], value)
+{
+    new i = g_TuneCount[playerid];
+    if (i >= TUNE_MAX_ENTRIES)
+    {
+        return;
+    }
+    strcopy(g_TuneLabels[playerid][i], label, TUNE_LABEL_LENGTH);
+    g_TuneValues[playerid][i] = value;
+    g_TuneCount[playerid]++;
+}
+
+static stock Tune_ShowMain(playerid, vehicleid)
+{
+    new model = GetVehicleModel(vehicleid);
+    Tune_Begin(playerid, TUNE_VIEW_MAIN, "Tuning");
     for (new slot = 0; slot < VEH_TUNE_SLOTS; slot++)
     {
         for (new c = TUNE_COMPONENT_FIRST; c <= TUNE_COMPONENT_LAST; c++)
         {
             if (_:GetVehicleComponentType(c) == slot && VehicleCanHaveComponent(model, c))
             {
-                strcat(body, g_TuneSlotNames[slot]);
-                strcat(body, "\n");
-                g_TuneMenu[playerid][count++] = slot;
+                Tune_Add(playerid, g_TuneSlotNames[slot], slot);
                 break;
             }
         }
     }
-    strcat(body, "Boja\nPaintjob\nSkini sav tuning");
-    g_TuneMenu[playerid][count++] = TUNE_MENU_COLOUR;
-    g_TuneMenu[playerid][count++] = TUNE_MENU_PAINTJOB;
-    g_TuneMenu[playerid][count] = TUNE_MENU_CLEAR;
-    ShowPlayerDialog(playerid, DIALOG_TUNE_MENU, DIALOG_STYLE_LIST, "Tuning vozila", body, "Izaberi", "Zatvori");
+    Tune_Add(playerid, "Boja", TUNE_MENU_COLOUR);
+    Tune_Add(playerid, "Paintjob", TUNE_MENU_PAINTJOB);
+    Tune_Add(playerid, "Skini sav tuning", TUNE_MENU_CLEAR);
+    Tune_Present(playerid);
 }
 
-static stock Tune_ShowParts(playerid, vehicleid, slot)
+static stock Tune_ShowParts(playerid, vehicleid, slot, page = 0)
 {
-    new body[640], name[24], line[48], count, model = GetVehicleModel(vehicleid);
-    strcopy(body, "Bez dela (skini)\n");
-    g_TuneParts[playerid][count++] = 0;
-    for (new c = TUNE_COMPONENT_FIRST; c <= TUNE_COMPONENT_LAST && count < TUNE_MAX_PARTS; c++)
+    new name[24], label[TUNE_LABEL_LENGTH], count, model = GetVehicleModel(vehicleid);
+    Tune_Begin(playerid, TUNE_VIEW_PARTS, g_TuneSlotNames[slot]);
+    g_TuneSlot[playerid] = slot;
+    Tune_Add(playerid, "Bez dela (skini)", 0);
+    for (new c = TUNE_COMPONENT_FIRST; c <= TUNE_COMPONENT_LAST; c++)
     {
         if (_:GetVehicleComponentType(c) == slot && VehicleCanHaveComponent(model, c))
         {
-            Tune_PartName(c, count, name);
-            format(line, sizeof(line), "%s%s\n", name, GetVehicleComponentInSlot(vehicleid, CARMODTYPE:slot) == c ? (" (stavljeno)") : (""));
-            strcat(body, line);
-            g_TuneParts[playerid][count++] = c;
+            Tune_PartName(c, ++count, name);
+            format(label, sizeof(label), "%s%s", name, GetVehicleComponentInSlot(vehicleid, CARMODTYPE:slot) == c ? (" (stavljeno)") : (""));
+            Tune_Add(playerid, label, c);
         }
     }
-    g_TunePartCount[playerid] = count;
-    g_TuneSlot[playerid] = slot;
-    ShowPlayerDialog(playerid, DIALOG_TUNE_PARTS, DIALOG_STYLE_LIST, g_TuneSlotNames[slot], body, "Stavi", "Nazad");
+    g_TunePage[playerid] = page;
+    Tune_Present(playerid);
+}
+
+static stock Tune_ShowPaintjobs(playerid)
+{
+    Tune_Begin(playerid, TUNE_VIEW_PAINTJOB, "Paintjob");
+    Tune_Add(playerid, "Paintjob 1", 0);
+    Tune_Add(playerid, "Paintjob 2", 1);
+    Tune_Add(playerid, "Paintjob 3", 2);
+    Tune_Add(playerid, "Bez paintjob-a", VEH_PAINTJOB_NONE);
+    Tune_Present(playerid);
 }
 
 // A personal vehicle keeps its tuning, and the change is logged since it is free value for the owner.
@@ -188,98 +302,143 @@ static stock Tune_Clear(playerid, vehicleid)
 cmd:atune(playerid, params[])
 {
     new vehicleid = Tune_GetVehicle(playerid);
-    if (vehicleid != 0)
+    if (vehicleid == 0)
     {
-        Tune_ShowMenu(playerid, vehicleid);
+        return 1;
     }
+    // Frozen so the menu keys do not drive the vehicle away from the camera.
+    g_TuneActive[playerid] = true;
+    TogglePlayerControllable(playerid, false);
+    Tune_FocusCamera(playerid, vehicleid);
+    Tune_ShowMain(playerid, vehicleid);
+    Msg_Info(playerid, "Strelice gore i dole biraju, Space potvrdjuje, Enter vraca nazad i zatvara meni.");
     return 1;
 }
 
-stock bool:Tune_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[])
+stock Tune_OnPlayerSelectedMenuRow(playerid, row)
 {
-    if (dialogid != DIALOG_TUNE_MENU && dialogid != DIALOG_TUNE_PARTS && dialogid != DIALOG_TUNE_COLOUR && dialogid != DIALOG_TUNE_PAINTJOB)
+    if (!g_TuneActive[playerid])
     {
-        return false;
+        return;
     }
-    if (!response && dialogid == DIALOG_TUNE_MENU)
-    {
-        return true;
-    }
-    // The player could have left the vehicle or the duty while the dialog was open.
+    // The admin could have left the vehicle or gone off duty while the menu was open.
     new vehicleid = Tune_GetVehicle(playerid);
     if (vehicleid == 0)
     {
-        return true;
+        Tune_Close(playerid);
+        return;
     }
-    if (!response)
+    new rows = Tune_RowsOnPage(playerid);
+    if (g_TuneCount[playerid] > TUNE_MENU_ROWS && row == rows)
     {
-        Tune_ShowMenu(playerid, vehicleid);
-        return true;
+        new pages = (g_TuneCount[playerid] + rows - 1) / rows;
+        g_TunePage[playerid] = (g_TunePage[playerid] + 1) % pages;
+        Tune_Present(playerid);
+        return;
     }
-
-    switch (dialogid)
+    new index = g_TunePage[playerid] * rows + row;
+    if (row < 0 || row >= rows || index >= g_TuneCount[playerid])
     {
-        case DIALOG_TUNE_MENU:
+        Tune_Present(playerid);
+        return;
+    }
+    new value = g_TuneValues[playerid][index];
+    switch (g_TuneView[playerid])
+    {
+        case TUNE_VIEW_MAIN:
         {
-            if (listitem < 0 || listitem >= sizeof(g_TuneMenu[]))
-            {
-                return true;
-            }
-            switch (g_TuneMenu[playerid][listitem])
+            switch (value)
             {
                 case TUNE_MENU_COLOUR:
                 {
+                    Tune_DestroyMenu(playerid);
                     ShowPlayerDialog(playerid, DIALOG_TUNE_COLOUR, DIALOG_STYLE_INPUT, "Boja vozila", "Upisite dve boje (0-255), npr: 1 0", "Ofarbaj", "Nazad");
                 }
                 case TUNE_MENU_PAINTJOB:
                 {
-                    ShowPlayerDialog(playerid, DIALOG_TUNE_PAINTJOB, DIALOG_STYLE_LIST, "Paintjob (samo neki modeli)", "Paintjob 1\nPaintjob 2\nPaintjob 3\nBez paintjob-a", "Izaberi", "Nazad");
+                    Tune_ShowPaintjobs(playerid);
                 }
                 case TUNE_MENU_CLEAR:
                 {
                     Tune_Clear(playerid, vehicleid);
                     Msg_Admin(playerid, "Sav tuning je skinut sa vozila.");
-                    Tune_ShowMenu(playerid, vehicleid);
+                    Tune_ShowMain(playerid, vehicleid);
                 }
                 default:
                 {
-                    Tune_ShowParts(playerid, vehicleid, g_TuneMenu[playerid][listitem]);
+                    Tune_ShowParts(playerid, vehicleid, value);
                 }
             }
         }
-        case DIALOG_TUNE_PARTS:
+        case TUNE_VIEW_PARTS:
         {
-            if (listitem >= 0 && listitem < g_TunePartCount[playerid])
-            {
-                Tune_SetPart(playerid, vehicleid, g_TuneSlot[playerid], g_TuneParts[playerid][listitem]);
-            }
-            Tune_ShowParts(playerid, vehicleid, g_TuneSlot[playerid]);
+            Tune_SetPart(playerid, vehicleid, g_TuneSlot[playerid], value);
+            Tune_ShowParts(playerid, vehicleid, g_TuneSlot[playerid], g_TunePage[playerid]);
         }
-        case DIALOG_TUNE_COLOUR:
+        case TUNE_VIEW_PAINTJOB:
         {
-            new colour1, colour2;
-            if (sscanf(inputtext, "dd", colour1, colour2) || colour1 < 0 || colour1 > 255 || colour2 < 0 || colour2 > 255)
-            {
-                Msg_Error(playerid, "Upisite dve boje od 0 do 255, npr: 1 0");
-            }
-            else
-            {
-                ChangeVehicleColours(vehicleid, colour1, colour2);
-                Veh_OnColoursChanged(vehicleid, colour1, colour2);
-                new what[24];
-                format(what, sizeof(what), "boja %d %d", colour1, colour2);
-                Tune_Saved(playerid, vehicleid, what);
-            }
-            Tune_ShowMenu(playerid, vehicleid);
-        }
-        case DIALOG_TUNE_PAINTJOB:
-        {
-            if (listitem >= 0 && listitem <= VEH_PAINTJOB_NONE)
-            {
-                Tune_SetPaintjob(playerid, vehicleid, listitem);
-            }
-            Tune_ShowMenu(playerid, vehicleid);
+            Tune_SetPaintjob(playerid, vehicleid, value);
+            Tune_ShowMain(playerid, vehicleid);
         }
     }
+}
+
+// Enter in a sub-menu goes back to the main one; in the main menu it ends tuning.
+stock Tune_OnPlayerExitedMenu(playerid)
+{
+    if (!g_TuneActive[playerid])
+    {
+        return;
+    }
+    new vehicleid = Tune_GetVehicle(playerid);
+    if (vehicleid == 0 || g_TuneView[playerid] == TUNE_VIEW_MAIN)
+    {
+        Tune_Close(playerid);
+        return;
+    }
+    Tune_ShowMain(playerid, vehicleid);
+}
+
+stock Tune_OnPlayerStateChange(playerid, PLAYER_STATE:newstate)
+{
+    if (newstate != PLAYER_STATE_DRIVER)
+    {
+        Tune_Close(playerid);
+    }
+}
+
+stock bool:Tune_OnDialogResponse(playerid, dialogid, response, const inputtext[])
+{
+    if (dialogid != DIALOG_TUNE_COLOUR)
+    {
+        return false;
+    }
+    if (!g_TuneActive[playerid])
+    {
+        return true;
+    }
+    new vehicleid = Tune_GetVehicle(playerid);
+    if (vehicleid == 0)
+    {
+        Tune_Close(playerid);
+        return true;
+    }
+    if (response)
+    {
+        new colour1, colour2;
+        if (sscanf(inputtext, "dd", colour1, colour2) || colour1 < 0 || colour1 > 255 || colour2 < 0 || colour2 > 255)
+        {
+            Msg_Error(playerid, "Upisite dve boje od 0 do 255, npr: 1 0");
+        }
+        else
+        {
+            ChangeVehicleColours(vehicleid, colour1, colour2);
+            Veh_OnColoursChanged(vehicleid, colour1, colour2);
+            new what[24];
+            format(what, sizeof(what), "boja %d %d", colour1, colour2);
+            Tune_Saved(playerid, vehicleid, what);
+        }
+    }
+    Tune_ShowMain(playerid, vehicleid);
     return true;
 }

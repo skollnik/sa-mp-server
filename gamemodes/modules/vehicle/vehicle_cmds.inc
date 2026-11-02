@@ -130,6 +130,7 @@ static const g_VehEditMenu[][E_MENU_ITEM] =
     { ADMIN_LEVEL_HEAD, "Ukloni kopiju kljuca", "izmenivozilo %s kljuc", "" },
     { ADMIN_LEVEL_HEAD, "Zakljucaj / otkljucaj", "izmenivozilo %s zakljucaj", "" },
     { ADMIN_LEVEL_ADMIN, "Nove nasumicne tablice", "resettablice %s", "" },
+    { ADMIN_LEVEL_ADMIN, "Sopstvene tablice", "resettablice %s", "Tablica (2-8 znakova, A-Z, 0-9, razmak, crtica):" },
     { ADMIN_LEVEL_TRIAL, "Teleport do vozila", "gotoveh %s", "" },
     { ADMIN_LEVEL_ADMIN, "Dovedi vozilo", "getveh %s", "" },
     { ADMIN_LEVEL_ADMIN, "Vrati na parking", "respawnveh %s", "" },

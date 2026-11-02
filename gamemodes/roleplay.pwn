@@ -204,6 +204,7 @@ public OnPlayerConnect(playerid)
 
 public OnPlayerDisconnect(playerid, reason)
 {
+    Tune_Close(playerid);
     Gps_OnPlayerDisconnect(playerid);
     Phone_OnPlayerDisconnect(playerid);
     Beg_OnPlayerDisconnect(playerid);
@@ -267,6 +268,43 @@ public OnPlayerExitVehicle(playerid, vehicleid)
     return 1;
 }
 
+public OnPlayerSelectedMenuRow(playerid, row)
+{
+    Tune_OnPlayerSelectedMenuRow(playerid, row);
+    return 1;
+}
+
+public OnPlayerExitedMenu(playerid)
+{
+    Tune_OnPlayerExitedMenu(playerid);
+    return 1;
+}
+
+public OnEnterExitModShop(playerid, enterexit, interiorid)
+{
+    if (enterexit == 0)
+    {
+        Veh_OnExitModShop(playerid);
+    }
+    return 1;
+}
+
+public OnVehicleMod(playerid, vehicleid, componentid)
+{
+    return Veh_OnShopChange(vehicleid) ? 1 : 0;
+}
+
+public OnVehiclePaintjob(playerid, vehicleid, paintjobid)
+{
+    Veh_OnShopChange(vehicleid);
+    return 1;
+}
+
+public OnVehicleRespray(playerid, vehicleid, color1, color2)
+{
+    return Veh_OnRespray(playerid, vehicleid) ? 1 : 0;
+}
+
 public OnVehicleDeath(vehicleid, killerid)
 {
     Veh_OnVehicleDeath(vehicleid);
@@ -280,6 +318,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
     Phone_OnPlayerDeath(playerid);
     Hunger_OnPlayerDeath(playerid);
     Beg_OnPlayerDeath(playerid);
+    Tune_Close(playerid);
     return 1;
 }
 
@@ -290,6 +329,7 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
     Veh_OnPlayerStateChange(playerid, newstate);
     Speedo_OnPlayerStateChange(playerid, newstate);
     Market_OnPlayerStateChange(playerid, newstate);
+    Tune_OnPlayerStateChange(playerid, newstate);
     return 1;
 }
 
@@ -399,7 +439,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     {
         return 1;
     }
-    if (Tune_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    if (Tune_OnDialogResponse(playerid, dialogid, response, inputtext))
     {
         return 1;
     }

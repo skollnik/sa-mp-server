@@ -1,14 +1,16 @@
 #define PLATE_CUSTOM_MIN        (2)
 #define PLATE_CUSTOM_MAX        (8)
 #define PLATE_STORED_MAX        (3)
+#define PLATE_CUSTOM_RULES      "2 do 8 znakova: slova A-Z, brojevi 0-9, razmak i crtica"
 
 enum E_PLATE_PURPOSE
 {
     PLATE_FIRST,
     PLATE_NEW,
     PLATE_CUSTOM,
-    // An admin replaces an unfitting plate for free; it is mounted right away.
-    PLATE_ADMIN
+    // An admin replaces an unfitting plate for free, with a random or a chosen one; it is mounted right away.
+    PLATE_ADMIN,
+    PLATE_ADMIN_CUSTOM
 }
 
 new g_PlateListed[MAX_PLAYERS][VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA + 1];
@@ -135,7 +137,7 @@ public OnPlateChecked(playerid, race, dbid, purpose, const plate[])
     new E_PLATE_PURPOSE:kind = E_PLATE_PURPOSE:purpose;
     if (cache_num_rows() > 0)
     {
-        if (kind == PLATE_CUSTOM)
+        if (kind == PLATE_CUSTOM || kind == PLATE_ADMIN_CUSTOM)
         {
             Msg_Error(playerid, "Tablica %s je zauzeta. Izaberite drugu.", plate);
         }
@@ -151,10 +153,10 @@ public OnPlateChecked(playerid, race, dbid, purpose, const plate[])
         return 1;
     }
 
-    if (kind == PLATE_ADMIN)
+    if (kind == PLATE_ADMIN || kind == PLATE_ADMIN_CUSTOM)
     {
         new ownerid = Account_FindOnlineByDbId(g_Veh[slot][vOwnerDbId]), details[64];
-        format(details, sizeof(details), "vozilo %d: %s -> %s", dbid, g_Veh[slot][vPlate], plate);
+        format(details, sizeof(details), "vozilo %d: '%s' -> %s", dbid, g_Veh[slot][vPlate], plate);
         Staff_Log(playerid, "resetplate", ownerid, details);
         Plate_Mount(slot, plate);
         Msg_Admin(playerid, "Vozilo %d ima nove tablice: %s.", dbid, plate);
@@ -324,7 +326,7 @@ stock bool:Plate_OnDialogResponse(playerid, dialogid, response, listitem, const 
             else if (listitem == 1)
             {
                 ShowPlayerDialog(playerid, DIALOG_PLATE_CUSTOM, DIALOG_STYLE_INPUT, "Sopstvena tablica",
-                    "Upisite tablicu: 2 do 8 znakova, slova A-Z, brojevi 0-9, razmak i crtica.\nAdmin moze da zameni uvredljivu tablicu bez povracaja novca.", "Izvadi", "Nazad");
+                    "Upisite tablicu: " PLATE_CUSTOM_RULES ".\nAdmin moze da zameni uvredljivu tablicu bez povracaja novca.", "Izvadi", "Nazad");
             }
         }
         case DIALOG_PLATE_CUSTOM:
@@ -342,7 +344,7 @@ stock bool:Plate_OnDialogResponse(playerid, dialogid, response, listitem, const 
             new plate[VEH_PLATE_LENGTH];
             if (!Plate_ParseCustom(inputtext, plate))
             {
-                Msg_Error(playerid, "Tablica mora imati 2 do 8 znakova: slova A-Z, brojevi 0-9, razmak i crtica.");
+                Msg_Error(playerid, "Tablica mora imati " PLATE_CUSTOM_RULES ".");
                 Plate_ShowActions(playerid, slot);
                 return true;
             }
@@ -424,18 +426,29 @@ cmd:resettablice(playerid, params[])
     {
         return 1;
     }
-    new vehicleid;
-    if (sscanf(params, "d", vehicleid) || vehicleid < 1 || vehicleid >= MAX_VEHICLES)
+    new vehicleid, text[16];
+    if (sscanf(params, "dS()[16]", vehicleid, text) || vehicleid < 1 || vehicleid >= MAX_VEHICLES)
     {
-        Msg_Usage(playerid, "/resettablice [id vozila] (uvredljiva tablica postaje nova nasumicna, besplatno; ID sa /vinfo)");
+        Msg_Usage(playerid, "/resettablice [id vozila] [tablica] (bez tablice: nove nasumicne; besplatno, postavljaju se odmah; ID sa /vinfo)");
         return 1;
     }
     new slot = g_VehSlotOf[vehicleid];
-    if (slot == -1 || !g_Veh[slot][vPlate][0])
+    if (slot == -1)
     {
-        Msg_Error(playerid, "To nije licno vozilo sa tablicama.");
+        Msg_Error(playerid, "To nije licno vozilo.");
         return 1;
     }
-    Plate_RequestRandom(playerid, g_Veh[slot][vDbId], PLATE_ADMIN);
+    if (isnull(text))
+    {
+        Plate_RequestRandom(playerid, g_Veh[slot][vDbId], PLATE_ADMIN);
+        return 1;
+    }
+    new plate[VEH_PLATE_LENGTH];
+    if (!Plate_ParseCustom(text, plate))
+    {
+        Msg_Error(playerid, "Tablica mora imati " PLATE_CUSTOM_RULES ".");
+        return 1;
+    }
+    Plate_Check(playerid, g_Veh[slot][vDbId], PLATE_ADMIN_CUSTOM, plate);
     return 1;
 }
