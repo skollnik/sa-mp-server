@@ -477,3 +477,35 @@ cmd:setgorivo(playerid, params[])
     Msg_Admin(playerid, "Vozilo %d sada ima %d/%d l goriva.", vehicleid, litres, tank);
     return 1;
 }
+
+// Taking slots back does not take vehicles away, same as when VIP ends.
+cmd:setmesta(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    {
+        return 1;
+    }
+    new targetid, extra;
+    if (sscanf(params, "ud", targetid, extra) || extra < 0 || extra > VEH_ADMIN_EXTRA_MAX)
+    {
+        Msg_Usage(playerid, "/setmesta [id ili ime] [0-%d] (dodatna mesta za vozila, pored obicnih i VIP)", VEH_ADMIN_EXTRA_MAX);
+        return 1;
+    }
+    if (!Staff_CheckTarget(playerid, targetid))
+    {
+        return 1;
+    }
+    g_Player[targetid][pExtraVehSlots] = extra;
+    new query[96], details[32];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `extra_vehicle_slots` = %d WHERE `id` = %d", extra, g_Player[targetid][pDbId]);
+    mysql_tquery(g_SQL, query);
+
+    format(details, sizeof(details), "dodatna mesta: %d", extra);
+    Staff_Log(playerid, "setvehslots", targetid, details);
+    Msg_Admin(playerid, "Igrac %s ima %d dodatnih mesta, ukupno %d mesta za vozila.", Account_Name(targetid), extra, Veh_MaxFor(targetid));
+    if (targetid != playerid)
+    {
+        Msg_Info(targetid, "Admin %s vam je podesio mesta za vozila: sada ih imate %d (/v).", Account_Name(playerid), Veh_MaxFor(targetid));
+    }
+    return 1;
+}

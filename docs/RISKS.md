@@ -221,7 +221,9 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Pregled oštećenog vozila dok mehaničar ne postoji | 👁 | Uslov je 650 HP (VIP `/vfix` i admin `/fixveh` popravljaju); kad dođe mehaničar, uslov raste (BACKLOG) |
 | Nove tablice se ne vide dok se vozilo ponovo ne napravi | ✅ | Vozilo se pravi ponovo na istom mestu, sa istim stanjem, a putnici se vraćaju na svoja mesta (vlasnik proverava u igri) |
 | Admin besplatno tunira vozila prijateljima | ✅ | Admin nivoa 1 i 2 tunira samo admin vozila; lična vozila tek nivo 3+, uz log i poruku vlasniku |
-| Besplatan tuning i farbanje u GTA radionicama (Transfender, Pay'n'spray) | ✅ | Na ličnom vozilu drugi ne vide promenu; boja se vraća odmah, delovi i paintjob pri izlasku iz radionice (vozilo se pravi ponovo sa sačuvanim izgledom) |
+| Besplatan tuning, farbanje i popravka u GTA radionicama (Transfender, Pay'n'spray) | ✅ | Radionice su zatvorene (vozilo se odbija od vrata); ako neko ipak uđe zbog laga, lično vozilo se vraća na sačuvani izgled, a drugi ne vide promenu |
+| Igrač se zaglavi kod zatvorene radionice | ✅ | Odbija se samo vozilo koje ide ka vratima sa strane sa koje je došlo; vozilo koje je unutra može slobodno da izađe |
+| Admin daje dodatna mesta za vozila prijateljima | 👁 | Samo nivo 4, najviše 5 mesta, svaka promena ide u admin log |
 | Admin ostane bez kontrola ili sa zaglavljenom kamerom posle `/atune` | ✅ | Kamera i kontrole se vraćaju pri zatvaranju menija, izlasku iz vozila, smrti i izlasku sa servera; admin koga je drugi admin zamrznuo (`/freeze`) ostaje zamrznut |
 | Admin sopstvenom tablicom uzme tuđu ili uvredljivu tablicu | ✅ | Ista pravila i provera zauzetosti kao za igrača (i sačuvane tablice); svaka promena ide u admin log |
 | `/resetvozila` izbaci nekoga ili obriše admin vozilo u upotrebi | ✅ | Pre reseta svi dobijaju poruku i vreme da sednu u vozilo; vozila u kojima neko sedi se ne diraju |
@@ -461,7 +463,9 @@ Every new system or change goes through these questions, against all existing sy
 | Inspecting a damaged vehicle while there is no mechanic | 👁 | The requirement is 650 HP (VIP `/vfix` and admin `/fixveh` repair); it goes up once the mechanic exists (backlog) |
 | New plates do not show until the vehicle is created again | ✅ | The vehicle is created again on the same spot with the same state, and passengers are put back in their seats (the owner checks in game) |
 | An admin tunes friends' vehicles for free | ✅ | Admins of level 1 and 2 tune only admin vehicles; personal vehicles need level 3+, logged and the owner is told |
-| Free tuning and paint in GTA shops (Transfender, Pay'n'spray) | ✅ | On a personal vehicle nobody else sees the change; the colour goes back right away, parts and paintjob when leaving the shop (the vehicle is created again with its saved look) |
+| Free tuning, paint and repair in GTA shops (Transfender, Pay'n'spray) | ✅ | The shops are closed (vehicles bounce off the door); if someone gets in through lag, a personal vehicle goes back to its saved look and nobody else sees the change |
+| A player gets stuck at a closed shop | ✅ | Only a vehicle heading for the door from the side it came from is pushed; a vehicle inside can leave freely |
+| An admin gives friends extra vehicle slots | 👁 | Level 4 only, at most 5 slots, every change goes to the admin log |
 | An admin is left without controls or with a stuck camera after `/atune` | ✅ | The camera and controls come back when the menu closes, on leaving the vehicle, on death and on disconnect; an admin frozen by another admin (`/freeze`) stays frozen |
 | An admin takes someone else's plate or an offensive one with a custom plate | ✅ | The same rules and taken-plate check as for players (stored plates too); every change goes to the admin log |
 | `/resetvozila` throws someone out or removes an admin vehicle in use | ✅ | Everyone gets a message and time to sit in a vehicle first; vehicles with someone inside are left alone |

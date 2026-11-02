@@ -91,6 +91,7 @@
 
 #include "modules/vehicle/vehicle_impl.inc"
 #include "modules/vehicle/fuel.inc"
+#include "modules/vehicle/garages.inc"
 #include "modules/vehicle/registration.inc"
 #include "modules/vehicle/tuning.inc"
 #include "modules/vehicle/plates.inc"
@@ -144,6 +145,7 @@ public OnGameModeInit()
     Veh_Init();
     Fine_Init();
     Cam_Init();
+    Garage_Init();
     Plate_Init();
     Market_Init();
     Offer_Init();
@@ -192,6 +194,7 @@ public OnPlayerConnect(playerid)
     Veh_OnPlayerConnect(playerid);
     Fine_OnPlayerConnect(playerid);
     Plate_OnPlayerConnect(playerid);
+    Garage_OnPlayerConnect(playerid);
     Offer_OnPlayerConnect(playerid);
     Bet_OnPlayerConnect(playerid);
     Beg_OnPlayerConnect(playerid);
@@ -259,6 +262,13 @@ public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bod
 public OnPlayerEnterDynamicArea(playerid, STREAMER_TAG_AREA:areaid)
 {
     Cam_OnPlayerEnterArea(playerid, areaid);
+    Garage_OnPlayerEnterArea(playerid, areaid);
+    return 1;
+}
+
+public OnPlayerLeaveDynamicArea(playerid, STREAMER_TAG_AREA:areaid)
+{
+    Garage_OnPlayerLeaveArea(playerid, areaid);
     return 1;
 }
 

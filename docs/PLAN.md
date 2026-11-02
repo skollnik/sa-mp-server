@@ -60,10 +60,10 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Dopune 3.1: vozila stalno u svetu, paljenje motora 1,5 s, upaljeno vozilo vozi i igrač bez ključa, VEH-2 registracija i tehnički pregled (mapa u Willowfield-u), admin `/atune`, `/resetvozila` sa odbrojavanjem, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` sa listom
 - [x] Tablice u policiji (prve, nove, sopstvene), kamere po gradu sa kaznama (`/kazne`)
 - [x] Korak 3.2: ADM-8 auto pijaca (event), prodaja i zamena vozila između igrača (`/ponudi`), sačuvane tablice, VIP mesto za vozilo; admin meniji (`/aigrac`, `/izmenivozilo` i ostali)
-- [x] Dopune 3.2: `/atune` u GTA meniju sa strane (vozilo se vidi), admin sopstvene tablice, slobodna i VIP mesta u `/v`, GTA radionice ne menjaju lična vozila
+- [x] Dopune 3.2: `/atune` u GTA meniju sa strane (vozilo se vidi), admin sopstvene tablice, slobodna i VIP mesta u `/v`, GTA radionice ne menjaju lična vozila; GTA radionice i Pay'n'spray zatvoreni, admin dodatna mesta za vozila (`/setmesta`)
 - [ ] Korak 3.3: VEH-8 gepek kao inventar, kanister
 - [ ] Korak 3.4: LIC-1, LIC-2 auto škola i dozvole
-- [ ] Korak 3.5: VEH-6 šteta i kilometraža, JOB-3 mehaničar, VEH-9 rent-a-car i bicikli, pay'n'spray
+- [ ] Korak 3.5: VEH-6 šteta i kilometraža, JOB-3 mehaničar, VEH-9 rent-a-car i bicikli
 
 ### Faza 4: Imovina
 - [ ] PROP-1 – PROP-5: kuće, iznajmljivanje, sef, nameštaj, garaže
@@ -171,10 +171,10 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] 3.1 additions: vehicles always in the world, a 1.5 s engine start, a running vehicle can be driven without a key, VEH-2 registration and technical inspection (a map in Willowfield), admin `/atune`, `/resetvozila` with a countdown, `/vinfo`, `/gotoveh`, `/getveh`, `/respawnveh`, `/setgorivo`, `/napravimesto` with a list
 - [x] Plates at the police station (first, new, custom), city cameras with fines (`/kazne`)
 - [x] Step 3.2: ADM-8 car market (event), vehicle sales and trades between players (`/ponudi`), kept plates, VIP vehicle slot; admin menus (`/aigrac`, `/izmenivozilo` and others)
-- [x] 3.2 additions: `/atune` in GTA's side menu (the vehicle stays in view), admin custom plates, free and VIP slots in `/v`, GTA shops do not change personal vehicles
+- [x] 3.2 additions: `/atune` in GTA's side menu (the vehicle stays in view), admin custom plates, free and VIP slots in `/v`, GTA shops do not change personal vehicles; GTA shops and Pay'n'spray closed, admin extra vehicle slots (`/setmesta`)
 - [ ] Step 3.3: VEH-8 trunk as inventory, jerry can
 - [ ] Step 3.4: LIC-1, LIC-2 driving school and licenses
-- [ ] Step 3.5: VEH-6 damage and mileage, JOB-3 mechanic, VEH-9 car and bike rental, pay'n'spray
+- [ ] Step 3.5: VEH-6 damage and mileage, JOB-3 mechanic, VEH-9 car and bike rental
 
 ### Phase 4: Property
 - [ ] PROP-1 – PROP-5: houses, renting, safe, furniture, garages

@@ -104,7 +104,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 |--------|------------------------------|------|
 | Limiter brzine (`/limit`) | Vozač zada najveću brzinu | — |
 | ✅ Tehnički pregled | Registracija važi X dana, produžava se na tehničkom pregledu; policija proverava | — |
-| Pay'n'spray i perionica | Plaća se popravka i farbanje ili pranje vozila | Pay'n'spray postoji u GTA; perionica nema mapu |
+| Perionica | Plaćeno pranje vozila | Nema mapu; Pay'n'spray je ugašen (odluka vlasnika 02.11.2026), popravka i farbanje su samo kod mehaničara |
 | Drive-thru | Naručivanje hrane iz vozila na prolazu restorana brze hrane | Prolazi postoje u GTA |
 | Iznajmljivanje bicikala i skutera | Punkt sa vozilima, plaća se po satu, vozilo nestaje kad istekne | Mapa sa 7 malih punktova (LS: Unity stanica, kod opštine, kod bolnice, Downtown, Conference Center; Dillimore) |
 | Stanovi i vikendice | Novi tipovi imovine pored kuće (PROP-1) | Stanovi #1161; vikend naselje #0318–#0328 |
@@ -272,6 +272,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 31.10.2026. | Korak 3.2: auto pijaca (`/pijaca`, `/kupivozilo`; gotovina ili račun, pola rezervoara), prodaja i zamena vozila (`/ponudi`, 5% takse, najmanje $1.000), sačuvane tablice pri prodaji, VIP mesto za vozilo; admin meniji (`/aigrac`, `/izmenivozilo`, `/izmeniulaz [id]`, `/izmenimesto`, `/izmenigps`, `/izmenikameru`, `/dodajgps`, `/setvip`), nove admin komande (`/proveriinv`, `/dajpredmet`, `/uzmipredmet`, `/kazne [igrac]`, `/ponistikazne`, `/setlicna`, `/odblokirajpin`, `/givebank`); meni vozila u `/v`; natpis kamere 40 m; provera svih komandi u pomoći |
 | 31.10.2026. | Bolnica spolja sa parkom ispred nje i enterijer bolnice |
 | 02.11.2026. | Dopune 3.2: `/atune` u GTA meniju sa leve strane i sa kamerom na vozilo, admin sopstvene tablice (`/resettablice [id] [tablica]`, meni `/izmenivozilo`), u `/v` se vide slobodna i VIP mesta, GTA radionice i Pay'n'spray ne menjaju lična vozila (boja se više ne menja pri postavljanju tablica) |
+| 02.11.2026. | GTA radionice (Transfender, Loco Low Co, Wheel Arch Angels) i svi Pay'n'spray-evi su zatvoreni: vozilo se odbija od vrata; admin daje dodatna mesta za vozila (`/setmesta [igrac] [0-5]`, i u `/aigrac`); `/atune` na poslednjoj strani nudi „Prva strana“ |
 
 ---
 
@@ -379,7 +380,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 |------|------------------------------------|-----|
 | Speed limiter (`/limit`) | The driver sets a top speed | — |
 | ✅ Vehicle inspection | Registration is valid for X days and renewed at the inspection; police check it | — |
-| Pay'n'spray and car wash | Paid repair and respray, or a car wash | Pay'n'spray exists in GTA; no car wash map |
+| Car wash | Paid vehicle wash | No map; Pay'n'spray is closed (owner's decision 2026-11-02), repair and paint only at the mechanic |
 | Drive-thru | Ordering food from a vehicle at a fast food drive-thru | Drive-thru lanes exist in GTA |
 | Bike and scooter rental | A rental point with vehicles, paid per hour, the vehicle disappears when time runs out | Map with 7 small points (LS: Unity Station, city hall, hospital, Downtown, Conference Center; Dillimore) |
 | Apartments and cottages | New property types next to houses (PROP-1) | Apartments #1161; weekend settlement #0318–#0328 |
@@ -547,3 +548,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-31 | Step 3.2: car market (`/pijaca`, `/kupivozilo`; cash or account, half a tank), vehicle sales and trades (`/ponudi`, 5% tax, at least $1,000), kept plates on a sale, VIP vehicle slot; admin menus (`/aigrac`, `/izmenivozilo`, `/izmeniulaz [id]`, `/izmenimesto`, `/izmenigps`, `/izmenikameru`, `/dodajgps`, `/setvip`), new admin commands (`/proveriinv`, `/dajpredmet`, `/uzmipredmet`, `/kazne [player]`, `/ponistikazne`, `/setlicna`, `/odblokirajpin`, `/givebank`); the vehicle menu in `/v`; camera label 40 m; every command checked in the help |
 | 2026-10-31 | Hospital exterior with the park in front of it and the hospital interior |
 | 2026-11-02 | 3.2 additions: `/atune` in GTA's menu on the left with the camera on the vehicle, admin custom plates (`/resettablice [id] [plate]`, `/izmenivozilo` menu), free and VIP slots shown in `/v`, GTA shops and Pay'n'spray do not change personal vehicles (the colour no longer changes when plates are mounted) |
+| 2026-11-02 | GTA shops (Transfender, Loco Low Co, Wheel Arch Angels) and every Pay'n'spray are closed: vehicles bounce off the door; admins give extra vehicle slots (`/setmesta [player] [0-5]`, also in `/aigrac`); `/atune` offers "Prva strana" on the last page |

@@ -112,6 +112,8 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 104 | 2026-11-02 | `/atune` koristi GTA meni sa leve strane ekrana i kameru uperenu u vozilo; admin je zamrznut dok je meni otvoren | Dijalog je na sredini ekrana i pokriva vozilo; GTA meni sa strane je uobičajena praksa za tuning |
 | 105 | 2026-11-02 | Admin od nivoa 2 postavlja besplatno nasumične ili sopstvene tablice, odmah na vozilo (`/resettablice [id] [tablica]`, meni `/izmenivozilo`); ista pravila i provera zauzetosti kao za igrača | Zahtev vlasnika |
 | 106 | 2026-11-02 | `/v` prikazuje sva mesta za vozila: zauzeta, slobodna i VIP mesto; kad VIP istekne, a vozila ima više nego mesta, to piše u naslovu | Zahtev vlasnika; igrač vidi koliko vozila može da ima |
+| 107 | 2026-11-02 | GTA radionice za tuning i svi Pay'n'spray-evi su zatvoreni: oko vrata je zona, a vozilo koje krene ka vratima odbija se nazad, na stranu sa koje je došlo (vrata gledaju na sve strane, pa se ne koriste predmeti za blokadu); vraćanje izgleda iz odluke 103 ostaje kao rezerva | Odluka vlasnika: na RP serverima ih nema, popravka i farbanje su posao mehaničara |
+| 108 | 2026-11-02 | Admin nivoa 4 daje igraču 0 do 5 dodatnih mesta za vozila (`/setmesta`), bez obzira na VIP; kad se mesta smanje, vozila ostaju kao kod isteka VIP-a | Zahtev vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -245,6 +247,8 @@ This file records every important decision so it does not get re-discussed. Newe
 | 104 | 2026-11-02 | `/atune` uses GTA's menu on the left of the screen and a camera aimed at the vehicle; the admin is frozen while the menu is open | A dialog sits in the middle of the screen and covers the vehicle; a side menu is common practice for tuning |
 | 105 | 2026-11-02 | An admin from level 2 sets random or custom plates for free, mounted right away (`/resettablice [id] [plate]`, `/izmenivozilo` menu); the same rules and taken-plate check as for players | Owner's request |
 | 106 | 2026-11-02 | `/v` lists every vehicle slot: used, free and the VIP slot; when VIP ends with more vehicles than slots, the title says so | Owner's request; players see how many vehicles they can have |
+| 107 | 2026-11-02 | GTA tuning shops and every Pay'n'spray are closed: a zone around the door pushes a vehicle heading for it back to the side it came from (the doors face every direction, so no blocking objects are used); restoring the look from decision 103 stays as a fallback | Owner's decision: RP servers do not have them, repair and paint are the mechanic's job |
+| 108 | 2026-11-02 | A level 4 admin gives a player 0 to 5 extra vehicle slots (`/setmesta`), regardless of VIP; when slots go down, vehicles stay as when VIP ends | Owner's request |
 
 ### Code architecture (proposal)
 ```

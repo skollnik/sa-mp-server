@@ -68,6 +68,7 @@ stock Account_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `acc_worn` INT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `bank_account` TINYINT(1) NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `held_pay` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `extra_vehicle_slots` TINYINT UNSIGNED NOT NULL DEFAULT 0");
 
     // The old per-chat toggle columns are folded into channel_bits (OOC = bit 0, PM = bit 1, newbie = bit 2) and cleared.
     mysql_tquery(g_SQL,
@@ -397,6 +398,7 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_int(0, "acc_worn", g_Player[playerid][pAccWornBits]);
     cache_get_value_name_bool(0, "bank_account", g_Player[playerid][pHasBankAccount]);
     cache_get_value_name_int(0, "held_pay", g_Player[playerid][pHeldPay]);
+    cache_get_value_name_int(0, "extra_vehicle_slots", g_Player[playerid][pExtraVehSlots]);
 
     if (!Account_CheckFreeSlot(playerid))
     {

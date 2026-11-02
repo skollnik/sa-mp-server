@@ -35,7 +35,7 @@ new g_Offer[MAX_PLAYERS][E_OFFER];
 new g_OfferFrom[MAX_PLAYERS];
 new g_OfferFromRace[MAX_PLAYERS];
 new g_OfferNextAt[MAX_PLAYERS];
-new g_OfferListed[MAX_PLAYERS][VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA + 1];
+new g_OfferListed[MAX_PLAYERS][VEH_LIST_SIZE];
 // Trade surcharge direction picked in the dialog: 0 none, 1 the offering player pays, 2 they ask for it.
 new g_OfferExtraKind[MAX_PLAYERS];
 

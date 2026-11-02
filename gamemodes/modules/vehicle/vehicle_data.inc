@@ -7,6 +7,10 @@
 #define VEH_KEY_RANGE           (5.0)
 // Extra vehicle slot for Silver and Gold VIP.
 #define VEH_VIP_EXTRA           (1)
+// Most extra slots an admin can give (/setmesta), with or without VIP.
+#define VEH_ADMIN_EXTRA_MAX     (5)
+// Rows of a list of one owner's vehicles: every slot anyone can have, plus one for vehicles kept after VIP ended.
+#define VEH_LIST_SIZE           (VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA + VEH_ADMIN_EXTRA_MAX + 1)
 #define VEH_DEATH_RESPAWN_S     (10)
 // A destroyed vehicle comes back smoking, so a crash still costs something (repair: mechanic, phase 3.5).
 #define VEH_RESPAWN_HEALTH      (500.0)
@@ -71,7 +75,7 @@ new g_VehSlotOf[MAX_VEHICLES];
 // Fuel is kept for every vehicle ID, so job and faction vehicles can use it later.
 new Float:g_VehFuel[MAX_VEHICLES];
 new bool:g_VehFuelReserveWarned[MAX_VEHICLES];
-new g_VehListed[MAX_PLAYERS][VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA + 1];
+new g_VehListed[MAX_PLAYERS][VEH_LIST_SIZE];
 new g_VehSelected[MAX_PLAYERS];
 // A running engine start or technical inspection; 0 when none.
 new g_VehStartTimer[MAX_PLAYERS];

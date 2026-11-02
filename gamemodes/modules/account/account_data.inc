@@ -51,6 +51,8 @@ enum E_PLAYER_DATA
     bool:pHasBankAccount,
     // Pay and prizes waiting at the bank counter for a player without an account.
     pHeldPay,
+    // Vehicle slots given by an admin on top of the usual and VIP ones; saved only by /setmesta.
+    pExtraVehSlots,
 
     // Runtime only, never saved
     pLastLoginText[24],

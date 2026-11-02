@@ -523,6 +523,7 @@ forward Veh_Tick();
 public Veh_Tick()
 {
     Fuel_Tick();
+    Garage_Tick();
 
     new now = gettime();
     for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
@@ -769,11 +770,11 @@ stock Veh_RandomPlate(plate[], size = sizeof(plate))
         g_PlateLetters[random(sizeof(g_PlateLetters) - 1)], g_PlateLetters[random(sizeof(g_PlateLetters) - 1)]);
 }
 
-// Silver and Gold VIP get one more vehicle. When VIP ends nothing is taken away: the vehicles stay,
-// but no new one can be bought or received until the owner is back under the limit.
+// Silver and Gold VIP get one more vehicle and an admin can give more (/setmesta). When VIP ends or slots are taken back
+// nothing is taken away: the vehicles stay, but no new one can be bought or received until the owner is back under the limit.
 stock Veh_MaxFor(playerid)
 {
-    return VEH_MAX_PER_PLAYER + (Vip_GetLevel(playerid) >= VIP_SILVER ? VEH_VIP_EXTRA : 0);
+    return VEH_MAX_PER_PLAYER + g_Player[playerid][pExtraVehSlots] + (Vip_GetLevel(playerid) >= VIP_SILVER ? VEH_VIP_EXTRA : 0);
 }
 
 stock bool:Veh_HasFreeSlot(playerid)
@@ -914,7 +915,7 @@ stock Veh_ShowList(playerid)
     }
     // Free places are listed too, so the owner sees how many vehicles they can have and which place comes with VIP.
     new limit = Veh_MaxFor(playerid), owned = count;
-    for (new place = owned; place < VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA && count < sizeof(g_VehListed[]); place++)
+    for (new place = owned; place < VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA + g_Player[playerid][pExtraVehSlots] && count < sizeof(g_VehListed[]); place++)
     {
         strcat(body, place < limit ? ("Slobodno mesto\t-\t-\t-\t-\n") : ("VIP mesto (Silver i Gold VIP)\t-\t-\t-\t-\n"));
         g_VehListed[playerid][count++] = -1;
@@ -922,7 +923,7 @@ stock Veh_ShowList(playerid)
     new title[64];
     if (owned > limit)
     {
-        format(title, sizeof(title), "Vasa vozila: %d od %d mesta (VIP je istekao)", owned, limit);
+        format(title, sizeof(title), "Vasa vozila: %d od %d mesta (novo tek kad prodate jedno)", owned, limit);
     }
     else
     {

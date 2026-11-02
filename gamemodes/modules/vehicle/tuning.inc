@@ -156,7 +156,7 @@ static stock Tune_Present(playerid)
     }
     if (g_TuneCount[playerid] > TUNE_MENU_ROWS)
     {
-        AddMenuItem(menu, 0, "Sledeca strana >>");
+        AddMenuItem(menu, 0, first + rows < g_TuneCount[playerid] ? ("Sledeca strana >>") : ("<< Prva strana"));
     }
     g_TuneMenuId[playerid] = menu;
     ShowMenuForPlayer(menu, playerid);

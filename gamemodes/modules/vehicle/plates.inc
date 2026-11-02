@@ -13,7 +13,7 @@ enum E_PLATE_PURPOSE
     PLATE_ADMIN_CUSTOM
 }
 
-new g_PlateListed[MAX_PLAYERS][VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA + 1];
+new g_PlateListed[MAX_PLAYERS][VEH_LIST_SIZE];
 new g_PlateSlot[MAX_PLAYERS];
 // Plates an owner kept when selling a vehicle, waiting at the police counter for another vehicle.
 new g_StoredPlates[MAX_PLAYERS][PLATE_STORED_MAX][VEH_PLATE_LENGTH];

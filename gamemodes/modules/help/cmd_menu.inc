@@ -1,6 +1,6 @@
 // A dialog in front of a command with many options: every entry runs an existing command (with the same checks and logs),
 // optionally after asking for the missing value, so no command logic is written twice.
-#define MAX_MENU_ITEMS          (40)
+#define MAX_MENU_ITEMS          (48)
 #define MENU_COMMAND_LENGTH     (48)
 #define MENU_PROMPT_LENGTH      (72)
 
