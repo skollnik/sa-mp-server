@@ -335,6 +335,7 @@ stock Veh_Despawn(slot, bool:save)
         DestroyVehicle(vehicleid);
         g_VehSlotOf[vehicleid] = -1;
     }
+    Trunk_Reset(slot);
     static const empty[E_VEH];
     g_Veh[slot] = empty;
 }
@@ -457,6 +458,7 @@ public OnVehiclesLoaded(playerid, race, bool:remind)
         Veh_LoadRow(slot, row, playerid);
         if (Veh_Spawn(slot))
         {
+            Trunk_Load(slot);
             loaded++;
         }
     }
@@ -523,7 +525,6 @@ forward Veh_Tick();
 public Veh_Tick()
 {
     Fuel_Tick();
-    Garage_Tick();
 
     new now = gettime();
     for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
@@ -556,6 +557,28 @@ stock Veh_FindNearby(playerid, bool:owner_only)
             continue;
         }
         if (owner_only ? !Veh_IsOwner(playerid, id) : !Veh_HasKey(playerid, id))
+        {
+            continue;
+        }
+        new Float:distance = GetVehicleDistanceFromPoint(id, x, y, z);
+        if (distance < best_distance)
+        {
+            best_distance = distance;
+            best = id;
+        }
+    }
+    return best;
+}
+
+// Any vehicle, not only personal ones (a jerry can helps a stranger too).
+stock Veh_FindClosest(playerid, Float:range)
+{
+    new best = INVALID_VEHICLE_ID, Float:best_distance = range, world = GetPlayerVirtualWorld(playerid);
+    new Float:x, Float:y, Float:z;
+    GetPlayerPos(playerid, x, y, z);
+    for (new id = 1; id < MAX_VEHICLES; id++)
+    {
+        if (!IsValidVehicle(id) || GetVehicleVirtualWorld(id) != world)
         {
             continue;
         }

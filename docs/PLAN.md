@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 3: korak 3.2 (auto pijaca, prodaja i zamena vozila, sačuvane tablice, VIP mesto za vozilo) i admin meniji napisani, čekaju test vlasnika; sledeći je korak 3.3, gepek kao inventar i kanister (ažurirano 2026-10-31)
+**Trenutni status:** Faza 3: korak 3.3 (gepek kao inventar, kanister) napisan, čeka test vlasnika; sledeći je korak 3.4, auto škola i dozvole (ažurirano 2026-11-02)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -61,7 +61,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Tablice u policiji (prve, nove, sopstvene), kamere po gradu sa kaznama (`/kazne`)
 - [x] Korak 3.2: ADM-8 auto pijaca (event), prodaja i zamena vozila između igrača (`/ponudi`), sačuvane tablice, VIP mesto za vozilo; admin meniji (`/aigrac`, `/izmenivozilo` i ostali)
 - [x] Dopune 3.2: `/atune` u GTA meniju sa strane (vozilo se vidi), admin sopstvene tablice, slobodna i VIP mesta u `/v`, GTA radionice ne menjaju lična vozila; GTA radionice i Pay'n'spray zatvoreni, admin dodatna mesta za vozila (`/setmesta`)
-- [ ] Korak 3.3: VEH-8 gepek kao inventar, kanister
+- [x] Korak 3.3: VEH-8 gepek kao inventar (`/gepek`; auto 6, kombi i pikap 12, veliki kamion 20 mesta), kanister od 10 l; GTA radionice i Pay'n'spray zatvoreni kapijama
 - [ ] Korak 3.4: LIC-1, LIC-2 auto škola i dozvole
 - [ ] Korak 3.5: VEH-6 šteta i kilometraža, JOB-3 mehaničar, VEH-9 rent-a-car i bicikli
 
@@ -113,7 +113,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** Phase 3: step 3.2 (car market, vehicle sales and trades, kept plates, VIP vehicle slot) and admin menus written, waiting for the owner's test; next is step 3.3, the trunk as inventory and the jerry can (updated 2026-10-31)
+**Current status:** Phase 3: step 3.3 (trunk as inventory, jerry can) written, waiting for the owner's test; next is step 3.4, the driving school and licenses (updated 2026-11-02)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -172,7 +172,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] Plates at the police station (first, new, custom), city cameras with fines (`/kazne`)
 - [x] Step 3.2: ADM-8 car market (event), vehicle sales and trades between players (`/ponudi`), kept plates, VIP vehicle slot; admin menus (`/aigrac`, `/izmenivozilo` and others)
 - [x] 3.2 additions: `/atune` in GTA's side menu (the vehicle stays in view), admin custom plates, free and VIP slots in `/v`, GTA shops do not change personal vehicles; GTA shops and Pay'n'spray closed, admin extra vehicle slots (`/setmesta`)
-- [ ] Step 3.3: VEH-8 trunk as inventory, jerry can
+- [x] Step 3.3: VEH-8 trunk as inventory (`/gepek`; car 6, van and pickup 12, big truck 20 slots), a 10 l jerry can; GTA shops and Pay'n'spray closed with gates
 - [ ] Step 3.4: LIC-1, LIC-2 driving school and licenses
 - [ ] Step 3.5: VEH-6 damage and mileage, JOB-3 mechanic, VEH-9 car and bike rental
 

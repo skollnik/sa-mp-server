@@ -34,12 +34,15 @@ enum E_ITEM
     ITEM_HAT_KNIT,
     ITEM_CAP,
     ITEM_BACKPACK,
-    ITEM_BAG
+    ITEM_BAG,
+    // New items go at the end: the number is what the database keeps.
+    ITEM_CANISTER_FULL
 }
 
 forward bool:Inv_Add(playerid, E_ITEM:item, amount);
 forward bool:Inv_CanAdd(playerid, E_ITEM:item, amount);
 forward bool:Inv_Remove(playerid, E_ITEM:item, amount);
+forward bool:Inv_Replace(playerid, E_ITEM:from, E_ITEM:to);
 forward bool:Inv_Has(playerid, E_ITEM:item);
 forward bool:Inv_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Inv_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
@@ -80,7 +83,9 @@ new const g_ItemInfo[E_ITEM][E_ITEM_INFO] =
     { "Zimska kapa",        1,  0,   0,  18953, 0 },
     { "Kacket",             1,  0,   0,  18926, 0 },
     { "Ranac",              1,  0,   0,  3026,  0 },
-    { "Torba",              1,  0,   0,  11745, 0 }
+    { "Torba",              1,  0,   0,  11745, 0 },
+    // Filled at a gas station (/gorivo on foot), so it is not sold.
+    { "Kanister (10 l)",    1,  0,   0,  1650,  0 }
 };
 
 enum E_INV_SLOT

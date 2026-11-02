@@ -99,6 +99,7 @@ static stock Veh_DeleteForever(playerid, slot)
     {
         Msg_Admin(ownerid, "Admin %s je obrisao vase vozilo %s.", Account_Name(playerid), Veh_Name(slot));
     }
+    Trunk_Empty(slot);
     Veh_Despawn(slot, false);
 }
 
@@ -119,6 +120,17 @@ cmd:obrisivozilo(playerid, params[])
     return 1;
 }
 
+// strcmp treats an empty string as equal, so a missing value would count as a confirmation.
+static stock bool:Veh_IsConfirmed(playerid, const value[])
+{
+    if (!isnull(value) && !strcmp(value, "DA", true))
+    {
+        return true;
+    }
+    Msg_Error(playerid, "Nije potvrdjeno (upisite DA).");
+    return false;
+}
+
 static const g_VehEditMenu[][E_MENU_ITEM] =
 {
     { ADMIN_LEVEL_HEAD, "Novi vlasnik (igrac online)", "izmenivozilo %s vlasnik", "ID ili ime novog vlasnika:" },
@@ -129,6 +141,8 @@ static const g_VehEditMenu[][E_MENU_ITEM] =
     { ADMIN_LEVEL_HEAD, "Registracija", "izmenivozilo %s registracija", "Dana od danas (0 ponistava):" },
     { ADMIN_LEVEL_HEAD, "Ukloni kopiju kljuca", "izmenivozilo %s kljuc", "" },
     { ADMIN_LEVEL_HEAD, "Zakljucaj / otkljucaj", "izmenivozilo %s zakljucaj", "" },
+    { ADMIN_LEVEL_ADMIN, "Proveri gepek", "proverigepek %s", "" },
+    { ADMIN_LEVEL_HEAD, "Isprazni gepek", "izmenivozilo %s gepek", "Upisite DA za potvrdu:" },
     { ADMIN_LEVEL_ADMIN, "Nove nasumicne tablice", "resettablice %s", "" },
     { ADMIN_LEVEL_ADMIN, "Sopstvene tablice", "resettablice %s", "Tablica (2-8 znakova, A-Z, 0-9, razmak, crtica):" },
     { ADMIN_LEVEL_TRIAL, "Teleport do vozila", "gotoveh %s", "" },
@@ -223,11 +237,18 @@ cmd:izmenivozilo(playerid, params[])
         Veh_SetParam(vehicleid, VEH_PARAM_DOORS, g_Veh[slot][vLocked]);
         Veh_SaveState(slot);
     }
+    else if (!strcmp(option, "gepek", true))
+    {
+        if (!Veh_IsConfirmed(playerid, value))
+        {
+            return 1;
+        }
+        Trunk_Empty(slot);
+    }
     else if (!strcmp(option, "obrisi", true))
     {
-        if (strcmp(value, "DA", true))
+        if (!Veh_IsConfirmed(playerid, value))
         {
-            Msg_Error(playerid, "Brisanje nije potvrdjeno (upisite DA).");
             return 1;
         }
         Veh_DeleteForever(playerid, slot);
@@ -235,7 +256,7 @@ cmd:izmenivozilo(playerid, params[])
     }
     else
     {
-        Msg_Error(playerid, "Opcije: vlasnik, parking, boja, popravi, registracija, kljuc, zakljucaj, obrisi.");
+        Msg_Error(playerid, "Opcije: vlasnik, parking, boja, popravi, registracija, kljuc, zakljucaj, gepek, obrisi.");
         return 1;
     }
 

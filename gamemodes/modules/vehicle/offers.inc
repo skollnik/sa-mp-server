@@ -28,6 +28,9 @@ enum E_OFFER
     ofAmount,
     bool:ofKeepPlate,
     bool:ofTheirKeepPlate,
+    // Trunk versions when the offer was sent: a trunk emptied afterwards cancels it.
+    ofTrunkVersion,
+    ofTheirTrunkVersion,
     ofSentAt
 }
 
@@ -127,6 +130,11 @@ static stock bool:Offer_IsValid(seller, bool:tell)
     {
         format(message, sizeof(message), "Kupac mora biti nivo %d+ i imati slobodno mesto za vozilo.", OFFER_MIN_LEVEL);
     }
+    else if (g_Offer[seller][ofSentAt] != 0 && (g_TrunkVersion[g_Offer[seller][ofSlot]] != g_Offer[seller][ofTrunkVersion]
+        || (g_Offer[seller][ofKind] == OFFER_TRADE && g_TrunkVersion[g_Offer[seller][ofTheirSlot]] != g_Offer[seller][ofTheirTrunkVersion])))
+    {
+        strcopy(message, "Sadrzaj gepeka se promenio posle ponude; posaljite novu ponudu.");
+    }
     else if (g_Offer[seller][ofKeepPlate] && Plate_FreeStoredSlot(seller) == -1)
     {
         strcopy(message, "Imate najvise sacuvanih tablica; iskoristite neku u policiji (/tablice).");
@@ -145,14 +153,15 @@ static stock bool:Offer_IsValid(seller, bool:tell)
 
 static stock Offer_Describe(seller, dest[], size = sizeof(dest))
 {
-    new slot = g_Offer[seller][ofSlot], registration[24], Float:health;
+    new slot = g_Offer[seller][ofSlot], registration[24], Float:health, trunk[48];
     Veh_RegistrationText(slot, registration);
+    Trunk_Summary(slot, trunk);
     GetVehicleHealth(g_Veh[slot][vVehicleId], health);
     if (g_Offer[seller][ofKind] == OFFER_SALE)
     {
-        format(dest, size, "%s vam prodaje vozilo:\n\n%s\nRegistracija: %s\nGorivo: %.0f l\nStanje: %.0f / 1000\nTablice: %s\n\nCena: $%d (gotovinom)\n\nPonuda vazi %d sekundi.",
+        format(dest, size, "%s vam prodaje vozilo:\n\n%s\nRegistracija: %s\nGorivo: %.0f l\nStanje: %.0f / 1000\nTablice: %s\nGepek: %s\n\nCena: $%d (gotovinom)\n\nPonuda vazi %d sekundi.",
             Account_Name(seller), Veh_Name(slot), registration, g_VehFuel[g_Veh[slot][vVehicleId]], health,
-            g_Offer[seller][ofKeepPlate] ? ("prodavac ih zadrzava") : ("ostaju na vozilu"), g_Offer[seller][ofAmount], OFFER_TIMEOUT_S);
+            g_Offer[seller][ofKeepPlate] ? ("prodavac ih zadrzava") : ("ostaju na vozilu"), trunk, g_Offer[seller][ofAmount], OFFER_TIMEOUT_S);
         return;
     }
     new theirs = g_Offer[seller][ofTheirSlot], extra[64];
@@ -168,9 +177,9 @@ static stock Offer_Describe(seller, dest[], size = sizeof(dest))
     {
         strcopy(extra, "bez doplate");
     }
-    format(dest, size, "%s nudi zamenu vozila:\n\nDobijate: %s (registracija: %s, stanje %.0f / 1000)\nDajete: %s\nDoplata: %s\nNjegove tablice: %s\n\nPonuda vazi %d sekundi.",
+    format(dest, size, "%s nudi zamenu vozila:\n\nDobijate: %s (registracija: %s, stanje %.0f / 1000)\nDajete: %s\nDoplata: %s\nNjegove tablice: %s\nGepek vozila koje dobijate: %s\n\nPonuda vazi %d sekundi.",
         Account_Name(seller), Veh_Name(slot), registration, health, Veh_Name(theirs), extra,
-        g_Offer[seller][ofKeepPlate] ? ("zadrzava ih") : ("ostaju na vozilu"), OFFER_TIMEOUT_S);
+        g_Offer[seller][ofKeepPlate] ? ("zadrzava ih") : ("ostaju na vozilu"), trunk, OFFER_TIMEOUT_S);
 }
 
 static stock Offer_Send(seller)
@@ -181,6 +190,8 @@ static stock Offer_Send(seller)
     }
     new target = g_Offer[seller][ofTarget], text[512];
     g_Offer[seller][ofSentAt] = gettime();
+    g_Offer[seller][ofTrunkVersion] = g_TrunkVersion[g_Offer[seller][ofSlot]];
+    g_Offer[seller][ofTheirTrunkVersion] = g_Offer[seller][ofKind] == OFFER_TRADE ? g_TrunkVersion[g_Offer[seller][ofTheirSlot]] : 0;
     g_OfferNextAt[seller] = gettime() + OFFER_COOLDOWN_S;
     g_OfferFrom[target] = seller;
     g_OfferFromRace[target] = g_AccountRace[seller];
@@ -300,6 +311,7 @@ cmd:ponudi(playerid, params[])
     g_Offer[playerid][ofKeepPlate] = false;
     g_Offer[playerid][ofTheirKeepPlate] = false;
     g_Offer[playerid][ofAmount] = 0;
+    g_Offer[playerid][ofSentAt] = 0;
     ShowPlayerDialog(playerid, DIALOG_OFFER_TYPE, DIALOG_STYLE_LIST, "Ponuda", "Prodaja vozila\nZamena vozila (uz doplatu ili bez)", "Izaberi", "Odustani");
     return 1;
 }

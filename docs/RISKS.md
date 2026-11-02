@@ -221,8 +221,13 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Pregled oštećenog vozila dok mehaničar ne postoji | 👁 | Uslov je 650 HP (VIP `/vfix` i admin `/fixveh` popravljaju); kad dođe mehaničar, uslov raste (BACKLOG) |
 | Nove tablice se ne vide dok se vozilo ponovo ne napravi | ✅ | Vozilo se pravi ponovo na istom mestu, sa istim stanjem, a putnici se vraćaju na svoja mesta (vlasnik proverava u igri) |
 | Admin besplatno tunira vozila prijateljima | ✅ | Admin nivoa 1 i 2 tunira samo admin vozila; lična vozila tek nivo 3+, uz log i poruku vlasniku |
-| Besplatan tuning, farbanje i popravka u GTA radionicama (Transfender, Pay'n'spray) | ✅ | Radionice su zatvorene (vozilo se odbija od vrata); ako neko ipak uđe zbog laga, lično vozilo se vraća na sačuvani izgled, a drugi ne vide promenu |
-| Igrač se zaglavi kod zatvorene radionice | ✅ | Odbija se samo vozilo koje ide ka vratima sa strane sa koje je došlo; vozilo koje je unutra može slobodno da izađe |
+| Besplatan tuning, farbanje i popravka u GTA radionicama (Transfender, Pay'n'spray) | ✅ | Radionice su zatvorene kapijom; ako neko ipak uđe (npr. lag ili teleport), lično vozilo se vraća na sačuvani izgled, a drugi ne vide promenu |
+| Dva igrača uzmu isti predmet iz gepeka u isto vreme (dupliranje) | ✅ | Svaka radnja ponovo proverava predmet i količinu u trenutku izvršenja; drugi dobija poruku da predmeta više nema |
+| Krađa iz gepeka | 👁 | Moguća samo dok je gepek otvoren i vozilo otključano (RP); zaključavanje štiti; svaka radnja je u chatu i u `trunk_log` |
+| Prevara pri prodaji vozila (prodavac isprazni gepek posle ponude) | ✅ | Kupac vidi sadržaj u ponudi; svaka promena gepeka posle slanja poništava ponudu |
+| Predmet koji je na igraču ode u gepek, a ostane na telu | ✅ | Naočare, kapa, ranac i torba moraju prvo da se skinu |
+| Besplatno gorivo kanisterom | ✅ | Puni se samo na pumpi po istoj ceni po litru; sipanje traje 5 s i proverava se ponovo (vozilo blizu, motor ugašen, kanister još kod igrača) |
+| Kanister u vozilu bez goriva (admin vozila, bicikli) | ✅ | Odbija se: sipa se samo u vozilo koje koristi gorivo |
 | Admin daje dodatna mesta za vozila prijateljima | 👁 | Samo nivo 4, najviše 5 mesta, svaka promena ide u admin log |
 | Admin ostane bez kontrola ili sa zaglavljenom kamerom posle `/atune` | ✅ | Kamera i kontrole se vraćaju pri zatvaranju menija, izlasku iz vozila, smrti i izlasku sa servera; admin koga je drugi admin zamrznuo (`/freeze`) ostaje zamrznut |
 | Admin sopstvenom tablicom uzme tuđu ili uvredljivu tablicu | ✅ | Ista pravila i provera zauzetosti kao za igrača (i sačuvane tablice); svaka promena ide u admin log |
@@ -463,8 +468,13 @@ Every new system or change goes through these questions, against all existing sy
 | Inspecting a damaged vehicle while there is no mechanic | 👁 | The requirement is 650 HP (VIP `/vfix` and admin `/fixveh` repair); it goes up once the mechanic exists (backlog) |
 | New plates do not show until the vehicle is created again | ✅ | The vehicle is created again on the same spot with the same state, and passengers are put back in their seats (the owner checks in game) |
 | An admin tunes friends' vehicles for free | ✅ | Admins of level 1 and 2 tune only admin vehicles; personal vehicles need level 3+, logged and the owner is told |
-| Free tuning, paint and repair in GTA shops (Transfender, Pay'n'spray) | ✅ | The shops are closed (vehicles bounce off the door); if someone gets in through lag, a personal vehicle goes back to its saved look and nobody else sees the change |
-| A player gets stuck at a closed shop | ✅ | Only a vehicle heading for the door from the side it came from is pushed; a vehicle inside can leave freely |
+| Free tuning, paint and repair in GTA shops (Transfender, Pay'n'spray) | ✅ | The shops are closed with a gate; if someone gets in anyway (lag or a teleport), a personal vehicle goes back to its saved look and nobody else sees the change |
+| Two players take the same trunk item at once (duplication) | ✅ | Every action checks the item and amount again when it happens; the other player is told it is gone |
+| Theft from a trunk | 👁 | Only possible while the trunk is open and the vehicle unlocked (RP); locking protects it; every action shows in chat and goes to `trunk_log` |
+| A sale scam (the seller empties the trunk after the offer) | ✅ | The buyer sees the contents in the offer; any trunk change after sending cancels the offer |
+| A worn item goes into the trunk but stays on the body | ✅ | Glasses, hats, backpacks and bags must be taken off first |
+| Free fuel with a jerry can | ✅ | Filled only at a pump at the same price per litre; pouring takes 5 s and is checked again (vehicle close, engine off, can still held) |
+| A jerry can on a vehicle without fuel (admin vehicles, bicycles) | ✅ | Refused: it pours only into a vehicle that uses fuel |
 | An admin gives friends extra vehicle slots | 👁 | Level 4 only, at most 5 slots, every change goes to the admin log |
 | An admin is left without controls or with a stuck camera after `/atune` | ✅ | The camera and controls come back when the menu closes, on leaving the vehicle, on death and on disconnect; an admin frozen by another admin (`/freeze`) stays frozen |
 | An admin takes someone else's plate or an offensive one with a custom plate | ✅ | The same rules and taken-plate check as for players (stored plates too); every change goes to the admin log |

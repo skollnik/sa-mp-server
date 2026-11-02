@@ -43,7 +43,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Vozila poslova i frakcija dobijaju gorivo kad se naprave, inače im se motor odmah gasi |
 | Mesta gde se ne sme parkirati (ispred vrata, na putu, na pijaci) |
 | Popravka vozila koje se posle uništenja vrati sa 500 HP i dimom (mehaničar, korak 3.5) |
-| Kanister (korak 3.3); vožnja bez dozvole (korak 3.4) |
+| ✅ Kanister (korak 3.3); vožnja bez dozvole (korak 3.4) |
 | Anti-cheat za vozila: HP vozila (repair hack), ulazak u zaključano vozilo |
 | VIP: mesto za još jedno vozilo (Silver+), sopstvena tablica i neon (Gold) |
 | Kad dođe mehaničar (korak 3.5): podići uslov za tehnički pregled sa 650 na oko 900 HP |
@@ -52,6 +52,9 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | ✅ GTA radionice za tuning (Transfender i ostale) i Pay'n'spray ne menjaju lična vozila: drugi igrači ne vide promenu, a vozilo se vraća kakvo je bilo (naplaćena popravka u Pay'n'spray-u je u koraku 3.5) |
 | Kad dođe mehaničar (korak 3.5): ista mapa u Willowfield-u (radionica pored tehničkog pregleda) |
 | Kad dođu kuće i firme (Faza 4): prodaja i zamena kroz `/ponudi` |
+| Pregradak u vozilu (malo skladište iznutra, 2 mesta): čeka odluku vlasnika |
+| Kad dođe oružje kao predmet: oružje u gepeku |
+| Kad dođu vozila poslova i frakcija: gepek za njih (npr. oprema frakcije) |
 | Brisanje neaktivnog naloga (6 meseci): oslobađanje sačuvanih tablica |
 | Izložbena vozila na pijaci mogu da se guraju; ako bude problem, vraćati ih na mesto kad se pomere |
 | Mehaničar (korak 3.5, odobreno): radionica u Willowfield-u za popravku; mehaničar ne dolazi na teren, osim da odvuče vozilo koje ne može da se upali do radionice |
@@ -273,6 +276,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 31.10.2026. | Bolnica spolja sa parkom ispred nje i enterijer bolnice |
 | 02.11.2026. | Dopune 3.2: `/atune` u GTA meniju sa leve strane i sa kamerom na vozilo, admin sopstvene tablice (`/resettablice [id] [tablica]`, meni `/izmenivozilo`), u `/v` se vide slobodna i VIP mesta, GTA radionice i Pay'n'spray ne menjaju lična vozila (boja se više ne menja pri postavljanju tablica) |
 | 02.11.2026. | GTA radionice (Transfender, Loco Low Co, Wheel Arch Angels) i svi Pay'n'spray-evi su zatvoreni: vozilo se odbija od vrata; admin daje dodatna mesta za vozila (`/setmesta [igrac] [0-5]`, i u `/aigrac`); `/atune` na poslednjoj strani nudi „Prva strana“ |
+| 02.11.2026. | Korak 3.3: gepek kao inventar (`/gepek`, admin `/proverigepek` i „Isprazni gepek“ u `/izmenivozilo`), kanister od 10 l (puni se peške sa `/gorivo`); GTA radionice i Pay'n'spray zatvoreni kapijom umesto zone |
 
 ---
 
@@ -319,7 +323,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Job and faction vehicles get fuel when they are created, otherwise their engine stops right away |
 | No-parking spots (in front of doors, on the road, at the market) |
 | Repairing a vehicle that comes back after being destroyed with 500 HP and smoke (mechanic, step 3.5) |
-| Jerry can (step 3.3); driving without a license (step 3.4) |
+| ✅ Jerry can (step 3.3); driving without a license (step 3.4) |
 | Vehicle anti-cheat: vehicle HP (repair hack), entering a locked vehicle |
 | VIP: one more vehicle slot (Silver+), custom plate and neon (Gold) |
 | Once the mechanic exists (step 3.5): raise the inspection requirement from 650 to about 900 HP |
@@ -328,6 +332,9 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | ✅ GTA tuning shops (Transfender and others) and Pay'n'spray do not change personal vehicles: other players never see the change and the vehicle goes back to how it was (a paid Pay'n'spray repair is in step 3.5) |
 | Once the mechanic exists (step 3.5): the same map in Willowfield (the workshop next to the inspection) |
 | Once houses and businesses exist (Phase 4): selling and trading them through `/ponudi` |
+| Vehicle glovebox (small storage from inside, 2 slots): waiting for the owner's decision |
+| Once weapons are items: weapons in the trunk |
+| Once job and faction vehicles exist: a trunk for them (e.g. faction gear) |
 | Deleting an inactive account (6 months): free its kept plates |
 | Market display vehicles can be pushed around; if it becomes a problem, put them back when they move |
 | Mechanic (step 3.5, approved): a workshop in Willowfield for repairs; the mechanic does not come out to players, except to tow a vehicle that will not start to the workshop |
@@ -549,3 +556,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-10-31 | Hospital exterior with the park in front of it and the hospital interior |
 | 2026-11-02 | 3.2 additions: `/atune` in GTA's menu on the left with the camera on the vehicle, admin custom plates (`/resettablice [id] [plate]`, `/izmenivozilo` menu), free and VIP slots shown in `/v`, GTA shops and Pay'n'spray do not change personal vehicles (the colour no longer changes when plates are mounted) |
 | 2026-11-02 | GTA shops (Transfender, Loco Low Co, Wheel Arch Angels) and every Pay'n'spray are closed: vehicles bounce off the door; admins give extra vehicle slots (`/setmesta [player] [0-5]`, also in `/aigrac`); `/atune` offers "Prva strana" on the last page |
+| 2026-11-02 | Step 3.3: trunk as inventory (`/gepek`, admin `/proverigepek` and "Isprazni gepek" in `/izmenivozilo`), a 10 l jerry can (filled on foot with `/gorivo`); GTA shops and Pay'n'spray closed with a gate instead of a zone |

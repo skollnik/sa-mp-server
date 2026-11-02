@@ -98,26 +98,56 @@ stock bool:Inv_Has(playerid, E_ITEM:item)
     return Inv_Count(playerid, item) > 0;
 }
 
-stock bool:Inv_CanAdd(playerid, E_ITEM:item, amount)
+// Free room for an item in a set of slots (inventory or trunk); a new stack may only start in the first `capacity` slots.
+stock Container_Room(const slots[][E_INV_SLOT], size, capacity, E_ITEM:item)
 {
-    if (!g_InvLoaded[playerid])
+    new room, stack = g_ItemInfo[item][itMaxStack];
+    for (new slot = 0; slot < size; slot++)
     {
-        return false;
-    }
-
-    new room, stack = g_ItemInfo[item][itMaxStack], capacity = Inv_Capacity(playerid);
-    for (new slot = 0; slot < INV_MAX_SLOTS; slot++)
-    {
-        if (g_Inv[playerid][slot][isItem] == item)
+        if (slots[slot][isItem] == item)
         {
-            room += stack - g_Inv[playerid][slot][isAmount];
+            room += stack - slots[slot][isAmount];
         }
-        else if (g_Inv[playerid][slot][isItem] == ITEM_NONE && slot < capacity)
+        else if (slots[slot][isItem] == ITEM_NONE && slot < capacity)
         {
             room += stack;
         }
     }
-    return room >= amount;
+    return room;
+}
+
+// Fills existing stacks first, then free slots; the room must be checked first. Returns the changed slots as bits,
+// so whoever owns the slots saves them.
+stock Container_Add(slots[][E_INV_SLOT], size, capacity, E_ITEM:item, amount)
+{
+    new changed, stack = g_ItemInfo[item][itMaxStack];
+    for (new slot = 0; slot < size && amount > 0; slot++)
+    {
+        if (slots[slot][isItem] == item && slots[slot][isAmount] < stack)
+        {
+            new put = min(amount, stack - slots[slot][isAmount]);
+            slots[slot][isAmount] += put;
+            amount -= put;
+            changed |= 1 << slot;
+        }
+    }
+    for (new slot = 0; slot < capacity && amount > 0; slot++)
+    {
+        if (slots[slot][isItem] == ITEM_NONE)
+        {
+            new put = min(amount, stack);
+            slots[slot][isItem] = item;
+            slots[slot][isAmount] = put;
+            amount -= put;
+            changed |= 1 << slot;
+        }
+    }
+    return changed;
+}
+
+stock bool:Inv_CanAdd(playerid, E_ITEM:item, amount)
+{
+    return g_InvLoaded[playerid] && Container_Room(g_Inv[playerid], INV_MAX_SLOTS, Inv_Capacity(playerid), item) >= amount;
 }
 
 stock bool:Inv_Add(playerid, E_ITEM:item, amount)
@@ -126,28 +156,28 @@ stock bool:Inv_Add(playerid, E_ITEM:item, amount)
     {
         return false;
     }
-
-    new stack = g_ItemInfo[item][itMaxStack], capacity = Inv_Capacity(playerid);
-    for (new slot = 0; slot < INV_MAX_SLOTS && amount > 0; slot++)
+    new changed = Container_Add(g_Inv[playerid], INV_MAX_SLOTS, Inv_Capacity(playerid), item, amount);
+    for (new slot = 0; slot < INV_MAX_SLOTS; slot++)
     {
-        if (g_Inv[playerid][slot][isItem] == item && g_Inv[playerid][slot][isAmount] < stack)
+        if (changed & (1 << slot))
         {
-            new put = min(amount, stack - g_Inv[playerid][slot][isAmount]);
-            g_Inv[playerid][slot][isAmount] += put;
-            amount -= put;
             Inv_SaveSlot(playerid, slot);
         }
     }
-    for (new slot = 0; slot < capacity && amount > 0; slot++)
+    return true;
+}
+
+// Swaps one piece for another (a jerry can that gets filled or emptied).
+stock bool:Inv_Replace(playerid, E_ITEM:from, E_ITEM:to)
+{
+    if (!Inv_Remove(playerid, from, 1))
     {
-        if (g_Inv[playerid][slot][isItem] == ITEM_NONE)
-        {
-            new put = min(amount, stack);
-            g_Inv[playerid][slot][isItem] = item;
-            g_Inv[playerid][slot][isAmount] = put;
-            amount -= put;
-            Inv_SaveSlot(playerid, slot);
-        }
+        return false;
+    }
+    if (!Inv_Add(playerid, to, 1))
+    {
+        Inv_Add(playerid, from, 1);
+        return false;
     }
     return true;
 }
@@ -296,6 +326,16 @@ stock bool:Inv_Use(playerid, slot)
         case ITEM_PHONE:
         {
             Phone_ShowMenu(playerid);
+            return false;
+        }
+        case ITEM_CANISTER_FULL:
+        {
+            Fuel_StartCanister(playerid);
+            return false;
+        }
+        case ITEM_CANISTER:
+        {
+            Msg_Info(playerid, "Prazan kanister se puni na benzinskoj pumpi: /gorivo peske, pored pumpe.");
             return false;
         }
         default:

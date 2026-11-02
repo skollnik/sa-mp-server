@@ -36,7 +36,7 @@
 | Tehnički pregled i registracija (`/registruj`, 60 dana) | motor $500, auto $1.000, kamion, autobus, brod i letelica $2.000; bicikl se ne registruje |
 | Tablice (policija, `/tablice`) | prve $300, nove nasumične $1.500, sopstvena $60.000 (Gold VIP $30.000) |
 | Kazne sa kamera (`/kazne`, opština ili policija) | brzina do 20 km/h preko $150, do 40 km/h $400, više $800; neregistrovano vozilo $500 |
-| Kanister (prazan) | $50 |
+| Kanister (prazan, 24/7) / punjenje na pumpi (10 l) | $50 / $30 |
 | Telefon (aparat) | $500 |
 | SIM kartica (nasumičan broj) | $50 |
 | Izbor svog broja (besplatno za Silver i Gold VIP i admine) | +$2.000 |
@@ -173,7 +173,7 @@
 | Technical inspection and registration (`/registruj`, 60 days) | motorbike $500, car $1,000, truck, bus, boat and aircraft $2,000; bicycles are not registered |
 | Plates (police, `/tablice`) | first $300, new random $1,500, custom $60,000 (Gold VIP $30,000) |
 | Camera fines (`/kazne`, city hall or police) | speeding up to 20 km/h over $150, up to 40 km/h $400, more $800; unregistered vehicle $500 |
-| Jerry can (empty) | $50 |
+| Jerry can (empty, 24/7) / filling at a pump (10 l) | $50 / $30 |
 | Phone (device) | $500 |
 | SIM card (random number) | $50 |
 | Picking your own number (free for Silver and Gold VIP and admins) | +$2,000 |
