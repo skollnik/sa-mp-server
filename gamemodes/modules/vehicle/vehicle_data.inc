@@ -11,6 +11,20 @@
 #define VEH_ADMIN_EXTRA_MAX     (5)
 // Rows of a list of one owner's vehicles: every slot anyone can have, plus one for vehicles kept after VIP ended.
 #define VEH_LIST_SIZE           (VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA + VEH_ADMIN_EXTRA_MAX + 1)
+
+enum E_VEH_CLASS
+{
+    // Trailers, trains and RC toys.
+    VEH_CLASS_OTHER,
+    VEH_CLASS_BICYCLE,
+    VEH_CLASS_MOTO,
+    VEH_CLASS_CAR,
+    // Vans, pickups and buses.
+    VEH_CLASS_VAN,
+    VEH_CLASS_TRUCK,
+    VEH_CLASS_BOAT,
+    VEH_CLASS_AIR
+}
 #define VEH_DEATH_RESPAWN_S     (10)
 // A destroyed vehicle comes back smoking, so a crash still costs something (repair: mechanic, phase 3.5).
 #define VEH_RESPAWN_HEALTH      (500.0)
@@ -103,6 +117,7 @@ forward bool:Veh_OnDialogResponse(playerid, dialogid, response, listitem);
 forward bool:Veh_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
 forward bool:Veh_IsRegistered(slot);
 forward bool:Veh_HasFreeSlot(playerid);
+forward E_VEH_CLASS:Veh_Class(model);
 forward bool:Market_IsNearExit(vehicleid);
 forward bool:Market_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Offer_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);

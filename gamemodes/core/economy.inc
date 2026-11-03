@@ -72,3 +72,11 @@ new const g_PhoneTopups[] = { 10, 20, 50, 100 };
 new const g_VipPaydayBonus[] = { 0, 5, 10, 15 };
 // Inventory slots added per VIP level.
 new const g_VipInventorySlots[] = { 0, 2, 4, 6 };
+
+// Licenses (driving school); the test is paid again after a failed attempt.
+#define LIC_PRICE_CAR               (1500)
+#define LIC_PRICE_MOTO              (1000)
+#define LIC_PRICE_TRUCK             (5000)
+#define LIC_PRICE_BOAT              (7500)
+#define LIC_PRICE_FLY               (50000)
+#define LIC_PRICE_FISH              (250)

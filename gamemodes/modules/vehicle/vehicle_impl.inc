@@ -99,6 +99,43 @@ stock bool:Veh_IsBicycle(model)
     return model == 481 || model == 509 || model == 510;
 }
 
+// One list of models by kind, shared by the trunk (capacity) and licenses (which one a vehicle needs).
+stock E_VEH_CLASS:Veh_Class(model)
+{
+    if (Veh_IsBicycle(model))
+    {
+        return VEH_CLASS_BICYCLE;
+    }
+    if (AC_IsAircraft(model))
+    {
+        return VEH_CLASS_AIR;
+    }
+    switch (model)
+    {
+        case 435, 450, 584, 591, 606, 607, 608, 610, 611, 441, 464, 465, 501, 564, 594, 449, 537, 538, 569, 570, 590:
+        {
+            return VEH_CLASS_OTHER;
+        }
+        case 448, 461, 462, 463, 468, 471, 521, 522, 523, 581, 586:
+        {
+            return VEH_CLASS_MOTO;
+        }
+        case 430, 446, 452, 453, 454, 472, 473, 484, 493, 595:
+        {
+            return VEH_CLASS_BOAT;
+        }
+        case 403, 406, 408, 414, 433, 443, 455, 456, 498, 499, 514, 515, 524, 573, 578, 609:
+        {
+            return VEH_CLASS_TRUCK;
+        }
+        case 413, 418, 422, 423, 428, 440, 459, 478, 482, 483, 508, 543, 554, 582, 588, 600, 605, 431, 437:
+        {
+            return VEH_CLASS_VAN;
+        }
+    }
+    return VEH_CLASS_CAR;
+}
+
 // Trailers, trains and RC toys cannot be owned; everything else with an engine, and bicycles, can.
 stock bool:Veh_IsOwnableModel(model)
 {
@@ -107,6 +144,10 @@ stock bool:Veh_IsOwnableModel(model)
 
 stock bool:Veh_HasKey(playerid, vehicleid)
 {
+    if (g_TestVehicleOwner[vehicleid] != INVALID_PLAYER_ID)
+    {
+        return g_TestVehicleOwner[vehicleid] == playerid;
+    }
     if (g_IsAdminVehicle[vehicleid])
     {
         return Staff_IsAdmin(playerid);

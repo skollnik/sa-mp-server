@@ -39,28 +39,17 @@ stock Trunk_Init()
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 }
 
-// Cars 6, vans and pickups 12, big trucks 20; two-wheelers, boats, aircraft, trailers and trains have none.
+// Two-wheelers, boats, aircraft, trailers and trains have none.
 stock Trunk_Capacity(model)
 {
-    switch (model)
+    switch (Veh_Class(model))
     {
-        case 481, 509, 510, 448, 461, 462, 463, 468, 471, 521, 522, 523, 581, 586,
-            430, 446, 452, 453, 454, 472, 473, 484, 493, 595,
-            417, 425, 447, 460, 469, 476, 487, 488, 497, 511, 512, 513, 519, 520, 548, 553, 563, 577, 592, 593,
-            435, 450, 584, 591, 606, 607, 608, 610, 611, 441, 464, 465, 501, 564, 594, 449, 537, 538, 569, 570, 590:
-        {
-            return 0;
-        }
-        case 403, 406, 408, 414, 433, 443, 455, 456, 498, 499, 514, 515, 524, 573, 578, 609:
-        {
-            return 20;
-        }
-        case 413, 418, 422, 423, 428, 440, 459, 478, 482, 483, 508, 543, 554, 582, 588, 600, 605, 431, 437:
-        {
-            return 12;
-        }
+        case VEH_CLASS_CAR: return 6;
+        case VEH_CLASS_VAN: return 12;
+        case VEH_CLASS_TRUCK: return 20;
+        default: return 0;
     }
-    return 6;
+    return 0;
 }
 
 static stock Trunk_SaveSlot(slot, index)

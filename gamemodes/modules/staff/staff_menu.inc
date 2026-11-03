@@ -35,6 +35,7 @@ static const g_PlayerMenu[][E_MENU_ITEM] =
     { ADMIN_LEVEL_HEAD,   "Ponisti kazne sa kamera",         "ponistikazne %s", "" },
     { ADMIN_LEVEL_HEAD,   "Daj vozilo",                      "dajvozilo %s",    "Model vozila (400-611):" },
     { ADMIN_LEVEL_HEAD,   "Dodatna mesta za vozila",         "setmesta %s",     "Dodatna mesta (0-5), pored obicnih i VIP:" },
+    { ADMIN_LEVEL_HEAD,   "Dozvola (daj / oduzmi)",          "setdozvola %s",   "Vrsta (auto, motor, kamion, brod, letenje, ribolov) i 1 ili 0:" },
     { ADMIN_LEVEL_HEAD,   "Helper nivo",                     "makehelper %s",   "Helper nivo (0 skida):" },
     { ADMIN_LEVEL_MANAGEMENT, "Admin nivo",                  "makeadmin %s",    "Admin nivo (0 skida):" },
     { ADMIN_LEVEL_OWNER,  "Novac (gotovina)",                "givemoney %s",    "Iznos (negativan oduzima):" },

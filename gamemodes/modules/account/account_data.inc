@@ -53,6 +53,8 @@ enum E_PLAYER_DATA
     pHeldPay,
     // Vehicle slots given by an admin on top of the usual and VIP ones; saved only by /setmesta.
     pExtraVehSlots,
+    // One bit per E_LICENSE; saved only when it changes (school, /setdozvola).
+    pLicenses,
 
     // Runtime only, never saved
     pLastLoginText[24],

@@ -1160,7 +1160,7 @@ cmd:ahelp(playerid, params[])
     if (level >= ADMIN_LEVEL_HEAD)
     {
         strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setglad /setname /pmspy\n" \
-            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo /setmesta\nKamere: /napravikameru /obrisikameru /kamere /izmenikameru [id]\n" \
+            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo /setmesta    Auto skola: /setdozvola /rutaskole (meni rute)\nKamere: /napravikameru /obrisikameru /kamere /izmenikameru [id]\n" \
             "Izmene: /izmenivozilo (sve opcije) /izmenimesto [id] /izmenigps [id]    Auto pijaca: /pijaca (meni)\n" \
             "Igrac: /dajpredmet /uzmipredmet /setlicna /ponistikazne\n" C_GREY "/izmeniulaz [id], /dodajgps i /setvip [igrac] bez ostalih parametara otvaraju meni\n\n");
     }

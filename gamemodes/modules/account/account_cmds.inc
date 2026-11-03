@@ -77,6 +77,8 @@ cmd:stats(playerid, params[])
     new phone[40];
     if (g_Player[playerid][pPhoneNumber] > 0) format(phone, sizeof(phone), "%d (kredit $%d)", g_Player[playerid][pPhoneNumber], g_Player[playerid][pPhoneCredit]);
     else strcopy(phone, "nema SIM karticu");
+    new licenses[128];
+    Lic_Summary(playerid, licenses);
 
     format(body, sizeof(body),
         C_WHITE "Ime: " C_SERVER "%s\n" \
@@ -84,12 +86,12 @@ cmd:stats(playerid, params[])
         "Nivo: " C_SERVER "%d" C_WHITE "   Respect: %d/%d do nivoa %d\n" \
         "Sati igre: %d   Do plate: %d/%d aktivnih minuta%s\n\n" \
         "Novac kod sebe: " C_GREEN "$%d\n" C_WHITE "Banka: " C_GREEN "$%d\n\n" \
-        C_WHITE "Traka gladi: %d/%d   Licna karta: %s\nBroj telefona: %s\nVIP: %s",
+        C_WHITE "Traka gladi: %d/%d   Licna karta: %s\nBroj telefona: %s\nDozvole: %s\nVIP: %s",
         Account_Name(playerid), g_Player[playerid][pGender] == GENDER_FEMALE ? ("zensko") : ("musko"), g_Player[playerid][pAge],
         g_Player[playerid][pLevel], g_Player[playerid][pRespect], Payday_RespectNeeded(playerid), g_Player[playerid][pLevel] + 1,
         played / 3600, g_Player[playerid][pPaydayMinutes], PAYDAY_MIN_MINUTES, Payday_IsAfk(playerid) ? (C_RED " (AFK)" C_WHITE) : (""),
         g_Player[playerid][pCash], g_Player[playerid][pBank],
-        g_Player[playerid][pHunger], HUNGER_MAX, g_Player[playerid][pHasIdCard] ? ("ima") : ("nema"), phone, vip);
+        g_Player[playerid][pHunger], HUNGER_MAX, g_Player[playerid][pHasIdCard] ? ("ima") : ("nema"), phone, licenses, vip);
     ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_MSGBOX, SERVER_NAME " - Statistika", body, "Zatvori", "");
     return 1;
 }

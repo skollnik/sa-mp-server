@@ -103,39 +103,63 @@ stock Fuel_OnPlayerConnect(playerid)
     g_CanisterTimer[playerid] = -1;
 }
 
-// A partly full can is topped up first, otherwise an empty one is filled.
-static stock Fuel_FillCanister(playerid)
+// How many more litres a slot can take: a part-full can up to the brim, an empty can a whole can, anything else none.
+static stock Fuel_CanisterRoom(playerid, slot)
 {
-    new slot = -1;
-    for (new i = 0; i < INV_MAX_SLOTS; i++)
+    switch (g_Inv[playerid][slot][isItem])
     {
-        if (g_Inv[playerid][i][isItem] == ITEM_CANISTER_FULL && g_Inv[playerid][i][isAmount] < CANISTER_LITRES)
-        {
-            slot = i;
-            break;
-        }
+        case ITEM_CANISTER_FULL: return CANISTER_LITRES - g_Inv[playerid][slot][isAmount];
+        case ITEM_CANISTER: return CANISTER_LITRES;
     }
-    if (slot == -1)
+    return 0;
+}
+
+// /gorivo [litara] on foot. Part-full cans are topped up before empty ones are started, so the fuel ends up
+// in as few cans as possible; without a number every can is filled.
+static stock Fuel_FillCanisters(playerid, const params[])
+{
+    new wanted = cellmax, room;
+    if (!isnull(params) && (sscanf(params, "d", wanted) || wanted < 1))
     {
-        slot = Inv_FindSlot(playerid, ITEM_CANISTER);
+        Msg_Usage(playerid, "/gorivo [litara] (peske pored pumpe puni kanistere; bez broja do punog, $%d po litru)", FUEL_PRICE_PER_LITRE);
+        return;
     }
-    if (slot == -1)
+    for (new slot = 0; slot < INV_MAX_SLOTS; slot++)
     {
-        Msg_Error(playerid, "Gorivo se toci dok sedite za volanom; peske se puni prazan kanister (kupuje se u 24/7).");
+        room += Fuel_CanisterRoom(playerid, slot);
+    }
+    if (room == 0)
+    {
+        Msg_Error(playerid, "Gorivo se toci dok sedite za volanom; peske se puni kanister (prazan se kupuje u 24/7), a vasi su puni.");
         return;
     }
     if (!Point_Require(playerid, POINT_FUEL))
     {
         return;
     }
-    new litres = CANISTER_LITRES - (g_Inv[playerid][slot][isItem] == ITEM_CANISTER_FULL ? g_Inv[playerid][slot][isAmount] : 0);
-    if (!Money_Take(playerid, litres * FUEL_PRICE_PER_LITRE, "gorivo: kanister"))
+    new litres = min(wanted, room), price = litres * FUEL_PRICE_PER_LITRE;
+    if (!Money_Take(playerid, price, "gorivo: kanister"))
     {
         return;
     }
-    Inv_SetSlot(playerid, slot, ITEM_CANISTER_FULL, CANISTER_LITRES);
+    new left = litres;
+    for (new pass = 0; pass < 2 && left > 0; pass++)
+    {
+        new E_ITEM:kind = pass == 0 ? ITEM_CANISTER_FULL : ITEM_CANISTER;
+        for (new slot = 0; slot < INV_MAX_SLOTS && left > 0; slot++)
+        {
+            new space = Fuel_CanisterRoom(playerid, slot);
+            if (g_Inv[playerid][slot][isItem] != kind || space == 0)
+            {
+                continue;
+            }
+            new put = min(left, space);
+            Inv_SetSlot(playerid, slot, ITEM_CANISTER_FULL, CANISTER_LITRES - space + put);
+            left -= put;
+        }
+    }
     Chat_Action(playerid, "puni kanister gorivom.");
-    Msg_Success(playerid, "Natocili ste %d l u kanister za $%d (sada %d l). Sipa se pored vozila: /inv, pa kanister.", litres, litres * FUEL_PRICE_PER_LITRE, CANISTER_LITRES);
+    Msg_Success(playerid, "Natocili ste %d l u kanister za $%d. Sipa se pored vozila: /inv, pa kanister.", litres, price);
 }
 
 // Clearing animations in a vehicle throws the player out of it, and on F it would also stop them getting in.
@@ -237,7 +261,7 @@ cmd:gorivo(playerid, params[])
 {
     if (GetPlayerState(playerid) == PLAYER_STATE_ONFOOT)
     {
-        Fuel_FillCanister(playerid);
+        Fuel_FillCanisters(playerid, params);
         return 1;
     }
     if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER)

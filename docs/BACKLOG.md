@@ -52,7 +52,8 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | ✅ GTA radionice za tuning (Transfender i ostale) i Pay'n'spray ne menjaju lična vozila: drugi igrači ne vide promenu, a vozilo se vraća kakvo je bilo (naplaćena popravka u Pay'n'spray-u je u koraku 3.5) |
 | Kad dođe mehaničar (korak 3.5): ista mapa u Willowfield-u (radionica pored tehničkog pregleda) |
 | Kad dođu kuće i firme (Faza 4): prodaja i zamena kroz `/ponudi` |
-| Pregradak u vozilu (malo skladište iznutra, 2 mesta): čeka odluku vlasnika |
+| Kad dođe policija (Faza 5): provera i oduzimanje dozvola, kazna za vožnju bez dozvole |
+| Mesto auto škole: vlasnik postavlja šalter (`/napravimesto skola`) i GPS lokaciju kod poligona |
 | Kad dođe oružje kao predmet: oružje u gepeku |
 | Kad dođu vozila poslova i frakcija: gepek za njih (npr. oprema frakcije) |
 | Brisanje neaktivnog naloga (6 meseci): oslobađanje sačuvanih tablica |
@@ -278,6 +279,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 02.11.2026. | GTA radionice (Transfender, Loco Low Co, Wheel Arch Angels) i svi Pay'n'spray-evi su zatvoreni: vozilo se odbija od vrata; admin daje dodatna mesta za vozila (`/setmesta [igrac] [0-5]`, i u `/aigrac`); `/atune` na poslednjoj strani nudi „Prva strana“ |
 | 02.11.2026. | Korak 3.3: gepek kao inventar (`/gepek`, admin `/proverigepek` i „Isprazni gepek“ u `/izmenivozilo`), kanister od 10 l (puni se peške sa `/gorivo`); GTA radionice i Pay'n'spray zatvoreni kapijom umesto zone |
 | 03.11.2026. | Kanister pamti litre (ostatak ostaje, dopuna na pumpi), bilo koji taster prekida sipanje bez izbacivanja iz vozila, zaključano vozilo ne otvara haubu ni gepek |
+| 03.11.2026. | Kanister se puni koliko igrač upiše (prvo delimično puni); korak 3.4: auto škola (`/skola`, teorija i vožnja, 6 dozvola), poligon kod aerodroma, `/dozvole`, `/pokazidozvole`, upozorenje za vožnju bez dozvole, admin `/setdozvola` i `/rutaskole`; pregradak odbačen (retko se koristi) |
 
 ---
 
@@ -333,7 +335,8 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | ✅ GTA tuning shops (Transfender and others) and Pay'n'spray do not change personal vehicles: other players never see the change and the vehicle goes back to how it was (a paid Pay'n'spray repair is in step 3.5) |
 | Once the mechanic exists (step 3.5): the same map in Willowfield (the workshop next to the inspection) |
 | Once houses and businesses exist (Phase 4): selling and trading them through `/ponudi` |
-| Vehicle glovebox (small storage from inside, 2 slots): waiting for the owner's decision |
+| Once police exist (Phase 5): checking and revoking licenses, a fine for driving without one |
+| The driving school spot: the owner places the counter (`/napravimesto skola`) and a GPS location by the polygon |
 | Once weapons are items: weapons in the trunk |
 | Once job and faction vehicles exist: a trunk for them (e.g. faction gear) |
 | Deleting an inactive account (6 months): free its kept plates |
@@ -559,3 +562,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-02 | GTA shops (Transfender, Loco Low Co, Wheel Arch Angels) and every Pay'n'spray are closed: vehicles bounce off the door; admins give extra vehicle slots (`/setmesta [player] [0-5]`, also in `/aigrac`); `/atune` offers "Prva strana" on the last page |
 | 2026-11-02 | Step 3.3: trunk as inventory (`/gepek`, admin `/proverigepek` and "Isprazni gepek" in `/izmenivozilo`), a 10 l jerry can (filled on foot with `/gorivo`); GTA shops and Pay'n'spray closed with a gate instead of a zone |
 | 2026-11-03 | The jerry can keeps its litres (the rest stays, topped up at the pump), any key stops pouring without throwing the player out of a vehicle, a locked vehicle does not open its bonnet or trunk |
+| 2026-11-03 | A jerry can is filled with the litres typed (part-full first); step 3.4: driving school (`/skola`, theory and drive, 6 licenses), the polygon by the airport, `/dozvole`, `/pokazidozvole`, a warning for driving without a license, admin `/setdozvola` and `/rutaskole`; glovebox dropped (rarely used) |

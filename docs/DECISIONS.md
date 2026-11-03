@@ -119,6 +119,11 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 111 | 2026-11-02 | Pri prodaji ili zameni stvari ostaju u gepeku i idu uz vozilo; kupac u ponudi vidi da gepek nije prazan, a promena gepeka posle slanja poništava ponudu | Uobičajena praksa: gepek pripada vozilu |
 | 112 | 2026-11-02 | Kanister: prazan  u 24/7, puni se peške na pumpi (`/gorivo`, 10 l za ), sipa se pored bilo kog vozila sa ugašenim motorom (5 s, bilo koji taster prekida); što ne stane ostaje u kanisteru, a delimično pun kanister se dopunjuje na pumpi | Odobrio vlasnik; kanister pamti litre, pa se nikad ne spaja sa drugim kanisterom i uvek se prenosi ceo |
 | 113 | 2026-11-03 | Zaključano vozilo: hauba i gepek se zatvaraju pri zaključavanju i ne mogu da se otvore dok je vozilo zaključano | Zahtev vlasnika |
+| 114 | 2026-11-03 | Kanister se puni koliko igrač upiše (`/gorivo [litara]` peške, bez broja do punog); prvo se dopunjuju delimično puni kanisteri, pa prazni | Zahtev vlasnika; gorivo završi u što manje kanistera |
+| 115 | 2026-11-03 | Auto škola (`/skola`, mesto `skola`): teorija 8 nasumičnih pitanja (dozvoljena 1 greška), pa vožnja kroz checkpoint-e u vozilu škole; pad: šteta ispod 850 HP, van vozila duže od 20 s, preko 90 km/h duže od 3 s, isteklo vreme, smrt, zatvor, izlazak sa servera. Plaća se pre teorije, posle pada ponovo. Dozvole važe trajno | Odobrio vlasnik; uobičajena praksa (teorija pa vožnja, poligon sa čunjevima pa gradska vožnja) |
+| 116 | 2026-11-03 | Vožnja bez dozvole je dozvoljena; igrač dobija upozorenje, a kažnjava policija (faza 5). Vozilo se kupuje i bez dozvole | Uobičajena praksa na RP serverima |
+| 117 | 2026-11-03 | Rute ispita su u bazi (`license_routes`) i admin ih menja u igri (`/rutaskole`); prvi put se upisuju podrazumevane (poligon i gradska vožnja za auto i motor, gradska za kamion, krug po vodi za brod, krug iznad aerodroma za letenje) | Rute se mogu popraviti bez izmene koda |
+| 118 | 2026-11-03 | Pregradak u vozilu se ne pravi | Retko se koristi na RP serverima; gepek je dovoljan |
 
 ### Arhitektura koda (predlog)
 ```
@@ -259,6 +264,11 @@ This file records every important decision so it does not get re-discussed. Newe
 | 111 | 2026-11-02 | On a sale or trade the items stay in the trunk and go with the vehicle; the buyer sees in the offer that the trunk is not empty, and a trunk change after sending cancels the offer | Common practice: the trunk belongs to the vehicle |
 | 112 | 2026-11-02 | Jerry can: empty  at 24/7, filled on foot at a pump (`/gorivo`, 10 l for ), poured next to any vehicle with the engine off (5 s, any key stops it); what does not fit stays in the can, and a part-full can is topped up at the pump | Owner's approval; the can keeps its litres, so it never merges with another can and always moves as a whole |
 | 113 | 2026-11-03 | A locked vehicle: the bonnet and trunk shut on locking and cannot be opened while it is locked | Owner's request |
+| 114 | 2026-11-03 | A jerry can is filled with as many litres as the player types (`/gorivo [litres]` on foot, without a number to the brim); part-full cans are topped up before empty ones | Owner's request; the fuel ends up in as few cans as possible |
+| 115 | 2026-11-03 | Driving school (`/skola`, point `skola`): an 8-question random theory test (1 mistake allowed), then a checkpoint drive in a school vehicle; failing: damage below 850 HP, more than 20 s out of the vehicle, over 90 km/h for more than 3 s, time out, death, jail, disconnect. Paid before the theory, again after a fail. Licenses are permanent | Owner's approval; common practice (theory then drive, a cone polygon then city driving) |
+| 116 | 2026-11-03 | Driving without a license is allowed; the player is warned and the police fine it (phase 5). Vehicles can be bought without a license | Common practice on RP servers |
+| 117 | 2026-11-03 | Test routes are in the database (`license_routes`) and admins edit them in game (`/rutaskole`); defaults are written the first time (polygon and city for car and motorbike, city for truck, a water loop for the boat, a loop over the airport for flying) | Routes can be fixed without code changes |
+| 118 | 2026-11-03 | No vehicle glovebox | Rarely used on RP servers; the trunk is enough |
 
 ### Code architecture (proposal)
 ```

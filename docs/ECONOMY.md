@@ -58,6 +58,8 @@
 | Kirija za sobu (payday) | ~$50 (postavlja vlasnik) |
 
 ### Dozvole
+Auto škola (`/skola`): cena se plaća pre teorije, a posle pada ponovo. Uslovi: motor i auto nivo 1, kamion nivo 3 i dozvola za auto, brod nivo 3, letenje nivo 5; ribolov bez testa.
+
 | Dozvola | Cena |
 |---------|------|
 | Ribolov | $250 |
@@ -195,6 +197,8 @@
 | Room rent (payday) | ~$50 (set by the owner) |
 
 ### Licenses
+Driving school (`/skola`): the price is paid before the theory and again after a fail. Requirements: motorbike and car level 1, truck level 3 and a car license, boat level 3, flying level 5; fishing without a test.
+
 | License | Price |
 |---------|-------|
 | Fishing | $250 |

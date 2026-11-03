@@ -33,6 +33,7 @@
 #include "modules/inventory/inventory_data.inc"
 #include "modules/inventory/accessories_data.inc"
 #include "modules/vehicle/vehicle_data.inc"
+#include "modules/license/license_data.inc"
 #include "modules/vehicle/vehicle_names.inc"
 #include "modules/health/hunger_data.inc"
 #include "modules/help/cmd_menu.inc"
@@ -102,6 +103,7 @@
 #include "modules/vehicle/offers.inc"
 #include "modules/vehicle/vehicle_cmds.inc"
 #include "modules/vehicle/speedometer.inc"
+#include "modules/license/license.inc"
 
 #include "modules/help/help_cmds.inc"
 
@@ -151,6 +153,7 @@ public OnGameModeInit()
     Plate_Init();
     Market_Init();
     Offer_Init();
+    Lic_Init();
     Speedo_Init();
     Maps_Init();
 
@@ -171,6 +174,7 @@ public OnGameModeExit()
     Beg_Exit();
     Payday_Exit();
     Vip_Exit();
+    Lic_Exit();
     AC_Exit();
     Punish_Exit();
     Account_Exit();
@@ -197,6 +201,7 @@ public OnPlayerConnect(playerid)
     Fine_OnPlayerConnect(playerid);
     Plate_OnPlayerConnect(playerid);
     Fuel_OnPlayerConnect(playerid);
+    Lic_OnPlayerConnect(playerid);
     Offer_OnPlayerConnect(playerid);
     Bet_OnPlayerConnect(playerid);
     Beg_OnPlayerConnect(playerid);
@@ -209,6 +214,7 @@ public OnPlayerConnect(playerid)
 
 public OnPlayerDisconnect(playerid, reason)
 {
+    Lic_OnPlayerDisconnect(playerid);
     Fuel_CancelCanister(playerid);
     Tune_Close(playerid);
     Gps_OnPlayerDisconnect(playerid);
@@ -253,6 +259,12 @@ public OnPlayerUpdate(playerid)
 public OnPlayerEnterCheckpoint(playerid)
 {
     Checkpoint_OnPlayerEnter(playerid);
+    return 1;
+}
+
+public OnPlayerEnterRaceCheckpoint(playerid)
+{
+    Lic_OnPlayerEnterRaceCP(playerid);
     return 1;
 }
 
@@ -326,6 +338,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
     Beg_OnPlayerDeath(playerid);
     Fuel_CancelCanister(playerid);
     Tune_Close(playerid);
+    Lic_OnPlayerDeath(playerid);
     return 1;
 }
 
@@ -337,6 +350,7 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
     Speedo_OnPlayerStateChange(playerid, newstate);
     Market_OnPlayerStateChange(playerid, newstate);
     Tune_OnPlayerStateChange(playerid, newstate);
+    Lic_OnPlayerStateChange(playerid, newstate);
     return 1;
 }
 
@@ -472,6 +486,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Trunk_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Lic_OnDialogResponse(playerid, dialogid, response, listitem))
     {
         return 1;
     }

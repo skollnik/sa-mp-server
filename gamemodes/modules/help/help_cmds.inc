@@ -29,10 +29,11 @@ cmd:pomoc(playerid, params[])
         C_WHITE "N - motor (pali se uz kljuc; upaljeno vozilo moze da vozi svako)    Y - zakljucavanje najblizeg vaseg vozila\n" \
         "/v - vasa vozila (GPS, registracija, oduzimanje kopije kljuca)    /v parkiraj - mesto gde se vozilo vraca\n" \
         "/v [motor / zakljucaj / svetla / hauba / gepek]    /v kljuc - kopija kljuca igracu pored vas\n" \
-        "/gorivo - tocenje na benzinskoj pumpi (ugasen motor; peske puni prazan kanister od 10 l)    /registruj - tehnicki pregled (vazi 60 dana)\n" \
+        "/gorivo [litara] - tocenje na pumpi (za volanom, ugasen motor; peske puni kanistere)    /registruj - tehnicki pregled (vazi 60 dana)\n" \
         "/gepek - stvari u gepeku (stanite iza vozila; otvoren sa /v gepek, vozilo otkljucano)    Kanister: /inv pored vozila\n" \
         "/pijaca - auto pijaca (kad je otvorena)    /kupivozilo - kupovina na pijaci    /ponudi - prodaja ili zamena vozila igracu pored vas\n" \
-        "/tablice - tablice na salteru u policiji    /v tablice - postavljanje tablica    /kazne - kazne sa kamera (placaju se u opstini ili policiji)\n\n" \
+        "/tablice - tablice na salteru u policiji    /v tablice - postavljanje tablica    /kazne - kazne sa kamera (placaju se u opstini ili policiji)\n" \
+        "/skola - auto skola (dozvole: teorija i voznja)    /dozvole - vase dozvole    /pokazidozvole - igracu pored vas\n\n" \
         C_SERVER "Pomoc i podrska\n" \
         C_WHITE "/n - newbie chat (pitanja novih igraca)    /ask - pitanje helperima\n" \
         "/report - prijava igraca adminima    /admins, /helpers - tim online    /ahelp, /hhelp - komande tima\n\n" \
