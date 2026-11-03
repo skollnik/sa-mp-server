@@ -117,7 +117,8 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 109 | 2026-11-02 | Gepek (`/gepek`) pripada vozilu: koristi se peške iza vozila, kad je gepek otvoren (`/v gepek`, uz ključ) i vozilo otključano; tada svako može da stavlja i uzima. Kapacitet: auto 6, kombi i pikap 12, veliki kamion 20 mesta; motori, bicikli, brodovi, letelice i prikolice nemaju gepek | Odobrio vlasnik; uobičajena praksa (gepek mora biti otvoren, igrač iza vozila) |
 | 110 | 2026-11-02 | Više igrača kod istog gepeka: svi vide trenutni sadržaj, a svaka radnja se proverava u trenutku izvršenja (ko prvi uzme, njegovo je; drugi dobija poruku da predmeta više nema); svaka radnja se vidi u chatu (`*` ime vadi ili stavlja predmet) i upisuje u `trunk_log` | Pitanje vlasnika; bez dupliranja predmeta, a krađa ostaje RP uz trag za admine |
 | 111 | 2026-11-02 | Pri prodaji ili zameni stvari ostaju u gepeku i idu uz vozilo; kupac u ponudi vidi da gepek nije prazan, a promena gepeka posle slanja poništava ponudu | Uobičajena praksa: gepek pripada vozilu |
-| 112 | 2026-11-02 | Kanister: prazan  u 24/7, puni se peške na pumpi (`/gorivo`, 10 l za ), sipa se pored bilo kog vozila sa ugašenim motorom (5 s); što ne stane se prospe | Odobrio vlasnik |
+| 112 | 2026-11-02 | Kanister: prazan  u 24/7, puni se peške na pumpi (`/gorivo`, 10 l za ), sipa se pored bilo kog vozila sa ugašenim motorom (5 s, bilo koji taster prekida); što ne stane ostaje u kanisteru, a delimično pun kanister se dopunjuje na pumpi | Odobrio vlasnik; kanister pamti litre, pa se nikad ne spaja sa drugim kanisterom i uvek se prenosi ceo |
+| 113 | 2026-11-03 | Zaključano vozilo: hauba i gepek se zatvaraju pri zaključavanju i ne mogu da se otvore dok je vozilo zaključano | Zahtev vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -256,7 +257,8 @@ This file records every important decision so it does not get re-discussed. Newe
 | 109 | 2026-11-02 | The trunk (`/gepek`) belongs to the vehicle: used on foot behind the vehicle while the trunk is open (`/v gepek`, with a key) and the vehicle unlocked; then anyone may put in and take out. Capacity: car 6, van and pickup 12, big truck 20 slots; motorbikes, bicycles, boats, aircraft and trailers have none | Owner's approval; common practice (open trunk, player behind the vehicle) |
 | 110 | 2026-11-02 | Several players at one trunk: everyone sees the current contents and every action is checked when it happens (whoever takes first gets it; the other is told it is gone); every action shows in chat (`*` name takes or puts an item) and goes to `trunk_log` | Owner's question; no duplicated items, and theft stays RP with a trail for admins |
 | 111 | 2026-11-02 | On a sale or trade the items stay in the trunk and go with the vehicle; the buyer sees in the offer that the trunk is not empty, and a trunk change after sending cancels the offer | Common practice: the trunk belongs to the vehicle |
-| 112 | 2026-11-02 | Jerry can: empty  at 24/7, filled on foot at a pump (`/gorivo`, 10 l for ), poured next to any vehicle with the engine off (5 s); what does not fit spills | Owner's approval |
+| 112 | 2026-11-02 | Jerry can: empty  at 24/7, filled on foot at a pump (`/gorivo`, 10 l for ), poured next to any vehicle with the engine off (5 s, any key stops it); what does not fit stays in the can, and a part-full can is topped up at the pump | Owner's approval; the can keeps its litres, so it never merges with another can and always moves as a whole |
+| 113 | 2026-11-03 | A locked vehicle: the bonnet and trunk shut on locking and cannot be opened while it is locked | Owner's request |
 
 ### Code architecture (proposal)
 ```

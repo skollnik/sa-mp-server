@@ -91,20 +91,35 @@ stock Fuel_Tick()
 }
 
 // A jerry can is filled at the pump at the pump price and gets a stranded vehicle to the next gas station.
-#define CANISTER_LITRES         (10)
+// It keeps whatever litres did not fit into the tank.
 #define CANISTER_POUR_MS        (5000)
 #define CANISTER_RANGE          (3.0)
 
-new bool:g_CanisterPouring[MAX_PLAYERS];
+new g_CanisterTimer[MAX_PLAYERS] = { -1, ... };
+new g_CanisterSlot[MAX_PLAYERS];
 
 stock Fuel_OnPlayerConnect(playerid)
 {
-    g_CanisterPouring[playerid] = false;
+    g_CanisterTimer[playerid] = -1;
 }
 
+// A partly full can is topped up first, otherwise an empty one is filled.
 static stock Fuel_FillCanister(playerid)
 {
-    if (!Inv_Has(playerid, ITEM_CANISTER))
+    new slot = -1;
+    for (new i = 0; i < INV_MAX_SLOTS; i++)
+    {
+        if (g_Inv[playerid][i][isItem] == ITEM_CANISTER_FULL && g_Inv[playerid][i][isAmount] < CANISTER_LITRES)
+        {
+            slot = i;
+            break;
+        }
+    }
+    if (slot == -1)
+    {
+        slot = Inv_FindSlot(playerid, ITEM_CANISTER);
+    }
+    if (slot == -1)
     {
         Msg_Error(playerid, "Gorivo se toci dok sedite za volanom; peske se puni prazan kanister (kupuje se u 24/7).");
         return;
@@ -113,26 +128,50 @@ static stock Fuel_FillCanister(playerid)
     {
         return;
     }
-    new price = CANISTER_LITRES * FUEL_PRICE_PER_LITRE;
-    if (g_Player[playerid][pCash] < price)
+    new litres = CANISTER_LITRES - (g_Inv[playerid][slot][isItem] == ITEM_CANISTER_FULL ? g_Inv[playerid][slot][isAmount] : 0);
+    if (!Money_Take(playerid, litres * FUEL_PRICE_PER_LITRE, "gorivo: kanister"))
     {
-        Msg_Error(playerid, "Nemate dovoljno novca (potrebno je $%d).", price);
         return;
     }
-    if (!Inv_Replace(playerid, ITEM_CANISTER, ITEM_CANISTER_FULL))
-    {
-        Msg_Error(playerid, "Nemate mesta u inventaru.");
-        return;
-    }
-    Money_Take(playerid, price, "gorivo: kanister");
+    Inv_SetSlot(playerid, slot, ITEM_CANISTER_FULL, CANISTER_LITRES);
     Chat_Action(playerid, "puni kanister gorivom.");
-    Msg_Success(playerid, "Napunili ste kanister (%d l) za $%d. Sipa se pored vozila: /inv, pa kanister.", CANISTER_LITRES, price);
+    Msg_Success(playerid, "Natocili ste %d l u kanister za $%d (sada %d l). Sipa se pored vozila: /inv, pa kanister.", litres, litres * FUEL_PRICE_PER_LITRE, CANISTER_LITRES);
 }
 
-// Called from the inventory; the can is only emptied when the pouring is done.
-stock Fuel_StartCanister(playerid)
+// Clearing animations in a vehicle throws the player out of it, and on F it would also stop them getting in.
+static stock Fuel_StopCanister(playerid, bool:clear = true)
 {
-    if (g_CanisterPouring[playerid])
+    KillTimer(g_CanisterTimer[playerid]);
+    g_CanisterTimer[playerid] = -1;
+    if (clear && GetPlayerState(playerid) == PLAYER_STATE_ONFOOT)
+    {
+        ClearAnimations(playerid);
+    }
+}
+
+// Also on death and disconnect, so the timer never runs for a player who is gone.
+stock Fuel_CancelCanister(playerid)
+{
+    if (g_CanisterTimer[playerid] != -1)
+    {
+        Fuel_StopCanister(playerid);
+    }
+}
+
+// Any key (F to enter a vehicle, sprint, jump, fire) stops the pouring right away.
+stock Fuel_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
+{
+    if (g_CanisterTimer[playerid] != -1 && (newkeys & ~oldkeys))
+    {
+        Fuel_StopCanister(playerid, !(newkeys & KEY_SECONDARY_ATTACK));
+        Msg_Info(playerid, "Sipanje goriva je prekinuto.");
+    }
+}
+
+// Called from the inventory with the can's slot; litres leave the can only when the pouring is done.
+stock Fuel_StartCanister(playerid, slot)
+{
+    if (g_CanisterTimer[playerid] != -1)
     {
         return;
     }
@@ -152,34 +191,45 @@ stock Fuel_StartCanister(playerid)
         Msg_Info(playerid, "Rezervoar je pun.");
         return;
     }
-    g_CanisterPouring[playerid] = true;
+    g_CanisterSlot[playerid] = slot;
     ApplyAnimation(playerid, "BOMBER", "BOM_Plant_Loop", 4.1, true, false, false, false, 0, SYNC_ALL);
     Chat_Action(playerid, "sipa gorivo iz kanistera u vozilo.");
-    SetTimerEx("Fuel_FinishCanister", CANISTER_POUR_MS, false, "ddd", playerid, g_AccountRace[playerid], vehicleid);
+    Msg_Info(playerid, "Sipanje traje %d s; bilo koji taster ga prekida.", CANISTER_POUR_MS / 1000);
+    g_CanisterTimer[playerid] = SetTimerEx("Fuel_FinishCanister", CANISTER_POUR_MS, false, "dd", playerid, vehicleid);
 }
 
-forward Fuel_FinishCanister(playerid, race, vehicleid);
-public Fuel_FinishCanister(playerid, race, vehicleid)
+forward Fuel_FinishCanister(playerid, vehicleid);
+public Fuel_FinishCanister(playerid, vehicleid)
 {
-    if (race != g_AccountRace[playerid])
+    g_CanisterTimer[playerid] = -1;
+    new slot = g_CanisterSlot[playerid];
+    if (GetPlayerState(playerid) != PLAYER_STATE_ONFOOT)
     {
         return 1;
     }
-    g_CanisterPouring[playerid] = false;
     ClearAnimations(playerid);
-    // Everything may have changed in five seconds: the vehicle driven off, started, or the can dropped.
-    if (!IsValidVehicle(vehicleid) || Veh_FindClosest(playerid, CANISTER_RANGE) != vehicleid
-        || Veh_IsEngineOn(vehicleid) || GetPlayerState(playerid) != PLAYER_STATE_ONFOOT || !Inv_Replace(playerid, ITEM_CANISTER_FULL, ITEM_CANISTER))
+    // The vehicle may have been driven off or started meanwhile, or the can given away.
+    if (!IsValidVehicle(vehicleid) || Veh_FindClosest(playerid, CANISTER_RANGE) != vehicleid || Veh_IsEngineOn(vehicleid)
+        || g_Inv[playerid][slot][isItem] != ITEM_CANISTER_FULL)
     {
         Msg_Error(playerid, "Sipanje je prekinuto.");
         return 1;
     }
-    // What does not fit spills; the can comes back empty either way.
     new Float:tank = float(Fuel_TankSize(GetVehicleModel(vehicleid)));
-    new Float:poured = Utils_FloatMin(float(CANISTER_LITRES), tank - g_VehFuel[vehicleid]);
-    Fuel_Set(vehicleid, g_VehFuel[vehicleid] + poured);
+    new litres = min(g_Inv[playerid][slot][isAmount], floatround(tank - g_VehFuel[vehicleid], floatround_ceil));
+    Fuel_Set(vehicleid, Utils_FloatMin(g_VehFuel[vehicleid] + float(litres), tank));
     Veh_SaveIfPersonal(vehicleid);
-    Msg_Success(playerid, "Sipali ste %.0f l. U rezervoaru: %.0f/%.0f l.", poured, g_VehFuel[vehicleid], tank);
+
+    new left = g_Inv[playerid][slot][isAmount] - litres;
+    if (left > 0)
+    {
+        Inv_SetSlot(playerid, slot, ITEM_CANISTER_FULL, left);
+    }
+    else
+    {
+        Inv_SetSlot(playerid, slot, ITEM_CANISTER, 1);
+    }
+    Msg_Success(playerid, "Sipali ste %d l. U rezervoaru: %.0f/%.0f l, u kanisteru je ostalo %d l.", litres, g_VehFuel[vehicleid], tank, left);
     return 1;
 }
 

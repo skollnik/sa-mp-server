@@ -277,6 +277,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 02.11.2026. | Dopune 3.2: `/atune` u GTA meniju sa leve strane i sa kamerom na vozilo, admin sopstvene tablice (`/resettablice [id] [tablica]`, meni `/izmenivozilo`), u `/v` se vide slobodna i VIP mesta, GTA radionice i Pay'n'spray ne menjaju lična vozila (boja se više ne menja pri postavljanju tablica) |
 | 02.11.2026. | GTA radionice (Transfender, Loco Low Co, Wheel Arch Angels) i svi Pay'n'spray-evi su zatvoreni: vozilo se odbija od vrata; admin daje dodatna mesta za vozila (`/setmesta [igrac] [0-5]`, i u `/aigrac`); `/atune` na poslednjoj strani nudi „Prva strana“ |
 | 02.11.2026. | Korak 3.3: gepek kao inventar (`/gepek`, admin `/proverigepek` i „Isprazni gepek“ u `/izmenivozilo`), kanister od 10 l (puni se peške sa `/gorivo`); GTA radionice i Pay'n'spray zatvoreni kapijom umesto zone |
+| 03.11.2026. | Kanister pamti litre (ostatak ostaje, dopuna na pumpi), bilo koji taster prekida sipanje bez izbacivanja iz vozila, zaključano vozilo ne otvara haubu ni gepek |
 
 ---
 
@@ -557,3 +558,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-02 | 3.2 additions: `/atune` in GTA's menu on the left with the camera on the vehicle, admin custom plates (`/resettablice [id] [plate]`, `/izmenivozilo` menu), free and VIP slots shown in `/v`, GTA shops and Pay'n'spray do not change personal vehicles (the colour no longer changes when plates are mounted) |
 | 2026-11-02 | GTA shops (Transfender, Loco Low Co, Wheel Arch Angels) and every Pay'n'spray are closed: vehicles bounce off the door; admins give extra vehicle slots (`/setmesta [player] [0-5]`, also in `/aigrac`); `/atune` offers "Prva strana" on the last page |
 | 2026-11-02 | Step 3.3: trunk as inventory (`/gepek`, admin `/proverigepek` and "Isprazni gepek" in `/izmenivozilo`), a 10 l jerry can (filled on foot with `/gorivo`); GTA shops and Pay'n'spray closed with a gate instead of a zone |
+| 2026-11-03 | The jerry can keeps its litres (the rest stays, topped up at the pump), any key stops pouring without throwing the player out of a vehicle, a locked vehicle does not open its bonnet or trunk |

@@ -1,6 +1,7 @@
 #define INV_BASE_SLOTS          (10)
 #define INV_MAX_SLOTS           (16)
 #define INV_GIVE_RADIUS         (3.0)
+#define CANISTER_LITRES         (10)
 
 #define MAX_DROPS               (200)
 #define DROP_PICKUP_RADIUS      (2.0)
@@ -42,7 +43,7 @@ enum E_ITEM
 forward bool:Inv_Add(playerid, E_ITEM:item, amount);
 forward bool:Inv_CanAdd(playerid, E_ITEM:item, amount);
 forward bool:Inv_Remove(playerid, E_ITEM:item, amount);
-forward bool:Inv_Replace(playerid, E_ITEM:from, E_ITEM:to);
+forward bool:Item_IsWhole(E_ITEM:item);
 forward bool:Inv_Has(playerid, E_ITEM:item);
 forward bool:Inv_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Inv_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
@@ -84,8 +85,8 @@ new const g_ItemInfo[E_ITEM][E_ITEM_INFO] =
     { "Kacket",             1,  0,   0,  18926, 0 },
     { "Ranac",              1,  0,   0,  3026,  0 },
     { "Torba",              1,  0,   0,  11745, 0 },
-    // Filled at a gas station (/gorivo on foot), so it is not sold.
-    { "Kanister (10 l)",    1,  0,   0,  1650,  0 }
+    // Filled at a gas station (/gorivo on foot), so it is not sold; the amount is the litres inside (Item_IsWhole).
+    { "Kanister sa gorivom (l)", CANISTER_LITRES, 0, 0, 1650, 0 }
 };
 
 enum E_INV_SLOT

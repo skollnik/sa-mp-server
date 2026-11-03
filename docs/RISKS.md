@@ -228,6 +228,9 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Predmet koji je na igraču ode u gepek, a ostane na telu | ✅ | Naočare, kapa, ranac i torba moraju prvo da se skinu |
 | Besplatno gorivo kanisterom | ✅ | Puni se samo na pumpi po istoj ceni po litru; sipanje traje 5 s i proverava se ponovo (vozilo blizu, motor ugašen, kanister još kod igrača) |
 | Kanister u vozilu bez goriva (admin vozila, bicikli) | ✅ | Odbija se: sipa se samo u vozilo koje koristi gorivo |
+| Dva delimično puna kanistera se spoje u jedan (gubi se kanister) | ✅ | Kanister sa gorivom se nikad ne spaja; daje se, baca i stavlja u gepek uvek ceo |
+| Igrač uđe u vozilo dok sipa, pa ga posle nekoliko sekundi izbaci | ✅ | Bilo koji taster odmah prekida sipanje; animacija se briše samo dok je igrač peške |
+| Gepek zaključanog vozila otvoren i ispražnjen | ✅ | Zaključavanje zatvara haubu i gepek, a dok je vozilo zaključano ne mogu da se otvore |
 | Admin daje dodatna mesta za vozila prijateljima | 👁 | Samo nivo 4, najviše 5 mesta, svaka promena ide u admin log |
 | Admin ostane bez kontrola ili sa zaglavljenom kamerom posle `/atune` | ✅ | Kamera i kontrole se vraćaju pri zatvaranju menija, izlasku iz vozila, smrti i izlasku sa servera; admin koga je drugi admin zamrznuo (`/freeze`) ostaje zamrznut |
 | Admin sopstvenom tablicom uzme tuđu ili uvredljivu tablicu | ✅ | Ista pravila i provera zauzetosti kao za igrača (i sačuvane tablice); svaka promena ide u admin log |
@@ -475,6 +478,9 @@ Every new system or change goes through these questions, against all existing sy
 | A worn item goes into the trunk but stays on the body | ✅ | Glasses, hats, backpacks and bags must be taken off first |
 | Free fuel with a jerry can | ✅ | Filled only at a pump at the same price per litre; pouring takes 5 s and is checked again (vehicle close, engine off, can still held) |
 | A jerry can on a vehicle without fuel (admin vehicles, bicycles) | ✅ | Refused: it pours only into a vehicle that uses fuel |
+| Two part-full cans merge into one (a can is lost) | ✅ | A can with fuel never merges; it is always given, dropped and put in a trunk as a whole |
+| A player gets in a vehicle while pouring and is thrown out a few seconds later | ✅ | Any key stops the pouring right away; the animation is cleared only while on foot |
+| A locked vehicle's trunk is opened and emptied | ✅ | Locking shuts the bonnet and trunk, and they cannot be opened while it is locked |
 | An admin gives friends extra vehicle slots | 👁 | Level 4 only, at most 5 slots, every change goes to the admin log |
 | An admin is left without controls or with a stuck camera after `/atune` | ✅ | The camera and controls come back when the menu closes, on leaving the vehicle, on death and on disconnect; an admin frozen by another admin (`/freeze`) stays frozen |
 | An admin takes someone else's plate or an offensive one with a custom plate | ✅ | The same rules and taken-plate check as for players (stored plates too); every change goes to the admin log |

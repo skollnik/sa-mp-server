@@ -98,13 +98,20 @@ stock bool:Inv_Has(playerid, E_ITEM:item)
     return Inv_Count(playerid, item) > 0;
 }
 
-// Free room for an item in a set of slots (inventory or trunk); a new stack may only start in the first `capacity` slots.
-stock Container_Room(const slots[][E_INV_SLOT], size, capacity, E_ITEM:item)
+// An item whose amount is a measure, not a count (litres in a jerry can): it never merges with another piece
+// and always moves as a whole, so two half-full cans stay two cans.
+stock bool:Item_IsWhole(E_ITEM:item)
 {
-    new room, stack = g_ItemInfo[item][itMaxStack];
+    return item == ITEM_CANISTER_FULL;
+}
+
+// Free room for an item in a set of slots (inventory or trunk); a new stack may only start in the first `capacity` slots.
+static stock Container_Room(const slots[][E_INV_SLOT], size, capacity, E_ITEM:item)
+{
+    new room, stack = g_ItemInfo[item][itMaxStack], bool:whole = Item_IsWhole(item);
     for (new slot = 0; slot < size; slot++)
     {
-        if (slots[slot][isItem] == item)
+        if (slots[slot][isItem] == item && !whole)
         {
             room += stack - slots[slot][isAmount];
         }
@@ -116,6 +123,15 @@ stock Container_Room(const slots[][E_INV_SLOT], size, capacity, E_ITEM:item)
     return room;
 }
 
+stock bool:Container_CanAdd(const slots[][E_INV_SLOT], size, capacity, E_ITEM:item, amount)
+{
+    if (Item_IsWhole(item) && amount > g_ItemInfo[item][itMaxStack])
+    {
+        return false;
+    }
+    return Container_Room(slots, size, capacity, item) >= amount;
+}
+
 // Fills existing stacks first, then free slots; the room must be checked first. Returns the changed slots as bits,
 // so whoever owns the slots saves them.
 stock Container_Add(slots[][E_INV_SLOT], size, capacity, E_ITEM:item, amount)
@@ -123,7 +139,7 @@ stock Container_Add(slots[][E_INV_SLOT], size, capacity, E_ITEM:item, amount)
     new changed, stack = g_ItemInfo[item][itMaxStack];
     for (new slot = 0; slot < size && amount > 0; slot++)
     {
-        if (slots[slot][isItem] == item && slots[slot][isAmount] < stack)
+        if (slots[slot][isItem] == item && slots[slot][isAmount] < stack && !Item_IsWhole(item))
         {
             new put = min(amount, stack - slots[slot][isAmount]);
             slots[slot][isAmount] += put;
@@ -147,7 +163,7 @@ stock Container_Add(slots[][E_INV_SLOT], size, capacity, E_ITEM:item, amount)
 
 stock bool:Inv_CanAdd(playerid, E_ITEM:item, amount)
 {
-    return g_InvLoaded[playerid] && Container_Room(g_Inv[playerid], INV_MAX_SLOTS, Inv_Capacity(playerid), item) >= amount;
+    return g_InvLoaded[playerid] && Container_CanAdd(g_Inv[playerid], INV_MAX_SLOTS, Inv_Capacity(playerid), item, amount);
 }
 
 stock bool:Inv_Add(playerid, E_ITEM:item, amount)
@@ -167,19 +183,25 @@ stock bool:Inv_Add(playerid, E_ITEM:item, amount)
     return true;
 }
 
-// Swaps one piece for another (a jerry can that gets filled or emptied).
-stock bool:Inv_Replace(playerid, E_ITEM:from, E_ITEM:to)
+// Sets one slot directly (a jerry can that gets filled or emptied in place).
+stock Inv_SetSlot(playerid, slot, E_ITEM:item, amount)
 {
-    if (!Inv_Remove(playerid, from, 1))
+    g_Inv[playerid][slot][isItem] = item;
+    g_Inv[playerid][slot][isAmount] = amount;
+    Inv_SaveSlot(playerid, slot);
+}
+
+// The first slot holding the item, or -1.
+stock Inv_FindSlot(playerid, E_ITEM:item)
+{
+    for (new slot = 0; slot < INV_MAX_SLOTS; slot++)
     {
-        return false;
+        if (g_Inv[playerid][slot][isItem] == item)
+        {
+            return slot;
+        }
     }
-    if (!Inv_Add(playerid, to, 1))
-    {
-        Inv_Add(playerid, from, 1);
-        return false;
-    }
-    return true;
+    return -1;
 }
 
 stock Inv_TakeFromSlot(playerid, slot, amount)
@@ -330,7 +352,7 @@ stock bool:Inv_Use(playerid, slot)
         }
         case ITEM_CANISTER_FULL:
         {
-            Fuel_StartCanister(playerid);
+            Fuel_StartCanister(playerid, slot);
             return false;
         }
         case ITEM_CANISTER:
@@ -386,6 +408,10 @@ stock bool:Inv_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 stock Inv_Give(playerid, slot, targetid, amount)
 {
     new E_ITEM:item = g_Inv[playerid][slot][isItem];
+    if (Item_IsWhole(item))
+    {
+        amount = g_Inv[playerid][slot][isAmount];
+    }
     if (!Chat_CheckBeside(playerid, targetid, INV_GIVE_RADIUS))
     {
         return;

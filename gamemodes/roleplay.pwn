@@ -209,6 +209,7 @@ public OnPlayerConnect(playerid)
 
 public OnPlayerDisconnect(playerid, reason)
 {
+    Fuel_CancelCanister(playerid);
     Tune_Close(playerid);
     Gps_OnPlayerDisconnect(playerid);
     Phone_OnPlayerDisconnect(playerid);
@@ -323,6 +324,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
     Phone_OnPlayerDeath(playerid);
     Hunger_OnPlayerDeath(playerid);
     Beg_OnPlayerDeath(playerid);
+    Fuel_CancelCanister(playerid);
     Tune_Close(playerid);
     return 1;
 }
@@ -348,6 +350,7 @@ public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
     if (Account_IsLoggedIn(playerid))
     {
+        Fuel_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
         if (!Veh_OnPlayerKeyStateChange(playerid, newkeys, oldkeys) && !Inv_OnPlayerKeyStateChange(playerid, newkeys, oldkeys))
         {
             Door_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);

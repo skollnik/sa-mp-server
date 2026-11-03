@@ -349,7 +349,7 @@ static stock Trunk_Put(playerid, inv_slot, amount)
         return;
     }
     new capacity = Trunk_Capacity(g_Veh[slot][vModel]);
-    if (Container_Room(g_Trunk[slot], TRUNK_MAX_SLOTS, capacity, item) < amount)
+    if (!Container_CanAdd(g_Trunk[slot], TRUNK_MAX_SLOTS, capacity, item, amount))
     {
         Msg_Error(playerid, "Nema mesta u gepeku.");
         Trunk_Show(playerid, slot);
@@ -410,9 +410,9 @@ stock bool:Trunk_OnDialogResponse(playerid, dialogid, response, listitem, const 
             }
             new index = g_TrunkListed[playerid][listitem];
             g_TrunkPickItem[playerid] = g_Trunk[slot][index][isItem];
-            if (g_Trunk[slot][index][isAmount] == 1)
+            if (g_Trunk[slot][index][isAmount] == 1 || Item_IsWhole(g_Trunk[slot][index][isItem]))
             {
-                Trunk_Take(playerid, index, 1);
+                Trunk_Take(playerid, index, g_Trunk[slot][index][isAmount]);
                 return true;
             }
             g_TrunkPick[playerid] = index;
@@ -442,9 +442,9 @@ stock bool:Trunk_OnDialogResponse(playerid, dialogid, response, listitem, const 
             }
             new inv_slot = g_InvListed[playerid][listitem];
             g_TrunkPickItem[playerid] = g_Inv[playerid][inv_slot][isItem];
-            if (g_Inv[playerid][inv_slot][isAmount] == 1)
+            if (g_Inv[playerid][inv_slot][isAmount] == 1 || Item_IsWhole(g_Inv[playerid][inv_slot][isItem]))
             {
-                Trunk_Put(playerid, inv_slot, 1);
+                Trunk_Put(playerid, inv_slot, g_Inv[playerid][inv_slot][isAmount]);
                 return true;
             }
             g_TrunkPick[playerid] = inv_slot;

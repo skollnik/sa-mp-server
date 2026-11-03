@@ -178,9 +178,16 @@ stock Veh_Name(slot)
     return name;
 }
 
-static stock Veh_ApplyLock(slot)
+// Locking also shuts the bonnet and the trunk, so a locked vehicle cannot be emptied through an open trunk.
+stock Veh_ApplyLock(slot)
 {
-    Veh_SetParam(g_Veh[slot][vVehicleId], VEH_PARAM_DOORS, g_Veh[slot][vLocked]);
+    new vehicleid = g_Veh[slot][vVehicleId];
+    Veh_SetParam(vehicleid, VEH_PARAM_DOORS, g_Veh[slot][vLocked]);
+    if (g_Veh[slot][vLocked])
+    {
+        Veh_SetParam(vehicleid, VEH_PARAM_BONNET, false);
+        Veh_SetParam(vehicleid, VEH_PARAM_BOOT, false);
+    }
 }
 
 static stock Veh_ApplyTuning(slot)
@@ -687,6 +694,12 @@ stock Veh_TogglePart(playerid, E_VEH_PARAM:param, const open_action[], const clo
         return;
     }
     new bool:open = !Veh_GetParam(vehicleid, param);
+    new slot = g_VehSlotOf[vehicleid];
+    if (open && slot != -1 && g_Veh[slot][vLocked])
+    {
+        Msg_Error(playerid, "Vozilo je zakljucano; prvo ga otkljucajte (taster Y).");
+        return;
+    }
     Veh_SetParam(vehicleid, param, open);
     Chat_Action(playerid, open ? open_action : close_action);
 }

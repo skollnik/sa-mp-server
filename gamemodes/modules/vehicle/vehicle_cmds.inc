@@ -234,7 +234,7 @@ cmd:izmenivozilo(playerid, params[])
     else if (!strcmp(option, "zakljucaj", true))
     {
         g_Veh[slot][vLocked] = !g_Veh[slot][vLocked];
-        Veh_SetParam(vehicleid, VEH_PARAM_DOORS, g_Veh[slot][vLocked]);
+        Veh_ApplyLock(slot);
         Veh_SaveState(slot);
     }
     else if (!strcmp(option, "gepek", true))
