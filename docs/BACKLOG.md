@@ -53,7 +53,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Kad dođe mehaničar (korak 3.5): ista mapa u Willowfield-u (radionica pored tehničkog pregleda) |
 | Kad dođu kuće i firme (Faza 4): prodaja i zamena kroz `/ponudi` |
 | Kad dođe policija (Faza 5): provera i oduzimanje dozvola, kazna za vožnju bez dozvole |
-| Mesto auto škole: vlasnik postavlja šalter (`/napravimesto skola`) i GPS lokaciju kod poligona |
+| Auto škola: vlasnik bira mapu (El Corona ili San Fierro); ostala se briše, rute ispita se prave za izabrano mesto, pa vlasnik postavlja ulaz (`/napraviulaz`), šalter (`/napravimesto skola`) i GPS |
 | Kad dođe oružje kao predmet: oružje u gepeku |
 | Kad dođu vozila poslova i frakcija: gepek za njih (npr. oprema frakcije) |
 | Brisanje neaktivnog naloga (6 meseci): oslobađanje sačuvanih tablica |
@@ -336,7 +336,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Once the mechanic exists (step 3.5): the same map in Willowfield (the workshop next to the inspection) |
 | Once houses and businesses exist (Phase 4): selling and trading them through `/ponudi` |
 | Once police exist (Phase 5): checking and revoking licenses, a fine for driving without one |
-| The driving school spot: the owner places the counter (`/napravimesto skola`) and a GPS location by the polygon |
+| Driving school: the owner picks the map (El Corona or San Fierro); the other is removed, test routes are made for the chosen spot, then the owner places the entrance (`/napraviulaz`), the counter (`/napravimesto skola`) and GPS |
 | Once weapons are items: weapons in the trunk |
 | Once job and faction vehicles exist: a trunk for them (e.g. faction gear) |
 | Deleting an inactive account (6 months): free its kept plates |

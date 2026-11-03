@@ -19,7 +19,7 @@ static stock bool:Map_IsFarModel(modelid)
 {
     switch (modelid)
     {
-        case 4600, 4806, 19529, 19531, 19536, 19547: return true;
+        case 4600, 4806, 5134, 19529, 19531, 19536, 19547: return true;
     }
     return false;
 }
@@ -42,13 +42,15 @@ stock STREAMER_TAG_OBJECT:Map_Interior(modelid, Float:x, Float:y, Float:z, Float
 #include "maps/exteriors/bank_exterior.inc"
 #include "maps/exteriors/vehicle_inspection.inc"
 #include "maps/exteriors/hospital_exterior.inc"
-#include "maps/exteriors/driving_school.inc"
+#include "maps/exteriors/driving_school_elcorona.inc"
+#include "maps/exteriors/driving_school_sf.inc"
 
 #include "maps/interiors/cityhall_a.inc"
 #include "maps/interiors/police_a.inc"
 #include "maps/interiors/prison.inc"
 #include "maps/interiors/bank.inc"
 #include "maps/interiors/hospital.inc"
+#include "maps/interiors/driving_school_elcorona.inc"
 
 stock Maps_Init()
 {
@@ -59,7 +61,8 @@ stock Maps_Init()
     Map_CarMarket();
     Map_BankExterior();
     Map_VehicleInspection();
-    Map_DrivingSchool();
+    Map_DrivingSchoolElCorona();
+    Map_DrivingSchoolSF();
 
     Map_HospitalExterior();
 
@@ -68,6 +71,7 @@ stock Maps_Init()
     Map_PrisonInterior();
     Map_BankInterior();
     Map_HospitalInterior();
+    Map_DrivingSchoolElCoronaInterior();
 
     printf("[MAPS] %d objects created.", CountDynamicObjects());
 }
@@ -78,4 +82,5 @@ stock Maps_OnPlayerConnect(playerid)
     Map_CityHallParking_Remove(playerid);
     Map_BankExterior_Remove(playerid);
     Map_VehicleInspection_Remove(playerid);
+    Map_DrivingSchoolElCorona_Remove(playerid);
 }

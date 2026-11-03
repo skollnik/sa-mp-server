@@ -124,6 +124,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 116 | 2026-11-03 | Vožnja bez dozvole je dozvoljena; igrač dobija upozorenje, a kažnjava policija (faza 5). Vozilo se kupuje i bez dozvole | Uobičajena praksa na RP serverima |
 | 117 | 2026-11-03 | Rute ispita su u bazi (`license_routes`) i admin ih menja u igri (`/rutaskole`); prvi put se upisuju podrazumevane (poligon i gradska vožnja za auto i motor, gradska za kamion, krug po vodi za brod, krug iznad aerodroma za letenje) | Rute se mogu popraviti bez izmene koda |
 | 118 | 2026-11-03 | Pregradak u vozilu se ne pravi | Retko se koristi na RP serverima; gepek je dovoljan |
+| 119 | 2026-11-03 | Auto škola nije kod aerodroma (tamo je spawn). Kandidati su mesta koja referentni gamemode-ovi najčešće koriste: El Corona u Los Santosu (zgrada sa enterijerom, blizu tehničkog pregleda) i GTA auto škola u San Fierru (Doherty, enterijer iz igre, poligon sa čunjevima); vlasnik bira | Zahtev vlasnika; uobičajena praksa |
 
 ### Arhitektura koda (predlog)
 ```
@@ -269,6 +270,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 116 | 2026-11-03 | Driving without a license is allowed; the player is warned and the police fine it (phase 5). Vehicles can be bought without a license | Common practice on RP servers |
 | 117 | 2026-11-03 | Test routes are in the database (`license_routes`) and admins edit them in game (`/rutaskole`); defaults are written the first time (polygon and city for car and motorbike, city for truck, a water loop for the boat, a loop over the airport for flying) | Routes can be fixed without code changes |
 | 118 | 2026-11-03 | No vehicle glovebox | Rarely used on RP servers; the trunk is enough |
+| 119 | 2026-11-03 | The driving school is not at the airport (the spawn is there). The candidates are the spots reference gamemodes use most: El Corona in Los Santos (a building with an interior, near the inspection) and the GTA driving school in San Fierro (Doherty, the game's own interior, a cone polygon); the owner picks | Owner's request; common practice |
 
 ### Code architecture (proposal)
 ```
