@@ -235,7 +235,11 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Vozilo za ispit kao besplatno vozilo (izlazak sa servera, smrt, zatvor) | ✅ | Ispit pada i vozilo se briše; igrač se vraća na šalter |
 | Ispit preskočen teleportom ili prečicom | ✅ | Checkpoint se računa samo za vozača u vozilu za ispit, redom; vreme je ograničeno |
 | GPS i ispit koriste isti marker | ✅ | Ispit koristi trkački checkpoint, a GPS se gasi na početku vožnje |
-| Vozilo za ispit se stvori u objektu na parkingu | ✅ | Na parkingu nema objekata; klupa, saksije i kanta su ispred zgrade |
+| Vozilo za ispit se stvori u objektu na parkingu | ✅ | Na parkingu nema objekata |
+| Igrač ne sedne u vozilo za ispit posle dalekog teleporta i padne ispit zbog vremena van vozila | ✅ | Stavlja se u vozilo tek kad ga klijent učita; vreme van vozila se broji tek kad sedne (ili posle 8 s, kad može sam da uđe) |
+| Propeler helikoptera za ispit udari u objekat ili igrača pored | ✅ | Start na otvorenoj pisti bez objekata u krugu od 22 m; motor se pali tek kad igrač sedne |
+| Ruta za brod vodi preko kopna ili kroz mol | ✅ | Svaka tačka i deo puta provereni kroz GTA geometriju; ruta ide južno od kraja mola |
+| Poruka u chatu duža od 144 znaka se ne prikaže | ✅ | Kamera šalje svaku kaznu u posebnom redu; nove poruke sa promenljivim delovima proveravati na najdužu verziju |
 | Sakrivena GTA tabla ostavi nevidljiv sudar na parkingu | ✅ | Na mestu starog stuba stoji saksija, pa se ne udara u prazno |
 | Dozvola bez ispita | 👁 | Samo ribolov se kupuje; ostalo samo posle teorije i vožnje ili od admina nivoa 4 (log) |
 | Admin daje dodatna mesta za vozila prijateljima | 👁 | Samo nivo 4, najviše 5 mesta, svaka promena ide u admin log |
@@ -492,7 +496,11 @@ Every new system or change goes through these questions, against all existing sy
 | The test vehicle as a free vehicle (disconnect, death, jail) | ✅ | The test fails and the vehicle is destroyed; the player goes back to the counter |
 | Skipping the test by teleport or shortcut | ✅ | A checkpoint counts only for the driver of the test vehicle, in order; time is limited |
 | GPS and the test share a marker | ✅ | The test uses a race checkpoint, and the GPS is stopped when the drive starts |
-| The test vehicle spawns inside an object in the lot | ✅ | There are no objects in the lot; the bench, plants and bin are in front of the building |
+| The test vehicle spawns inside an object in the lot | ✅ | There are no objects in the lot |
+| The player is not seated after a far teleport and fails for time out of the vehicle | ✅ | They are put in only once the client has loaded the vehicle; time out of it counts only after they sit in (or after 8 s, when they can get in by hand) |
+| The test helicopter's rotor hits an object or a player next to it | ✅ | It starts on open tarmac with no object within 22 m; the engine starts only when the player sits in |
+| The boat route leads over land or through the pier | ✅ | Every point and leg checked against the GTA geometry; the route passes south of the pier's end |
+| A chat message longer than 144 characters is not shown | ✅ | A camera sends each fine on its own line; new messages with variable parts are checked at their longest |
 | The hidden GTA sign leaves an invisible collision in the lot | ✅ | A plant pot stands where the old pole was, so nothing invisible is hit |
 | A license without a test | 👁 | Only fishing is bought; the rest only after theory and the drive, or from a level 4 admin (logged) |
 | An admin gives friends extra vehicle slots | 👁 | Level 4 only, at most 5 slots, every change goes to the admin log |

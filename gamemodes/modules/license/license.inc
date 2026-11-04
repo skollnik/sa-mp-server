@@ -9,6 +9,10 @@
 #define LIC_SIZE_NARROW         (3.0)
 #define LIC_SIZE_BOAT           (8.0)
 #define LIC_SIZE_AIR            (15.0)
+// A far teleport can take the client a few seconds to load; until then the vehicle cannot be entered.
+#define LIC_SEAT_RETRY_MS       (500)
+#define LIC_SEAT_TRIES          (16)
+#define LIC_LABEL_DISTANCE      (30.0)
 
 enum E_LIC_QUESTION
 {
@@ -74,24 +78,34 @@ static const Float:g_LicDefaultCity[][3] =
 
 static const Float:g_LicDefaultBoat[][3] =
 {
-    { 80.18, -1854.06, 0.0 },
-    { 93.56, -1864.49, 0.0 },
-    { 107.24, -1861.70, 0.0 },
-    { 115.71, -1863.39, 0.0 },
-    { 121.49, -1850.95, 0.0 },
-    { 117.62, -1841.70, 0.0 },
-    { 112.06, -1837.43, 0.0 }
+    { 100.0, -1880.0, 0.0 },
+    { 105.0, -1960.0, 0.0 },
+    { 150.0, -2030.0, 0.0 },
+    { 250.0, -2050.0, 0.0 },
+    { 330.0, -2110.0, 0.0 },
+    { 380.0, -2130.0, 0.0 },
+    { 440.0, -2100.0, 0.0 },
+    { 560.0, -2060.0, 0.0 },
+    { 680.0, -2080.0, 0.0 },
+    { 560.0, -2130.0, 0.0 },
+    { 380.0, -2160.0, 0.0 },
+    { 200.0, -2100.0, 0.0 },
+    { 120.0, -2010.0, 0.0 },
+    { 100.0, -1920.0, 0.0 },
+    { 112.0, -1850.0, 0.0 }
 };
 
+// The helicopter starts on open tarmac away from the boarding bridges, which its rotor would hit.
 static const Float:g_LicDefaultAir[][3] =
 {
-    { 1520.0, -2430.0, 45.0 },
+    { 1600.0, -2460.0, 40.0 },
     { 1800.0, -2500.0, 70.0 },
     { 2050.0, -2400.0, 80.0 },
     { 1900.0, -2250.0, 80.0 },
     { 1600.0, -2250.0, 70.0 },
-    { 1450.0, -2400.0, 40.0 },
-    { 1520.0, -2430.0, 15.0 }
+    { 1450.0, -2400.0, 45.0 },
+    { 1500.0, -2560.0, 35.0 },
+    { 1600.0, -2460.0, 14.5 }
 };
 
 // x, y, z and facing angle where the test vehicle appears.
@@ -100,8 +114,8 @@ static const Float:g_LicDefaultStart[E_LICENSE][4] =
     { 2066.47, -1913.96, 13.40, 90.0 },
     { 2066.47, -1913.96, 13.20, 90.0 },
     { 2066.47, -1913.96, 13.60, 90.0 },
-    { 112.06, -1837.43, 0.0, 94.0 },
-    { 1520.0, -2430.0, 13.6, 90.0 },
+    { 112.0, -1837.0, 0.0, 180.0 },
+    { 1600.0, -2460.0, 13.5, 90.0 },
     { 0.0, 0.0, 0.0, 0.0 }
 };
 
@@ -125,6 +139,8 @@ enum E_LIC_TEST
     ltOrder[LIC_QUESTIONS],
     ltCount,
     ltVehicle,
+    STREAMER_TAG_3D_TEXT_LABEL:ltLabel,
+    bool:ltSeated,
     ltPoint,
     ltStartedAt,
     ltOutSeconds,
@@ -495,7 +511,10 @@ static stock Lic_StartDrive(playerid)
 
     g_TestVehicleOwner[vehicleid] = playerid;
     Fuel_Set(vehicleid, float(Fuel_TankSize(GetVehicleModel(vehicleid))));
-    Veh_SetParam(vehicleid, VEH_PARAM_ENGINE, true);
+    new label[48];
+    format(label, sizeof(label), "Auto skola\n" C_WHITE "Ispit: %s", g_LicInfo[license][liName]);
+    g_LicTest[playerid][ltLabel] = CreateDynamic3DTextLabel(label, COLOR_SERVER, 0.0, 0.0, 1.2, LIC_LABEL_DISTANCE, INVALID_PLAYER_ID, vehicleid, 1);
+    g_LicTest[playerid][ltSeated] = false;
     g_LicTest[playerid][ltStage] = LIC_STAGE_DRIVE;
     g_LicTest[playerid][ltVehicle] = vehicleid;
     g_LicTest[playerid][ltPoint] = 0;
@@ -509,20 +528,41 @@ static stock Lic_StartDrive(playerid)
     SetPlayerInterior(playerid, 0);
     SetPlayerVirtualWorld(playerid, 0);
     AC_SetPlayerPos(playerid, g_LicStart[license][0], g_LicStart[license][1], g_LicStart[license][2] + 1.0);
-    SetTimerEx("Lic_SeatPlayer", 700, false, "dd", playerid, vehicleid);
+    SetTimerEx("Lic_SeatPlayer", LIC_SEAT_RETRY_MS, false, "ddd", playerid, vehicleid, 1);
     Lic_ShowPoint(playerid);
     Msg_Info(playerid, "Instruktor: vozite kroz oznacene tacke. Imate %d minuta; ne ostecujte vozilo.", g_LicInfo[license][liTimeLimit] / 60);
 }
 
-forward Lic_SeatPlayer(playerid, vehicleid);
-public Lic_SeatPlayer(playerid, vehicleid)
+forward Lic_SeatPlayer(playerid, vehicleid, tries);
+public Lic_SeatPlayer(playerid, vehicleid, tries)
 {
-    if (g_LicTest[playerid][ltStage] == LIC_STAGE_DRIVE && g_LicTest[playerid][ltVehicle] == vehicleid)
+    if (g_LicTest[playerid][ltStage] != LIC_STAGE_DRIVE || g_LicTest[playerid][ltVehicle] != vehicleid || g_LicTest[playerid][ltSeated])
     {
-        AC_ExpectTeleport(playerid, g_LicStart[g_LicTest[playerid][ltLicense]][0], g_LicStart[g_LicTest[playerid][ltLicense]][1], g_LicStart[g_LicTest[playerid][ltLicense]][2]);
+        return 1;
+    }
+    if (IsVehicleStreamedIn(vehicleid, playerid) && GetPlayerVehicleID(playerid) != vehicleid)
+    {
+        new E_LICENSE:license = g_LicTest[playerid][ltLicense];
+        AC_ExpectTeleport(playerid, g_LicStart[license][0], g_LicStart[license][1], g_LicStart[license][2]);
         PutPlayerInVehicle(playerid, vehicleid, 0);
     }
+    if (tries < LIC_SEAT_TRIES)
+    {
+        SetTimerEx("Lic_SeatPlayer", LIC_SEAT_RETRY_MS, false, "ddd", playerid, vehicleid, tries + 1);
+    }
+    else
+    {
+        // The player is next to the vehicle and can get in by hand; from here the time out of it counts.
+        g_LicTest[playerid][ltSeated] = true;
+    }
     return 1;
+}
+
+// The engine starts only when the player sits in, so a helicopter rotor never spins next to them.
+static stock Lic_OnSeated(playerid)
+{
+    g_LicTest[playerid][ltSeated] = true;
+    Veh_SetParam(g_LicTest[playerid][ltVehicle], VEH_PARAM_ENGINE, true);
 }
 
 // bring_back: false on death and disconnect, where the player is not moved.
@@ -536,6 +576,7 @@ static stock Lic_EndTest(playerid, bool:bring_back)
         return;
     }
     DisablePlayerRaceCheckpoint(playerid);
+    DestroyDynamic3DTextLabel(g_LicTest[playerid][ltLabel]);
     g_TestVehicleOwner[vehicleid] = INVALID_PLAYER_ID;
     DestroyVehicle(vehicleid);
     if (bring_back)
@@ -591,6 +632,10 @@ public Lic_Tick()
         }
         if (GetPlayerVehicleID(playerid) != vehicleid)
         {
+            if (!g_LicTest[playerid][ltSeated])
+            {
+                continue;
+            }
             new out = ++g_LicTest[playerid][ltOutSeconds];
             if (out > LIC_OUT_LIMIT_S)
             {
@@ -652,6 +697,10 @@ stock Lic_OnPlayerStateChange(playerid, PLAYER_STATE:newstate)
         RemovePlayerFromVehicle(playerid);
         Msg_Error(playerid, "Ovo vozilo je za vozacki ispit.");
         return;
+    }
+    if (owner == playerid && newstate == PLAYER_STATE_DRIVER)
+    {
+        Lic_OnSeated(playerid);
     }
     if (newstate != PLAYER_STATE_DRIVER || owner == playerid || g_IsAdminVehicle[vehicleid])
     {

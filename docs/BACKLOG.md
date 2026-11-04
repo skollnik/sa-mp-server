@@ -283,6 +283,11 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 04.11.2026. | Auto škola u El Coroni: nove teksture GTA zgrade (tabla "AUTO SKOLA", bez murala i grafita), tabla iznad ulaza, ograda, podignuta rampa, lampe, čunjevi, znak STOP, klupa i saksije; mapa u San Fierru i poligon kod aerodroma obrisani; rute ispita kreću sa parkinga u El Coroni |
 | 04.11.2026. | Ograda, rampa i lampe oko parkinga auto škole uklonjene na zahtev vlasnika |
 | 04.11.2026. | Tabla "AUTO SKOLA" premeštena na trotoar bliže putu, veći natpis iznad ulaza, čunjevi i znak STOP uklonjeni |
+| 04.11.2026. | Auto škola vraćena na izgled iz uobičajene prakse (plava traka i natpis "AUTO SKOLA" iznad ulaza), tabla na stubu uklonjena |
+| 04.11.2026. | Natpis "Auto skola" na vozilu za ispit |
+| 04.11.2026. | Ispit: igrač se stavlja u vozilo tek kad se učita (brod, helikopter i ostala vozila) |
+| 04.11.2026. | Duža ruta za brod; helikopter na otvorenoj pisti, bez udaranja u most |
+| 04.11.2026. | Kamera opet ispisuje razlog kazne (poruka je bila preduga) |
 
 ---
 
@@ -569,3 +574,8 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-04 | Driving school in El Corona: new materials on the GTA building ("AUTO SKOLA" sign, no mural or tags), a sign above the entrance, fence, raised barrier, lamps, cones, a STOP sign, bench and plants; the San Fierro map and the airport polygon removed; test routes start in the El Corona lot |
 | 2026-11-04 | Fence, barrier and lamps around the school lot removed at the owner's request |
 | 2026-11-04 | The "AUTO SKOLA" pole sign moved to the pavement closer to the road, a bigger sign above the entrance, cones and the STOP sign removed |
+| 2026-11-04 | The driving school back to the common-practice look (blue band and the "AUTO SKOLA" sign above the entrance), the pole sign removed |
+| 2026-11-04 | An "Auto skola" label on the test vehicle |
+| 2026-11-04 | Test: the player is put in the vehicle only once it has loaded (boat, helicopter and the other vehicles) |
+| 2026-11-04 | A longer boat route; the helicopter on open tarmac, no longer hitting the bridge |
+| 2026-11-04 | The camera shows the fine's reason again (the message was too long) |

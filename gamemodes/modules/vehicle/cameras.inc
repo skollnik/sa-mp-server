@@ -224,27 +224,30 @@ stock Cam_OnPlayerEnterArea(playerid, STREAMER_TAG_AREA:areaid)
     PlayerPlaySound(playerid, CAMERA_FLASH_SOUND, 0.0, 0.0, 0.0);
     GameTextForPlayer(playerid, "~w~blic!", 1000, 6);
 
-    new reason[64], total, ownerid = INVALID_PLAYER_ID, owner_dbid = g_Veh[slot][vOwnerDbId];
+    new reason[64];
     if (speeding)
     {
         format(reason, sizeof(reason), "brzina %d km/h (ogranicenje %d), kamera %d", speed, g_Cameras[cam][camLimit], g_Cameras[cam][camDbId]);
-        total += Cam_SpeedFine(over);
-        ownerid = Fine_Add(owner_dbid, g_Veh[slot][vDbId], g_Veh[slot][vPlate], reason, Cam_SpeedFine(over));
+        Cam_Fine(playerid, slot, reason, Cam_SpeedFine(over));
     }
     if (unregistered)
     {
         format(reason, sizeof(reason), "neregistrovano vozilo, kamera %d", g_Cameras[cam][camDbId]);
-        total += FINE_UNREGISTERED;
-        ownerid = Fine_Add(owner_dbid, g_Veh[slot][vDbId], g_Veh[slot][vPlate], reason, FINE_UNREGISTERED);
+        Cam_Fine(playerid, slot, reason, FINE_UNREGISTERED);
     }
+}
 
+// One line per fine: both reasons in one line ran past the 144-character chat limit and the client dropped it.
+static stock Cam_Fine(playerid, slot, const reason[], amount)
+{
+    new ownerid = Fine_Add(g_Veh[slot][vOwnerDbId], g_Veh[slot][vDbId], g_Veh[slot][vPlate], reason, amount);
     if (ownerid != INVALID_PLAYER_ID)
     {
-        Msg_Info(ownerid, "Kamera je snimila vase vozilo %s (%s%s%s). Kazna: $%d, placa se u opstini ili policiji (/kazne).", Veh_Name(slot), speeding ? ("prebrza voznja") : (""), speeding && unregistered ? (", ") : (""), unregistered ? ("nije registrovano") : (""), total);
+        Msg_Info(ownerid, "Kamera je snimila %s: %s. Kazna $%d (/kazne).", Veh_Name(slot), reason, amount);
     }
     if (ownerid != playerid)
     {
-        Msg_Info(playerid, "Kamera vas je snimila. Kazna stize vlasniku vozila.");
+        Msg_Info(playerid, "Kamera vas je snimila: %s. Kazna stize vlasniku vozila.", reason);
     }
 }
 
