@@ -126,6 +126,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 118 | 2026-11-03 | Pregradak u vozilu se ne pravi | Retko se koristi na RP serverima; gepek je dovoljan |
 | 119 | 2026-11-03 | Auto škola nije kod aerodroma (tamo je spawn). Kandidati su mesta koja referentni gamemode-ovi najčešće koriste: El Corona u Los Santosu (zgrada sa enterijerom, blizu tehničkog pregleda) i GTA auto škola u San Fierru (Doherty, enterijer iz igre, poligon sa čunjevima); vlasnik bira | Zahtev vlasnika; uobičajena praksa |
 | 120 | 2026-11-04 | Auto škola je u El Coroni (vlasnik izabrao; mapa u San Fierru obrisana). GTA zgrada dobija nove teksture na svim delovima koji su smetali (tabla na stubu postaje "AUTO SKOLA", mural i grafiti na izlozima nestaju), tabla iznad ulaza, parking je ograđen sa jednim ulazom za vozila na jugu i podignutom rampom koja se ne pomera. Ispit za auto, motor i kamion kreće sa parkinga, ide gradom i vraća se kroz rampu; poligona nema | Zahtev vlasnika; ograda, rampa, lampe i ruta po uobičajenoj praksi za ovu lokaciju |
+| 121 | 2026-11-04 | Oko parkinga auto škole nema ograde, rampe ni lampi; ostaju table "AUTO SKOLA", plava traka, čunjevi, znak STOP, klupa i saksije | Zahtev vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -273,6 +274,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 118 | 2026-11-03 | No vehicle glovebox | Rarely used on RP servers; the trunk is enough |
 | 119 | 2026-11-03 | The driving school is not at the airport (the spawn is there). The candidates are the spots reference gamemodes use most: El Corona in Los Santos (a building with an interior, near the inspection) and the GTA driving school in San Fierro (Doherty, the game's own interior, a cone polygon); the owner picks | Owner's request; common practice |
 | 120 | 2026-11-04 | The driving school is in El Corona (the owner's pick; the San Fierro map removed). The GTA building gets new materials on every part that was in the way (the pole sign becomes "AUTO SKOLA", the mural and the tagged shop windows are gone), a sign above the entrance, and the lot is fenced with one vehicle entrance on the south and a raised barrier that never moves. The car, motorbike and truck tests start in the lot, loop through the city and come back through the barrier; there is no cone course | Owner's request; fence, barrier, lights and route follow common practice for this spot |
+| 121 | 2026-11-04 | No fence, barrier or lamps around the school lot; the "AUTO SKOLA" signs, the blue band, cones, the STOP sign, bench and plants stay | Owner's request |
 
 ### Code architecture (proposal)
 ```

@@ -1,7 +1,7 @@
 #define SCHOOL_BLUE             (0xFF0C8AF7)
 
 // The driving school in El Corona: the GTA building at 2045,-1903 rebuilt with new materials
-// (the pole sign, the gang mural and the tagged shop windows are part of the model itself), its parking lot fenced in.
+// (the pole sign, the gang mural and the tagged shop windows are part of the model itself).
 stock Map_DrivingSchoolElCorona()
 {
     new STREAMER_TAG_OBJECT:building = Map_Exterior(5134, 2045.49219, -1903.61719, 16.18750, 0.00000, 0.00000, 0.00000);
@@ -22,32 +22,6 @@ stock Map_DrivingSchoolElCorona()
     Map_Exterior(1536, 2044.89124, -1909.50879, 12.56572, 0.00000, 0.00000, 90.84454);
     Map_Exterior(1536, 2044.85901, -1906.50696, 12.56572, 0.00000, 0.00000, 268.81448);
     Map_Exterior(18981, 2059.39844, -1910.08118, 11.87875, 0.00000, 90.00000, 0.00000);
-
-    // The south side stays open between the fence and the building for people on foot; vehicles use the barrier.
-    Map_Exterior(983, 2050.00000, -1922.29980, 13.20000, 0.00000, 0.00000, 90.00000);
-    Map_Exterior(983, 2063.50000, -1922.29980, 13.20000, 0.00000, 0.00000, 90.00000);
-    Map_Exterior(983, 2068.30005, -1922.29980, 13.20000, 0.00000, 0.00000, 90.00000);
-    Map_Exterior(983, 2071.50000, -1919.09998, 13.20000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(983, 2071.50000, -1912.69995, 13.20000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(983, 2071.50000, -1906.32996, 13.20000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(983, 2071.50000, -1900.00000, 13.20000, 0.00000, 0.00000, 0.00000);
-
-    // The arm stands raised: a moving one could shut a test vehicle in or hit a player.
-    Map_Exterior(966, 2060.10010, -1922.40002, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(968, 2060.07007, -1922.39001, 13.09688, 0.00000, 0.00000, 0.00000);
-
-    Map_Exterior(1568, 2046.80005, -1922.30005, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(1568, 2050.00000, -1922.29980, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(1568, 2063.50000, -1922.29980, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(1568, 2066.69922, -1922.29980, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(1568, 2069.89941, -1922.29980, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(1568, 2071.50000, -1919.09998, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(1568, 2071.50000, -1915.90002, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(1568, 2071.50000, -1912.69995, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(1568, 2071.50000, -1909.50000, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(1568, 2071.50000, -1906.40002, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(1568, 2071.50000, -1903.19995, 12.50000, 0.00000, 0.00000, 0.00000);
-    Map_Exterior(1568, 2071.60010, -1900.00000, 12.60000, 0.00000, 0.00000, 0.00000);
 
     // The middle of the lot stays clear: the test vehicle appears there.
     Map_Exterior(1238, 2070.90000, -1919.00000, 12.87000, 0.00000, 0.00000, 0.00000);

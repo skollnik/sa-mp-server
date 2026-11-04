@@ -53,7 +53,7 @@ static const g_LicQuestions[][E_LIC_QUESTION] =
 };
 
 // Default routes, written to the database the first time; admins change them in game with /rutaskole.
-// The road tests leave the school lot in El Corona through the barrier, loop through the city and come back to it.
+// The road tests leave the school lot in El Corona, loop through the city and come back to its south entrance.
 static const Float:g_LicDefaultCity[][3] =
 {
     { 2084.29, -1814.85, 12.90 },
