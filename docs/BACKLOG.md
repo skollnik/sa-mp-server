@@ -282,6 +282,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 03.11.2026. | Kanister se puni koliko igrač upiše (prvo delimično puni); korak 3.4: auto škola (`/skola`, teorija i vožnja, 6 dozvola), poligon kod aerodroma, `/dozvole`, `/pokazidozvole`, upozorenje za vožnju bez dozvole, admin `/setdozvola` i `/rutaskole`; pregradak odbačen (retko se koristi) |
 | 04.11.2026. | Auto škola u El Coroni: nove teksture GTA zgrade (tabla "AUTO SKOLA", bez murala i grafita), tabla iznad ulaza, ograda, podignuta rampa, lampe, čunjevi, znak STOP, klupa i saksije; mapa u San Fierru i poligon kod aerodroma obrisani; rute ispita kreću sa parkinga u El Coroni |
 | 04.11.2026. | Ograda, rampa i lampe oko parkinga auto škole uklonjene na zahtev vlasnika |
+| 04.11.2026. | Tabla "AUTO SKOLA" premeštena na trotoar bliže putu, veći natpis iznad ulaza, čunjevi i znak STOP uklonjeni |
 
 ---
 
@@ -567,3 +568,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-03 | A jerry can is filled with the litres typed (part-full first); step 3.4: driving school (`/skola`, theory and drive, 6 licenses), the polygon by the airport, `/dozvole`, `/pokazidozvole`, a warning for driving without a license, admin `/setdozvola` and `/rutaskole`; glovebox dropped (rarely used) |
 | 2026-11-04 | Driving school in El Corona: new materials on the GTA building ("AUTO SKOLA" sign, no mural or tags), a sign above the entrance, fence, raised barrier, lamps, cones, a STOP sign, bench and plants; the San Fierro map and the airport polygon removed; test routes start in the El Corona lot |
 | 2026-11-04 | Fence, barrier and lamps around the school lot removed at the owner's request |
+| 2026-11-04 | The "AUTO SKOLA" pole sign moved to the pavement closer to the road, a bigger sign above the entrance, cones and the STOP sign removed |
