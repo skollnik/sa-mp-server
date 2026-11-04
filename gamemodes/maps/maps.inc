@@ -43,7 +43,6 @@ stock STREAMER_TAG_OBJECT:Map_Interior(modelid, Float:x, Float:y, Float:z, Float
 #include "maps/exteriors/vehicle_inspection.inc"
 #include "maps/exteriors/hospital_exterior.inc"
 #include "maps/exteriors/driving_school_elcorona.inc"
-#include "maps/exteriors/driving_school_sf.inc"
 
 #include "maps/interiors/cityhall_a.inc"
 #include "maps/interiors/police_a.inc"
@@ -62,7 +61,6 @@ stock Maps_Init()
     Map_BankExterior();
     Map_VehicleInspection();
     Map_DrivingSchoolElCorona();
-    Map_DrivingSchoolSF();
 
     Map_HospitalExterior();
 

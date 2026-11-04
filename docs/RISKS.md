@@ -235,6 +235,8 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Vozilo za ispit kao besplatno vozilo (izlazak sa servera, smrt, zatvor) | ✅ | Ispit pada i vozilo se briše; igrač se vraća na šalter |
 | Ispit preskočen teleportom ili prečicom | ✅ | Checkpoint se računa samo za vozača u vozilu za ispit, redom; vreme je ograničeno |
 | GPS i ispit koriste isti marker | ✅ | Ispit koristi trkački checkpoint, a GPS se gasi na početku vožnje |
+| Rampa auto škole zatvori vozilo ili udari igrača | ✅ | Rampa stoji podignuta i ne pomera se; ulaz za vozila je uvek otvoren |
+| Vozilo za ispit se stvori u objektu na parkingu | ✅ | Sredina parkinga je prazna; čunjevi su uz ogradu i ulaz, klupa i saksije ispred zgrade |
 | Dozvola bez ispita | 👁 | Samo ribolov se kupuje; ostalo samo posle teorije i vožnje ili od admina nivoa 4 (log) |
 | Admin daje dodatna mesta za vozila prijateljima | 👁 | Samo nivo 4, najviše 5 mesta, svaka promena ide u admin log |
 | Admin ostane bez kontrola ili sa zaglavljenom kamerom posle `/atune` | ✅ | Kamera i kontrole se vraćaju pri zatvaranju menija, izlasku iz vozila, smrti i izlasku sa servera; admin koga je drugi admin zamrznuo (`/freeze`) ostaje zamrznut |
@@ -490,6 +492,8 @@ Every new system or change goes through these questions, against all existing sy
 | The test vehicle as a free vehicle (disconnect, death, jail) | ✅ | The test fails and the vehicle is destroyed; the player goes back to the counter |
 | Skipping the test by teleport or shortcut | ✅ | A checkpoint counts only for the driver of the test vehicle, in order; time is limited |
 | GPS and the test share a marker | ✅ | The test uses a race checkpoint, and the GPS is stopped when the drive starts |
+| The school barrier shuts a vehicle in or hits a player | ✅ | The barrier stays raised and never moves; the vehicle entrance is always open |
+| The test vehicle spawns inside an object in the lot | ✅ | The middle of the lot is clear; cones sit by the fence and the entrance, the bench and plants in front of the building |
 | A license without a test | 👁 | Only fishing is bought; the rest only after theory and the drive, or from a level 4 admin (logged) |
 | An admin gives friends extra vehicle slots | 👁 | Level 4 only, at most 5 slots, every change goes to the admin log |
 | An admin is left without controls or with a stuck camera after `/atune` | ✅ | The camera and controls come back when the menu closes, on leaving the vehicle, on death and on disconnect; an admin frozen by another admin (`/freeze`) stays frozen |

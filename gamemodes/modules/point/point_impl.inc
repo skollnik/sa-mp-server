@@ -236,7 +236,7 @@ cmd:napravimesto(playerid, params[])
             return 1;
         }
     }
-    Msg_Usage(playerid, "/napravimesto (lista) ili /napravimesto [banka / bankomat / opstina / prodavnica / odeca / pumpa / pregled / policija]");
+    Msg_Usage(playerid, "/napravimesto (lista) ili /napravimesto [banka / bankomat / opstina / prodavnica / odeca / pumpa / pregled / policija / skola]");
     return 1;
 }
 
