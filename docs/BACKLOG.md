@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 3 | Vlasnik postavlja radionicu (`/napravimesto radionica`) i GPS i testira korak 3.5; posle toga faza 4 (imovina) |
+| 3 | Korak 3.6 (predlog čeka odobrenje): kvar motora sa nasumičnim paljenjem i pravilo za letelice i brodove; sve komande na srpskom (`/atune` i ostale); popravka po procentima sa fiksnom cenom (teren do 60%, radionica do traženog procenta, vidljiva šteta se popravlja srazmerno), bez biranja delova, mehaničar ne može da se pomeri dok popravlja i ne leže pored vozila; tjuning samo na mestu za tehnički pregled, delovi se prvo isprobaju pa plaćaju, ispravka dugmeta „Prva strana“; `/servis` napisan na radionici; natpisi `[ADMIN]` crni, `[MEHANICAR]` sivi, `[RENT]` nove boje sa cenom ispod; kazne sa kamera za vozila poslova idu vozaču; `/vratirent` samo iz rent vozila; brojevi službi (911, 555) uvek u imeniku telefona. Posle toga vlasnik postavlja radionicu i GPS i testira, pa faza 4 (imovina) |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -298,7 +298,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 3 | The owner places the workshop (`/napravimesto radionica`) and GPS and tests step 3.5; then phase 4 (property) |
+| 3 | Step 3.6 (proposal awaiting approval): engine failure with a random start and a rule for aircraft and boats; every command in Serbian (`/atune` and the rest); repairs by percent at a fixed price (field up to 60%, workshop up to the asked percent, visible damage fixed in proportion), no part choice, the mechanic cannot move while repairing and does not lie down next to the vehicle; tuning only at the inspection spot, parts are tried on before they are paid, the "first page" button fixed; `/servis` shown at the workshop; labels `[ADMIN]` black, `[MEHANICAR]` grey, `[RENT]` in a new colour with the price below; camera fines for job vehicles go to the driver; `/vratirent` only from the rental; service numbers (911, 555) always in the phone contacts. Then the owner places the workshop and GPS and tests, then phase 4 (property) |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
