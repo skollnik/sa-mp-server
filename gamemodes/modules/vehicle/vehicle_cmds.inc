@@ -367,7 +367,7 @@ cmd:vinfo(playerid, params[])
 
     new Float:health, model = GetVehicleModel(vehicleid), slot = g_VehSlotOf[vehicleid];
     GetVehicleHealth(vehicleid, health);
-    Msg_Admin(playerid, "Vozilo ID %d: %s, HP %.0f, gorivo %.0f l, motor %s.", vehicleid, Veh_ModelName(model), health, g_VehFuel[vehicleid], Veh_IsEngineOn(vehicleid) ? ("radi") : ("ugasen"));
+    Msg_Admin(playerid, "Vozilo ID %d: %s, HP %.0f (stanje %d%%), gorivo %.0f l, motor %s.", vehicleid, Veh_ModelName(model), health, Veh_Condition(vehicleid), g_VehFuel[vehicleid], Veh_IsEngineOn(vehicleid) ? ("radi") : ("ugasen"));
     if (slot != -1)
     {
         new registration[24], key[MAX_PLAYER_NAME + 1] = "nema";
@@ -459,8 +459,7 @@ cmd:respawnveh(playerid, params[])
     }
     else if (g_IsAdminVehicle[vehicleid])
     {
-        DestroyVehicle(vehicleid);
-        g_IsAdminVehicle[vehicleid] = false;
+        Staff_DestroyAdminVehicle(vehicleid);
         Msg_Admin(playerid, "Admin vozilo %d je obrisano.", vehicleid);
     }
     else

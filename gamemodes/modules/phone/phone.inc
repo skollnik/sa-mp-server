@@ -4,6 +4,7 @@
 #define PHONE_NUMBER_MIN        (100000)
 #define PHONE_NUMBER_MAX        (999999)
 #define PHONE_EMERGENCY         (911)
+#define PHONE_MECHANIC          (555)
 #define PHONE_RANDOM_TRIES      (10)
 #define PHONE_RING_RADIUS       (15.0)
 
@@ -534,13 +535,8 @@ stock bool:Phone_OnPlayerText(playerid, const text[])
 
 stock Phone_Emergency(playerid, const text[])
 {
-    new message[192], place[ZONE_NAME_LENGTH] = "enterijer", Float:x, Float:y, Float:z;
-    GetPlayerPos(playerid, x, y, z);
-    new zone = GetPlayerInterior(playerid) == 0 ? Hud_FindZone(x, y) : -1;
-    if (zone != -1)
-    {
-        strcopy(place, g_Zones[zone][zName]);
-    }
+    new message[192], place[ZONE_NAME_LENGTH];
+    Hud_PlayerPlace(playerid, place);
     format(message, sizeof(message), "[911] %s [%d] (%s): %s", Account_Name(playerid), playerid, place, text);
     Staff_SendToAdmins(message, CHANNEL_REPORTS);
     Msg_Info(playerid, "Dispecer: Hitne sluzbe jos ne rade, vas poziv je prosledjen administraciji.");
@@ -704,7 +700,7 @@ cmd:pozovi(playerid, params[])
     new number, text[128];
     if (sscanf(params, "dS()[128]", number, text))
     {
-        Msg_Usage(playerid, "/pozovi [broj] (911 [opis] za hitne sluzbe)");
+        Msg_Usage(playerid, "/pozovi [broj] (911 [opis] hitne sluzbe, 555 [opis] mehanicar)");
         return 1;
     }
     if (g_Phone[playerid][phCall] != CALL_NONE)
@@ -725,6 +721,25 @@ cmd:pozovi(playerid, params[])
         }
         Chat_Action(playerid, "vadi telefon i zove hitne sluzbe.");
         Phone_Emergency(playerid, text);
+        return 1;
+    }
+    if (number == PHONE_MECHANIC)
+    {
+        if (!Phone_Require(playerid))
+        {
+            return 1;
+        }
+        if (isnull(text) || strlen(text) > MECH_CALL_TEXT)
+        {
+            Msg_Usage(playerid, "/pozovi 555 [sta je sa vozilom i gde ste, do %d slova]", MECH_CALL_TEXT);
+            return 1;
+        }
+        if (!Punish_CanSpeak(playerid, text))
+        {
+            return 1;
+        }
+        Chat_Action(playerid, "vadi telefon i zove mehanicara.");
+        Mech_Call(playerid, text);
         return 1;
     }
     if (!Phone_Require(playerid))

@@ -14,7 +14,8 @@ enum E_SPEEDO_PART
     PlayerText:spUnit,
     PlayerText:spFuelBack,
     PlayerText:spFuelBar,
-    PlayerText:spStatus
+    PlayerText:spStatus,
+    PlayerText:spCondition
 }
 
 new PlayerText:g_Speedo[MAX_PLAYERS][E_SPEEDO_PART];
@@ -23,6 +24,7 @@ new bool:g_SpeedoShown[MAX_PLAYERS];
 new g_SpeedoLastSpeed[MAX_PLAYERS];
 new g_SpeedoLastFuel[MAX_PLAYERS];
 new g_SpeedoLastStatus[MAX_PLAYERS];
+new g_SpeedoLastCondition[MAX_PLAYERS];
 new g_SpeedoTimer;
 // By Safety_SpeedoState: the belt or helmet, green when on.
 static const g_SpeedoGearTag[][] = { "", "~r~POJAS", "~g~POJAS", "~r~KACIGA", "~g~KACIGA" };
@@ -79,6 +81,7 @@ stock Speedo_Show(playerid)
     g_Speedo[playerid][spSpeed] = Speedo_Text(playerid, 606.0, 350.0, "0", TEXT_DRAW_FONT_3, 0.5, 2.0);
     g_Speedo[playerid][spUnit] = Speedo_Text(playerid, 632.0, 361.0, "KM/H", TEXT_DRAW_FONT_2, 0.16, 0.8);
     g_Speedo[playerid][spStatus] = Speedo_Text(playerid, 632.0, 383.0, "_", TEXT_DRAW_FONT_2, 0.15, 0.75);
+    g_Speedo[playerid][spCondition] = Speedo_Text(playerid, 632.0, 341.0, "_", TEXT_DRAW_FONT_2, 0.15, 0.75);
     g_Speedo[playerid][spFuelBack] = Speedo_Box(playerid, SPEEDO_FUEL_WIDTH, SPEEDO_BACK_COLOR);
     g_Speedo[playerid][spFuelBar] = Speedo_Box(playerid, SPEEDO_FUEL_WIDTH, SPEEDO_FUEL_COLOR);
 
@@ -86,6 +89,7 @@ stock Speedo_Show(playerid)
     g_SpeedoLastSpeed[playerid] = -1;
     g_SpeedoLastFuel[playerid] = -1;
     g_SpeedoLastStatus[playerid] = -1;
+    g_SpeedoLastCondition[playerid] = -1;
     PlayerTextDrawShow(playerid, g_Speedo[playerid][spSpeed]);
     PlayerTextDrawShow(playerid, g_Speedo[playerid][spUnit]);
     Speedo_Update(playerid);
@@ -147,6 +151,7 @@ static stock Speedo_Update(playerid)
             PlayerTextDrawHide(playerid, g_Speedo[playerid][spFuelBack]);
             PlayerTextDrawHide(playerid, g_Speedo[playerid][spFuelBar]);
             PlayerTextDrawHide(playerid, g_Speedo[playerid][spStatus]);
+            PlayerTextDrawHide(playerid, g_Speedo[playerid][spCondition]);
         }
         return;
     }
@@ -169,7 +174,30 @@ static stock Speedo_Update(playerid)
         }
     }
 
-    new slot = g_VehSlotOf[vehicleid], bool:engine = Veh_IsEngineOn(vehicleid);
+    // Kilometres are counted for personal vehicles only, so other vehicles show just the condition.
+    new condition = Veh_Condition(vehicleid), slot = g_VehSlotOf[vehicleid];
+    new kilometres = slot == -1 ? -1 : floatround(g_Veh[slot][vMileage], floatround_floor);
+    if (condition + kilometres * 101 != g_SpeedoLastCondition[playerid])
+    {
+        g_SpeedoLastCondition[playerid] = condition + kilometres * 101;
+        new colour[4] = "~g~", km[24];
+        if (condition < 30)
+        {
+            colour = "~r~";
+        }
+        else if (condition < 60)
+        {
+            colour = "~y~";
+        }
+        if (kilometres >= 0)
+        {
+            format(km, sizeof(km), "%d KM   ", kilometres);
+        }
+        PlayerTextDrawSetString(playerid, g_Speedo[playerid][spCondition], "~w~%sSTANJE %s%d%%", km, colour, condition);
+        PlayerTextDrawShow(playerid, g_Speedo[playerid][spCondition]);
+    }
+
+    new bool:engine = Veh_IsEngineOn(vehicleid);
     new bool:locked = slot != -1 && g_Veh[slot][vLocked];
     new gear = Safety_SpeedoState(playerid, vehicleid);
     new status = (engine ? 1 : 0) | (locked ? 2 : 0) | (gear << 2) | (floatround(g_VehFuel[vehicleid]) << 5);

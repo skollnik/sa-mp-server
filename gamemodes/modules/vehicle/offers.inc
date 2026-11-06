@@ -153,14 +153,13 @@ static stock bool:Offer_IsValid(seller, bool:tell)
 
 static stock Offer_Describe(seller, dest[], size = sizeof(dest))
 {
-    new slot = g_Offer[seller][ofSlot], registration[24], Float:health, trunk[48];
+    new slot = g_Offer[seller][ofSlot], registration[24], trunk[48];
     Veh_RegistrationText(slot, registration);
     Trunk_Summary(slot, trunk);
-    GetVehicleHealth(g_Veh[slot][vVehicleId], health);
     if (g_Offer[seller][ofKind] == OFFER_SALE)
     {
-        format(dest, size, "%s vam prodaje vozilo:\n\n%s\nRegistracija: %s\nGorivo: %.0f l\nStanje: %.0f / 1000\nTablice: %s\nGepek: %s\n\nCena: $%d (gotovinom)\n\nPonuda vazi %d sekundi.",
-            Account_Name(seller), Veh_Name(slot), registration, g_VehFuel[g_Veh[slot][vVehicleId]], health,
+        format(dest, size, "%s vam prodaje vozilo:\n\n%s\nRegistracija: %s\nGorivo: %.0f l\nStanje: %d%%\nKilometraza: %.0f km\nTablice: %s\nGepek: %s\n\nCena: $%d (gotovinom)\n\nPonuda vazi %d sekundi.",
+            Account_Name(seller), Veh_Name(slot), registration, g_VehFuel[g_Veh[slot][vVehicleId]], Veh_Condition(g_Veh[slot][vVehicleId]), g_Veh[slot][vMileage],
             g_Offer[seller][ofKeepPlate] ? ("prodavac ih zadrzava") : ("ostaju na vozilu"), trunk, g_Offer[seller][ofAmount], OFFER_TIMEOUT_S);
         return;
     }
@@ -177,8 +176,8 @@ static stock Offer_Describe(seller, dest[], size = sizeof(dest))
     {
         strcopy(extra, "bez doplate");
     }
-    format(dest, size, "%s nudi zamenu vozila:\n\nDobijate: %s (registracija: %s, stanje %.0f / 1000)\nDajete: %s\nDoplata: %s\nNjegove tablice: %s\nGepek vozila koje dobijate: %s\n\nPonuda vazi %d sekundi.",
-        Account_Name(seller), Veh_Name(slot), registration, health, Veh_Name(theirs), extra,
+    format(dest, size, "%s nudi zamenu vozila:\n\nDobijate: %s (registracija: %s, stanje %d%%, %.0f km)\nDajete: %s\nDoplata: %s\nNjegove tablice: %s\nGepek vozila koje dobijate: %s\n\nPonuda vazi %d sekundi.",
+        Account_Name(seller), Veh_Name(slot), registration, Veh_Condition(g_Veh[slot][vVehicleId]), g_Veh[slot][vMileage], Veh_Name(theirs), extra,
         g_Offer[seller][ofKeepPlate] ? ("zadrzava ih") : ("ostaju na vozilu"), trunk, OFFER_TIMEOUT_S);
 }
 

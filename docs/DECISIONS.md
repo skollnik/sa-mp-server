@@ -141,6 +141,16 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 133 | 2026-11-06 | Kad policija oduzme dozvolu koju posao traži, igrač ne dobija otkaz, ali ne može da radi ture dok je ponovo ne položi | Vlasnik prepustio odluku; otkaz bi bio dupla kazna |
 | 134 | 2026-11-06 | Tabla na stubu GTA zgrade, na uglu parkinga, ponovo je tabla auto škole ("AUTO SKOLA" i "L" na plavoj podlozi), kao na većini servera; nevidljivog stuba više nema | Zahtev vlasnika |
 | 135 | 2026-11-06 | Kaciga se stavlja i skida i u vozilu (`/kaciga`), za razliku od ostalih dodataka | Zahtev vlasnika: da se ne silazi sa motora |
+| 136 | 2026-11-06 | Stanje vozila se prikazuje u procentima: 1000 HP je 100%, 250 HP (vozilo se pali) je 0%. Kilometraža se broji samo ličnim vozilima i čuva u bazi | Zahtev vlasnika; procenat je razumljiviji od 650 / 1000 |
+| 137 | 2026-11-06 | Ispod 400 HP (20%) motor se gasi, pali iz trećeg pokušaja i posle 1–3 minuta opet otkazuje; ispod 300 HP (7%) ne pali. Ne važi za letelice i brodove. Jak udarac i dalje može da zapali vozilo | Uobičajena praksa (motor se gasi ispod 400 HP) i pretpostavka vlasnika |
+| 138 | 2026-11-06 | Osnova za poslove: jedan posao, uzima se u opštini (`/posao`), smena počinje i završava se `/oprema` na mestu posla (radna odeća), `/otkaz`, `/posaoinfo`. Posao koji vozi traži dozvolu i za zaposlenje i za smenu | Odobren predlog |
+| 139 | 2026-11-06 | Mehaničar: na terenu popravlja motor do 60% i gume, u radionici sve do 100%; cenu (–.000) dogovara sa vozačem i ceo iznos ide mehaničaru, a plaća se tek kad je popravka gotova. Tjuning i farbanje samo u radionici: mušterija plaća deo, mehaničar dobija 30%, ostatak izlazi iz igre | Vlasnik: deo na terenu, celo vozilo u radnji; tjuning i farbanje odmah |
+| 140 | 2026-11-06 | Mehaničarska vozila (četiri šlepa) stoje na parkingu pored garaža u Willowfield-u, koje koristi uobičajena praksa za tu mapu; vozi ih samo mehaničar na smeni, a šlepom se kače samo pokvarena vozila ili vozila bez goriva | Vlasnik ne želi da se vozilo dobija uz opremu; šlep ne sme da odnosi tuđa ispravna vozila |
+| 141 | 2026-11-06 | Poziv mehaničaru na broj 555 (`/pozovi 555 [opis]`): ide svim mehaničarima na smeni sa imenom i kvartom, prvi koji ukuca `/prihvatipoziv [id]` dobija GPS do pozivaoca | Zahtev vlasnika |
+| 142 | 2026-11-06 | Servis u radionici (`/servis`, $500, 30 s) radi samo kad nijedan mehaničar nije na smeni | Odobren predlog |
+| 143 | 2026-11-06 | Rent-a-car bez šaltera: vozila stoje na mapi (auta i Faggio ispred aerodroma, bicikli kod Unity stanice), uđeš i `/rent [1-3 sata]` (bicikl $20, Faggio $80, auto $200 po satu); vraća se samo kad istekne vreme, `/vratirent`, izlazak sa servera ili uništenje; kazne sa kamera stižu onome ko je iznajmio | Zahtev vlasnika i uobičajena praksa |
+| 144 | 2026-11-06 | Natpisi na vozilima su kratki i u visini vozila: ADMIN, RENT, AUTO SKOLA, MEHANICAR | Zahtev vlasnika |
+| 145 | 2026-11-06 | Tehnički pregled traži bar 900 HP, jer popravka sada postoji | Dogovoreno kad dođe mehaničar |
 
 ### Arhitektura koda (predlog)
 ```
@@ -303,6 +313,16 @@ This file records every important decision so it does not get re-discussed. Newe
 | 133 | 2026-11-06 | When the police take away a license a job needs, the player is not fired but cannot do runs until they pass it again | The owner left it to me; firing would be a double penalty |
 | 134 | 2026-11-06 | The GTA building's pole sign at the corner of the lot is the school's sign again ("AUTO SKOLA" and "L" on blue), as on most servers; there is no invisible pole any more | Owner's request |
 | 135 | 2026-11-06 | The helmet goes on and off in a vehicle too (`/kaciga`), unlike the other accessories | Owner's request: no getting off the motorbike |
+| 136 | 2026-11-06 | The vehicle condition shows in percent: 1000 HP is 100%, 250 HP (the vehicle catches fire) is 0%. Mileage counts for personal vehicles only and is saved | Owner's request; a percentage is clearer than 650 / 1000 |
+| 137 | 2026-11-06 | Below 400 HP (20%) the engine dies, starts on one try in three and fails again after 1–3 minutes; below 300 HP (7%) it does not start. Not for aircraft and boats. A hard hit can still set the vehicle on fire | Common practice (the engine stops below 400 HP) and the owner's assumption |
+| 138 | 2026-11-06 | Job framework: one job, taken at the city hall (`/posao`), a shift starts and ends with `/oprema` at the workplace (work clothes), `/otkaz`, `/posaoinfo`. A job that drives needs the license both to be hired and to start a shift | Approved proposal |
+| 139 | 2026-11-06 | Mechanic: in the field repairs the engine up to 60% and the tyres, in the workshop everything to 100%; the price ($50–$3,000) is agreed with the driver and all of it goes to the mechanic, paid only when the repair is done. Tuning and paint only in the workshop: the customer pays the part, the mechanic gets 30%, the rest leaves the game | Owner: part in the field, the whole vehicle in the shop; tuning and paint now |
+| 140 | 2026-11-06 | The mechanic vehicles (four tow trucks) stand at the parking next to the garages in Willowfield, which common practice uses for that map; only a mechanic on a shift drives them, and only broken-down vehicles or ones out of fuel are towed | The owner does not want a vehicle handed out with the equipment; the tow truck must not carry off other people's working vehicles |
+| 141 | 2026-11-06 | Calling a mechanic on 555 (`/pozovi 555 [description]`): it goes to every mechanic on a shift with the name and district, and the first to type `/prihvatipoziv [id]` gets GPS to the caller | Owner's request |
+| 142 | 2026-11-06 | The workshop service (`/servis`, $500, 30 s) works only when no mechanic is on a shift | Approved proposal |
+| 143 | 2026-11-06 | Rent-a-car without a counter: the vehicles stand on the map (cars and Faggios in front of the airport, bicycles at Unity Station), get in and `/rent [1-3 hours]` (bicycle $20, Faggio $80, car $200 per hour); it goes back when the time runs out, with `/vratirent`, on disconnect or when destroyed; camera fines go to whoever rented it | Owner's request and common practice |
+| 144 | 2026-11-06 | Vehicle labels are short and at the vehicle's height: ADMIN, RENT, AUTO SKOLA, MEHANICAR | Owner's request |
+| 145 | 2026-11-06 | The inspection needs at least 900 HP, now that repairs exist | Agreed for when the mechanic arrives |
 
 ### Code architecture (proposal)
 ```

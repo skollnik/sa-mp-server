@@ -401,6 +401,7 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_int(0, "held_pay", g_Player[playerid][pHeldPay]);
     cache_get_value_name_int(0, "extra_vehicle_slots", g_Player[playerid][pExtraVehSlots]);
     cache_get_value_name_int(0, "licenses", g_Player[playerid][pLicenses]);
+    cache_get_value_name_int(0, "job", g_Player[playerid][pJob]);
 
     if (!Account_CheckFreeSlot(playerid))
     {

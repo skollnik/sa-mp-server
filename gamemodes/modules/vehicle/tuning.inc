@@ -17,6 +17,9 @@ static const g_TuneSlotNames[VEH_TUNE_SLOTS][] =
     "Prednja zastita", "Zadnja zastita"
 };
 
+// What a part costs at the mechanic, by slot (nitro by size, see Tune_PartPrice); docs/ECONOMY.md lists them.
+static const g_TunePartPrices[VEH_TUNE_SLOTS] = { 800, 600, 500, 700, 300, 0, 500, 1200, 800, 3000, 600, 600, 300, 300, 400, 400 };
+
 static const g_TuneWheelIds[] = { 1025, 1073, 1074, 1075, 1076, 1077, 1078, 1079, 1080, 1081, 1082, 1083, 1084, 1085, 1096, 1097, 1098 };
 static const g_TuneWheelNames[][] =
 {
@@ -40,11 +43,17 @@ new g_TuneValues[MAX_PLAYERS][TUNE_MAX_ENTRIES];
 new g_TuneCount[MAX_PLAYERS];
 new g_TunePage[MAX_PLAYERS];
 new g_TuneSlot[MAX_PLAYERS];
+// The mechanic serving the player, or INVALID_PLAYER_ID for an admin's free /atune.
+new g_TuneMechanic[MAX_PLAYERS] = { INVALID_PLAYER_ID, ... };
 
 // Admin vehicles are for any admin; a personal vehicle is someone's property, so free tuning on it is for senior admins.
 // Returns the vehicle or 0, with the reason already told.
 static stock Tune_GetVehicle(playerid)
 {
+    if (g_TuneMechanic[playerid] != INVALID_PLAYER_ID)
+    {
+        return Mech_TuningVehicle(playerid, g_TuneMechanic[playerid]);
+    }
     if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_TRIAL))
     {
         return 0;
@@ -70,6 +79,41 @@ static stock Tune_GetVehicle(playerid)
         return 0;
     }
     return vehicleid;
+}
+
+static stock Tune_PartPrice(slot, component)
+{
+    switch (component)
+    {
+        case 1008: return TUNE_PRICE_NITRO_X2;
+        case 1009: return TUNE_PRICE_NITRO_X5;
+        case 1010: return TUNE_PRICE_NITRO_X10;
+    }
+    return g_TunePartPrices[slot];
+}
+
+static stock bool:Tune_AtMechanic(playerid)
+{
+    return g_TuneMechanic[playerid] != INVALID_PLAYER_ID;
+}
+
+// Free for an admin; at a mechanic the customer pays and the mechanic gets a share, the rest leaves the game.
+static stock bool:Tune_Pay(playerid, price, const what[])
+{
+    if (!Tune_AtMechanic(playerid))
+    {
+        return true;
+    }
+    new reason[48], mechanic = g_TuneMechanic[playerid];
+    format(reason, sizeof(reason), "tjuning: %s", what);
+    if (!Money_Take(playerid, price, reason))
+    {
+        return false;
+    }
+    new share = price * TUNE_MECHANIC_SHARE / 100;
+    Money_GiveCash(mechanic, share, "mehanicar: tjuning", g_Player[playerid][pDbId]);
+    Msg_Info(mechanic, "Tjuning za %s (%s, $%d): vasa zarada $%d.", Account_Name(playerid), what, price, share);
+    return true;
 }
 
 static stock Tune_PartName(component, number, dest[], size = sizeof(dest))
@@ -118,6 +162,7 @@ static stock Tune_DestroyMenu(playerid)
 // Also called when the admin leaves the vehicle, dies or disconnects, so the camera and controls always come back.
 stock Tune_Close(playerid)
 {
+    g_TuneMechanic[playerid] = INVALID_PLAYER_ID;
     if (!g_TuneActive[playerid])
     {
         return;
@@ -185,7 +230,7 @@ static stock Tune_Add(playerid, const label[], value)
 static stock Tune_ShowMain(playerid, vehicleid)
 {
     new model = GetVehicleModel(vehicleid);
-    Tune_Begin(playerid, TUNE_VIEW_MAIN, "Tuning");
+    Tune_Begin(playerid, TUNE_VIEW_MAIN, Tune_AtMechanic(playerid) ? ("Mehanicar - tjuning") : ("Tuning"));
     for (new slot = 0; slot < VEH_TUNE_SLOTS; slot++)
     {
         for (new c = TUNE_COMPONENT_FIRST; c <= TUNE_COMPONENT_LAST; c++)
@@ -214,7 +259,18 @@ static stock Tune_ShowParts(playerid, vehicleid, slot, page = 0)
         if (_:GetVehicleComponentType(c) == slot && VehicleCanHaveComponent(model, c))
         {
             Tune_PartName(c, ++count, name);
-            format(label, sizeof(label), "%s%s", name, GetVehicleComponentInSlot(vehicleid, CARMODTYPE:slot) == c ? (" (stavljeno)") : (""));
+            if (GetVehicleComponentInSlot(vehicleid, CARMODTYPE:slot) == c)
+            {
+                format(label, sizeof(label), "%s (stavljeno)", name);
+            }
+            else if (Tune_AtMechanic(playerid))
+            {
+                format(label, sizeof(label), "%s ($%d)", name, Tune_PartPrice(slot, c));
+            }
+            else
+            {
+                strcopy(label, name);
+            }
             Tune_Add(playerid, label, c);
         }
     }
@@ -235,6 +291,10 @@ static stock Tune_ShowPaintjobs(playerid)
 // A personal vehicle keeps its tuning, and the change is logged since it is free value for the owner.
 static stock Tune_Saved(playerid, vehicleid, const what[])
 {
+    if (Tune_AtMechanic(playerid))
+    {
+        return;
+    }
     new slot = g_VehSlotOf[vehicleid];
     if (slot == -1)
     {
@@ -262,8 +322,16 @@ static stock Tune_SetPart(playerid, vehicleid, slot, component)
     }
     else
     {
-        AddVehicleComponent(vehicleid, component);
+        if (component == current)
+        {
+            return;
+        }
         format(what, sizeof(what), "%s %d", g_TuneSlotNames[slot], component);
+        if (!Tune_Pay(playerid, Tune_PartPrice(slot, component), g_TuneSlotNames[slot]))
+        {
+            return;
+        }
+        AddVehicleComponent(vehicleid, component);
     }
     if (g_VehSlotOf[vehicleid] != -1)
     {
@@ -274,6 +342,11 @@ static stock Tune_SetPart(playerid, vehicleid, slot, component)
 
 static stock Tune_SetPaintjob(playerid, vehicleid, paintjob)
 {
+    new slot = g_VehSlotOf[vehicleid];
+    if (paintjob != VEH_PAINTJOB_NONE && (slot == -1 || g_Veh[slot][vPaintjob] != paintjob) && !Tune_Pay(playerid, TUNE_PRICE_PAINTJOB, "paintjob"))
+    {
+        return;
+    }
     ChangeVehiclePaintjob(vehicleid, paintjob);
     if (g_VehSlotOf[vehicleid] != -1)
     {
@@ -299,20 +372,40 @@ static stock Tune_Clear(playerid, vehicleid)
     Tune_SetPaintjob(playerid, vehicleid, VEH_PAINTJOB_NONE);
 }
 
-cmd:atune(playerid, params[])
+// Frozen so the menu keys do not drive the vehicle away from the camera.
+static stock Tune_Open(playerid, vehicleid)
 {
-    new vehicleid = Tune_GetVehicle(playerid);
-    if (vehicleid == 0)
-    {
-        return 1;
-    }
-    // Frozen so the menu keys do not drive the vehicle away from the camera.
     g_TuneActive[playerid] = true;
     TogglePlayerControllable(playerid, false);
     Tune_FocusCamera(playerid, vehicleid);
     Tune_ShowMain(playerid, vehicleid);
     Msg_Info(playerid, "Strelice gore i dole biraju, Space potvrdjuje, Enter vraca nazad i zatvara meni.");
+}
+
+cmd:atune(playerid, params[])
+{
+    g_TuneMechanic[playerid] = INVALID_PLAYER_ID;
+    new vehicleid = Tune_GetVehicle(playerid);
+    if (vehicleid == 0)
+    {
+        return 1;
+    }
+    Tune_Open(playerid, vehicleid);
     return 1;
+}
+
+// Opened when the customer accepts the mechanic's offer.
+stock Tune_OpenForCustomer(playerid, mechanic)
+{
+    g_TuneMechanic[playerid] = mechanic;
+    new vehicleid = Tune_GetVehicle(playerid);
+    if (vehicleid == 0)
+    {
+        g_TuneMechanic[playerid] = INVALID_PLAYER_ID;
+        return;
+    }
+    Tune_Open(playerid, vehicleid);
+    Msg_Info(mechanic, "%s je otvorio meni za tjuning.", Account_Name(playerid));
 }
 
 stock Tune_OnPlayerSelectedMenuRow(playerid, row)
@@ -352,7 +445,12 @@ stock Tune_OnPlayerSelectedMenuRow(playerid, row)
                 case TUNE_MENU_COLOUR:
                 {
                     Tune_DestroyMenu(playerid);
-                    ShowPlayerDialog(playerid, DIALOG_TUNE_COLOUR, DIALOG_STYLE_INPUT, "Boja vozila", "Upisite dve boje (0-255), npr: 1 0", "Ofarbaj", "Nazad");
+                    new text[80] = "Upisite dve boje (0-255), npr: 1 0";
+                    if (Tune_AtMechanic(playerid))
+                    {
+                        format(text, sizeof(text), "Upisite dve boje (0-255), npr: 1 0\n\nFarbanje kosta $%d.", TUNE_PRICE_PAINT);
+                    }
+                    ShowPlayerDialog(playerid, DIALOG_TUNE_COLOUR, DIALOG_STYLE_INPUT, "Boja vozila", text, "Ofarbaj", "Nazad");
                 }
                 case TUNE_MENU_PAINTJOB:
                 {
@@ -361,7 +459,7 @@ stock Tune_OnPlayerSelectedMenuRow(playerid, row)
                 case TUNE_MENU_CLEAR:
                 {
                     Tune_Clear(playerid, vehicleid);
-                    Msg_Admin(playerid, "Sav tuning je skinut sa vozila.");
+                    Msg_Info(playerid, "Sav tuning je skinut sa vozila.");
                     Tune_ShowMain(playerid, vehicleid);
                 }
                 default:
@@ -430,7 +528,7 @@ stock bool:Tune_OnDialogResponse(playerid, dialogid, response, const inputtext[]
         {
             Msg_Error(playerid, "Upisite dve boje od 0 do 255, npr: 1 0");
         }
-        else
+        else if (Tune_Pay(playerid, TUNE_PRICE_PAINT, "farbanje"))
         {
             ChangeVehicleColours(vehicleid, colour1, colour2);
             Veh_OnColoursChanged(vehicleid, colour1, colour2);

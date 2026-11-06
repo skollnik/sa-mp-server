@@ -31,14 +31,25 @@ enum E_VEH_CLASS
 // Saved below this it would catch fire again right after spawning.
 #define VEH_MIN_SAVED_HEALTH    (300.0)
 #define VEH_ENGINE_START_MS     (1500)
-// Below this the engine sometimes fails to start on the first try.
+// Below this the engine dies, starts only now and then and keeps dying, enough to limp to the workshop.
 #define VEH_ENGINE_WEAK_HEALTH  (400.0)
+// Below this it does not start at all and the vehicle has to be towed.
+#define VEH_ENGINE_DEAD_HEALTH  (300.0)
+#define VEH_ENGINE_START_CHANCE (3)
+#define VEH_ENGINE_STALL_MIN_S  (60)
+#define VEH_ENGINE_STALL_MAX_S  (180)
+// GTA health: 1000 is a new vehicle and it catches fire at 250, which players see as 100% and 0%.
+#define VEH_HEALTH_FULL         (1000.0)
+#define VEH_HEALTH_FIRE         (250.0)
+#define VEH_LABEL_DISTANCE      (20.0)
+// Inside the body, so the label reads as written on the vehicle rather than floating above it.
+#define VEH_LABEL_OFFSET_Z      (0.3)
 #define VEH_REGISTRATION_DAYS   (60)
 // Renewing is allowed only near the end, so nobody stacks years of registration in advance.
 #define VEH_REGISTRATION_RENEW_DAYS (15)
 #define VEH_REGISTRATION_WARN_DAYS  (7)
-// Until the mechanic exists (step 3.5) a heavily damaged vehicle could never pass; raise this once repairs can be bought.
-#define VEH_INSPECTION_MIN_HEALTH   (650.0)
+// Repairs can be bought (mechanic, workshop service), so a vehicle has to be in good shape to pass.
+#define VEH_INSPECTION_MIN_HEALTH   (900.0)
 #define VEH_INSPECTION_MS       (5000)
 // One saved component per tuning slot (CARMODTYPE 0-15).
 #define VEH_TUNE_SLOTS          (16)
@@ -67,6 +78,7 @@ enum E_VEH
     // False for a market vehicle until the owner leaves it somewhere (its spot is the market exit until then).
     bool:vParked,
     Float:vFuel,
+    Float:vMileage,
     Float:vHealth,
     VEHICLE_PANEL_STATUS:vPanels,
     VEHICLE_DOOR_STATUS:vDoors,
@@ -77,11 +89,12 @@ enum E_VEH
     vKeyName[MAX_PLAYER_NAME + 1],
     vMods[VEH_TUNE_SLOTS],
     vPaintjob,
-    vDiedAt,
-    // The last camera that photographed the vehicle and when, so one camera fines a vehicle only once in a while.
-    vCameraSlot,
-    vCameraAt
+    vDiedAt
 }
+
+forward bool:Veh_CanBreakDown(vehicleid);
+forward bool:Rent_IsRentVehicle(vehicleid);
+forward bool:Rent_IsRenter(playerid, vehicleid);
 
 new g_Veh[MAX_PERSONAL_VEHICLES][E_VEH];
 // Slot in g_Veh for every vehicle ID, or -1 for vehicles that are not personal.
@@ -89,6 +102,10 @@ new g_VehSlotOf[MAX_VEHICLES];
 // Fuel is kept for every vehicle ID, so job and faction vehicles can use it later.
 new Float:g_VehFuel[MAX_VEHICLES];
 new bool:g_VehFuelReserveWarned[MAX_VEHICLES];
+// When a weak engine that is running dies again; 0 means the next tick below the limit kills it.
+new g_VehStallAt[MAX_VEHICLES];
+// The short label on special vehicles (ADMIN, RENT, AUTO SKOLA, MEHANICAR).
+new STREAMER_TAG_3D_TEXT_LABEL:g_VehLabel[MAX_VEHICLES];
 new g_VehListed[MAX_PLAYERS][VEH_LIST_SIZE];
 new g_VehSelected[MAX_PLAYERS];
 // A running engine start or technical inspection; 0 when none.

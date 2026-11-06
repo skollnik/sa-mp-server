@@ -48,4 +48,5 @@ new const g_LicInfo[E_LICENSE][E_LIC_INFO] =
 new g_TestVehicleOwner[MAX_VEHICLES] = { INVALID_PLAYER_ID, ... };
 
 forward bool:Lic_Has(playerid, E_LICENSE:license);
+forward E_LICENSE:Lic_ForModel(model);
 forward bool:Lic_OnDialogResponse(playerid, dialogid, response, listitem);

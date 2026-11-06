@@ -34,6 +34,7 @@
 #include "modules/inventory/accessories_data.inc"
 #include "modules/vehicle/vehicle_data.inc"
 #include "modules/license/license_data.inc"
+#include "modules/job/job_data.inc"
 #include "modules/vehicle/vehicle_names.inc"
 #include "modules/health/hunger_data.inc"
 #include "modules/help/cmd_menu.inc"
@@ -104,7 +105,10 @@
 #include "modules/vehicle/offers.inc"
 #include "modules/vehicle/vehicle_cmds.inc"
 #include "modules/vehicle/speedometer.inc"
+#include "modules/vehicle/rent.inc"
 #include "modules/license/license.inc"
+#include "modules/job/job.inc"
+#include "modules/job/mechanic.inc"
 
 #include "modules/help/help_cmds.inc"
 
@@ -155,6 +159,9 @@ public OnGameModeInit()
     Market_Init();
     Offer_Init();
     Lic_Init();
+    Job_Init();
+    Mech_Init();
+    Rent_Init();
     Speedo_Init();
     Safety_Init();
     Maps_Init();
@@ -206,6 +213,9 @@ public OnPlayerConnect(playerid)
     Plate_OnPlayerConnect(playerid);
     Fuel_OnPlayerConnect(playerid);
     Lic_OnPlayerConnect(playerid);
+    Job_OnPlayerConnect(playerid);
+    Mech_OnPlayerConnect(playerid);
+    Rent_OnPlayerConnect(playerid);
     Offer_OnPlayerConnect(playerid);
     Bet_OnPlayerConnect(playerid);
     Beg_OnPlayerConnect(playerid);
@@ -219,6 +229,8 @@ public OnPlayerConnect(playerid)
 public OnPlayerDisconnect(playerid, reason)
 {
     Lic_OnPlayerDisconnect(playerid);
+    Mech_OnPlayerDisconnect(playerid);
+    Rent_OnPlayerDisconnect(playerid);
     Fuel_CancelCanister(playerid);
     Tune_Close(playerid);
     Gps_OnPlayerDisconnect(playerid);
@@ -327,9 +339,17 @@ public OnVehicleRespray(playerid, vehicleid, color1, color2)
     return Veh_OnRespray(playerid, vehicleid) ? 1 : 0;
 }
 
+public OnVehicleSpawn(vehicleid)
+{
+    Job_OnVehicleSpawn(vehicleid);
+    Rent_OnVehicleSpawn(vehicleid);
+    return 1;
+}
+
 public OnVehicleDeath(vehicleid, killerid)
 {
     Veh_OnVehicleDeath(vehicleid);
+    Rent_OnVehicleDeath(vehicleid);
     Market_OnVehicleDeath(vehicleid);
     return 1;
 }
@@ -343,6 +363,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
     Fuel_CancelCanister(playerid);
     Tune_Close(playerid);
     Lic_OnPlayerDeath(playerid);
+    Job_OnPlayerDeath(playerid);
     return 1;
 }
 
@@ -356,6 +377,8 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
     Market_OnPlayerStateChange(playerid, newstate);
     Tune_OnPlayerStateChange(playerid, newstate);
     Lic_OnPlayerStateChange(playerid, newstate);
+    Job_OnPlayerStateChange(playerid, newstate);
+    Rent_OnPlayerStateChange(playerid, newstate);
     return 1;
 }
 
@@ -495,6 +518,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Lic_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (Job_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (Mech_OnDialogResponse(playerid, dialogid, response, listitem))
     {
         return 1;
     }

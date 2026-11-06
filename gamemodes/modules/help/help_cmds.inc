@@ -34,7 +34,11 @@ cmd:pomoc(playerid, params[])
         "/pijaca - auto pijaca (kad je otvorena)    /kupivozilo - kupovina na pijaci    /ponudi - prodaja ili zamena vozila igracu pored vas\n" \
         "/tablice - tablice na salteru u policiji    /v tablice - postavljanje tablica    /kazne - kazne sa kamera (placaju se u opstini ili policiji)\n" \
         "/pojas - vezivanje pojasa u vozilu    /kaciga - kaciga na motoru (kupuje se u prodavnici odece)\n" \
-        "/skola - auto skola (dozvole: teorija i voznja)    /dozvole - vase dozvole    /pokazidozvole - igracu pored vas\n\n" \
+        "/skola - auto skola (dozvole: teorija i voznja)    /dozvole - vase dozvole    /pokazidozvole - igracu pored vas\n" \
+        "/rent [sati] - u vozilu sa natpisom RENT    /vratirent - vracanje    /servis - popravka u radionici kad nema mehanicara    /pozovi 555 [opis] - mehanicar\n\n" \
+        C_SERVER "Posao\n" \
+        C_WHITE "/posao - poslovi u opstini    /posaoinfo - uputstvo    /oprema - pocetak i kraj smene    /otkaz\n" \
+        "Mehanicar: /popravi [id] [cena]    /tjuning [id]    /prihvatipoziv [id]    /vuci (iz slepera)\n\n" \
         C_SERVER "Pomoc i podrska\n" \
         C_WHITE "/n - newbie chat (pitanja novih igraca)    /ask - pitanje helperima\n" \
         "/report - prijava igraca adminima    /admins, /helpers - tim online    /ahelp, /hhelp - komande tima\n\n" \

@@ -48,6 +48,11 @@
 | Naočare (3 vrste, prodavnica odeće) | $150 / $200 / $250 |
 | Zimska kapa / kačket / panama šešir / polucilindar | $150 / $200 / $300 / $350 |
 | Kaciga (crna, crvena, bela; prodavnica odeće) | $150 |
+| Rent-a-car po satu (1–3 sata unapred): bicikl / Faggio / auto | $20 / $80 / $200 |
+| Popravka kod mehaničara (dogovor, ceo iznos ide mehaničaru) | $50–$3.000 |
+| Servis u radionici kad nema mehaničara (izlazi iz igre) | $500 |
+| Tjuning kod mehaničara (mehaničar dobija 30%, ostatak izlazi iz igre): svetla i otvori $300, krov i auspuh $500, hauba i branici $600, pragovi $700, spojler i stereo $800, felne $1.200, hidraulika $3.000, nitro x2 / x5 / x10 $1.500 / $3.000 / $5.000, zaštite $400 | |
+| Farbanje / paintjob kod mehaničara | $300 / $1.500 |
 | Torba / ranac | $400 / $600 |
 | Lična karta (opština) | $50 |
 | Radio | $700 |
@@ -188,6 +193,11 @@ Auto škola (`/skola`): cena se plaća pre teorije, a posle pada ponovo. Uslovi:
 | Glasses (3 kinds, clothing shop) | $150 / $200 / $250 |
 | Knit hat / cap / panama hat / bowler | $150 / $200 / $300 / $350 |
 | Helmet (black, red, white; clothing shop) | $150 |
+| Rent-a-car per hour (1–3 hours ahead): bicycle / Faggio / car | $20 / $80 / $200 |
+| Repair at the mechanic (agreed, all of it goes to the mechanic) | $50–$3,000 |
+| Workshop service when no mechanic is working (leaves the game) | $500 |
+| Tuning at the mechanic (the mechanic gets 30%, the rest leaves the game): lights and vents $300, roof and exhaust $500, hood and bumpers $600, side skirts $700, spoiler and stereo $800, wheels $1,200, hydraulics $3,000, nitro x2 / x5 / x10 $1,500 / $3,000 / $5,000, guards $400 | |
+| Paint / paintjob at the mechanic | $300 / $1,500 |
 | Bag / backpack | $400 / $600 |
 | ID card (city hall) | $50 |
 | Radio | $700 |

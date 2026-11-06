@@ -55,6 +55,8 @@ enum E_PLAYER_DATA
     pExtraVehSlots,
     // One bit per E_LICENSE; saved only when it changes (school, /setdozvola).
     pLicenses,
+    // E_JOB; saved only when it changes (/posao, /otkaz).
+    pJob,
 
     // Runtime only, never saved
     pLastLoginText[24],

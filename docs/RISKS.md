@@ -246,6 +246,18 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Pozajmljena kaciga sa ispita ostane igraču ili uđe u inventar | ✅ | Nije predmet; skida se na kraju ispita (prolaz, pad, smrt, izlazak) i vraća se ono što je nosio na glavi |
 | Kaciga i šešir na glavi u isto vreme | ✅ | Kaciga je dodatak za glavu, pa zamenjuje šešir ili kapu |
 | Kaciga se menja u vozilu i tako zaobiđe proveru kamere ili ispita | ✅ | Kamera i ispit gledaju stanje u trenutku prolaska; stavljanje kacige u vožnji je dozvoljeno i nije prekršaj |
+| Mehaničar odvuče šlepom tuđe ispravno vozilo | ✅ | Kače se samo vozila ispod 20% ili bez goriva, i samo kad niko ne sedi za volanom |
+| Mehaničar naplati popravku koja nije urađena | ✅ | Novac se uzima tek kad se popravka završi, a mehaničar je i dalje pored vozila |
+| Prijatelji jedni drugima popravljaju za $50 i niko ne ide u servis | 👁 | Cena je stvar dogovora (najmanje $50); pratiti ekonomiju, a po potrebi uvesti delove koje mehaničar kupuje |
+| Mehaničar popravlja sam sebi | ✅ | `/popravi` i `/tjuning` ne mogu na sebe; servis radi samo kad nema mehaničara na smeni |
+| Neko vozi vozilo posla bez posla | ✅ | Vozača bez smene izbaci iz vozila; ključ (motor) ima samo radnik na smeni; posle smene ili otkaza izlazi iz vozila |
+| Rent vozilo kao besplatno vozilo zauvek | ✅ | Najam najviše 3 sata unapred; vraća se kad istekne, na izlazak, uništenje ili `/vratirent`; slobodno vozilo odgurano sa mesta vraća se posle 10 minuta |
+| Rent vozilo da se prođe kamera bez kazne | ✅ | Kazna stiže onome ko je iznajmio |
+| Rent vozilo u gepek, prodaju ili tjuning | ✅ | Ti sistemi rade samo sa ličnim vozilima |
+| Tjuning uz mehaničara bez plaćanja | ✅ | Svaki deo se plaća pre nego što se stavi; skidanje je besplatno; meni se zatvara kad mehaničar ode ili završi smenu |
+| Natpis vozila ostane da visi posle brisanja vozila | ✅ | Natpis se briše pre svakog brisanja admin, rent i vozila za ispit |
+| Igrač zaglavi vozilo na 0% i ne može da ga pomeri | ✅ | Šlep mehaničara ili `/respawnveh`; lično vozilo se čuva sa najmanje 300 HP |
+| Poziv 555 preduži red u chatu | ✅ | Opis je najviše 64 slova, pa red sa imenom i kvartom staje u 144 znaka |
 | Admin vozilo ili vozilo za ispit kažnjeno kamerom | ✅ | Kamere i dalje snimaju samo lična vozila |
 | Dozvola bez ispita | 👁 | Samo ribolov se kupuje; ostalo samo posle teorije i vožnje ili od admina nivoa 4 (log) |
 | Admin daje dodatna mesta za vozila prijateljima | 👁 | Samo nivo 4, najviše 5 mesta, svaka promena ide u admin log |
@@ -513,6 +525,18 @@ Every new system or change goes through these questions, against all existing sy
 | The helmet lent for the test stays with the player or goes into the inventory | ✅ | It is not an item; it comes off when the test ends (pass, fail, death, disconnect) and whatever was on the head goes back |
 | A helmet and a hat on the head at once | ✅ | The helmet is a head accessory, so it replaces a hat or cap |
 | The helmet is changed in a vehicle to get around a camera or test check | ✅ | The camera and the test look at the moment the player passes; putting a helmet on while riding is allowed and is no offence |
+| A mechanic tows someone's working vehicle away | ✅ | Only vehicles below 20% or out of fuel are towed, and only with nobody at the wheel |
+| A mechanic charges for a repair that was not done | ✅ | The money is taken only when the repair is finished and the mechanic is still next to the vehicle |
+| Friends repair each other for $50 and nobody uses the service | 👁 | The price is agreed (at least $50); watch the economy and, if needed, add parts the mechanic has to buy |
+| A mechanic repairs their own vehicle | ✅ | `/popravi` and `/tjuning` cannot target oneself; the service works only when no mechanic is on a shift |
+| Someone drives a job vehicle without the job | ✅ | A driver without a shift is thrown out; only a worker on a shift has the key (engine); after the shift or quitting they leave the vehicle |
+| A rental as a free vehicle forever | ✅ | At most 3 hours ahead; it goes back when the time runs out, on disconnect, when destroyed or with `/vratirent`; a free one pushed off its spot returns after 10 minutes |
+| A rental used to pass a camera without a fine | ✅ | The fine goes to whoever rented it |
+| A rental in the trunk, sale or tuning systems | ✅ | Those systems work with personal vehicles only |
+| Tuning at the mechanic without paying | ✅ | Every part is paid before it goes on; removing is free; the menu closes when the mechanic leaves or ends the shift |
+| A vehicle label left hanging after the vehicle is deleted | ✅ | The label is removed before every admin, rental and test vehicle is destroyed |
+| A player stuck with a vehicle at 0% that cannot move | ✅ | The mechanic's tow truck or `/respawnveh`; a personal vehicle is saved with at least 300 HP |
+| A 555 call too long for the chat line | ✅ | The description is at most 64 characters, so the line with name and district fits in 144 |
 | An admin or test vehicle fined by a camera | ✅ | Cameras still photograph only personal vehicles |
 | A license without a test | 👁 | Only fishing is bought; the rest only after theory and the drive, or from a level 4 admin (logged) |
 | An admin gives friends extra vehicle slots | 👁 | Level 4 only, at most 5 slots, every change goes to the admin log |

@@ -34,6 +34,7 @@ stock Veh_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `paintjob` TINYINT UNSIGNED NOT NULL DEFAULT 3");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `pending_plate` VARCHAR(12) NULL");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `parked` TINYINT UNSIGNED NOT NULL DEFAULT 1");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `mileage` FLOAT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD UNIQUE INDEX IF NOT EXISTS `vehicle_pending_plate` (`pending_plate`)");
     // Vehicles that got a plate before registration existed count as freshly registered.
     new query[512];
@@ -144,6 +145,14 @@ stock bool:Veh_IsOwnableModel(model)
 
 stock bool:Veh_HasKey(playerid, vehicleid)
 {
+    if (g_JobVehicle[vehicleid] != JOB_NONE)
+    {
+        return Job_IsOnDuty(playerid, g_JobVehicle[vehicleid]);
+    }
+    if (Rent_IsRentVehicle(vehicleid))
+    {
+        return Rent_IsRenter(playerid, vehicleid);
+    }
     if (g_TestVehicleOwner[vehicleid] != INVALID_PLAYER_ID)
     {
         return g_TestVehicleOwner[vehicleid] == playerid;
@@ -203,6 +212,31 @@ stock Veh_CountOwned(owner_dbid)
         }
     }
     return count;
+}
+
+// The condition players see: 100 for a new vehicle, 0 when it catches fire.
+stock Veh_Condition(vehicleid)
+{
+    new Float:health;
+    GetVehicleHealth(vehicleid, health);
+    new percent = floatround((health - VEH_HEALTH_FIRE) * 100.0 / (VEH_HEALTH_FULL - VEH_HEALTH_FIRE));
+    return percent < 0 ? 0 : (percent > 100 ? 100 : percent);
+}
+
+stock Veh_SetLabel(vehicleid, const text[], colour)
+{
+    Veh_ClearLabel(vehicleid);
+    g_VehLabel[vehicleid] = CreateDynamic3DTextLabel(text, colour, 0.0, 0.0, VEH_LABEL_OFFSET_Z, VEH_LABEL_DISTANCE, INVALID_PLAYER_ID, vehicleid, 0);
+}
+
+// Called before the vehicle is destroyed, since a label left behind would hang where the vehicle was.
+stock Veh_ClearLabel(vehicleid)
+{
+    if (IsValidDynamic3DTextLabel(g_VehLabel[vehicleid]))
+    {
+        DestroyDynamic3DTextLabel(g_VehLabel[vehicleid]);
+    }
+    g_VehLabel[vehicleid] = STREAMER_TAG_3D_TEXT_LABEL:INVALID_STREAMER_ID;
 }
 
 stock Veh_Name(slot)
@@ -355,10 +389,10 @@ stock Veh_SaveState(slot)
     Veh_FormatMods(slot, mods);
     mysql_format(g_SQL, query, sizeof(query),
         "UPDATE `vehicles` SET `fuel` = %f, `health` = %f, `panels` = %d, `doors` = %d, `lights` = %d, `tyres` = %d, " \
-        "`locked` = %d, `color1` = %d, `color2` = %d, `key_holder` = %d, `mods` = '%e', `paintjob` = %d, `registered_until` = %d WHERE `id` = %d",
+        "`locked` = %d, `color1` = %d, `color2` = %d, `key_holder` = %d, `mods` = '%e', `paintjob` = %d, `registered_until` = %d, `mileage` = %f WHERE `id` = %d",
         g_Veh[slot][vFuel], g_Veh[slot][vHealth], _:g_Veh[slot][vPanels], _:g_Veh[slot][vDoors], _:g_Veh[slot][vLights], _:g_Veh[slot][vTyres],
         g_Veh[slot][vLocked] ? 1 : 0, g_Veh[slot][vColor1], g_Veh[slot][vColor2], g_Veh[slot][vKeyDbId], mods, g_Veh[slot][vPaintjob],
-        g_Veh[slot][vRegisteredUntil], g_Veh[slot][vDbId]);
+        g_Veh[slot][vRegisteredUntil], g_Veh[slot][vMileage], g_Veh[slot][vDbId]);
     mysql_tquery(g_SQL, query);
 }
 
@@ -426,7 +460,6 @@ static stock Veh_LoadRow(slot, row, ownerid)
     g_Veh[slot][vOwnerId] = ownerid;
     g_Veh[slot][vVehicleId] = INVALID_VEHICLE_ID;
     g_Veh[slot][vDiedAt] = 0;
-    g_Veh[slot][vCameraSlot] = -1;
     cache_get_value_name_int(row, "id", g_Veh[slot][vDbId]);
     cache_get_value_name_int(row, "owner_id", g_Veh[slot][vOwnerDbId]);
     cache_get_value_name(row, "owner_name", g_Veh[slot][vOwnerName], MAX_PLAYER_NAME + 1);
@@ -443,6 +476,7 @@ static stock Veh_LoadRow(slot, row, ownerid)
     cache_get_value_name_int(row, "parked", value);
     g_Veh[slot][vParked] = value != 0;
     cache_get_value_name_float(row, "fuel", g_Veh[slot][vFuel]);
+    cache_get_value_name_float(row, "mileage", g_Veh[slot][vMileage]);
     cache_get_value_name_float(row, "health", g_Veh[slot][vHealth]);
     cache_get_value_name_int(row, "panels", value);
     g_Veh[slot][vPanels] = VEHICLE_PANEL_STATUS:value;
@@ -569,10 +603,57 @@ static stock Veh_RespawnAfterDeath(slot)
     }
 }
 
+// A weak engine dies when the vehicle drops below the limit and then again every few minutes of running.
+static stock Veh_CheckEngine(vehicleid, now)
+{
+    new Float:health;
+    GetVehicleHealth(vehicleid, health);
+    if (health >= VEH_ENGINE_WEAK_HEALTH || !Veh_CanBreakDown(vehicleid))
+    {
+        g_VehStallAt[vehicleid] = 0;
+        return;
+    }
+    if (g_VehStallAt[vehicleid] != 0 && now < g_VehStallAt[vehicleid])
+    {
+        return;
+    }
+    g_VehStallAt[vehicleid] = 0;
+    Veh_SetParam(vehicleid, VEH_PARAM_ENGINE, false);
+    new driver = GetVehicleDriver(vehicleid);
+    if (driver != INVALID_PLAYER_ID)
+    {
+        Msg_Error(driver, "Motor je otkazao (stanje %d%%). Pozovite mehanicara: /pozovi 555 [opis].", Veh_Condition(vehicleid));
+        Chat_Action(driver, "gleda kako se motor gasi.");
+    }
+}
+
+// Aircraft and boats are left out: a dead engine there means a crash or drifting with nobody able to tow.
+stock bool:Veh_CanBreakDown(vehicleid)
+{
+    new E_VEH_CLASS:class = Veh_Class(GetVehicleModel(vehicleid));
+    return class != VEH_CLASS_AIR && class != VEH_CLASS_BOAT && class != VEH_CLASS_BICYCLE;
+}
+
 forward Veh_Tick();
 public Veh_Tick()
 {
     Fuel_Tick();
+    Rent_Tick();
+
+    new tick_now = gettime();
+    for (new vehicleid = 1; vehicleid < MAX_VEHICLES; vehicleid++)
+    {
+        if (!IsValidVehicle(vehicleid) || !Fuel_IsUsed(vehicleid) || !Veh_IsEngineOn(vehicleid))
+        {
+            continue;
+        }
+        Veh_CheckEngine(vehicleid, tick_now);
+        new slot = g_VehSlotOf[vehicleid];
+        if (slot != -1)
+        {
+            g_Veh[slot][vMileage] += Veh_SpeedKmh(vehicleid) / 3600.0;
+        }
+    }
 
     new now = gettime();
     for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
@@ -698,13 +779,21 @@ public Veh_FinishStart(playerid, vehicleid, race)
     }
     new Float:health;
     GetVehicleHealth(vehicleid, health);
-    if (health < VEH_ENGINE_WEAK_HEALTH && random(2) == 0)
+    new bool:breaks = Veh_CanBreakDown(vehicleid);
+    if (breaks && health < VEH_ENGINE_DEAD_HEALTH)
+    {
+        Chat_Action(playerid, "pokusava da upali motor, ali motor ne pali.");
+        Msg_Error(playerid, "Motor je previse ostecen (stanje %d%%) i ne pali. Vozilo mora na slep: /pozovi 555 [opis].", Veh_Condition(vehicleid));
+        return 1;
+    }
+    if (breaks && health < VEH_ENGINE_WEAK_HEALTH && random(VEH_ENGINE_START_CHANCE) != 0)
     {
         Chat_Action(playerid, "pokusava da upali motor, ali motor se gusi.");
         GameTextForPlayer(playerid, "~r~motor nije upalio", 1500, 6);
         return 1;
     }
     Veh_SetParam(vehicleid, VEH_PARAM_ENGINE, true);
+    g_VehStallAt[vehicleid] = health < VEH_ENGINE_WEAK_HEALTH ? gettime() + VEH_ENGINE_STALL_MIN_S + random(VEH_ENGINE_STALL_MAX_S - VEH_ENGINE_STALL_MIN_S) : 0;
     GameTextForPlayer(playerid, "~g~motor upaljen", 1500, 6);
     return 1;
 }
@@ -950,8 +1039,8 @@ stock Veh_TransferTo(slot, buyerid)
 
 stock Veh_ShowList(playerid)
 {
-    new body[768], line[160], count, dbid = g_Player[playerid][pDbId];
-    strcopy(body, "Vozilo\tGorivo\tGde je\tRegistracija\tKopija kljuca\n");
+    new body[2048], line[192], count, dbid = g_Player[playerid][pDbId];
+    strcopy(body, "Vozilo\tStanje\tGorivo\tGde je\tRegistracija\tKopija kljuca\n");
     for (new slot = 0; slot < MAX_PERSONAL_VEHICLES && count < sizeof(g_VehListed[]); slot++)
     {
         if (!g_Veh[slot][vUsed] || g_Veh[slot][vOwnerDbId] != dbid)
@@ -968,15 +1057,8 @@ stock Veh_ShowList(playerid)
             strcopy(fuel, "-");
         }
         GetVehiclePos(vehicleid, x, y, z);
-        new zone = Hud_FindZone(x, y), place[32], key[MAX_PLAYER_NAME + 1], registration[24];
-        if (zone == -1)
-        {
-            strcopy(place, "van grada");
-        }
-        else
-        {
-            strcopy(place, g_Zones[zone][zName]);
-        }
+        new place[ZONE_NAME_LENGTH], key[MAX_PLAYER_NAME + 1], registration[24];
+        Hud_ZoneName(x, y, place);
         if (g_Veh[slot][vKeyDbId] != 0)
         {
             strcopy(key, g_Veh[slot][vKeyName]);
@@ -986,7 +1068,7 @@ stock Veh_ShowList(playerid)
             strcopy(key, "nema");
         }
         Veh_RegistrationText(slot, registration);
-        format(line, sizeof(line), "%s\t%s\t%s\t%s\t%s\n", Veh_Name(slot), fuel, place, registration, key);
+        format(line, sizeof(line), "%s\t%d%%, %.0f km\t%s\t%s\t%s\t%s\n", Veh_Name(slot), Veh_Condition(vehicleid), g_Veh[slot][vMileage], fuel, place, registration, key);
         strcat(body, line);
         g_VehListed[playerid][count++] = slot;
     }
@@ -994,7 +1076,7 @@ stock Veh_ShowList(playerid)
     new limit = Veh_MaxFor(playerid), owned = count;
     for (new place = owned; place < VEH_MAX_PER_PLAYER + VEH_VIP_EXTRA + g_Player[playerid][pExtraVehSlots] && count < sizeof(g_VehListed[]); place++)
     {
-        strcat(body, place < limit ? ("Slobodno mesto\t-\t-\t-\t-\n") : ("VIP mesto (Silver i Gold VIP)\t-\t-\t-\t-\n"));
+        strcat(body, place < limit ? ("Slobodno mesto\t-\t-\t-\t-\t-\n") : ("VIP mesto (Silver i Gold VIP)\t-\t-\t-\t-\t-\n"));
         g_VehListed[playerid][count++] = -1;
     }
     new title[64];

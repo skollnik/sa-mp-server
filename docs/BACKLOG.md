@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 3 | Korak 3.5 (predlog čeka odobrenje): kilometraža, stanje vozila u procentima, kvar motora ispod 400 HP; mehaničar kao posao (osnova za poslove), poziv mehaničara na broj 555 sa GPS-om; rent vozila parkirana na mapi (uđeš i `/rent`); natpisi na vozilima (rent, admin, auto škola, posao) |
+| 3 | Vlasnik postavlja radionicu (`/napravimesto radionica`) i GPS i testira korak 3.5; posle toga faza 4 (imovina) |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -25,7 +25,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Svlačionica za doktore u bolnici (izabrani enterijer je nema): posebna prostorija iza vrata |
 | Vrata u bolnici koja otvaraju samo doktori (izbačena su iz mape dok ne dođe frakcija bolnice) |
 | Auto škola, mehaničar, novinari: još nema izabrane mape |
-| Auto pijaca (korak 3.2): prostor sa parkingom gde admin postavlja vozila; punktovi za iznajmljivanje bicikala i rent-a-car (korak 3.5) |
+| Auto pijaca (korak 3.2): prostor sa parkingom gde admin postavlja vozila |
 
 **Posle opštine, banke i ostalih mesta (Faza 2)**
 | Stavka |
@@ -42,15 +42,12 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Vlasnik postavlja pumpe na benzinskim stanicama iz GTA (`/napravimesto pumpa`, gde vozač staje) i GPS lokacije za njih |
 | Vozila poslova i frakcija dobijaju gorivo kad se naprave, inače im se motor odmah gasi |
 | Mesta gde se ne sme parkirati (ispred vrata, na putu, na pijaci) |
-| Popravka vozila koje se posle uništenja vrati sa 500 HP i dimom (mehaničar, korak 3.5) |
 | ✅ Kanister (korak 3.3); vožnja bez dozvole (korak 3.4) |
 | Anti-cheat za vozila: HP vozila (repair hack), ulazak u zaključano vozilo |
 | VIP: mesto za još jedno vozilo (Silver+), sopstvena tablica i neon (Gold) |
-| Kad dođe mehaničar (korak 3.5): podići uslov za tehnički pregled sa 650 na oko 900 HP |
 | Kad dođe policija (Faza 5): provera registracije i tablica, kazna i pauk za neregistrovano vozilo ili vozilo sa isteklom registracijom |
 | Kad dođu vozila poslova i frakcija: `/resetvozila` i `/respawnveh` da ih vraćaju na njihova mesta |
 | ✅ GTA radionice za tuning (Transfender i ostale) i Pay'n'spray ne menjaju lična vozila: drugi igrači ne vide promenu, a vozilo se vraća kakvo je bilo (naplaćena popravka u Pay'n'spray-u je u koraku 3.5) |
-| Kad dođe mehaničar (korak 3.5): ista mapa u Willowfield-u (radionica pored tehničkog pregleda) |
 | Kad dođu kuće i firme (Faza 4): prodaja i zamena kroz `/ponudi` |
 | Kad dođe policija (Faza 5): provera i oduzimanje dozvola, kazna za vožnju bez dozvole |
 | Auto škola u El Coroni: vlasnik postavlja ulaz (`/napraviulaz`, pa izlaz unutra), šalter (`/napravimesto skola`) i GPS lokaciju |
@@ -58,7 +55,6 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Kad dođu vozila poslova i frakcija: gepek za njih (npr. oprema frakcije) |
 | Brisanje neaktivnog naloga (6 meseci): oslobađanje sačuvanih tablica |
 | Izložbena vozila na pijaci mogu da se guraju; ako bude problem, vraćati ih na mesto kad se pomere |
-| Mehaničar (korak 3.5, odobreno): radionica u Willowfield-u za popravku; mehaničar ne dolazi na teren, osim da odvuče vozilo koje ne može da se upali do radionice |
 | Kad dođu vozila poslova i frakcija: kamere za njih (policija i hitna sa rotacijom izuzete) |
 | Kad dođe policija (Faza 5): neplaćene kazne u MDC-u, policija piše kazne ručno (`/ticket`) |
 
@@ -125,8 +121,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Rudnik | Posao rudara za sve igrače; ako je rudnik firma, vlasnik dobija procenat od svake ture | #1287–#1288 |
 | Poslovi: ronilac, košenje trave, lovac, poštar, utovarivač u luci, vozač autobusa po linijama | Ronilac vadi zlato za zlataru; lovac prodaje meso restoranima; poštar nosi pošiljke do kuća | Luka #0678–#0679 |
 | Poslovi: građevinar, mašinovođa, prevoz starog gvožđa | Građevinar nosi materijal po gradilištu; mašinovođa vozi voz po stanicama; staro gvožđe ide na otpad | Gradilište #2128–#2130 |
-| Uvodni tekst kad igrač prvi put uzme posao | Kratak prozor: šta je posao, gde se počinje, komande i plata; posle se otvara komandom (npr. `/posaoinfo`) | — |
-| Posao traži dozvolu | Posao na kome se vozi može da se uzme samo sa dozvolom za to vozilo (kamiondžija: kamion, ribar: brod i ribolov, dostavljač: auto ili motor, pilot: letenje); bez dozvole posao odbija; ako policija oduzme dozvolu, igrač ostaje na poslu, ali ne može da radi ture dok je ponovo ne položi (JOB-1, LIC-1) | — |
+| Posao traži dozvolu | Urađeno za mehaničara (dozvola za auto); važi za svaki novi posao: posao na kome se vozi može da se uzme samo sa dozvolom za to vozilo (kamiondžija: kamion, ribar: brod i ribolov, dostavljač: auto ili motor, pilot: letenje); bez dozvole posao odbija; ako policija oduzme dozvolu, igrač ostaje na poslu, ali ne može da radi ture dok je ponovo ne položi (JOB-1, LIC-1) | — |
 | Kućica za čamac | Imovina na vodi, kao garaža za lični čamac: čamac stoji u njoj i tu se pojavljuje; traži dozvolu za brod (LIC-2) | Pristanište #2107–#2112, enterijer #1805 |
 
 **Faza 5: frakcije, država, policija, hitna**
@@ -292,6 +287,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 06.11.2026. | Saksija sa parkinga auto škole uklonjena; ostaje samo nevidljiv sudar tankog stuba (deo GTA zgrade) |
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 | 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
+| 06.11.2026. | Korak 3.5: stanje u procentima, kilometraža, kvar motora; osnova za poslove i mehaničar (popravka, tjuning, farbanje, poziv 555, šlep, servis); rent-a-car na mapi; natpisi na vozilima; pregled traži 900 HP; uvodni tekst posla (`/posaoinfo`) |
 
 ---
 
@@ -302,7 +298,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 3 | Step 3.5 (proposal awaiting approval): mileage, vehicle condition in percent, engine failure below 400 HP; the mechanic as a job (job framework), calling a mechanic on 555 with GPS; rental vehicles parked on the map (get in and `/rent`); labels on vehicles (rental, admin, driving school, job) |
+| 3 | The owner places the workshop (`/napravimesto radionica`) and GPS and tests step 3.5; then phase 4 (property) |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
@@ -320,7 +316,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Doctors' locker room in the hospital (the chosen interior has none): a separate room behind a door |
 | Hospital doors only doctors can open (removed from the map until the hospital faction exists) |
 | Driving school, mechanic, news: no map picked yet |
-| Car market (step 3.2): an area with parking where the admin puts the vehicles; bike rental and rent-a-car points (step 3.5) |
+| Car market (step 3.2): an area with parking where the admin puts the vehicles |
 
 **After city hall, bank and other places (Phase 2)**
 | Item |
@@ -337,15 +333,12 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | The owner places pumps at the GTA gas stations (`/napravimesto pumpa`, where the driver stops) and GPS locations for them |
 | Job and faction vehicles get fuel when they are created, otherwise their engine stops right away |
 | No-parking spots (in front of doors, on the road, at the market) |
-| Repairing a vehicle that comes back after being destroyed with 500 HP and smoke (mechanic, step 3.5) |
 | ✅ Jerry can (step 3.3); driving without a license (step 3.4) |
 | Vehicle anti-cheat: vehicle HP (repair hack), entering a locked vehicle |
 | VIP: one more vehicle slot (Silver+), custom plate and neon (Gold) |
-| Once the mechanic exists (step 3.5): raise the inspection requirement from 650 to about 900 HP |
 | Once police exist (Phase 5): checking registration and plates, a fine and the tow truck for an unregistered or expired vehicle |
 | Once job and faction vehicles exist: `/resetvozila` and `/respawnveh` return them to their spots |
 | ✅ GTA tuning shops (Transfender and others) and Pay'n'spray do not change personal vehicles: other players never see the change and the vehicle goes back to how it was (a paid Pay'n'spray repair is in step 3.5) |
-| Once the mechanic exists (step 3.5): the same map in Willowfield (the workshop next to the inspection) |
 | Once houses and businesses exist (Phase 4): selling and trading them through `/ponudi` |
 | Once police exist (Phase 5): checking and revoking licenses, a fine for driving without one |
 | Driving school in El Corona: the owner places the entrance (`/napraviulaz`, then the exit inside), the counter (`/napravimesto skola`) and a GPS location |
@@ -353,7 +346,6 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Once job and faction vehicles exist: a trunk for them (e.g. faction gear) |
 | Deleting an inactive account (6 months): free its kept plates |
 | Market display vehicles can be pushed around; if it becomes a problem, put them back when they move |
-| Mechanic (step 3.5, approved): a workshop in Willowfield for repairs; the mechanic does not come out to players, except to tow a vehicle that will not start to the workshop |
 | Once job and faction vehicles exist: cameras for them (police and EMS with sirens exempt) |
 | Once police exist (Phase 5): unpaid fines in the MDC, police write fines by hand (`/ticket`) |
 
@@ -420,8 +412,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Mine | Miner job for every player; if the mine is a business, the owner gets a share of each run | #1287–#1288 |
 | Jobs: diver, lawn mowing, hunter, mail carrier, port loader, bus driver on lines | The diver finds gold for the jewellery store; the hunter sells meat to restaurants; the mail carrier delivers to houses | Port #0678–#0679 |
 | Jobs: construction worker, train driver, scrap metal hauler | Construction carries material on a site; the train driver runs between stations; scrap goes to the junkyard | Construction site #2128–#2130 |
-| Intro text when a player takes a job for the first time | A short window: what the job is, where to start, commands and pay; reopened later with a command (e.g. `/posaoinfo`) | — |
-| A job requires a license | A job that involves driving can be taken only with the license for that vehicle (trucker: truck, fisherman: boat and fishing, delivery: car or motorbike, pilot: flying); without it the job refuses; if the police take the license away, the player keeps the job but cannot do runs until they pass it again (JOB-1, LIC-1) | — |
+| A job requires a license | Done for the mechanic (car license); applies to every new job: a job that involves driving can be taken only with the license for that vehicle (trucker: truck, fisherman: boat and fishing, delivery: car or motorbike, pilot: flying); without it the job refuses; if the police take the license away, the player keeps the job but cannot do runs until they pass it again (JOB-1, LIC-1) | — |
 | Boathouse | Property on the water, a garage for a personal boat: the boat is stored and spawns there; requires a boat license (LIC-2) | Pier #2107–#2112, interior #1805 |
 
 **Phase 5: factions, state, police, EMS**
@@ -587,3 +578,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-06 | The plant pot removed from the school lot; only the thin pole's invisible collision stays (part of the GTA building) |
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
 | 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |
+| 2026-11-06 | Step 3.5: condition in percent, mileage, engine failure; the job framework and the mechanic (repairs, tuning, paint, the 555 call, towing, the service); rent-a-car on the map; vehicle labels; the inspection needs 900 HP; the job intro text (`/posaoinfo`) |

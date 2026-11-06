@@ -12,7 +12,6 @@
 // A far teleport can take the client a few seconds to load; until then the vehicle cannot be entered.
 #define LIC_SEAT_RETRY_MS       (500)
 #define LIC_SEAT_TRIES          (16)
-#define LIC_LABEL_DISTANCE      (30.0)
 
 enum E_LIC_QUESTION
 {
@@ -141,7 +140,6 @@ enum E_LIC_TEST
     ltOrder[LIC_QUESTIONS],
     ltCount,
     ltVehicle,
-    STREAMER_TAG_3D_TEXT_LABEL:ltLabel,
     bool:ltSeated,
     ltPoint,
     ltStartedAt,
@@ -513,9 +511,7 @@ static stock Lic_StartDrive(playerid)
 
     g_TestVehicleOwner[vehicleid] = playerid;
     Fuel_Set(vehicleid, float(Fuel_TankSize(GetVehicleModel(vehicleid))));
-    new label[48];
-    format(label, sizeof(label), "Auto skola\n" C_WHITE "Ispit: %s", g_LicInfo[license][liName]);
-    g_LicTest[playerid][ltLabel] = CreateDynamic3DTextLabel(label, COLOR_SERVER, 0.0, 0.0, 1.2, LIC_LABEL_DISTANCE, INVALID_PLAYER_ID, vehicleid, 1);
+    Veh_SetLabel(vehicleid, "AUTO SKOLA", COLOR_SERVER);
     g_LicTest[playerid][ltSeated] = false;
     // The school lends a helmet for the motorbike test; /kaciga still puts on the player's own first.
     Safety_LendHelmet(playerid, license == LIC_MOTO);
@@ -581,7 +577,7 @@ static stock Lic_EndTest(playerid, bool:bring_back)
         return;
     }
     DisablePlayerRaceCheckpoint(playerid);
-    DestroyDynamic3DTextLabel(g_LicTest[playerid][ltLabel]);
+    Veh_ClearLabel(vehicleid);
     g_TestVehicleOwner[vehicleid] = INVALID_PLAYER_ID;
     DestroyVehicle(vehicleid);
     if (bring_back)

@@ -8,7 +8,7 @@ cmd:opstina(playerid, params[])
     new list[160], price[24];
     if (g_Player[playerid][pHasIdCard]) strcopy(price, C_GREEN "imate je");
     else format(price, sizeof(price), "$%d", ID_CARD_PRICE);
-    format(list, sizeof(list), "Licna karta\t%s\nPrijava na posao\t" C_GREY "uskoro", price);
+    format(list, sizeof(list), "Licna karta\t%s\nPrijava na posao\t/posao", price);
     ShowPlayerDialog(playerid, DIALOG_CITYHALL, DIALOG_STYLE_TABLIST, SERVER_NAME " - Opstina Los Santos", list, "Izaberi", "Zatvori");
     return 1;
 }
@@ -41,7 +41,7 @@ stock bool:CityHall_OnDialogResponse(playerid, dialogid, response, listitem)
     }
     else
     {
-        Msg_Info(playerid, "Prijava na posao stize zajedno sa poslovima.");
+        Job_ShowList(playerid);
     }
     return true;
 }

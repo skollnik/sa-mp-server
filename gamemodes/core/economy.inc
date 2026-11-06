@@ -82,3 +82,21 @@ new const g_VipInventorySlots[] = { 0, 2, 4, 6 };
 #define LIC_PRICE_BOAT              (7500)
 #define LIC_PRICE_FLY               (50000)
 #define LIC_PRICE_FISH              (250)
+
+// Mechanic: the price of a repair is agreed between the players, within these limits; the whole amount goes to the mechanic.
+#define MECH_REPAIR_MIN             (50)
+#define MECH_REPAIR_MAX             (3000)
+// The workshop's own repair when no mechanic is at work; the money leaves the game.
+#define MECH_SERVICE_PRICE          (500)
+// Tuning and paint at the mechanic: the customer pays the part, the mechanic keeps this share and the rest leaves the game.
+#define TUNE_MECHANIC_SHARE         (30)
+#define TUNE_PRICE_PAINT            (300)
+#define TUNE_PRICE_PAINTJOB         (1500)
+#define TUNE_PRICE_NITRO_X2         (1500)
+#define TUNE_PRICE_NITRO_X5         (3000)
+#define TUNE_PRICE_NITRO_X10        (5000)
+
+// Rent-a-car, per hour.
+#define RENT_PRICE_BIKE             (20)
+#define RENT_PRICE_MOTO             (80)
+#define RENT_PRICE_CAR              (200)

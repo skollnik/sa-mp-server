@@ -15,7 +15,8 @@ enum E_POINT_TYPE
     POINT_FUEL,
     POINT_INSPECTION,
     POINT_POLICE,
-    POINT_SCHOOL
+    POINT_SCHOOL,
+    POINT_WORKSHOP
 }
 
 enum E_POINT_INFO
@@ -38,7 +39,8 @@ new const g_PointInfo[E_POINT_TYPE][E_POINT_INFO] =
     { "pumpa",      "Benzinska pumpa",  "/gorivo",   6.0, POINT_FUEL_PICKUP_MODEL },
     { "pregled",    "Tehnicki pregled", "/registruj", 6.0, POINT_PICKUP_MODEL },
     { "policija",   "Policija - salter", "/tablice", 2.0, POINT_PICKUP_MODEL },
-    { "skola",      "Auto skola - salter", "/skola", 2.0, POINT_PICKUP_MODEL }
+    { "skola",      "Auto skola - salter", "/skola", 2.0, POINT_PICKUP_MODEL },
+    { "radionica",  "Mehanicarska radionica", "/oprema", 2.0, POINT_PICKUP_MODEL }
 };
 
 enum E_POINT
@@ -60,5 +62,6 @@ enum E_POINT
 new g_Points[MAX_POINTS][E_POINT];
 
 forward bool:Point_IsNear(playerid, E_POINT_TYPE:type);
+forward bool:Point_IsWithin(playerid, E_POINT_TYPE:type, Float:radius);
 forward bool:Point_Require(playerid, E_POINT_TYPE:type);
 forward bool:Point_OnDialogResponse(playerid, dialogid, response, listitem);

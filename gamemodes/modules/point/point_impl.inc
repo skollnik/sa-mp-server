@@ -131,11 +131,17 @@ stock Point_FindNearest(playerid, Float:radius)
 
 stock bool:Point_IsNear(playerid, E_POINT_TYPE:type)
 {
+    return Point_IsWithin(playerid, type, g_PointInfo[type][piRadius]);
+}
+
+// For places that cover an area around the point, like the mechanic's workshop.
+stock bool:Point_IsWithin(playerid, E_POINT_TYPE:type, Float:radius)
+{
     new interior = GetPlayerInterior(playerid), world = GetPlayerVirtualWorld(playerid);
     for (new i = 0; i < MAX_POINTS; i++)
     {
         if (g_Points[i][ptUsed] && g_Points[i][ptType] == type && g_Points[i][ptInterior] == interior && g_Points[i][ptWorld] == world
-            && IsPlayerInRangeOfPoint(playerid, g_PointInfo[type][piRadius], g_Points[i][ptX], g_Points[i][ptY], g_Points[i][ptZ]))
+            && IsPlayerInRangeOfPoint(playerid, radius, g_Points[i][ptX], g_Points[i][ptY], g_Points[i][ptZ]))
         {
             return true;
         }
@@ -236,7 +242,7 @@ cmd:napravimesto(playerid, params[])
             return 1;
         }
     }
-    Msg_Usage(playerid, "/napravimesto (lista) ili /napravimesto [banka / bankomat / opstina / prodavnica / odeca / pumpa / pregled / policija / skola]");
+    Msg_Usage(playerid, "/napravimesto (lista) ili /napravimesto [banka / bankomat / opstina / prodavnica / odeca / pumpa / pregled / policija / skola / radionica]");
     return 1;
 }
 

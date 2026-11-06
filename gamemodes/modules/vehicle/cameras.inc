@@ -23,6 +23,9 @@ enum E_CAMERA
 }
 
 new g_Cameras[MAX_CAMERAS][E_CAMERA];
+// The last camera that photographed each vehicle and when, so one camera fines a vehicle only once in a while.
+new g_CameraLastSlot[MAX_VEHICLES] = { -1, ... };
+new g_CameraLastAt[MAX_VEHICLES];
 
 // Starting set of Los Santos cameras with their limits; written once, after that the admin adds and removes them in game.
 static const Float:g_CameraSeed[][5] =
@@ -190,7 +193,8 @@ static stock Cam_SpeedFine(over)
     return over <= 40 ? FINE_SPEED_MID : FINE_SPEED_HIGH;
 }
 
-// Only personal vehicles are photographed for now; job and faction vehicles get their own rules when they exist.
+// Personal vehicles and rentals are photographed (a rental's fines go to whoever rented it); job and faction
+// vehicles get their own rules when they exist.
 stock Cam_OnPlayerEnterArea(playerid, STREAMER_TAG_AREA:areaid)
 {
     if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
@@ -202,25 +206,25 @@ stock Cam_OnPlayerEnterArea(playerid, STREAMER_TAG_AREA:areaid)
     {
         return;
     }
-    new vehicleid = GetPlayerVehicleID(playerid), slot = g_VehSlotOf[vehicleid];
-    if (slot == -1 || Fuel_TankSize(g_Veh[slot][vModel]) == 0)
+    new vehicleid = GetPlayerVehicleID(playerid), slot = g_VehSlotOf[vehicleid], model = GetVehicleModel(vehicleid);
+    if ((slot == -1 && Rent_RenterDbId(vehicleid) == 0) || Fuel_TankSize(model) == 0)
     {
         return;
     }
     new now = gettime();
-    if (g_Veh[slot][vCameraSlot] == cam && now - g_Veh[slot][vCameraAt] < CAMERA_COOLDOWN_S)
+    if (g_CameraLastSlot[vehicleid] == cam && now - g_CameraLastAt[vehicleid] < CAMERA_COOLDOWN_S)
     {
         return;
     }
 
     new speed = floatround(Veh_SpeedKmh(vehicleid)), over = speed - g_Cameras[cam][camLimit];
-    new bool:speeding = over > CAMERA_SPEED_TOLERANCE, bool:unregistered = !Veh_IsRegistered(slot), bool:unprotected = !Safety_IsProtected(playerid, vehicleid);
+    new bool:speeding = over > CAMERA_SPEED_TOLERANCE, bool:unregistered = slot != -1 && !Veh_IsRegistered(slot), bool:unprotected = !Safety_IsProtected(playerid, vehicleid);
     if (!speeding && !unregistered && !unprotected)
     {
         return;
     }
-    g_Veh[slot][vCameraSlot] = cam;
-    g_Veh[slot][vCameraAt] = now;
+    g_CameraLastSlot[vehicleid] = cam;
+    g_CameraLastAt[vehicleid] = now;
     PlayerPlaySound(playerid, CAMERA_FLASH_SOUND, 0.0, 0.0, 0.0);
     GameTextForPlayer(playerid, "~w~blic!", 1000, 6);
 
@@ -228,28 +232,38 @@ stock Cam_OnPlayerEnterArea(playerid, STREAMER_TAG_AREA:areaid)
     if (speeding)
     {
         format(reason, sizeof(reason), "brzina %d km/h (ogranicenje %d), kamera %d", speed, g_Cameras[cam][camLimit], g_Cameras[cam][camDbId]);
-        Cam_Fine(playerid, slot, reason, Cam_SpeedFine(over));
+        Cam_Fine(playerid, vehicleid, reason, Cam_SpeedFine(over));
     }
     if (unregistered)
     {
         format(reason, sizeof(reason), "neregistrovano vozilo, kamera %d", g_Cameras[cam][camDbId]);
-        Cam_Fine(playerid, slot, reason, FINE_UNREGISTERED);
+        Cam_Fine(playerid, vehicleid, reason, FINE_UNREGISTERED);
     }
     if (unprotected)
     {
-        new bool:helmet = Safety_GearFor(g_Veh[slot][vModel]) == SAFETY_GEAR_HELMET;
+        new bool:helmet = Safety_GearFor(model) == SAFETY_GEAR_HELMET;
         format(reason, sizeof(reason), "voznja bez %s, kamera %d", helmet ? ("kacige") : ("pojasa"), g_Cameras[cam][camDbId]);
-        Cam_Fine(playerid, slot, reason, helmet ? FINE_NO_HELMET : FINE_NO_BELT);
+        Cam_Fine(playerid, vehicleid, reason, helmet ? FINE_NO_HELMET : FINE_NO_BELT);
     }
 }
 
 // One line per fine: both reasons in one line ran past the 144-character chat limit and the client dropped it.
-static stock Cam_Fine(playerid, slot, const reason[], amount)
+static stock Cam_Fine(playerid, vehicleid, const reason[], amount)
 {
-    new ownerid = Fine_Add(g_Veh[slot][vOwnerDbId], g_Veh[slot][vDbId], g_Veh[slot][vPlate], reason, amount);
+    new slot = g_VehSlotOf[vehicleid], ownerid, name[48];
+    if (slot != -1)
+    {
+        ownerid = Fine_Add(g_Veh[slot][vOwnerDbId], g_Veh[slot][vDbId], g_Veh[slot][vPlate], reason, amount);
+        strcopy(name, Veh_Name(slot));
+    }
+    else
+    {
+        ownerid = Fine_Add(Rent_RenterDbId(vehicleid), 0, "RENT", reason, amount);
+        format(name, sizeof(name), "rent vozilo %s", Veh_ModelName(GetVehicleModel(vehicleid)));
+    }
     if (ownerid != INVALID_PLAYER_ID)
     {
-        Msg_Info(ownerid, "Kamera je snimila %s: %s. Kazna $%d (/kazne).", Veh_Name(slot), reason, amount);
+        Msg_Info(ownerid, "Kamera je snimila %s: %s. Kazna $%d (/kazne).", name, reason, amount);
     }
     if (ownerid != playerid)
     {
@@ -359,11 +373,8 @@ cmd:kamere(playerid, params[])
         {
             continue;
         }
-        new zone = Hud_FindZone(g_Cameras[i][camX], g_Cameras[i][camY]), place[32] = "van grada";
-        if (zone != -1)
-        {
-            strcopy(place, g_Zones[zone][zName]);
-        }
+        new place[ZONE_NAME_LENGTH];
+        Hud_ZoneName(g_Cameras[i][camX], g_Cameras[i][camY], place);
         format(line, sizeof(line), "%d\t%d km/h\t%s\n", g_Cameras[i][camDbId], g_Cameras[i][camLimit], place);
         strcat(body, line);
         count++;

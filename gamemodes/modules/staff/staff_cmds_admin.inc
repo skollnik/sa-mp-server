@@ -767,6 +767,7 @@ cmd:veh(playerid, params[])
 
     g_IsAdminVehicle[vehicleid] = true;
     g_AdminVehicleOwner[vehicleid] = playerid;
+    Veh_SetLabel(vehicleid, "ADMIN", COLOR_ADMIN);
     LinkVehicleToInterior(vehicleid, GetPlayerInterior(playerid));
     SetVehicleVirtualWorld(vehicleid, GetPlayerVirtualWorld(playerid));
     SetVehicleParamsEx(vehicleid, 1, 1, 0, 0, 0, 0, 0);
@@ -799,8 +800,7 @@ cmd:dveh(playerid, params[])
         return 1;
     }
 
-    DestroyVehicle(vehicleid);
-    g_IsAdminVehicle[vehicleid] = false;
+    Staff_DestroyAdminVehicle(vehicleid);
     Msg_Admin(playerid, "Admin vozilo je obrisano.");
     return 1;
 }
@@ -1146,7 +1146,7 @@ cmd:ahelp(playerid, params[])
         return 1;
     }
 
-    new level = g_Player[playerid][pAdminLevel], body[2048];
+    new level = g_Player[playerid][pAdminLevel], body[4096];
 
     strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns /aclog /kanali\nVozila: /vinfo /gotoveh /atune (admin vozila) /izmenivozilo [id] (meni)\n" C_SERVER "/aigrac [igrac]" C_WHITE " - sve opcije za igraca u jednom meniju\n\n");
     if (level >= ADMIN_LEVEL_ADMIN)
@@ -1160,7 +1160,7 @@ cmd:ahelp(playerid, params[])
     if (level >= ADMIN_LEVEL_HEAD)
     {
         strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setglad /setname /pmspy\n" \
-            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo /setmesta    Auto skola: /setdozvola /rutaskole (meni rute)\nKamere: /napravikameru /obrisikameru /kamere /izmenikameru [id]\n" \
+            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo /setmesta    Auto skola: /setdozvola /rutaskole (meni rute)\nKamere: /napravikameru /obrisikameru /kamere /izmenikameru [id]    Rent: /napravirent [cena] (u admin vozilu) /obrisirent\n" \
             "Izmene: /izmenivozilo (sve opcije) /izmenimesto [id] /izmenigps [id]    Auto pijaca: /pijaca (meni)\n" \
             "Igrac: /dajpredmet /uzmipredmet /setlicna /ponistikazne\n" C_GREY "/izmeniulaz [id], /dodajgps i /setvip [igrac] bez ostalih parametara otvaraju meni\n\n");
     }

@@ -33,8 +33,7 @@ stock Staff_OnPlayerDisconnect(playerid)
     {
         if (g_IsAdminVehicle[v] && g_AdminVehicleOwner[v] == playerid)
         {
-            DestroyVehicle(v);
-            g_IsAdminVehicle[v] = false;
+            Staff_DestroyAdminVehicle(v);
         }
     }
 
@@ -253,7 +252,7 @@ stock Staff_GetHelperRank(playerid, dest[], size = sizeof(dest))
 }
 
 // Names stay white; staff on duty are recognised by a tag floating above the name instead.
-// Admins on duty also wear the staff outfit; the character's own skin (pSkin) is never overwritten.
+// Admins on duty wear the staff outfit and workers on a shift their work clothes; the character's own skin (pSkin) is never overwritten.
 stock Staff_UpdateLook(playerid)
 {
     SetPlayerColor(playerid, COLOR_PLAYER_NAME);
@@ -261,6 +260,10 @@ stock Staff_UpdateLook(playerid)
     if (g_Staff[playerid][sAdminDuty])
     {
         SetPlayerSkin(playerid, (g_Player[playerid][pGender] == GENDER_FEMALE) ? ADMIN_DUTY_SKIN_FEMALE : ADMIN_DUTY_SKIN_MALE);
+    }
+    else if (Job_Skin(playerid) != -1)
+    {
+        SetPlayerSkin(playerid, Job_Skin(playerid));
     }
     else if (GetPlayerSkin(playerid) != g_Player[playerid][pSkin])
     {
@@ -368,6 +371,13 @@ stock Staff_Log(adminid, const action[], targetid, const details[])
     mysql_tquery(g_SQL, query);
 }
 
+stock Staff_DestroyAdminVehicle(vehicleid)
+{
+    Veh_ClearLabel(vehicleid);
+    DestroyVehicle(vehicleid);
+    g_IsAdminVehicle[vehicleid] = false;
+}
+
 // only_empty leaves the ones someone sits in, so a vehicle reset never throws a driver out.
 stock Staff_DestroyAdminVehicles(bool:only_empty)
 {
@@ -376,8 +386,7 @@ stock Staff_DestroyAdminVehicles(bool:only_empty)
     {
         if (g_IsAdminVehicle[v] && !(only_empty && IsVehicleOccupied(v)))
         {
-            DestroyVehicle(v);
-            g_IsAdminVehicle[v] = false;
+            Staff_DestroyAdminVehicle(v);
             count++;
         }
     }

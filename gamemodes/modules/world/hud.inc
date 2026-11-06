@@ -271,6 +271,32 @@ stock Hud_FindZone(Float:x, Float:y)
     return -1;
 }
 
+// The district name for messages and lists; "van grada" outside every district.
+stock Hud_ZoneName(Float:x, Float:y, dest[], size = sizeof(dest))
+{
+    new zone = Hud_FindZone(x, y);
+    if (zone == -1)
+    {
+        strcopy(dest, "van grada", size);
+    }
+    else
+    {
+        strcopy(dest, g_Zones[zone][zName], size);
+    }
+}
+
+stock Hud_PlayerPlace(playerid, dest[], size = sizeof(dest))
+{
+    if (GetPlayerInterior(playerid) != 0)
+    {
+        strcopy(dest, "enterijer", size);
+        return;
+    }
+    new Float:x, Float:y, Float:z;
+    GetPlayerPos(playerid, x, y, z);
+    Hud_ZoneName(x, y, dest, size);
+}
+
 stock Hud_UpdateZone(playerid)
 {
     if (g_HudParts[playerid][hpZoneText] == INVALID_PLAYER_TEXT_DRAW)
