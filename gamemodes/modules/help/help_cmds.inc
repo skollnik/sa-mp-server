@@ -33,6 +33,7 @@ cmd:pomoc(playerid, params[])
         "/gepek - stvari u gepeku (stanite iza vozila; otvoren sa /v gepek, vozilo otkljucano)    Kanister: /inv pored vozila\n" \
         "/pijaca - auto pijaca (kad je otvorena)    /kupivozilo - kupovina na pijaci    /ponudi - prodaja ili zamena vozila igracu pored vas\n" \
         "/tablice - tablice na salteru u policiji    /v tablice - postavljanje tablica    /kazne - kazne sa kamera (placaju se u opstini ili policiji)\n" \
+        "/pojas - vezivanje pojasa u vozilu    /kaciga - kaciga na motoru (kupuje se u prodavnici odece)\n" \
         "/skola - auto skola (dozvole: teorija i voznja)    /dozvole - vase dozvole    /pokazidozvole - igracu pored vas\n\n" \
         C_SERVER "Pomoc i podrska\n" \
         C_WHITE "/n - newbie chat (pitanja novih igraca)    /ask - pitanje helperima\n" \

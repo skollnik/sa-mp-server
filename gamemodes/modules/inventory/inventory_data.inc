@@ -37,7 +37,10 @@ enum E_ITEM
     ITEM_BACKPACK,
     ITEM_BAG,
     // New items go at the end: the number is what the database keeps.
-    ITEM_CANISTER_FULL
+    ITEM_CANISTER_FULL,
+    ITEM_HELMET_BLACK,
+    ITEM_HELMET_RED,
+    ITEM_HELMET_WHITE
 }
 
 forward bool:Inv_Add(playerid, E_ITEM:item, amount);
@@ -86,7 +89,11 @@ new const g_ItemInfo[E_ITEM][E_ITEM_INFO] =
     { "Ranac",              1,  0,   0,  3026,  0 },
     { "Torba",              1,  0,   0,  11745, 0 },
     // Filled at a gas station (/gorivo on foot), so it is not sold; the amount is the litres inside (Item_IsWhole).
-    { "Kanister sa gorivom (l)", CANISTER_LITRES, 0, 0, 1650, 0 }
+    { "Kanister sa gorivom (l)", CANISTER_LITRES, 0, 0, 1650, 0 },
+    // Helmets are accessories as well (accessories.inc); /kaciga puts one on (safety.inc).
+    { "Kaciga (crna)",      1,  0,   0,  18645, 0 },
+    { "Kaciga (crvena)",    1,  0,   0,  18977, 0 },
+    { "Kaciga (bela)",      1,  0,   0,  18978, 0 }
 };
 
 enum E_INV_SLOT

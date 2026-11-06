@@ -214,8 +214,8 @@ stock Cam_OnPlayerEnterArea(playerid, STREAMER_TAG_AREA:areaid)
     }
 
     new speed = floatround(Veh_SpeedKmh(vehicleid)), over = speed - g_Cameras[cam][camLimit];
-    new bool:speeding = over > CAMERA_SPEED_TOLERANCE, bool:unregistered = !Veh_IsRegistered(slot);
-    if (!speeding && !unregistered)
+    new bool:speeding = over > CAMERA_SPEED_TOLERANCE, bool:unregistered = !Veh_IsRegistered(slot), bool:unprotected = !Safety_IsProtected(playerid, vehicleid);
+    if (!speeding && !unregistered && !unprotected)
     {
         return;
     }
@@ -234,6 +234,12 @@ stock Cam_OnPlayerEnterArea(playerid, STREAMER_TAG_AREA:areaid)
     {
         format(reason, sizeof(reason), "neregistrovano vozilo, kamera %d", g_Cameras[cam][camDbId]);
         Cam_Fine(playerid, slot, reason, FINE_UNREGISTERED);
+    }
+    if (unprotected)
+    {
+        new bool:helmet = Safety_GearFor(g_Veh[slot][vModel]) == SAFETY_GEAR_HELMET;
+        format(reason, sizeof(reason), "voznja bez %s, kamera %d", helmet ? ("kacige") : ("pojasa"), g_Cameras[cam][camDbId]);
+        Cam_Fine(playerid, slot, reason, helmet ? FINE_NO_HELMET : FINE_NO_BELT);
     }
 }
 

@@ -240,6 +240,12 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Propeler helikoptera za ispit udari u objekat ili igrača pored | ✅ | Start na otvorenoj pisti bez objekata u krugu od 22 m; motor se pali tek kad igrač sedne |
 | Ruta za brod vodi preko kopna ili kroz mol | ✅ | Svaka tačka i deo puta provereni kroz GTA geometriju; ruta ide južno od kraja mola |
 | Poruka u chatu duža od 144 znaka se ne prikaže | ✅ | Kamera šalje svaku kaznu u posebnom redu; nove poruke sa promenljivim delovima proveravati na najdužu verziju |
+| Pucanje u vozilo ili struganje povređuje putnike bez pojasa | ✅ | Udes se računa samo za gubitak od 50+ HP odjednom pri brzini od 30+ km/h |
+| Igrač izbačen kroz šoferšajbnu zaglavi u zidu ili ga anti-cheat prijavi | ✅ | Postavlja se iznad krova vozila i leti napred; teleport i kretanje su najavljeni anti-cheatu |
+| Pojas ostane vezan posle izlaska, smrti ili prelaska u drugo vozilo | ✅ | Pojas se odvezuje pri svakoj promeni stanja igrača |
+| Pozajmljena kaciga sa ispita ostane igraču ili uđe u inventar | ✅ | Nije predmet; skida se na kraju ispita (prolaz, pad, smrt, izlazak) i vraća se ono što je nosio na glavi |
+| Kaciga i šešir na glavi u isto vreme | ✅ | Kaciga je dodatak za glavu, pa zamenjuje šešir ili kapu |
+| Admin vozilo ili vozilo za ispit kažnjeno kamerom | ✅ | Kamere i dalje snimaju samo lična vozila |
 | Sakrivena GTA tabla ostavi nevidljiv sudar na parkingu | 👁 | Kolizija GTA zgrade ima stub od 40 cm na uglu parkinga (2071,0, -1903,7); vlasnik ne želi ništa na tom mestu, pa se proverava u igri da li smeta |
 | Dozvola bez ispita | 👁 | Samo ribolov se kupuje; ostalo samo posle teorije i vožnje ili od admina nivoa 4 (log) |
 | Admin daje dodatna mesta za vozila prijateljima | 👁 | Samo nivo 4, najviše 5 mesta, svaka promena ide u admin log |
@@ -501,6 +507,12 @@ Every new system or change goes through these questions, against all existing sy
 | The test helicopter's rotor hits an object or a player next to it | ✅ | It starts on open tarmac with no object within 22 m; the engine starts only when the player sits in |
 | The boat route leads over land or through the pier | ✅ | Every point and leg checked against the GTA geometry; the route passes south of the pier's end |
 | A chat message longer than 144 characters is not shown | ✅ | A camera sends each fine on its own line; new messages with variable parts are checked at their longest |
+| Shooting at a vehicle or scraping it hurts passengers without a belt | ✅ | A crash counts only for a loss of 50+ HP at once at 30+ km/h |
+| A player thrown through the windscreen gets stuck in a wall or flagged by anti-cheat | ✅ | They are set above the vehicle's roof and fly forward; the teleport and movement are announced to the anti-cheat |
+| The belt stays on after leaving, dying or moving to another vehicle | ✅ | The belt comes off on every change of the player's state |
+| The helmet lent for the test stays with the player or goes into the inventory | ✅ | It is not an item; it comes off when the test ends (pass, fail, death, disconnect) and whatever was on the head goes back |
+| A helmet and a hat on the head at once | ✅ | The helmet is a head accessory, so it replaces a hat or cap |
+| An admin or test vehicle fined by a camera | ✅ | Cameras still photograph only personal vehicles |
 | The hidden GTA sign leaves an invisible collision in the lot | 👁 | The GTA building's collision has a 0.4 m pole at the corner of the lot (2071.0, -1903.7); the owner wants nothing standing there, so it is checked in game whether it gets in the way |
 | A license without a test | 👁 | Only fishing is bought; the rest only after theory and the drive, or from a level 4 admin (logged) |
 | An admin gives friends extra vehicle slots | 👁 | Level 4 only, at most 5 slots, every change goes to the admin log |

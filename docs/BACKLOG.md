@@ -126,7 +126,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Poslovi: ronilac, košenje trave, lovac, poštar, utovarivač u luci, vozač autobusa po linijama | Ronilac vadi zlato za zlataru; lovac prodaje meso restoranima; poštar nosi pošiljke do kuća | Luka #0678–#0679 |
 | Poslovi: građevinar, mašinovođa, prevoz starog gvožđa | Građevinar nosi materijal po gradilištu; mašinovođa vozi voz po stanicama; staro gvožđe ide na otpad | Gradilište #2128–#2130 |
 | Uvodni tekst kad igrač prvi put uzme posao | Kratak prozor: šta je posao, gde se počinje, komande i plata; posle se otvara komandom (npr. `/posaoinfo`) | — |
-| Posao traži dozvolu | Posao na kome se vozi može da se uzme samo sa dozvolom za to vozilo (kamiondžija: kamion, ribar: brod i ribolov, dostavljač: auto ili motor, pilot: letenje); bez dozvole posao odbija, a ako se dozvola oduzme, igrač dobija otkaz (JOB-1, LIC-1) | — |
+| Posao traži dozvolu | Posao na kome se vozi može da se uzme samo sa dozvolom za to vozilo (kamiondžija: kamion, ribar: brod i ribolov, dostavljač: auto ili motor, pilot: letenje); bez dozvole posao odbija; ako policija oduzme dozvolu, igrač ostaje na poslu, ali ne može da radi ture dok je ponovo ne položi (JOB-1, LIC-1) | — |
 | Kućica za čamac | Imovina na vodi, kao garaža za lični čamac: čamac stoji u njoj i tu se pojavljuje; traži dozvolu za brod (LIC-2) | Pristanište #2107–#2112, enterijer #1805 |
 
 **Faza 5: frakcije, država, policija, hitna**
@@ -141,7 +141,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Crna lista frakcija | Ko izađe ili bude izbačen iz državne frakcije, X dana (npr. 30) ne može da uđe u državne frakcije | — |
 | Zakazani razgovori za posao | Lideri objave kad i gde frakcija prima nove članove, a igrači vide listu | — |
 | Narko test | Policija testira igrača; pozitivan ako je skoro koristio drogu (CRIME-3) | — |
-| Pojas i kaciga: policija | Policija proverava pojas i kacigu i piše kaznu (LAW-5); sam pojas i kaciga se prave ranije, u fazi 3 (predlog čeka odobrenje vlasnika) | — |
+| Pojas i kaciga: policija | Policija proverava pojas i kacigu i piše kaznu (LAW-5); sam pojas i kaciga su urađeni (VEH-13) | — |
 | Policija: kazneni poeni, blokada točka, razbijanje vrata, štit, `/backup` sa markerom, praćenje poslednjeg poziva | Dodaci na LAW-2 do LAW-8 | — |
 | Hitna: nosila, lečenje zavisnosti, kreveti u bolnici | Dodaci na EMS-1; lečenje zavisnosti je vezano za drogu (CRIME-3) | — |
 | Lanac oružja preko državnog skladišta | Vojska vozi materijal do skladišta policije i bandi (ARMY-1, CRIME-4) | Vojne baze #0995–#0997, #1661–#1663 |
@@ -290,6 +290,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 04.11.2026. | Duža ruta za brod; helikopter na otvorenoj pisti, bez udaranja u most |
 | 04.11.2026. | Kamera opet ispisuje razlog kazne (poruka je bila preduga) |
 | 06.11.2026. | Saksija sa parkinga auto škole uklonjena; ostaje samo nevidljiv sudar tankog stuba (deo GTA zgrade) |
+| 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 
 ---
 
@@ -419,7 +420,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Jobs: diver, lawn mowing, hunter, mail carrier, port loader, bus driver on lines | The diver finds gold for the jewellery store; the hunter sells meat to restaurants; the mail carrier delivers to houses | Port #0678–#0679 |
 | Jobs: construction worker, train driver, scrap metal hauler | Construction carries material on a site; the train driver runs between stations; scrap goes to the junkyard | Construction site #2128–#2130 |
 | Intro text when a player takes a job for the first time | A short window: what the job is, where to start, commands and pay; reopened later with a command (e.g. `/posaoinfo`) | — |
-| A job requires a license | A job that involves driving can be taken only with the license for that vehicle (trucker: truck, fisherman: boat and fishing, delivery: car or motorbike, pilot: flying); without it the job refuses, and if the license is taken away the player is fired (JOB-1, LIC-1) | — |
+| A job requires a license | A job that involves driving can be taken only with the license for that vehicle (trucker: truck, fisherman: boat and fishing, delivery: car or motorbike, pilot: flying); without it the job refuses; if the police take the license away, the player keeps the job but cannot do runs until they pass it again (JOB-1, LIC-1) | — |
 | Boathouse | Property on the water, a garage for a personal boat: the boat is stored and spawns there; requires a boat license (LIC-2) | Pier #2107–#2112, interior #1805 |
 
 **Phase 5: factions, state, police, EMS**
@@ -434,7 +435,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Faction blacklist | Whoever leaves or is kicked from a state faction cannot join state factions for X days (e.g. 30) | — |
 | Scheduled faction interviews | Leaders post when and where the faction recruits; players see the list | — |
 | Drug test | Police test a player; positive after recent drug use (CRIME-3) | — |
-| Seatbelt and helmet: police | Police check the seatbelt and helmet and write a ticket (LAW-5); the seatbelt and helmet themselves come earlier, in phase 3 (proposal awaiting the owner's approval) | — |
+| Seatbelt and helmet: police | Police check the seatbelt and helmet and write a ticket (LAW-5); the seatbelt and helmet themselves are done (VEH-13) | — |
 | Police: license penalty points, wheel clamp, door breaching, shield, `/backup` with a marker, tracing the last call | Extends LAW-2 to LAW-8 | — |
 | EMS: stretcher, addiction treatment, hospital beds | Extends EMS-1; addiction treatment ties into drugs (CRIME-3) | — |
 | Weapon chain through the state warehouse | The army hauls material to police and gang warehouses (ARMY-1, CRIME-4) | Army bases #0995–#0997, #1661–#1663 |
@@ -583,3 +584,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-04 | A longer boat route; the helicopter on open tarmac, no longer hitting the bridge |
 | 2026-11-04 | The camera shows the fine's reason again (the message was too long) |
 | 2026-11-06 | The plant pot removed from the school lot; only the thin pole's invisible collision stays (part of the GTA building) |
+| 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |

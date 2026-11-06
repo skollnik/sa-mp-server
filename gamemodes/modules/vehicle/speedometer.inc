@@ -24,6 +24,8 @@ new g_SpeedoLastSpeed[MAX_PLAYERS];
 new g_SpeedoLastFuel[MAX_PLAYERS];
 new g_SpeedoLastStatus[MAX_PLAYERS];
 new g_SpeedoTimer;
+// By Safety_SpeedoState: the belt or helmet, green when on.
+static const g_SpeedoGearTag[][] = { "", "~r~POJAS", "~g~POJAS", "~r~KACIGA", "~g~KACIGA" };
 
 stock Speedo_Init()
 {
@@ -169,12 +171,13 @@ static stock Speedo_Update(playerid)
 
     new slot = g_VehSlotOf[vehicleid], bool:engine = Veh_IsEngineOn(vehicleid);
     new bool:locked = slot != -1 && g_Veh[slot][vLocked];
-    new status = (engine ? 1 : 0) | (locked ? 2 : 0) | (floatround(g_VehFuel[vehicleid]) << 2);
+    new gear = Safety_SpeedoState(playerid, vehicleid);
+    new status = (engine ? 1 : 0) | (locked ? 2 : 0) | (gear << 2) | (floatround(g_VehFuel[vehicleid]) << 5);
     if (status != g_SpeedoLastStatus[playerid])
     {
         g_SpeedoLastStatus[playerid] = status;
-        PlayerTextDrawSetString(playerid, g_Speedo[playerid][spStatus], "~w~%.0f L   %sMOTOR   %s",
-            g_VehFuel[vehicleid], engine ? ("~g~") : ("~r~"), locked ? ("~r~ZAKLJUCANO") : ("~w~OTKLJUCANO"));
+        PlayerTextDrawSetString(playerid, g_Speedo[playerid][spStatus], "~w~%.0f L   %sMOTOR   %s   %s",
+            g_VehFuel[vehicleid], engine ? ("~g~") : ("~r~"), locked ? ("~r~ZAKLJUCANO") : ("~w~OTKLJUCANO"), g_SpeedoGearTag[gear]);
         PlayerTextDrawShow(playerid, g_Speedo[playerid][spStatus]);
     }
 }

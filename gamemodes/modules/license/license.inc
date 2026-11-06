@@ -38,6 +38,8 @@ static const g_LicQuestions[][E_LIC_QUESTION] =
     { LIC_Q_ROAD, "Sme li se koristiti telefon u ruci tokom voznje?", "Ne", "Da", "Samo u gradu", 0 },
     { LIC_Q_ROAD, "Kada je preticanje zabranjeno?", "Nikad", "Preko pune linije i u nepreglednoj krivini", "Uvek je dozvoljeno", 1 },
     { LIC_Q_ROAD, "Sta mora da ima vozilo kojim vozite?", "Kanister", "Rezervne gume", "Registraciju i tablice", 2 },
+    { LIC_Q_ROAD, "Ko mora da bude vezan pojasom u automobilu?", "Samo vozac", "Vozac i svi putnici", "Samo putnik napred", 1 },
+    { LIC_Q_ROAD, "Sta je obavezno za vozaca motora?", "Kaciga", "Rukavice", "Zvono", 0 },
     { LIC_Q_BOAT, "Dva broda idu jedan prema drugom. Sta rade?", "Oba skrecu udesno", "Oba skrecu ulevo", "Brzi prolazi prvi", 0 },
     { LIC_Q_BOAT, "Sta je obavezno na brodu za svakog putnika?", "Pecaroski pribor", "Prsluk za spasavanje", "Kanister", 1 },
     { LIC_Q_BOAT, "Smete li brodom da pridjete kupacima kod plaze?", "Da, polako", "Da, ako trubite", "Ne, drzi se rastojanje", 2 },
@@ -515,6 +517,8 @@ static stock Lic_StartDrive(playerid)
     format(label, sizeof(label), "Auto skola\n" C_WHITE "Ispit: %s", g_LicInfo[license][liName]);
     g_LicTest[playerid][ltLabel] = CreateDynamic3DTextLabel(label, COLOR_SERVER, 0.0, 0.0, 1.2, LIC_LABEL_DISTANCE, INVALID_PLAYER_ID, vehicleid, 1);
     g_LicTest[playerid][ltSeated] = false;
+    // The school lends a helmet for the motorbike test; /kaciga still puts on the player's own first.
+    Safety_LendHelmet(playerid, license == LIC_MOTO);
     g_LicTest[playerid][ltStage] = LIC_STAGE_DRIVE;
     g_LicTest[playerid][ltVehicle] = vehicleid;
     g_LicTest[playerid][ltPoint] = 0;
@@ -571,6 +575,7 @@ static stock Lic_EndTest(playerid, bool:bring_back)
     new vehicleid = g_LicTest[playerid][ltVehicle];
     g_LicTest[playerid][ltStage] = LIC_STAGE_NONE;
     g_LicTest[playerid][ltVehicle] = INVALID_VEHICLE_ID;
+    Safety_LendHelmet(playerid, false);
     if (vehicleid == INVALID_VEHICLE_ID)
     {
         return;
@@ -674,6 +679,12 @@ stock Lic_OnPlayerEnterRaceCP(playerid)
         return;
     }
     new E_LICENSE:license = g_LicTest[playerid][ltLicense];
+    // Nobody reminds the player: on the road tests the belt or helmet is part of what is being tested.
+    if (g_LicInfo[license][liQuestions] == LIC_Q_ROAD && !Safety_IsProtected(playerid, g_LicTest[playerid][ltVehicle]))
+    {
+        Lic_Fail(playerid, license == LIC_MOTO ? ("vozili ste bez kacige") : ("vozili ste bez pojasa"));
+        return;
+    }
     PlayerPlaySound(playerid, 1138, 0.0, 0.0, 0.0);
     if (++g_LicTest[playerid][ltPoint] >= g_LicRouteCount[license])
     {

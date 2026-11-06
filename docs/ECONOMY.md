@@ -35,7 +35,7 @@
 | Gorivo (benzinska pumpa, `/gorivo`) | $3 po litru: motor 15 l ($45), auto 55 l ($165), kamion, autobus, brod i letelica 100 l ($300); pun rezervoar traje oko 45 min vožnje |
 | Tehnički pregled i registracija (`/registruj`, 60 dana) | motor $500, auto $1.000, kamion, autobus, brod i letelica $2.000; bicikl se ne registruje |
 | Tablice (policija, `/tablice`) | prve $300, nove nasumične $1.500, sopstvena $60.000 (Gold VIP $30.000) |
-| Kazne sa kamera (`/kazne`, opština ili policija) | brzina do 20 km/h preko $150, do 40 km/h $400, više $800; neregistrovano vozilo $500 |
+| Kazne sa kamera (`/kazne`, opština ili policija) | brzina do 20 km/h preko $150, do 40 km/h $400, više $800; neregistrovano vozilo $500; vožnja bez pojasa ili kacige $200 |
 | Kanister (prazan, 24/7) / punjenje na pumpi (do 10 l, $3 po litru) | $50 / do $30 |
 | Telefon (aparat) | $500 |
 | SIM kartica (nasumičan broj) | $50 |
@@ -47,6 +47,7 @@
 | Kockice / novčić (za opklade, ne troše se) | $20 / $5 |
 | Naočare (3 vrste, prodavnica odeće) | $150 / $200 / $250 |
 | Zimska kapa / kačket / panama šešir / polucilindar | $150 / $200 / $300 / $350 |
+| Kaciga (crna, crvena, bela; prodavnica odeće) | $150 |
 | Torba / ranac | $400 / $600 |
 | Lična karta (opština) | $50 |
 | Radio | $700 |
@@ -174,7 +175,7 @@ Auto škola (`/skola`): cena se plaća pre teorije, a posle pada ponovo. Uslovi:
 | Fuel (gas station, `/gorivo`) | $3 per litre: motorbike 15 l ($45), car 55 l ($165), truck, bus, boat and aircraft 100 l ($300); a full tank lasts about 45 min of driving |
 | Technical inspection and registration (`/registruj`, 60 days) | motorbike $500, car $1,000, truck, bus, boat and aircraft $2,000; bicycles are not registered |
 | Plates (police, `/tablice`) | first $300, new random $1,500, custom $60,000 (Gold VIP $30,000) |
-| Camera fines (`/kazne`, city hall or police) | speeding up to 20 km/h over $150, up to 40 km/h $400, more $800; unregistered vehicle $500 |
+| Camera fines (`/kazne`, city hall or police) | speeding up to 20 km/h over $150, up to 40 km/h $400, more $800; unregistered vehicle $500; driving without a seatbelt or helmet $200 |
 | Jerry can (empty, 24/7) / filling at a pump (up to 10 l, $3 per litre) | $50 / up to $30 |
 | Phone (device) | $500 |
 | SIM card (random number) | $50 |
@@ -186,6 +187,7 @@ Auto škola (`/skola`): cena se plaća pre teorije, a posle pada ponovo. Uslovi:
 | Dice / coin (for bets, not used up) | $20 / $5 |
 | Glasses (3 kinds, clothing shop) | $150 / $200 / $250 |
 | Knit hat / cap / panama hat / bowler | $150 / $200 / $300 / $350 |
+| Helmet (black, red, white; clothing shop) | $150 |
 | Bag / backpack | $400 / $600 |
 | ID card (city hall) | $50 |
 | Radio | $700 |

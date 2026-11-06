@@ -74,6 +74,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **VEH-10 Frakcijska vozila:** dostupna samo članovima, sa sirenama.
 - **VEH-11 Impound (pauk služba):** odneseno vozilo se otkupljuje.
 - **VEH-12 Alarm i krađa:** obijanje brave, vruća žica, prodaja na otpadu (chop shop).
+- **VEH-13 Pojas i kaciga:** `/pojas` u autu, kombiju, kamionu i letelici, `/kaciga` na motoru (kaciga se kupuje u prodavnici odeće). Udes bez njih oduzima HP, a jak udes bez pojasa izbacuje kroz šoferšajbnu. Kamere kažnjavaju vozača bez pojasa ili kacige; na ispitu za auto, motor i kamion bez njih se pada. Policija proverava u fazi 5.
 
 ### PROP — Imovina
 - **PROP-1 Kuće:** kupovina, prodaja državi ili igraču, zaključavanje, enterijeri različite veličine.
@@ -242,6 +243,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **VEH-10 Faction vehicles:** members only, with sirens.
 - **VEH-11 Impound (tow service):** an impounded vehicle has to be bought back.
 - **VEH-12 Alarm and theft:** lockpicking, hotwiring, selling at a chop shop.
+- **VEH-13 Seatbelt and helmet:** `/pojas` in cars, vans, trucks and aircraft, `/kaciga` on motorbikes (the helmet is bought in the clothing shop). A crash without them costs HP, and a hard crash without a belt throws the player through the windscreen. Cameras fine a driver without a belt or helmet; on the car, motorbike and truck tests driving without them fails the test. Police check them in phase 5.
 
 ### PROP — Property
 - **PROP-1 Houses:** buy, sell to the state or a player, lock, interiors of different sizes.

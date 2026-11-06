@@ -120,6 +120,10 @@ stock Acc_Toggle(playerid, E_ITEM:item)
         return;
     }
     new E_ACC_PART:part = g_AccInfo[index][aiPart];
+    if (part == ACC_PART_HEAD)
+    {
+        Safety_OnHeadAccessory(playerid);
+    }
     if (g_AccWorn[playerid][part] == index)
     {
         Acc_TakeOff(playerid, index, true);
@@ -198,7 +202,7 @@ stock Acc_ShowList(playerid)
     }
     if (count == 0)
     {
-        Msg_Info(playerid, "Nemate dodatke (naocare, kape, ranac, torba). Kupuju se u prodavnici odece (/kupi).");
+        Msg_Info(playerid, "Nemate dodatke (naocare, kape, kacige, ranac, torba). Kupuju se u prodavnici odece (/kupi).");
         return;
     }
     ShowPlayerDialog(playerid, DIALOG_ACC_LIST, DIALOG_STYLE_TABLIST_HEADERS, "Dodaci na telu (klik stavlja ili skida)", body, "Izaberi", "Zatvori");

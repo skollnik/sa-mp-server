@@ -44,7 +44,10 @@ new const g_AccInfo[][E_ACC_INFO] =
     { ITEM_CAP,             ACC_PART_HEAD, BONE_HEAD,      200, 0.141, 0.016, -0.014, -175.4, 174.0, -178.3, 1.0, 1.0, 1.072 },
     { ITEM_BACKPACK,        ACC_PART_BACK, BONE_SPINE,     600, -0.040, -0.115, 0.0, 0.0, 0.0, 0.0, 0.759, 0.929, 0.95 },
     // Carried in the left hand, so it never clashes with a weapon in the right one.
-    { ITEM_BAG,             ACC_PART_BACK, BONE_LEFT_HAND, 400, 0.222, 0.047, -0.017, 60.2, -83.0, 0.0, 0.454, 0.811, 0.9 }
+    { ITEM_BAG,             ACC_PART_BACK, BONE_LEFT_HAND, 400, 0.222, 0.047, -0.017, 60.2, -83.0, 0.0, 0.454, 0.811, 0.9 },
+    { ITEM_HELMET_BLACK,    ACC_PART_HEAD, BONE_HEAD,      150, 0.070, 0.017, 0.0, 88.0, 75.0, 0.0, 1.0, 1.0, 1.0 },
+    { ITEM_HELMET_RED,      ACC_PART_HEAD, BONE_HEAD,      150, 0.070, 0.017, 0.0, 88.0, 75.0, 0.0, 1.0, 1.0, 1.0 },
+    { ITEM_HELMET_WHITE,    ACC_PART_HEAD, BONE_HEAD,      150, 0.070, 0.017, 0.0, 88.0, 75.0, 0.0, 1.0, 1.0, 1.0 }
 };
 
 // Index into g_AccInfo of what is worn on each part, or -1.

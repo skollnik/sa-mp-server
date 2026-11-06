@@ -134,6 +134,11 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 126 | 2026-11-04 | Nova ruta za brod: oko 1,6 km od uvale kod Santa Marije, oko mola i nazad. Helikopter počinje na otvorenoj pisti (1600, -2460), daleko od pešačkih mostova aerodroma, i sleće na isto mesto. Rute su proverene kroz GTA geometriju (nigde kopno ni objekat) | Stara brodska ruta je bila kratka; helikopter se stvarao ispod pešačkog mosta i udarao propelerom |
 | 127 | 2026-11-04 | Kamera šalje posebnu poruku za svaku kaznu, sa razlogom (brzina i ograničenje, ili neregistrovano vozilo) | Kad su obe kazne bile u jednoj poruci, poruka je imala preko 144 znaka i SA-MP je nije prikazao |
 | 128 | 2026-11-06 | Na parkingu auto škole nema ničega, ni saksije; nevidljiv sudar sakrivenog stuba ostaje jer je deo kolizije GTA zgrade | Zahtev vlasnika |
+| 129 | 2026-11-06 | Pojas (`/pojas`) u autu, kombiju, kamionu i letelici, za vozača i putnike; kaciga (`/kaciga`) na motoru i kvadu, kupuje se u prodavnici odeće (tri boje, $150) i nosi se kao dodatak za glavu. Samo komande, bez tastera. Pojas se odvezuje pri svakoj promeni sedišta, izlasku i smrti | Uobičajena praksa; vlasnik ne želi taster |
+| 130 | 2026-11-06 | Udes = vozilo izgubi bar 50 HP odjednom pri brzini od bar 30 km/h. Bez pojasa igrač gubi 5–25 HP, na motoru bez kacige 5–30 HP; ako vozilo izgubi 250 HP ili više, igrač bez pojasa izleće kroz šoferšajbnu (ne u letelici) | Odobrio vlasnik; prag brzine da pucanje u vozilo ne bi povređivalo |
+| 131 | 2026-11-06 | Kamera kažnjava vozača ličnog vozila bez pojasa ili kacige sa $200, u posebnom redu | Odobrio vlasnik |
+| 132 | 2026-11-06 | Na ispitu za auto, motor i kamion niko ne podseća na pojas i kacigu; prolazak kroz checkpoint bez njih obara ispit. Škola pozajmljuje kacigu za ispit na motoru (`/kaciga`), a teorija ima pitanja o pojasu i kacigi | Vlasnik: igrač treba sam da se seti |
+| 133 | 2026-11-06 | Kad policija oduzme dozvolu koju posao traži, igrač ne dobija otkaz, ali ne može da radi ture dok je ponovo ne položi | Vlasnik prepustio odluku; otkaz bi bio dupla kazna |
 
 ### Arhitektura koda (predlog)
 ```
@@ -289,6 +294,11 @@ This file records every important decision so it does not get re-discussed. Newe
 | 126 | 2026-11-04 | A new boat route: about 1.6 km from the cove by Santa Maria, around the pier and back. The helicopter starts on open tarmac (1600, -2460), away from the airport boarding bridges, and lands on the same spot. The routes were checked against the GTA geometry (no land or object anywhere) | The old boat route was short; the helicopter spawned under a boarding bridge and hit it with the rotor |
 | 127 | 2026-11-04 | A camera sends a separate message for each fine, with its reason (speed and limit, or unregistered vehicle) | With both fines in one message it ran past 144 characters and SA-MP did not show it |
 | 128 | 2026-11-06 | Nothing stands in the school lot, not even a plant pot; the hidden pole's invisible collision stays, as it is part of the GTA building's collision | Owner's request |
+| 129 | 2026-11-06 | A seatbelt (`/pojas`) in cars, vans, trucks and aircraft, for the driver and passengers; a helmet (`/kaciga`) on motorbikes and quads, bought in the clothing shop (three colours, $150) and worn as a head accessory. Commands only, no key. The belt comes off on every seat change, exit and death | Common practice; the owner wants no key |
+| 130 | 2026-11-06 | A crash = the vehicle loses at least 50 HP at once at 30 km/h or more. Without a belt the player loses 5–25 HP, on a motorbike without a helmet 5–30 HP; if the vehicle loses 250 HP or more, a player without a belt is thrown through the windscreen (not in aircraft) | Approved by the owner; the speed threshold keeps shots at a vehicle from hurting |
+| 131 | 2026-11-06 | A camera fines the driver of a personal vehicle without a belt or helmet $200, on its own line | Approved by the owner |
+| 132 | 2026-11-06 | On the car, motorbike and truck tests nobody reminds the player of the belt or helmet; passing a checkpoint without them fails the test. The school lends a helmet for the motorbike test (`/kaciga`), and the theory has questions on the belt and helmet | Owner: the player should remember on their own |
+| 133 | 2026-11-06 | When the police take away a license a job needs, the player is not fired but cannot do runs until they pass it again | The owner left it to me; firing would be a double penalty |
 
 ### Code architecture (proposal)
 ```

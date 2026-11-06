@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 3: korak 3.4 (auto škola i dozvole) napisan, auto škola premeštena u El Coronu; čeka da vlasnik postavi ulaz, šalter i GPS i testira; sledeći je korak 3.5, šteta, mehaničar i rent (ažurirano 2026-11-04)
+**Trenutni status:** Faza 3: korak 3.4 (auto škola i dozvole) napisan, auto škola premeštena u El Coronu; čeka da vlasnik postavi ulaz, šalter i GPS i testira; sledeći je korak 3.5, šteta, mehaničar i rent (ažurirano 2026-11-06)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -63,6 +63,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Dopune 3.2: `/atune` u GTA meniju sa strane (vozilo se vidi), admin sopstvene tablice, slobodna i VIP mesta u `/v`, GTA radionice ne menjaju lična vozila; GTA radionice i Pay'n'spray zatvoreni, admin dodatna mesta za vozila (`/setmesta`)
 - [x] Korak 3.3: VEH-8 gepek kao inventar (`/gepek`; auto 6, kombi i pikap 12, veliki kamion 20 mesta), kanister od 10 l; GTA radionice i Pay'n'spray zatvoreni kapijama
 - [x] Korak 3.4: LIC-1, LIC-2 auto škola i dozvole (`/skola`: teorija 8 pitanja i vožnja po ruti; auto, motor, kamion, brod, letenje, ribolov), zgrada sa tablama u El Coroni, rute menja admin (`/rutaskole`)
+- [x] Dopune 3.4: VEH-13 pojas i kaciga (`/pojas`, `/kaciga`), kazna sa kamera i pad na ispitu bez njih; natpis na vozilu za ispit, duža ruta za brod, helikopter na otvorenoj pisti
 - [ ] Korak 3.5: VEH-6 šteta i kilometraža, JOB-3 mehaničar, VEH-9 rent-a-car i bicikli
 
 ### Faza 4: Imovina
@@ -113,7 +114,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** Phase 3: step 3.4 (driving school and licenses) written, the school moved to El Corona; waiting for the owner to place the entrance, counter and GPS and test it; next is step 3.5, damage, the mechanic and rentals (updated 2026-11-04)
+**Current status:** Phase 3: step 3.4 (driving school and licenses) written, the school moved to El Corona; waiting for the owner to place the entrance, counter and GPS and test it; next is step 3.5, damage, the mechanic and rentals (updated 2026-11-06)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -174,6 +175,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] 3.2 additions: `/atune` in GTA's side menu (the vehicle stays in view), admin custom plates, free and VIP slots in `/v`, GTA shops do not change personal vehicles; GTA shops and Pay'n'spray closed, admin extra vehicle slots (`/setmesta`)
 - [x] Step 3.3: VEH-8 trunk as inventory (`/gepek`; car 6, van and pickup 12, big truck 20 slots), a 10 l jerry can; GTA shops and Pay'n'spray closed with gates
 - [x] Step 3.4: LIC-1, LIC-2 driving school and licenses (`/skola`: an 8-question theory test and a route drive; car, motorbike, truck, boat, flying, fishing), the building with its signs in El Corona, routes edited by admins (`/rutaskole`)
+- [x] 3.4 additions: VEH-13 seatbelt and helmet (`/pojas`, `/kaciga`), a camera fine and a failed test without them; a label on the test vehicle, a longer boat route, the helicopter on open tarmac
 - [ ] Step 3.5: VEH-6 damage and mileage, JOB-3 mechanic, VEH-9 car and bike rental
 
 ### Phase 4: Property

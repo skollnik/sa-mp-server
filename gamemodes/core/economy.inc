@@ -53,6 +53,8 @@
 #define FINE_SPEED_LOW              (150)
 #define FINE_SPEED_MID              (400)
 #define FINE_SPEED_HIGH             (800)
+#define FINE_NO_BELT                (200)
+#define FINE_NO_HELMET              (200)
 
 #define PHONE_PRICE                 (500)
 #define PHONE_SIM_PRICE             (50)

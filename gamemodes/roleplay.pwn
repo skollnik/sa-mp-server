@@ -92,6 +92,7 @@
 
 #include "modules/vehicle/vehicle_impl.inc"
 #include "modules/vehicle/fuel.inc"
+#include "modules/vehicle/safety.inc"
 #include "modules/vehicle/garages.inc"
 #include "modules/vehicle/trunk.inc"
 #include "modules/vehicle/registration.inc"
@@ -155,6 +156,7 @@ public OnGameModeInit()
     Offer_Init();
     Lic_Init();
     Speedo_Init();
+    Safety_Init();
     Maps_Init();
 
     printf("[SERVER] %s gamemode loaded.", SERVER_NAME);
@@ -164,6 +166,7 @@ public OnGameModeInit()
 public OnGameModeExit()
 {
     Speedo_Exit();
+    Safety_Exit();
     Veh_Exit();
     Phone_Exit();
     Inv_Exit();
@@ -197,6 +200,7 @@ public OnPlayerConnect(playerid)
     Acc_OnPlayerConnect(playerid);
     Phone_OnPlayerConnect(playerid);
     Speedo_OnPlayerConnect(playerid);
+    Safety_OnPlayerConnect(playerid);
     Veh_OnPlayerConnect(playerid);
     Fine_OnPlayerConnect(playerid);
     Plate_OnPlayerConnect(playerid);
@@ -348,6 +352,7 @@ public OnPlayerStateChange(playerid, PLAYER_STATE:newstate, PLAYER_STATE:oldstat
     Beg_OnPlayerStateChange(playerid, newstate);
     Veh_OnPlayerStateChange(playerid, newstate);
     Speedo_OnPlayerStateChange(playerid, newstate);
+    Safety_OnPlayerStateChange(playerid);
     Market_OnPlayerStateChange(playerid, newstate);
     Tune_OnPlayerStateChange(playerid, newstate);
     Lic_OnPlayerStateChange(playerid, newstate);
