@@ -240,7 +240,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Propeler helikoptera za ispit udari u objekat ili igrača pored | ✅ | Start na otvorenoj pisti bez objekata u krugu od 22 m; motor se pali tek kad igrač sedne |
 | Ruta za brod vodi preko kopna ili kroz mol | ✅ | Svaka tačka i deo puta provereni kroz GTA geometriju; ruta ide južno od kraja mola |
 | Poruka u chatu duža od 144 znaka se ne prikaže | ✅ | Kamera šalje svaku kaznu u posebnom redu; nove poruke sa promenljivim delovima proveravati na najdužu verziju |
-| Sakrivena GTA tabla ostavi nevidljiv sudar na parkingu | ✅ | Na mestu starog stuba stoji saksija, pa se ne udara u prazno |
+| Sakrivena GTA tabla ostavi nevidljiv sudar na parkingu | 👁 | Kolizija GTA zgrade ima stub od 40 cm na uglu parkinga (2071,0, -1903,7); vlasnik ne želi ništa na tom mestu, pa se proverava u igri da li smeta |
 | Dozvola bez ispita | 👁 | Samo ribolov se kupuje; ostalo samo posle teorije i vožnje ili od admina nivoa 4 (log) |
 | Admin daje dodatna mesta za vozila prijateljima | 👁 | Samo nivo 4, najviše 5 mesta, svaka promena ide u admin log |
 | Admin ostane bez kontrola ili sa zaglavljenom kamerom posle `/atune` | ✅ | Kamera i kontrole se vraćaju pri zatvaranju menija, izlasku iz vozila, smrti i izlasku sa servera; admin koga je drugi admin zamrznuo (`/freeze`) ostaje zamrznut |
@@ -501,7 +501,7 @@ Every new system or change goes through these questions, against all existing sy
 | The test helicopter's rotor hits an object or a player next to it | ✅ | It starts on open tarmac with no object within 22 m; the engine starts only when the player sits in |
 | The boat route leads over land or through the pier | ✅ | Every point and leg checked against the GTA geometry; the route passes south of the pier's end |
 | A chat message longer than 144 characters is not shown | ✅ | A camera sends each fine on its own line; new messages with variable parts are checked at their longest |
-| The hidden GTA sign leaves an invisible collision in the lot | ✅ | A plant pot stands where the old pole was, so nothing invisible is hit |
+| The hidden GTA sign leaves an invisible collision in the lot | 👁 | The GTA building's collision has a 0.4 m pole at the corner of the lot (2071.0, -1903.7); the owner wants nothing standing there, so it is checked in game whether it gets in the way |
 | A license without a test | 👁 | Only fishing is bought; the rest only after theory and the drive, or from a level 4 admin (logged) |
 | An admin gives friends extra vehicle slots | 👁 | Level 4 only, at most 5 slots, every change goes to the admin log |
 | An admin is left without controls or with a stuck camera after `/atune` | ✅ | The camera and controls come back when the menu closes, on leaving the vehicle, on death and on disconnect; an admin frozen by another admin (`/freeze`) stays frozen |

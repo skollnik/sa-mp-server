@@ -16,13 +16,12 @@ stock Map_DrivingSchoolElCorona()
     SetDynamicObjectMaterial(building, 7, 12931, "sw_brewery", "sw_brewbrick01");
     SetDynamicObjectMaterial(building, 3, 9485, "roadsfe", "ws_carpark2");
 
-    // The pole sign is part of the building model, so it is hidden instead of removed.
+    // The pole sign is part of the building model, so it is hidden instead of removed; its thin collision
+    // (0.4 m at 2071.0,-1903.7, on the edge of the lot) stays, as the owner wants nothing standing there.
     Map_SchoolHide(building, 1);
     Map_SchoolHide(building, 9);
     Map_SchoolHide(building, 10);
     Map_SchoolHide(building, 11);
-    // The hidden pole keeps its collision; the pot gives it something to be.
-    Map_Exterior(948, 2070.95000, -1903.75000, 12.55000, 0.00000, 0.00000, 0.00000);
 
     // The background is transparent so the letters sit on the blue band and can be taller than the plane fits.
     new STREAMER_TAG_OBJECT:sign = Map_Exterior(19482, 2045.68000, -1908.00000, 15.87500, 0.00000, 0.00000, 0.00000);

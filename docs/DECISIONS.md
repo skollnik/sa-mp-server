@@ -133,6 +133,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 125 | 2026-11-04 | Igrač se posle teorije stavlja u vozilo tek kad ga klijent učita (proverava se svakih 0,5 s, najviše 8 s). Vreme van vozila se ne broji dok ne sedne, a motor se pali tek kad sedne | Daleki teleport (brod, aerodrom) učitava se duže od fiksnog čekanja |
 | 126 | 2026-11-04 | Nova ruta za brod: oko 1,6 km od uvale kod Santa Marije, oko mola i nazad. Helikopter počinje na otvorenoj pisti (1600, -2460), daleko od pešačkih mostova aerodroma, i sleće na isto mesto. Rute su proverene kroz GTA geometriju (nigde kopno ni objekat) | Stara brodska ruta je bila kratka; helikopter se stvarao ispod pešačkog mosta i udarao propelerom |
 | 127 | 2026-11-04 | Kamera šalje posebnu poruku za svaku kaznu, sa razlogom (brzina i ograničenje, ili neregistrovano vozilo) | Kad su obe kazne bile u jednoj poruci, poruka je imala preko 144 znaka i SA-MP je nije prikazao |
+| 128 | 2026-11-06 | Na parkingu auto škole nema ničega, ni saksije; nevidljiv sudar sakrivenog stuba ostaje jer je deo kolizije GTA zgrade | Zahtev vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -287,6 +288,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 125 | 2026-11-04 | After the theory the player is put in the vehicle only once the client has loaded it (checked every 0.5 s, up to 8 s). Time out of the vehicle does not count until they sit in, and the engine starts only then | A far teleport (boat, airport) takes longer to load than a fixed wait |
 | 126 | 2026-11-04 | A new boat route: about 1.6 km from the cove by Santa Maria, around the pier and back. The helicopter starts on open tarmac (1600, -2460), away from the airport boarding bridges, and lands on the same spot. The routes were checked against the GTA geometry (no land or object anywhere) | The old boat route was short; the helicopter spawned under a boarding bridge and hit it with the rotor |
 | 127 | 2026-11-04 | A camera sends a separate message for each fine, with its reason (speed and limit, or unregistered vehicle) | With both fines in one message it ran past 144 characters and SA-MP did not show it |
+| 128 | 2026-11-06 | Nothing stands in the school lot, not even a plant pot; the hidden pole's invisible collision stays, as it is part of the GTA building's collision | Owner's request |
 
 ### Code architecture (proposal)
 ```
