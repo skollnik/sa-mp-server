@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 3 | Ostatak faze 3: auto pijaca i prodaja vozila (3.2), gepek i kanister (3.3), auto škola i dozvole (3.4), šteta, mehaničar i rent (3.5) |
+| 3 | Korak 3.5 (predlog čeka odobrenje): kilometraža, stanje vozila u procentima, kvar motora ispod 400 HP; mehaničar kao posao (osnova za poslove), poziv mehaničara na broj 555 sa GPS-om; rent vozila parkirana na mapi (uđeš i `/rent`); natpisi na vozilima (rent, admin, auto škola, posao) |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -302,7 +302,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 3 | Rest of phase 3: car market and vehicle sales (3.2), trunk and jerry can (3.3), driving school and licenses (3.4), damage, mechanic and rentals (3.5) |
+| 3 | Step 3.5 (proposal awaiting approval): mileage, vehicle condition in percent, engine failure below 400 HP; the mechanic as a job (job framework), calling a mechanic on 555 with GPS; rental vehicles parked on the map (get in and `/rent`); labels on vehicles (rental, admin, driving school, job) |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
