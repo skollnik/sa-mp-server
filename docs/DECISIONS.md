@@ -139,6 +139,8 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 131 | 2026-11-06 | Kamera kažnjava vozača ličnog vozila bez pojasa ili kacige sa $200, u posebnom redu | Odobrio vlasnik |
 | 132 | 2026-11-06 | Na ispitu za auto, motor i kamion niko ne podseća na pojas i kacigu; prolazak kroz checkpoint bez njih obara ispit. Škola pozajmljuje kacigu za ispit na motoru (`/kaciga`), a teorija ima pitanja o pojasu i kacigi | Vlasnik: igrač treba sam da se seti |
 | 133 | 2026-11-06 | Kad policija oduzme dozvolu koju posao traži, igrač ne dobija otkaz, ali ne može da radi ture dok je ponovo ne položi | Vlasnik prepustio odluku; otkaz bi bio dupla kazna |
+| 134 | 2026-11-06 | Tabla na stubu GTA zgrade, na uglu parkinga, ponovo je tabla auto škole ("AUTO SKOLA" i "L" na plavoj podlozi), kao na većini servera; nevidljivog stuba više nema | Zahtev vlasnika |
+| 135 | 2026-11-06 | Kaciga se stavlja i skida i u vozilu (`/kaciga`), za razliku od ostalih dodataka | Zahtev vlasnika: da se ne silazi sa motora |
 
 ### Arhitektura koda (predlog)
 ```
@@ -299,6 +301,8 @@ This file records every important decision so it does not get re-discussed. Newe
 | 131 | 2026-11-06 | A camera fines the driver of a personal vehicle without a belt or helmet $200, on its own line | Approved by the owner |
 | 132 | 2026-11-06 | On the car, motorbike and truck tests nobody reminds the player of the belt or helmet; passing a checkpoint without them fails the test. The school lends a helmet for the motorbike test (`/kaciga`), and the theory has questions on the belt and helmet | Owner: the player should remember on their own |
 | 133 | 2026-11-06 | When the police take away a license a job needs, the player is not fired but cannot do runs until they pass it again | The owner left it to me; firing would be a double penalty |
+| 134 | 2026-11-06 | The GTA building's pole sign at the corner of the lot is the school's sign again ("AUTO SKOLA" and "L" on blue), as on most servers; there is no invisible pole any more | Owner's request |
+| 135 | 2026-11-06 | The helmet goes on and off in a vehicle too (`/kaciga`), unlike the other accessories | Owner's request: no getting off the motorbike |
 
 ### Code architecture (proposal)
 ```

@@ -228,7 +228,10 @@ alias:pojas("seatbelt")
 
 cmd:kaciga(playerid, params[])
 {
-    if (!g_InvLoaded[playerid] || Inv_IsBusy(playerid))
+    // Unlike other accessories it goes on while riding, so nobody has to get off the motorbike for it.
+    new PLAYER_STATE:seat = GetPlayerState(playerid);
+    if (!g_InvLoaded[playerid] || (seat != PLAYER_STATE_ONFOOT && seat != PLAYER_STATE_DRIVER && seat != PLAYER_STATE_PASSENGER)
+        || g_Player[playerid][pJailSeconds] > 0 || g_Staff[playerid][sFrozen])
     {
         Msg_Error(playerid, "Trenutno ne mozete menjati dodatke.");
         return 1;

@@ -291,6 +291,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 04.11.2026. | Kamera opet ispisuje razlog kazne (poruka je bila preduga) |
 | 06.11.2026. | Saksija sa parkinga auto škole uklonjena; ostaje samo nevidljiv sudar tankog stuba (deo GTA zgrade) |
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
+| 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
 
 ---
 
@@ -585,3 +586,4 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-04 | The camera shows the fine's reason again (the message was too long) |
 | 2026-11-06 | The plant pot removed from the school lot; only the thin pole's invisible collision stays (part of the GTA building) |
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
+| 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |

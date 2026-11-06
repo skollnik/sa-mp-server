@@ -245,8 +245,8 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Pojas ostane vezan posle izlaska, smrti ili prelaska u drugo vozilo | ✅ | Pojas se odvezuje pri svakoj promeni stanja igrača |
 | Pozajmljena kaciga sa ispita ostane igraču ili uđe u inventar | ✅ | Nije predmet; skida se na kraju ispita (prolaz, pad, smrt, izlazak) i vraća se ono što je nosio na glavi |
 | Kaciga i šešir na glavi u isto vreme | ✅ | Kaciga je dodatak za glavu, pa zamenjuje šešir ili kapu |
+| Kaciga se menja u vozilu i tako zaobiđe proveru kamere ili ispita | ✅ | Kamera i ispit gledaju stanje u trenutku prolaska; stavljanje kacige u vožnji je dozvoljeno i nije prekršaj |
 | Admin vozilo ili vozilo za ispit kažnjeno kamerom | ✅ | Kamere i dalje snimaju samo lična vozila |
-| Sakrivena GTA tabla ostavi nevidljiv sudar na parkingu | 👁 | Kolizija GTA zgrade ima stub od 40 cm na uglu parkinga (2071,0, -1903,7); vlasnik ne želi ništa na tom mestu, pa se proverava u igri da li smeta |
 | Dozvola bez ispita | 👁 | Samo ribolov se kupuje; ostalo samo posle teorije i vožnje ili od admina nivoa 4 (log) |
 | Admin daje dodatna mesta za vozila prijateljima | 👁 | Samo nivo 4, najviše 5 mesta, svaka promena ide u admin log |
 | Admin ostane bez kontrola ili sa zaglavljenom kamerom posle `/atune` | ✅ | Kamera i kontrole se vraćaju pri zatvaranju menija, izlasku iz vozila, smrti i izlasku sa servera; admin koga je drugi admin zamrznuo (`/freeze`) ostaje zamrznut |
@@ -512,8 +512,8 @@ Every new system or change goes through these questions, against all existing sy
 | The belt stays on after leaving, dying or moving to another vehicle | ✅ | The belt comes off on every change of the player's state |
 | The helmet lent for the test stays with the player or goes into the inventory | ✅ | It is not an item; it comes off when the test ends (pass, fail, death, disconnect) and whatever was on the head goes back |
 | A helmet and a hat on the head at once | ✅ | The helmet is a head accessory, so it replaces a hat or cap |
+| The helmet is changed in a vehicle to get around a camera or test check | ✅ | The camera and the test look at the moment the player passes; putting a helmet on while riding is allowed and is no offence |
 | An admin or test vehicle fined by a camera | ✅ | Cameras still photograph only personal vehicles |
-| The hidden GTA sign leaves an invisible collision in the lot | 👁 | The GTA building's collision has a 0.4 m pole at the corner of the lot (2071.0, -1903.7); the owner wants nothing standing there, so it is checked in game whether it gets in the way |
 | A license without a test | 👁 | Only fishing is bought; the rest only after theory and the drive, or from a level 4 admin (logged) |
 | An admin gives friends extra vehicle slots | 👁 | Level 4 only, at most 5 slots, every change goes to the admin log |
 | An admin is left without controls or with a stuck camera after `/atune` | ✅ | The camera and controls come back when the menu closes, on leaving the vehicle, on death and on disconnect; an admin frozen by another admin (`/freeze`) stays frozen |

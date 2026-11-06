@@ -1,12 +1,7 @@
 #define SCHOOL_BLUE             (0xFF0C8AF7)
 
-// Text with a transparent background makes the whole material invisible.
-static stock Map_SchoolHide(STREAMER_TAG_OBJECT:objectid, index)
-{
-    SetDynamicObjectMaterialText(objectid, index, " ", 10, "Arial", 1, 0, 0, 0x00000000, 0);
-}
-
-// The driving school in El Corona: the GTA building at 2045,-1903 with a blue band and the sign above the entrance.
+// The driving school in El Corona: the GTA building at 2045,-1903 with a blue band, the sign above the entrance
+// and its pole sign at the corner of the lot.
 stock Map_DrivingSchoolElCorona()
 {
     new STREAMER_TAG_OBJECT:building = Map_Exterior(5134, 2045.49219, -1903.61719, 16.18750, 0.00000, 0.00000, 0.00000);
@@ -16,12 +11,10 @@ stock Map_DrivingSchoolElCorona()
     SetDynamicObjectMaterial(building, 7, 12931, "sw_brewery", "sw_brewbrick01");
     SetDynamicObjectMaterial(building, 3, 9485, "roadsfe", "ws_carpark2");
 
-    // The pole sign is part of the building model, so it is hidden instead of removed; its thin collision
-    // (0.4 m at 2071.0,-1903.7, on the edge of the lot) stays, as the owner wants nothing standing there.
-    Map_SchoolHide(building, 1);
-    Map_SchoolHide(building, 9);
-    Map_SchoolHide(building, 10);
-    Map_SchoolHide(building, 11);
+    // The building's own pole sign at the corner of the lot becomes the school's.
+    SetDynamicObjectMaterial(building, 9, 3440, "airportpillar", "metalic_64");
+    SetDynamicObjectMaterialText(building, 10, "L", 110, "Arial", 56, 1, 0xFFFFFFFF, SCHOOL_BLUE, 1);
+    SetDynamicObjectMaterialText(building, 11, "AUTO\nSKOLA", 130, "Arial", 100, 1, 0xFFFFFFFF, SCHOOL_BLUE, 1);
 
     // The background is transparent so the letters sit on the blue band and can be taller than the plane fits.
     new STREAMER_TAG_OBJECT:sign = Map_Exterior(19482, 2045.68000, -1908.00000, 15.87500, 0.00000, 0.00000, 0.00000);
