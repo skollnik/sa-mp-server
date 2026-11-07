@@ -5,6 +5,10 @@
 #define PHONE_NUMBER_MAX        (999999)
 #define PHONE_EMERGENCY         (911)
 #define PHONE_MECHANIC          (555)
+
+// Service numbers every phone lists above the contacts; they cannot be deleted. A new service adds its line here.
+static const g_PhoneServiceNames[][] = { "Hitne sluzbe", "Mehanicar" };
+static const g_PhoneServiceNumbers[] = { PHONE_EMERGENCY, PHONE_MECHANIC };
 #define PHONE_RANDOM_TRIES      (10)
 #define PHONE_RING_RADIUS       (15.0)
 
@@ -66,6 +70,7 @@ enum E_CONTACT
 
 new g_Contacts[MAX_PLAYERS][MAX_CONTACTS][E_CONTACT];
 new g_ContactSelected[MAX_PLAYERS];
+new g_ServiceSelected[MAX_PLAYERS];
 new g_PhoneTimer;
 
 stock Phone_Init()
@@ -862,6 +867,11 @@ stock Phone_ShowContacts(playerid)
 {
     new body[1536], line[64];
     strcopy(body, C_GREEN "+ Dodaj kontakt\n");
+    for (new i = 0; i < sizeof(g_PhoneServiceNumbers); i++)
+    {
+        format(line, sizeof(line), C_SERVER "%s\t%d\n", g_PhoneServiceNames[i], g_PhoneServiceNumbers[i]);
+        strcat(body, line);
+    }
     for (new i = 0; i < MAX_CONTACTS; i++)
     {
         if (g_Contacts[playerid][i][ctDbId])
@@ -1008,13 +1018,32 @@ stock bool:Phone_OnDialogResponse(playerid, dialogid, response, listitem, const 
                     C_WHITE "Unesite broj i ime, na primer: " C_SERVER "123456 Marko", "Sacuvaj", "Nazad");
                 return true;
             }
-            new slot = Phone_ContactSlot(playerid, listitem - 1);
+            if (listitem <= sizeof(g_PhoneServiceNumbers))
+            {
+                new service = listitem - 1, title[32];
+                g_ServiceSelected[playerid] = service;
+                format(title, sizeof(title), "%s (%d)", g_PhoneServiceNames[service], g_PhoneServiceNumbers[service]);
+                ShowPlayerDialog(playerid, DIALOG_CONTACT_SERVICE, DIALOG_STYLE_INPUT, title, C_WHITE "Opisite sta se desilo i gde ste:", "Pozovi", "Nazad");
+                return true;
+            }
+            new slot = Phone_ContactSlot(playerid, listitem - 1 - sizeof(g_PhoneServiceNumbers));
             if (slot == -1)
             {
                 return true;
             }
             g_ContactSelected[playerid] = slot;
             ShowPlayerDialog(playerid, DIALOG_CONTACT_ACTION, DIALOG_STYLE_LIST, g_Contacts[playerid][slot][ctName], "Pozovi\nPosalji poruku\nObrisi", "Izaberi", "Nazad");
+        }
+        case DIALOG_CONTACT_SERVICE:
+        {
+            if (!response || isnull(inputtext))
+            {
+                Phone_ShowContacts(playerid);
+                return true;
+            }
+            new input[144];
+            format(input, sizeof(input), "%d %s", g_PhoneServiceNumbers[g_ServiceSelected[playerid]], inputtext);
+            Phone_RunCommand(playerid, "/pozovi", input);
         }
         case DIALOG_CONTACT_ADD:
         {

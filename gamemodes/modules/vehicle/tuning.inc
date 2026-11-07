@@ -45,6 +45,13 @@ new g_TunePage[MAX_PLAYERS];
 new g_TuneSlot[MAX_PLAYERS];
 // The mechanic serving the player, or INVALID_PLAYER_ID for an admin's free /atune.
 new g_TuneMechanic[MAX_PLAYERS] = { INVALID_PLAYER_ID, ... };
+// At a mechanic the first pick only tries a part on; it is paid on the second pick and put back when the player looks elsewhere.
+new g_TunePreview[MAX_PLAYERS];
+new g_TunePreviewOld[MAX_PLAYERS];
+new g_TunePreviewPaintjob[MAX_PLAYERS] = { -1, ... };
+new bool:g_TuneColourPreview[MAX_PLAYERS];
+new g_TuneOldColours[MAX_PLAYERS][2];
+new g_TuneVehicle[MAX_PLAYERS];
 
 // Admin vehicles are for any admin; a personal vehicle is someone's property, so free tuning on it is for senior admins.
 // Returns the vehicle or 0, with the reason already told.
@@ -159,9 +166,41 @@ static stock Tune_DestroyMenu(playerid)
     }
 }
 
+// Puts back whatever was only being tried on, so nothing unpaid stays on the vehicle.
+static stock Tune_RevertPreview(playerid, vehicleid)
+{
+    if (g_TunePreview[playerid] != 0)
+    {
+        RemoveVehicleComponent(vehicleid, g_TunePreview[playerid]);
+        if (g_TunePreviewOld[playerid] != 0)
+        {
+            AddVehicleComponent(vehicleid, g_TunePreviewOld[playerid]);
+        }
+        g_TunePreview[playerid] = 0;
+    }
+    if (g_TunePreviewPaintjob[playerid] != -1)
+    {
+        new slot = g_VehSlotOf[vehicleid];
+        ChangeVehiclePaintjob(vehicleid, slot == -1 ? VEH_PAINTJOB_NONE : g_Veh[slot][vPaintjob]);
+        g_TunePreviewPaintjob[playerid] = -1;
+    }
+    if (g_TuneColourPreview[playerid])
+    {
+        ChangeVehicleColours(vehicleid, g_TuneOldColours[playerid][0], g_TuneOldColours[playerid][1]);
+        g_TuneColourPreview[playerid] = false;
+    }
+}
+
 // Also called when the admin leaves the vehicle, dies or disconnects, so the camera and controls always come back.
 stock Tune_Close(playerid)
 {
+    if (g_TuneActive[playerid] && IsValidVehicle(g_TuneVehicle[playerid]))
+    {
+        Tune_RevertPreview(playerid, g_TuneVehicle[playerid]);
+    }
+    g_TunePreview[playerid] = 0;
+    g_TunePreviewPaintjob[playerid] = -1;
+    g_TuneColourPreview[playerid] = false;
     g_TuneMechanic[playerid] = INVALID_PLAYER_ID;
     if (!g_TuneActive[playerid])
     {
@@ -182,6 +221,13 @@ stock Tune_Close(playerid)
 static stock Tune_RowsOnPage(playerid)
 {
     return g_TuneCount[playerid] <= TUNE_MENU_ROWS ? g_TuneCount[playerid] : TUNE_MENU_ROWS - 1;
+}
+
+// The last page can be shorter, so the page button is not always on the same row.
+static stock Tune_ItemsOnPage(playerid)
+{
+    new rows = Tune_RowsOnPage(playerid), left = g_TuneCount[playerid] - g_TunePage[playerid] * rows;
+    return left < rows ? left : rows;
 }
 
 static stock Tune_Present(playerid)
@@ -259,7 +305,11 @@ static stock Tune_ShowParts(playerid, vehicleid, slot, page = 0)
         if (_:GetVehicleComponentType(c) == slot && VehicleCanHaveComponent(model, c))
         {
             Tune_PartName(c, ++count, name);
-            if (GetVehicleComponentInSlot(vehicleid, CARMODTYPE:slot) == c)
+            if (c == g_TunePreview[playerid])
+            {
+                format(label, sizeof(label), "%s - kupi $%d", name, Tune_PartPrice(slot, c));
+            }
+            else if (c == Tune_Installed(playerid, vehicleid, slot))
             {
                 format(label, sizeof(label), "%s (stavljeno)", name);
             }
@@ -280,10 +330,24 @@ static stock Tune_ShowParts(playerid, vehicleid, slot, page = 0)
 
 static stock Tune_ShowPaintjobs(playerid)
 {
+    new label[TUNE_LABEL_LENGTH];
     Tune_Begin(playerid, TUNE_VIEW_PAINTJOB, "Paintjob");
-    Tune_Add(playerid, "Paintjob 1", 0);
-    Tune_Add(playerid, "Paintjob 2", 1);
-    Tune_Add(playerid, "Paintjob 3", 2);
+    for (new paintjob = 0; paintjob < VEH_PAINTJOB_NONE; paintjob++)
+    {
+        if (paintjob == g_TunePreviewPaintjob[playerid])
+        {
+            format(label, sizeof(label), "Paintjob %d - kupi $%d", paintjob + 1, TUNE_PRICE_PAINTJOB);
+        }
+        else if (Tune_AtMechanic(playerid))
+        {
+            format(label, sizeof(label), "Paintjob %d ($%d)", paintjob + 1, TUNE_PRICE_PAINTJOB);
+        }
+        else
+        {
+            format(label, sizeof(label), "Paintjob %d", paintjob + 1);
+        }
+        Tune_Add(playerid, label, paintjob);
+    }
     Tune_Add(playerid, "Bez paintjob-a", VEH_PAINTJOB_NONE);
     Tune_Present(playerid);
 }
@@ -309,28 +373,46 @@ static stock Tune_Saved(playerid, vehicleid, const what[])
     }
 }
 
+// What is really on the vehicle in this slot, not the part being tried on.
+static stock Tune_Installed(playerid, vehicleid, slot)
+{
+    return g_TunePreview[playerid] != 0 ? g_TunePreviewOld[playerid] : GetVehicleComponentInSlot(vehicleid, CARMODTYPE:slot);
+}
+
 static stock Tune_SetPart(playerid, vehicleid, slot, component)
 {
-    new current = GetVehicleComponentInSlot(vehicleid, CARMODTYPE:slot), what[48];
+    new installed = Tune_Installed(playerid, vehicleid, slot), what[48];
     if (component == 0)
     {
-        if (current != 0)
+        Tune_RevertPreview(playerid, vehicleid);
+        if (installed != 0)
         {
-            RemoveVehicleComponent(vehicleid, current);
+            RemoveVehicleComponent(vehicleid, installed);
         }
         format(what, sizeof(what), "%s skinut", g_TuneSlotNames[slot]);
     }
     else
     {
-        if (component == current)
+        if (component == installed)
         {
+            Tune_RevertPreview(playerid, vehicleid);
+            return;
+        }
+        if (Tune_AtMechanic(playerid) && g_TunePreview[playerid] != component)
+        {
+            Tune_RevertPreview(playerid, vehicleid);
+            g_TunePreviewOld[playerid] = installed;
+            g_TunePreview[playerid] = component;
+            AddVehicleComponent(vehicleid, component);
             return;
         }
         format(what, sizeof(what), "%s %d", g_TuneSlotNames[slot], component);
         if (!Tune_Pay(playerid, Tune_PartPrice(slot, component), g_TuneSlotNames[slot]))
         {
+            Tune_RevertPreview(playerid, vehicleid);
             return;
         }
+        g_TunePreview[playerid] = 0;
         AddVehicleComponent(vehicleid, component);
     }
     if (g_VehSlotOf[vehicleid] != -1)
@@ -343,10 +425,21 @@ static stock Tune_SetPart(playerid, vehicleid, slot, component)
 static stock Tune_SetPaintjob(playerid, vehicleid, paintjob)
 {
     new slot = g_VehSlotOf[vehicleid];
-    if (paintjob != VEH_PAINTJOB_NONE && (slot == -1 || g_Veh[slot][vPaintjob] != paintjob) && !Tune_Pay(playerid, TUNE_PRICE_PAINTJOB, "paintjob"))
+    if (Tune_AtMechanic(playerid) && paintjob != VEH_PAINTJOB_NONE && (slot == -1 || g_Veh[slot][vPaintjob] != paintjob))
     {
-        return;
+        if (g_TunePreviewPaintjob[playerid] != paintjob)
+        {
+            g_TunePreviewPaintjob[playerid] = paintjob;
+            ChangeVehiclePaintjob(vehicleid, paintjob);
+            return;
+        }
+        if (!Tune_Pay(playerid, TUNE_PRICE_PAINTJOB, "paintjob"))
+        {
+            Tune_RevertPreview(playerid, vehicleid);
+            return;
+        }
     }
+    g_TunePreviewPaintjob[playerid] = -1;
     ChangeVehiclePaintjob(vehicleid, paintjob);
     if (g_VehSlotOf[vehicleid] != -1)
     {
@@ -357,6 +450,7 @@ static stock Tune_SetPaintjob(playerid, vehicleid, paintjob)
 
 static stock Tune_Clear(playerid, vehicleid)
 {
+    Tune_RevertPreview(playerid, vehicleid);
     for (new slot = 0; slot < VEH_TUNE_SLOTS; slot++)
     {
         new component = GetVehicleComponentInSlot(vehicleid, CARMODTYPE:slot);
@@ -376,6 +470,7 @@ static stock Tune_Clear(playerid, vehicleid)
 static stock Tune_Open(playerid, vehicleid)
 {
     g_TuneActive[playerid] = true;
+    g_TuneVehicle[playerid] = vehicleid;
     TogglePlayerControllable(playerid, false);
     Tune_FocusCamera(playerid, vehicleid);
     Tune_ShowMain(playerid, vehicleid);
@@ -421,8 +516,8 @@ stock Tune_OnPlayerSelectedMenuRow(playerid, row)
         Tune_Close(playerid);
         return;
     }
-    new rows = Tune_RowsOnPage(playerid);
-    if (g_TuneCount[playerid] > TUNE_MENU_ROWS && row == rows)
+    new rows = Tune_RowsOnPage(playerid), items = Tune_ItemsOnPage(playerid);
+    if (g_TuneCount[playerid] > TUNE_MENU_ROWS && row == items)
     {
         new pages = (g_TuneCount[playerid] + rows - 1) / rows;
         g_TunePage[playerid] = (g_TunePage[playerid] + 1) % pages;
@@ -430,7 +525,7 @@ stock Tune_OnPlayerSelectedMenuRow(playerid, row)
         return;
     }
     new index = g_TunePage[playerid] * rows + row;
-    if (row < 0 || row >= rows || index >= g_TuneCount[playerid])
+    if (row < 0 || row >= items)
     {
         Tune_Present(playerid);
         return;
@@ -448,7 +543,7 @@ stock Tune_OnPlayerSelectedMenuRow(playerid, row)
                     new text[80] = "Upisite dve boje (0-255), npr: 1 0";
                     if (Tune_AtMechanic(playerid))
                     {
-                        format(text, sizeof(text), "Upisite dve boje (0-255), npr: 1 0\n\nFarbanje kosta $%d.", TUNE_PRICE_PAINT);
+                        format(text, sizeof(text), "Upisite dve boje (0-255), npr: 1 0\n\nBoja se prvo prikaze; farbanje kosta $%d.", TUNE_PRICE_PAINT);
                     }
                     ShowPlayerDialog(playerid, DIALOG_TUNE_COLOUR, DIALOG_STYLE_INPUT, "Boja vozila", text, "Ofarbaj", "Nazad");
                 }
@@ -476,7 +571,14 @@ stock Tune_OnPlayerSelectedMenuRow(playerid, row)
         case TUNE_VIEW_PAINTJOB:
         {
             Tune_SetPaintjob(playerid, vehicleid, value);
-            Tune_ShowMain(playerid, vehicleid);
+            if (g_TunePreviewPaintjob[playerid] != -1)
+            {
+                Tune_ShowPaintjobs(playerid);
+            }
+            else
+            {
+                Tune_ShowMain(playerid, vehicleid);
+            }
         }
     }
 }
@@ -494,6 +596,7 @@ stock Tune_OnPlayerExitedMenu(playerid)
         Tune_Close(playerid);
         return;
     }
+    Tune_RevertPreview(playerid, vehicleid);
     Tune_ShowMain(playerid, vehicleid);
 }
 
@@ -505,8 +608,39 @@ stock Tune_OnPlayerStateChange(playerid, PLAYER_STATE:newstate)
     }
 }
 
+static stock Tune_SaveColours(playerid, vehicleid, colour1, colour2)
+{
+    Veh_OnColoursChanged(vehicleid, colour1, colour2);
+    new what[24];
+    format(what, sizeof(what), "boja %d %d", colour1, colour2);
+    Tune_Saved(playerid, vehicleid, what);
+}
+
 stock bool:Tune_OnDialogResponse(playerid, dialogid, response, const inputtext[])
 {
+    if (dialogid == DIALOG_TUNE_COLOUR_BUY)
+    {
+        if (!g_TuneActive[playerid])
+        {
+            return true;
+        }
+        new vehicleid = Tune_GetVehicle(playerid);
+        if (vehicleid == 0)
+        {
+            Tune_Close(playerid);
+            return true;
+        }
+        if (response && g_TuneColourPreview[playerid] && Tune_Pay(playerid, TUNE_PRICE_PAINT, "farbanje"))
+        {
+            new colour1, colour2;
+            GetVehicleColours(vehicleid, colour1, colour2);
+            g_TuneColourPreview[playerid] = false;
+            Tune_SaveColours(playerid, vehicleid, colour1, colour2);
+        }
+        Tune_RevertPreview(playerid, vehicleid);
+        Tune_ShowMain(playerid, vehicleid);
+        return true;
+    }
     if (dialogid != DIALOG_TUNE_COLOUR)
     {
         return false;
@@ -528,13 +662,20 @@ stock bool:Tune_OnDialogResponse(playerid, dialogid, response, const inputtext[]
         {
             Msg_Error(playerid, "Upisite dve boje od 0 do 255, npr: 1 0");
         }
-        else if (Tune_Pay(playerid, TUNE_PRICE_PAINT, "farbanje"))
+        else if (Tune_AtMechanic(playerid))
+        {
+            new text[96];
+            GetVehicleColours(vehicleid, g_TuneOldColours[playerid][0], g_TuneOldColours[playerid][1]);
+            g_TuneColourPreview[playerid] = true;
+            ChangeVehicleColours(vehicleid, colour1, colour2);
+            format(text, sizeof(text), "Ovako izgleda boja %d %d.\n\nFarbanje kosta $%d.", colour1, colour2, TUNE_PRICE_PAINT);
+            ShowPlayerDialog(playerid, DIALOG_TUNE_COLOUR_BUY, DIALOG_STYLE_MSGBOX, "Boja vozila", text, "Kupi", "Vrati");
+            return true;
+        }
+        else
         {
             ChangeVehicleColours(vehicleid, colour1, colour2);
-            Veh_OnColoursChanged(vehicleid, colour1, colour2);
-            new what[24];
-            format(what, sizeof(what), "boja %d %d", colour1, colour2);
-            Tune_Saved(playerid, vehicleid, what);
+            Tune_SaveColours(playerid, vehicleid, colour1, colour2);
         }
     }
     Tune_ShowMain(playerid, vehicleid);

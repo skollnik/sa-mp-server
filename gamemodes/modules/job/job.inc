@@ -4,11 +4,13 @@ static const g_JobIntro[E_JOB][] =
     "",
     "Mehanicar popravlja i sredjuje vozila.\n\n" \
     "- Opremu i sleper uzimate u radionici u Willowfield-u (/oprema), uz dozvolu za auto.\n" \
-    "- /popravi [id] [cena]: na terenu motor (do 60%) i gume, u radionici sve do 100%.\n" \
-    "- /tjuning [id]: delovi i farbanje, samo u radionici.\n" \
+    "- /popravi [id]: na terenu motor do 60% i pukle gume, da vozilo stigne do radionice.\n" \
+    "- /popravi [id] [do %]: u radionici do trazenog procenta, uz karoseriju srazmerno.\n" \
+    "- Letelice i brodove popravljate u servisu letelica i brodova.\n" \
+    "- /tune [id]: delovi i farbanje, kad vozilo stoji na mestu za tehnicki pregled.\n" \
     "- Pozivi stizu na broj 555; prihvatate ih sa /prihvatipoziv [id].\n" \
     "- /vuci: kacenje vozila na sleper.\n\n" \
-    "Zaradu za popravku dogovarate sa vozacem; od tjuninga dobijate deo cene."
+    "Cena popravke je fiksna po procentu; vi dobijate 60%, ostalo su delovi. Od tjuninga dobijate 30%."
 };
 
 stock Job_Init()

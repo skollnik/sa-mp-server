@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 3: korak 3.5 (stanje i kilometraža, kvar motora, poslovi i mehaničar, rent-a-car, natpisi na vozilima) napisan; čeka da vlasnik postavi radionicu (`/napravimesto radionica`) i GPS i testira (ažurirano 2026-11-06)
+**Trenutni status:** Faza 3: koraci 3.5 i 3.6 napisani; čeka da vlasnik postavi radionicu (`/napravimesto radionica`), servis letelica i brodova (`/napravimesto hangar`) i GPS i testira (ažurirano 2026-11-07)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -65,6 +65,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Korak 3.4: LIC-1, LIC-2 auto škola i dozvole (`/skola`: teorija 8 pitanja i vožnja po ruti; auto, motor, kamion, brod, letenje, ribolov), zgrada sa tablama u El Coroni, rute menja admin (`/rutaskole`)
 - [x] Dopune 3.4: VEH-13 pojas i kaciga (`/pojas`, `/kaciga`), kazna sa kamera i pad na ispitu bez njih; natpis na vozilu za ispit, duža ruta za brod, helikopter na otvorenoj pisti
 - [x] Korak 3.5: VEH-6 stanje u procentima, kilometraža i kvar motora; JOB-1 osnova za poslove (`/posao`, `/oprema`, `/otkaz`); JOB-3 mehaničar (popravka na terenu i u radionici, tjuning i farbanje, poziv 555, šlep); servis bez mehaničara; VEH-9 rent-a-car na mapi (`/rent`); VEH-14 natpisi na vozilima; tehnički pregled traži 900 HP
+- [x] Korak 3.6: nasumično paljenje motora, pravilo za letelice i brodove; popravka po procentima sa fiksnom cenom, mehaničar zamrznut dok radi; servis letelica i brodova (`hangar`) i njihov tehnički pregled; `/tune` na mestu za tehnički pregled, proba pre plaćanja; natpisi u zagradama; kazne sa kamera za vozila poslova; `/vratirent` iz vozila; 911 i 555 u imeniku
 
 ### Faza 4: Imovina
 - [ ] PROP-1 – PROP-5: kuće, iznajmljivanje, sef, nameštaj, garaže
@@ -114,7 +115,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** Phase 3: step 3.5 (condition and mileage, engine failure, jobs and the mechanic, rent-a-car, vehicle labels) written; waiting for the owner to place the workshop (`/napravimesto radionica`) and GPS and test it (updated 2026-11-06)
+**Current status:** Phase 3: steps 3.5 and 3.6 written; waiting for the owner to place the workshop (`/napravimesto radionica`), the aircraft and boat service (`/napravimesto hangar`) and GPS and test them (updated 2026-11-07)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -177,6 +178,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] Step 3.4: LIC-1, LIC-2 driving school and licenses (`/skola`: an 8-question theory test and a route drive; car, motorbike, truck, boat, flying, fishing), the building with its signs in El Corona, routes edited by admins (`/rutaskole`)
 - [x] 3.4 additions: VEH-13 seatbelt and helmet (`/pojas`, `/kaciga`), a camera fine and a failed test without them; a label on the test vehicle, a longer boat route, the helicopter on open tarmac
 - [x] Step 3.5: VEH-6 condition in percent, mileage and engine failure; JOB-1 job framework (`/posao`, `/oprema`, `/otkaz`); JOB-3 mechanic (field and workshop repairs, tuning and paint, the 555 call, towing); the workshop service with no mechanic; VEH-9 rent-a-car on the map (`/rent`); VEH-14 vehicle labels; the inspection needs 900 HP
+- [x] Step 3.6: a random engine start, the rule for aircraft and boats; repairs by percent at a fixed price, the mechanic frozen while working; the aircraft and boat service (`hangar`) and their inspection; `/tune` on the inspection spot, a trial before paying; labels in brackets; camera fines for job vehicles; `/vratirent` from the vehicle; 911 and 555 in the contacts
 
 ### Phase 4: Property
 - [ ] PROP-1 – PROP-5: houses, renting, safe, furniture, garages

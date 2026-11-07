@@ -3,6 +3,8 @@
 #define POINT_PICKUP_MODEL      (1239)
 #define POINT_ATM_MODEL         (19324)
 #define POINT_FUEL_PICKUP_MODEL (1650)
+// Aircraft and boats are serviced and inspected anywhere around this point: an airport apron or a dock.
+#define POINT_HANGAR_RADIUS     (40.0)
 
 // Places where a service is used: standing next to one unlocks its command.
 enum E_POINT_TYPE
@@ -16,14 +18,15 @@ enum E_POINT_TYPE
     POINT_INSPECTION,
     POINT_POLICE,
     POINT_SCHOOL,
-    POINT_WORKSHOP
+    POINT_WORKSHOP,
+    POINT_HANGAR
 }
 
 enum E_POINT_INFO
 {
     piKey[16],
     piName[32],
-    piCommand[16],
+    piCommand[32],
     // How close the player must stand; a pump and the inspection are used from the driver's seat, so they reach further.
     Float:piRadius,
     piPickup
@@ -37,10 +40,11 @@ new const g_PointInfo[E_POINT_TYPE][E_POINT_INFO] =
     { "prodavnica", "Prodavnica 24/7",  "/kupi",     2.0, POINT_PICKUP_MODEL },
     { "odeca",      "Prodavnica odece", "/kupi",     2.0, POINT_PICKUP_MODEL },
     { "pumpa",      "Benzinska pumpa",  "/gorivo",   6.0, POINT_FUEL_PICKUP_MODEL },
-    { "pregled",    "Tehnicki pregled", "/registruj", 6.0, POINT_PICKUP_MODEL },
+    { "pregled",    "Tehnicki pregled", "/registruj   /tune (mehanicar)", 6.0, POINT_PICKUP_MODEL },
     { "policija",   "Policija - salter", "/tablice", 2.0, POINT_PICKUP_MODEL },
     { "skola",      "Auto skola - salter", "/skola", 2.0, POINT_PICKUP_MODEL },
-    { "radionica",  "Mehanicarska radionica", "/oprema", 2.0, POINT_PICKUP_MODEL }
+    { "radionica",  "Mehanicarska radionica", "/oprema   /servis", 2.0, POINT_PICKUP_MODEL },
+    { "hangar",     "Servis letelica i brodova", "/servis   /registruj", 2.0, POINT_PICKUP_MODEL }
 };
 
 enum E_POINT

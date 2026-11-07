@@ -767,7 +767,7 @@ cmd:veh(playerid, params[])
 
     g_IsAdminVehicle[vehicleid] = true;
     g_AdminVehicleOwner[vehicleid] = playerid;
-    Veh_SetLabel(vehicleid, "ADMIN", COLOR_ADMIN);
+    Veh_SetLabel(vehicleid, "[ADMIN]", COLOR_ADMIN_TAG);
     LinkVehicleToInterior(vehicleid, GetPlayerInterior(playerid));
     SetVehicleVirtualWorld(vehicleid, GetPlayerVirtualWorld(playerid));
     SetVehicleParamsEx(vehicleid, 1, 1, 0, 0, 0, 0, 0);

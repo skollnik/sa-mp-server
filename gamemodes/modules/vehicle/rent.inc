@@ -7,7 +7,6 @@
 #define RENT_IDLE_RETURN_S      (600)
 #define RENT_SPOT_RANGE         (5.0)
 #define RENT_DEATH_RESPAWN_S    (10)
-#define RENT_LABEL_COLOR        (0xF5B041FF)
 
 enum E_RENT
 {
@@ -108,8 +107,23 @@ static stock Rent_Spawn(slot)
     }
     g_RentOf[vehicleid] = slot;
     SetVehicleNumberPlate(vehicleid, "RENT");
-    Veh_SetLabel(vehicleid, "RENT", RENT_LABEL_COLOR);
+    Rent_UpdateLabel(slot);
     Rent_Reset(vehicleid);
+}
+
+// A free rental shows its price under the label; a rented one only says what it is.
+static stock Rent_UpdateLabel(slot)
+{
+    new text[40];
+    if (g_Rent[slot][rnRenter] == INVALID_PLAYER_ID)
+    {
+        format(text, sizeof(text), "[RENT]\n" C_GREEN "$%d / sat", g_Rent[slot][rnPrice]);
+    }
+    else
+    {
+        strcopy(text, "[RENT]");
+    }
+    Veh_SetLabel(g_Rent[slot][rnVehicle], text, COLOR_WHITE);
 }
 
 // Back to the state a free rental waits in: full tank, engine off, doors open.
@@ -180,6 +194,7 @@ static stock Rent_Return(slot)
     g_Rent[slot][rnWarned] = false;
     g_Rent[slot][rnAwaySince] = 0;
     g_Rent[slot][rnDiedAt] = 0;
+    Rent_UpdateLabel(slot);
     SetVehicleToRespawn(g_Rent[slot][rnVehicle]);
 }
 
@@ -323,7 +338,7 @@ cmd:rent(playerid, params[])
     new vehicleid = GetPlayerVehicleID(playerid), hours;
     if (!Rent_IsRentVehicle(vehicleid) || GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
     {
-        Msg_Error(playerid, "Sedite za volan vozila za rent (natpis RENT).");
+        Msg_Error(playerid, "Sedite za volan vozila za rent (natpis [RENT]).");
         return 1;
     }
     if (sscanf(params, "d", hours) || hours < 1 || hours > RENT_MAX_HOURS)
@@ -360,6 +375,7 @@ cmd:rent(playerid, params[])
     g_Rent[slot][rnRenterDbId] = g_Player[playerid][pDbId];
     g_Rent[slot][rnUntil] = start + hours * 3600;
     g_Rent[slot][rnWarned] = false;
+    Rent_UpdateLabel(slot);
     if (g_RentDecideTimer[playerid] != 0)
     {
         KillTimer(g_RentDecideTimer[playerid]);
@@ -376,6 +392,11 @@ cmd:vratirent(playerid, params[])
     if (slot == -1)
     {
         Msg_Error(playerid, "Nemate iznajmljeno vozilo.");
+        return 1;
+    }
+    if (GetPlayerVehicleID(playerid) != g_Rent[slot][rnVehicle])
+    {
+        Msg_Error(playerid, "Vozilo se vraca iz vozila: sedite u iznajmljeno vozilo.");
         return 1;
     }
     Rent_Return(slot);

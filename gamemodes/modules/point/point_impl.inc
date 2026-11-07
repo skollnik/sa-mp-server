@@ -35,7 +35,7 @@ public OnPointsLoaded()
 
 stock Point_CreateVisuals(slot)
 {
-    new text[64], E_POINT_TYPE:type = g_Points[slot][ptType];
+    new text[96], E_POINT_TYPE:type = g_Points[slot][ptType];
     format(text, sizeof(text), "%s\n" C_GREY "%s", g_PointInfo[type][piName], g_PointInfo[type][piCommand]);
 
     new Float:x = g_Points[slot][ptX], Float:y = g_Points[slot][ptY], Float:z = g_Points[slot][ptZ];
@@ -200,7 +200,7 @@ static stock Point_Create(playerid, E_POINT_TYPE:type)
 
 static stock Point_ShowTypes(playerid)
 {
-    new body[512], line[64];
+    new body[1024], line[72];
     for (new E_POINT_TYPE:t; t < E_POINT_TYPE; t++)
     {
         format(line, sizeof(line), "%s\t%s\n", g_PointInfo[t][piName], g_PointInfo[t][piCommand]);
@@ -242,7 +242,7 @@ cmd:napravimesto(playerid, params[])
             return 1;
         }
     }
-    Msg_Usage(playerid, "/napravimesto (lista) ili /napravimesto [banka / bankomat / opstina / prodavnica / odeca / pumpa / pregled / policija / skola / radionica]");
+    Msg_Usage(playerid, "/napravimesto [vrsta] (bez vrste se otvara lista svih vrsta)");
     return 1;
 }
 

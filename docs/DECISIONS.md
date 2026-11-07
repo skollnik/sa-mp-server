@@ -151,6 +151,16 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 143 | 2026-11-06 | Rent-a-car bez šaltera: vozila stoje na mapi (auta i Faggio ispred aerodroma, bicikli kod Unity stanice), uđeš i `/rent [1-3 sata]` (bicikl $20, Faggio $80, auto $200 po satu); vraća se samo kad istekne vreme, `/vratirent`, izlazak sa servera ili uništenje; kazne sa kamera stižu onome ko je iznajmio | Zahtev vlasnika i uobičajena praksa |
 | 144 | 2026-11-06 | Natpisi na vozilima su kratki i u visini vozila: ADMIN, RENT, AUTO SKOLA, MEHANICAR | Zahtev vlasnika |
 | 145 | 2026-11-06 | Tehnički pregled traži bar 900 HP, jer popravka sada postoji | Dogovoreno kad dođe mehaničar |
+| 146 | 2026-11-07 | Komande ostaju na engleskom gde su već bile (uobičajeno na našim serverima), srpske ostaju srpske; jedina promena je `/tjuning` → `/tune` | Odluka vlasnika |
+| 147 | 2026-11-07 | Slab motor (ispod 20%) pali nasumično: šansa 10–40% po stanju, posle neuspeha 3 s pauze; letelice i brodovi se nikad ne gase u pokretu i teško pale samo dok stoje | Zahtev vlasnika: ne fiksni treći pokušaj, ali da se teško pali |
+| 148 | 2026-11-07 | Popravka po procentima sa fiksnom cenom: teren uvek do 60% ($20/%), radionica do procenta koji vozač traži ($15/%), pukla guma $50; mehaničar dobija 60%, ostalo izlazi iz igre; nema biranja delova | Ideja vlasnika; teren služi da vozilo stigne do radionice |
+| 149 | 2026-11-07 | Vidljiva šteta se u radionici popravlja srazmerno popravljenim procentima (redom: svetla, staklo, hauba, branici, vrata, gepek, ostali paneli); na terenu se ne dira | Zahtev vlasnika |
+| 150 | 2026-11-07 | Mehaničar je zamrznut dok popravlja, stoji okrenut vozilu: nagnut nad otvorenim motorom, a čuči kad menja samo gume; trajanje 5 s + 0,5 s po procentu + 2 s po gumi, najviše 45 s | Zahtev vlasnika: da se ne pomera i ne leže pored vozila |
+| 151 | 2026-11-07 | Novo mesto `hangar` (servis letelica i brodova, krug od 40 m): tamo je radionička popravka, `/servis` i tehnički pregled za letelice i brodove | Zahtev vlasnika: letelica i brod ne mogu u radionicu |
+| 152 | 2026-11-07 | `/tune` samo kad vozilo stoji na mestu za tehnički pregled; deo, paintjob i boja se prvo probaju, a plaćaju drugim izborom | Zahtev vlasnika |
+| 153 | 2026-11-07 | `/servis` košta $20 po procentu do 100% (plus gume) i piše na natpisu radionice | Isto kao mehaničar na terenu, a skuplje od radionice |
+| 154 | 2026-11-07 | Natpisi na vozilima su u uglastim zagradama: `[ADMIN]` crni (kao oznaka admina), `[MEHANICAR]` sivi, `[RENT]` beli sa zelenom cenom ispod dok je slobodan, `[AUTO SKOLA]` plavi | Zahtev vlasnika |
+| 155 | 2026-11-07 | Kazne sa kamera za vozila poslova stižu vozaču; `/vratirent` radi samo iz iznajmljenog vozila; 911 i 555 su uvek na vrhu imenika i ne brišu se | Zahtev vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -323,6 +333,16 @@ This file records every important decision so it does not get re-discussed. Newe
 | 143 | 2026-11-06 | Rent-a-car without a counter: the vehicles stand on the map (cars and Faggios in front of the airport, bicycles at Unity Station), get in and `/rent [1-3 hours]` (bicycle $20, Faggio $80, car $200 per hour); it goes back when the time runs out, with `/vratirent`, on disconnect or when destroyed; camera fines go to whoever rented it | Owner's request and common practice |
 | 144 | 2026-11-06 | Vehicle labels are short and at the vehicle's height: ADMIN, RENT, AUTO SKOLA, MEHANICAR | Owner's request |
 | 145 | 2026-11-06 | The inspection needs at least 900 HP, now that repairs exist | Agreed for when the mechanic arrives |
+| 146 | 2026-11-07 | Commands stay in English where they already were (common on our servers), Serbian ones stay Serbian; the only change is `/tjuning` → `/tune` | Owner's decision |
+| 147 | 2026-11-07 | A weak engine (below 20%) starts at random: a 10–40% chance by condition, a 3 s pause after a failure; aircraft and boats never stall while moving and start badly only while standing | Owner's request: no fixed third try, but hard to start |
+| 148 | 2026-11-07 | Repairs by percent at a fixed price: the field always to 60% ($20/%), the workshop to the percent the driver asks for ($15/%), a popped tyre $50; the mechanic gets 60%, the rest leaves the game; no part choice | The owner's idea; the field gets the vehicle to the workshop |
+| 149 | 2026-11-07 | Visible damage is fixed in the workshop in proportion to the repaired percent (in order: lights, windscreen, bonnet, bumpers, doors, boot, other panels); the field leaves it | Owner's request |
+| 150 | 2026-11-07 | The mechanic is frozen while repairing, facing the vehicle: bent over the open engine, crouching when only changing tyres; 5 s + 0.5 s per percent + 2 s per tyre, at most 45 s | Owner's request: no moving and no lying next to the vehicle |
+| 151 | 2026-11-07 | A new place `hangar` (aircraft and boat service, a 40 m circle): the workshop repair, `/servis` and the inspection for aircraft and boats | Owner's request: aircraft and boats cannot reach the workshop |
+| 152 | 2026-11-07 | `/tune` only while the vehicle stands on the inspection spot; parts, paintjobs and colours are tried first and paid with the second pick | Owner's request |
+| 153 | 2026-11-07 | `/servis` costs $20 per percent to 100% (plus tyres) and is written on the workshop label | Same as a field mechanic, dearer than the workshop |
+| 154 | 2026-11-07 | Vehicle labels are in square brackets: `[ADMIN]` black (like the admin tag), `[MEHANICAR]` grey, `[RENT]` white with a green price below while free, `[AUTO SKOLA]` blue | Owner's request |
+| 155 | 2026-11-07 | Camera fines for job vehicles go to the driver; `/vratirent` works only from the rental; 911 and 555 always sit at the top of the contacts and cannot be deleted | Owner's request |
 
 ### Code architecture (proposal)
 ```

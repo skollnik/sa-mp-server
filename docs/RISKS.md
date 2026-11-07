@@ -248,17 +248,27 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Kaciga se menja u vozilu i tako zaobiđe proveru kamere ili ispita | ✅ | Kamera i ispit gledaju stanje u trenutku prolaska; stavljanje kacige u vožnji je dozvoljeno i nije prekršaj |
 | Mehaničar odvuče šlepom tuđe ispravno vozilo | ✅ | Kače se samo vozila ispod 20% ili bez goriva, i samo kad niko ne sedi za volanom |
 | Mehaničar naplati popravku koja nije urađena | ✅ | Novac se uzima tek kad se popravka završi, a mehaničar je i dalje pored vozila |
-| Prijatelji jedni drugima popravljaju za $50 i niko ne ide u servis | 👁 | Cena je stvar dogovora (najmanje $50); pratiti ekonomiju, a po potrebi uvesti delove koje mehaničar kupuje |
+| Prijatelji jedni drugima popravljaju za $50 i niko ne ide u servis | ✅ | Cena je fiksna po procentu ($20 na terenu, $15 u radionici, $50 po gumi); mehaničar dobija 60%, a 40% su delovi koji nestaju iz igre |
+| Ponuda za popravku pa udes pre prihvatanja (jeftina popravka velike štete) | ✅ | Pri prihvatanju se proverava da je stanje i broj puklih guma isti kao u ponudi; ako nije, traži se nova ponuda |
+| Mehaničar prekine animaciju ili ode usred popravke | ✅ | Zamrznut je dok popravka traje; prekida se ako bude povređen, završi smenu, vozač ode ili se vozilo pomeri više od 1,5 m; plaća se tek na kraju |
+| Mehaničar ostane zamrznut posle popravke | ✅ | Odmrzava se na kraju i pri svakom prekidu, osim ako ga je admin zamrznuo (`/freeze`) |
+| Teren se koristi umesto radionice | ✅ | Na terenu najviše 60% i bez karoserije; sve preko toga samo u radionici (letelice i brodovi u servisu letelica i brodova) |
+| Tjuning na ulici pored radionice | ✅ | Samo kad vozilo stoji na mestu za tehnički pregled (6 m) |
+| Deo za probu ostane na vozilu bez plaćanja | ✅ | Proba se vraća pri izlasku iz liste, izboru drugog dela, zatvaranju menija, izlasku iz vozila, smrti i izlasku sa servera; isto za paintjob i boju |
+| Paljenje motora brzim pritiskanjem N | ✅ | Posle neuspelog paljenja motor se 3 s ne može paliti; šansa zavisi od stanja (10–40%) |
+| Letelica ili brod se ugasi u pokretu | ✅ | Motor letelica i brodova se nikad ne gasi u pokretu; teško pali samo dok stoje |
+| Vozilo posla prođe kroz kameru bez kazne | ✅ | Kazna stiže vozaču |
+| `/vratirent` kao besplatan teleport vozila nazad | ✅ | Radi samo iz iznajmljenog vozila; vozilo se vraća na svoje mesto, a igrač ostaje gde je |
 | Mehaničar popravlja sam sebi | ✅ | `/popravi` i `/tjuning` ne mogu na sebe; servis radi samo kad nema mehaničara na smeni |
 | Neko vozi vozilo posla bez posla | ✅ | Vozača bez smene izbaci iz vozila; ključ (motor) ima samo radnik na smeni; posle smene ili otkaza izlazi iz vozila |
 | Rent vozilo kao besplatno vozilo zauvek | ✅ | Najam najviše 3 sata unapred; vraća se kad istekne, na izlazak, uništenje ili `/vratirent`; slobodno vozilo odgurano sa mesta vraća se posle 10 minuta |
 | Rent vozilo da se prođe kamera bez kazne | ✅ | Kazna stiže onome ko je iznajmio |
 | Rent vozilo u gepek, prodaju ili tjuning | ✅ | Ti sistemi rade samo sa ličnim vozilima |
-| Tjuning uz mehaničara bez plaćanja | ✅ | Svaki deo se plaća pre nego što se stavi; skidanje je besplatno; meni se zatvara kad mehaničar ode ili završi smenu |
+| Tjuning uz mehaničara bez plaćanja | ✅ | Deo se prvo proba, a plaća se drugim izborom pre nego što ostane na vozilu; skidanje je besplatno; meni se zatvara kad mehaničar ode ili završi smenu |
 | Natpis vozila ostane da visi posle brisanja vozila | ✅ | Natpis se briše pre svakog brisanja admin, rent i vozila za ispit |
 | Igrač zaglavi vozilo na 0% i ne može da ga pomeri | ✅ | Šlep mehaničara ili `/respawnveh`; lično vozilo se čuva sa najmanje 300 HP |
 | Poziv 555 preduži red u chatu | ✅ | Opis je najviše 64 slova, pa red sa imenom i kvartom staje u 144 znaka |
-| Admin vozilo ili vozilo za ispit kažnjeno kamerom | ✅ | Kamere i dalje snimaju samo lična vozila |
+| Admin vozilo ili vozilo za ispit kažnjeno kamerom | ✅ | Kamere snimaju lična, rent i vozila poslova |
 | Dozvola bez ispita | 👁 | Samo ribolov se kupuje; ostalo samo posle teorije i vožnje ili od admina nivoa 4 (log) |
 | Admin daje dodatna mesta za vozila prijateljima | 👁 | Samo nivo 4, najviše 5 mesta, svaka promena ide u admin log |
 | Admin ostane bez kontrola ili sa zaglavljenom kamerom posle `/atune` | ✅ | Kamera i kontrole se vraćaju pri zatvaranju menija, izlasku iz vozila, smrti i izlasku sa servera; admin koga je drugi admin zamrznuo (`/freeze`) ostaje zamrznut |
@@ -527,17 +537,27 @@ Every new system or change goes through these questions, against all existing sy
 | The helmet is changed in a vehicle to get around a camera or test check | ✅ | The camera and the test look at the moment the player passes; putting a helmet on while riding is allowed and is no offence |
 | A mechanic tows someone's working vehicle away | ✅ | Only vehicles below 20% or out of fuel are towed, and only with nobody at the wheel |
 | A mechanic charges for a repair that was not done | ✅ | The money is taken only when the repair is finished and the mechanic is still next to the vehicle |
-| Friends repair each other for $50 and nobody uses the service | 👁 | The price is agreed (at least $50); watch the economy and, if needed, add parts the mechanic has to buy |
+| Friends repair each other for $50 and nobody uses the service | ✅ | The price is fixed per percent ($20 in the field, $15 in the workshop, $50 per tyre); the mechanic gets 60%, and 40% are parts that leave the game |
+| An offer, then a crash before accepting (a cheap repair of heavy damage) | ✅ | On accepting, the condition and the number of popped tyres must match the offer; otherwise a new offer is needed |
+| The mechanic breaks the animation or walks off mid-repair | ✅ | Frozen while the repair runs; it is broken off if the mechanic gets hurt, ends the shift, the driver leaves or the vehicle moves more than 1.5 m; payment only at the end |
+| The mechanic stays frozen after a repair | ✅ | Unfrozen at the end and on every break-off, unless an admin froze them (`/freeze`) |
+| The field used instead of the workshop | ✅ | The field goes to 60% at most and no body work; everything above only in the workshop (aircraft and boats at the aircraft and boat service) |
+| Tuning on the street next to the workshop | ✅ | Only while the vehicle stands on the inspection spot (6 m) |
+| A part being tried on stays without payment | ✅ | The trial is undone on leaving the list, picking another part, closing the menu, leaving the vehicle, death and disconnect; the same for paintjobs and colours |
+| Starting the engine by hammering N | ✅ | After a failed start the engine cannot be started for 3 s; the chance depends on the condition (10–40%) |
+| An aircraft or boat stalls while moving | ✅ | Aircraft and boat engines never stall while moving; they start badly only while standing |
+| A job vehicle passes a camera without a fine | ✅ | The fine goes to the driver |
+| `/vratirent` as a free teleport back | ✅ | Works only from inside the rental; the vehicle goes back to its spot and the player stays where they are |
 | A mechanic repairs their own vehicle | ✅ | `/popravi` and `/tjuning` cannot target oneself; the service works only when no mechanic is on a shift |
 | Someone drives a job vehicle without the job | ✅ | A driver without a shift is thrown out; only a worker on a shift has the key (engine); after the shift or quitting they leave the vehicle |
 | A rental as a free vehicle forever | ✅ | At most 3 hours ahead; it goes back when the time runs out, on disconnect, when destroyed or with `/vratirent`; a free one pushed off its spot returns after 10 minutes |
 | A rental used to pass a camera without a fine | ✅ | The fine goes to whoever rented it |
 | A rental in the trunk, sale or tuning systems | ✅ | Those systems work with personal vehicles only |
-| Tuning at the mechanic without paying | ✅ | Every part is paid before it goes on; removing is free; the menu closes when the mechanic leaves or ends the shift |
+| Tuning at the mechanic without paying | ✅ | A part is first tried on and paid with the second pick before it stays on the vehicle; removing is free; the menu closes when the mechanic leaves or ends the shift |
 | A vehicle label left hanging after the vehicle is deleted | ✅ | The label is removed before every admin, rental and test vehicle is destroyed |
 | A player stuck with a vehicle at 0% that cannot move | ✅ | The mechanic's tow truck or `/respawnveh`; a personal vehicle is saved with at least 300 HP |
 | A 555 call too long for the chat line | ✅ | The description is at most 64 characters, so the line with name and district fits in 144 |
-| An admin or test vehicle fined by a camera | ✅ | Cameras still photograph only personal vehicles |
+| An admin or test vehicle fined by a camera | ✅ | Cameras photograph personal, rental and job vehicles |
 | A license without a test | 👁 | Only fishing is bought; the rest only after theory and the drive, or from a level 4 admin (logged) |
 | An admin gives friends extra vehicle slots | 👁 | Level 4 only, at most 5 slots, every change goes to the admin log |
 | An admin is left without controls or with a stuck camera after `/atune` | ✅ | The camera and controls come back when the menu closes, on leaving the vehicle, on death and on disconnect; an admin frozen by another admin (`/freeze`) stays frozen |

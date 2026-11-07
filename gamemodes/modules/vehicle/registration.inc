@@ -82,7 +82,15 @@ static stock Veh_CheckInspection(playerid)
         Msg_Error(playerid, "Bicikli se ne registruju.");
         return -1;
     }
-    if (!Point_Require(playerid, POINT_INSPECTION))
+    if (Veh_NeedsHangar(vehicleid))
+    {
+        if (!Point_IsWithin(playerid, POINT_HANGAR, POINT_HANGAR_RADIUS))
+        {
+            Msg_Error(playerid, "Letelice i brodovi idu na pregled u servis letelica i brodova (/gps).");
+            return -1;
+        }
+    }
+    else if (!Point_Require(playerid, POINT_INSPECTION))
     {
         return -1;
     }

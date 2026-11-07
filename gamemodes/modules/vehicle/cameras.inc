@@ -193,8 +193,7 @@ static stock Cam_SpeedFine(over)
     return over <= 40 ? FINE_SPEED_MID : FINE_SPEED_HIGH;
 }
 
-// Personal vehicles and rentals are photographed (a rental's fines go to whoever rented it); job and faction
-// vehicles get their own rules when they exist.
+// Personal vehicles, rentals and job vehicles are photographed; faction vehicles get their own rules when they exist.
 stock Cam_OnPlayerEnterArea(playerid, STREAMER_TAG_AREA:areaid)
 {
     if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
@@ -207,7 +206,7 @@ stock Cam_OnPlayerEnterArea(playerid, STREAMER_TAG_AREA:areaid)
         return;
     }
     new vehicleid = GetPlayerVehicleID(playerid), slot = g_VehSlotOf[vehicleid], model = GetVehicleModel(vehicleid);
-    if ((slot == -1 && Rent_RenterDbId(vehicleid) == 0) || Fuel_TankSize(model) == 0)
+    if (Cam_PayerDbId(playerid, vehicleid) == 0 || Fuel_TankSize(model) == 0)
     {
         return;
     }
@@ -248,18 +247,38 @@ stock Cam_OnPlayerEnterArea(playerid, STREAMER_TAG_AREA:areaid)
 }
 
 // One line per fine: both reasons in one line ran past the 144-character chat limit and the client dropped it.
-static stock Cam_Fine(playerid, vehicleid, const reason[], amount)
+// Who pays: the owner of a personal vehicle, whoever rented a rental, and the driver of a job vehicle; 0 for nobody.
+static stock Cam_PayerDbId(playerid, vehicleid)
 {
-    new slot = g_VehSlotOf[vehicleid], ownerid, name[48];
+    new slot = g_VehSlotOf[vehicleid];
     if (slot != -1)
     {
-        ownerid = Fine_Add(g_Veh[slot][vOwnerDbId], g_Veh[slot][vDbId], g_Veh[slot][vPlate], reason, amount);
+        return g_Veh[slot][vOwnerDbId];
+    }
+    if (Rent_IsRentVehicle(vehicleid))
+    {
+        return Rent_RenterDbId(vehicleid);
+    }
+    return g_JobVehicle[vehicleid] != JOB_NONE ? g_Player[playerid][pDbId] : 0;
+}
+
+static stock Cam_Fine(playerid, vehicleid, const reason[], amount)
+{
+    new slot = g_VehSlotOf[vehicleid], ownerid, name[48], payer = Cam_PayerDbId(playerid, vehicleid);
+    if (slot != -1)
+    {
+        ownerid = Fine_Add(payer, g_Veh[slot][vDbId], g_Veh[slot][vPlate], reason, amount);
         strcopy(name, Veh_Name(slot));
+    }
+    else if (Rent_IsRentVehicle(vehicleid))
+    {
+        ownerid = Fine_Add(payer, 0, "RENT", reason, amount);
+        format(name, sizeof(name), "rent vozilo %s", Veh_ModelName(GetVehicleModel(vehicleid)));
     }
     else
     {
-        ownerid = Fine_Add(Rent_RenterDbId(vehicleid), 0, "RENT", reason, amount);
-        format(name, sizeof(name), "rent vozilo %s", Veh_ModelName(GetVehicleModel(vehicleid)));
+        ownerid = Fine_Add(payer, 0, "POSAO", reason, amount);
+        format(name, sizeof(name), "vozilo posla %s", Veh_ModelName(GetVehicleModel(vehicleid)));
     }
     if (ownerid != INVALID_PLAYER_ID)
     {

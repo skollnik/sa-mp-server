@@ -214,6 +214,12 @@ stock Veh_CountOwned(owner_dbid)
     return count;
 }
 
+// The GTA health for a condition in percent, the reverse of Veh_Condition.
+stock Float:Veh_HealthAt(percent)
+{
+    return VEH_HEALTH_FIRE + (VEH_HEALTH_FULL - VEH_HEALTH_FIRE) * percent / 100.0;
+}
+
 // The condition players see: 100 for a new vehicle, 0 when it catches fire.
 stock Veh_Condition(vehicleid)
 {
@@ -608,7 +614,7 @@ static stock Veh_CheckEngine(vehicleid, now)
 {
     new Float:health;
     GetVehicleHealth(vehicleid, health);
-    if (health >= VEH_ENGINE_WEAK_HEALTH || !Veh_CanBreakDown(vehicleid))
+    if (health >= VEH_ENGINE_WEAK_HEALTH || !Veh_CanStall(vehicleid))
     {
         g_VehStallAt[vehicleid] = 0;
         return;
@@ -627,11 +633,29 @@ static stock Veh_CheckEngine(vehicleid, now)
     }
 }
 
-// Aircraft and boats are left out: a dead engine there means a crash or drifting with nobody able to tow.
-stock bool:Veh_CanBreakDown(vehicleid)
+// Aircraft and boats cannot reach the workshop or the inspection, so the hangar point stands in for both.
+stock bool:Veh_NeedsHangar(vehicleid)
+{
+    new E_VEH_CLASS:class = Veh_Class(GetVehicleModel(vehicleid));
+    return class == VEH_CLASS_AIR || class == VEH_CLASS_BOAT;
+}
+
+// Aircraft and boats never stall while running: a dead engine there means a crash or drifting with nobody able to tow.
+stock bool:Veh_CanStall(vehicleid)
 {
     new E_VEH_CLASS:class = Veh_Class(GetVehicleModel(vehicleid));
     return class != VEH_CLASS_AIR && class != VEH_CLASS_BOAT && class != VEH_CLASS_BICYCLE;
+}
+
+// A weak engine may refuse to start; aircraft and boats only while they stand, so one never drops out of the sky.
+static stock bool:Veh_StartCanFail(vehicleid)
+{
+    if (Veh_CanStall(vehicleid))
+    {
+        return true;
+    }
+    new E_VEH_CLASS:class = Veh_Class(GetVehicleModel(vehicleid));
+    return (class == VEH_CLASS_AIR || class == VEH_CLASS_BOAT) && Veh_SpeedKmh(vehicleid) < VEH_ENGINE_STILL_KMH;
 }
 
 forward Veh_Tick();
@@ -760,6 +784,11 @@ stock Veh_ToggleEngine(playerid)
         Msg_Error(playerid, "Vozilo nema goriva. Benzinska pumpa se trazi na /gps, a gorivo se toci sa /gorivo.");
         return;
     }
+    if (gettime() < g_VehStartRetryAt[vehicleid])
+    {
+        Msg_Error(playerid, "Motor se gusi; sacekajte trenutak pre sledeceg pokusaja.");
+        return;
+    }
     Chat_Action(playerid, "okrece kljuc u bravi.");
     GameTextForPlayer(playerid, "~w~paljenje...", VEH_ENGINE_START_MS, 6);
     g_VehStartTimer[playerid] = SetTimerEx("Veh_FinishStart", VEH_ENGINE_START_MS, false, "ddd", playerid, vehicleid, g_AccountRace[playerid]);
@@ -779,21 +808,24 @@ public Veh_FinishStart(playerid, vehicleid, race)
     }
     new Float:health;
     GetVehicleHealth(vehicleid, health);
-    new bool:breaks = Veh_CanBreakDown(vehicleid);
+    new bool:breaks = Veh_StartCanFail(vehicleid);
     if (breaks && health < VEH_ENGINE_DEAD_HEALTH)
     {
         Chat_Action(playerid, "pokusava da upali motor, ali motor ne pali.");
         Msg_Error(playerid, "Motor je previse ostecen (stanje %d%%) i ne pali. Vozilo mora na slep: /pozovi 555 [opis].", Veh_Condition(vehicleid));
         return 1;
     }
-    if (breaks && health < VEH_ENGINE_WEAK_HEALTH && random(VEH_ENGINE_START_CHANCE) != 0)
+    // The worse the engine, the lower the chance, so every try is a gamble rather than a fixed count.
+    new chance = VEH_ENGINE_CHANCE_MIN + floatround((VEH_ENGINE_CHANCE_MAX - VEH_ENGINE_CHANCE_MIN) * (health - VEH_ENGINE_DEAD_HEALTH) / (VEH_ENGINE_WEAK_HEALTH - VEH_ENGINE_DEAD_HEALTH));
+    if (breaks && health < VEH_ENGINE_WEAK_HEALTH && random(100) >= chance)
     {
+        g_VehStartRetryAt[vehicleid] = gettime() + VEH_ENGINE_RETRY_S;
         Chat_Action(playerid, "pokusava da upali motor, ali motor se gusi.");
         GameTextForPlayer(playerid, "~r~motor nije upalio", 1500, 6);
         return 1;
     }
     Veh_SetParam(vehicleid, VEH_PARAM_ENGINE, true);
-    g_VehStallAt[vehicleid] = health < VEH_ENGINE_WEAK_HEALTH ? gettime() + VEH_ENGINE_STALL_MIN_S + random(VEH_ENGINE_STALL_MAX_S - VEH_ENGINE_STALL_MIN_S) : 0;
+    g_VehStallAt[vehicleid] = health < VEH_ENGINE_WEAK_HEALTH && Veh_CanStall(vehicleid) ? gettime() + VEH_ENGINE_STALL_MIN_S + random(VEH_ENGINE_STALL_MAX_S - VEH_ENGINE_STALL_MIN_S) : 0;
     GameTextForPlayer(playerid, "~g~motor upaljen", 1500, 6);
     return 1;
 }

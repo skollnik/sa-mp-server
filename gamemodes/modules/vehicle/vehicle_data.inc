@@ -35,7 +35,13 @@ enum E_VEH_CLASS
 #define VEH_ENGINE_WEAK_HEALTH  (400.0)
 // Below this it does not start at all and the vehicle has to be towed.
 #define VEH_ENGINE_DEAD_HEALTH  (300.0)
-#define VEH_ENGINE_START_CHANCE (3)
+// Chance in percent that a weak engine starts: the lower end just above dead, the upper end just below weak.
+#define VEH_ENGINE_CHANCE_MIN   (10)
+#define VEH_ENGINE_CHANCE_MAX   (40)
+// After a failed start, so holding N does not try again and again.
+#define VEH_ENGINE_RETRY_S      (3)
+// Aircraft and boats below this speed count as standing, and only then can their engine fail to start.
+#define VEH_ENGINE_STILL_KMH    (5.0)
 #define VEH_ENGINE_STALL_MIN_S  (60)
 #define VEH_ENGINE_STALL_MAX_S  (180)
 // GTA health: 1000 is a new vehicle and it catches fire at 250, which players see as 100% and 0%.
@@ -92,7 +98,8 @@ enum E_VEH
     vDiedAt
 }
 
-forward bool:Veh_CanBreakDown(vehicleid);
+forward bool:Veh_CanStall(vehicleid);
+forward bool:Veh_NeedsHangar(vehicleid);
 forward bool:Rent_IsRentVehicle(vehicleid);
 forward bool:Rent_IsRenter(playerid, vehicleid);
 
@@ -104,6 +111,7 @@ new Float:g_VehFuel[MAX_VEHICLES];
 new bool:g_VehFuelReserveWarned[MAX_VEHICLES];
 // When a weak engine that is running dies again; 0 means the next tick below the limit kills it.
 new g_VehStallAt[MAX_VEHICLES];
+new g_VehStartRetryAt[MAX_VEHICLES];
 // The short label on special vehicles (ADMIN, RENT, AUTO SKOLA, MEHANICAR).
 new STREAMER_TAG_3D_TEXT_LABEL:g_VehLabel[MAX_VEHICLES];
 new g_VehListed[MAX_PLAYERS][VEH_LIST_SIZE];

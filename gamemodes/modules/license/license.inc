@@ -511,7 +511,7 @@ static stock Lic_StartDrive(playerid)
 
     g_TestVehicleOwner[vehicleid] = playerid;
     Fuel_Set(vehicleid, float(Fuel_TankSize(GetVehicleModel(vehicleid))));
-    Veh_SetLabel(vehicleid, "AUTO SKOLA", COLOR_SERVER);
+    Veh_SetLabel(vehicleid, "[AUTO SKOLA]", COLOR_SERVER);
     g_LicTest[playerid][ltSeated] = false;
     // The school lends a helmet for the motorbike test; /kaciga still puts on the player's own first.
     Safety_LendHelmet(playerid, license == LIC_MOTO);

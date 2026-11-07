@@ -67,7 +67,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **VEH-3 Ključevi:** zaključavanje/otključavanje (taster Y), jedna kopija ključa za drugog igrača.
 - **VEH-4 Ručno upravljanje:** motor, svetla, hauba i gepek.
 - **VEH-5 Gorivo:** potrošnja zavisi od tipa vozila. Toči se na benzinskim pumpama, a postoji i kanister.
-- **VEH-6 Oštećenja i popravka:** stanje vozila u procentima (brzinomer, `/v`, ponude), kilometraža ličnih vozila; ispod 20% motor otkazuje i teško pali, ispod 7% ne pali i vozilo ide na šlep. Popravka kod mehaničara ili u servisu radionice.
+- **VEH-6 Oštećenja i popravka:** stanje vozila u procentima (brzinomer, `/v`, ponude), kilometraža ličnih vozila; ispod 20% motor otkazuje i pali nasumično (10–40%, 3 s između pokušaja), ispod 7% ne pali i vozilo ide na šlep; letelice i brodovi se ne gase u pokretu i teško pale samo dok stoje. Popravka kod mehaničara ili u servisu radionice; letelice i brodovi u servisu letelica i brodova (`hangar`), gde je i njihov tehnički pregled.
 - **VEH-7 Parkiranje** (`/v parkiraj`): vozilo je stalno u svetu, a na parking se vraća posle restarta servera, uništenja ili admin reseta.
 - **VEH-8 Gepek / pregradak:** inventar u vozilu.
 - **VEH-9 Rent-a-car i javna vozila:** rent vozila stoje na mapi (aerodrom, Unity), uđeš i `/rent [sati]`; vozila poslova stoje na parkingu posla i vozi ih samo radnik na smeni.
@@ -75,7 +75,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **VEH-11 Impound (pauk služba):** odneseno vozilo se otkupljuje.
 - **VEH-12 Alarm i krađa:** obijanje brave, vruća žica, prodaja na otpadu (chop shop).
 - **VEH-13 Pojas i kaciga:** `/pojas` u autu, kombiju, kamionu i letelici, `/kaciga` na motoru (kaciga se kupuje u prodavnici odeće). Udes bez njih oduzima HP, a jak udes bez pojasa izbacuje kroz šoferšajbnu. Kamere kažnjavaju vozača bez pojasa ili kacige; na ispitu za auto, motor i kamion bez njih se pada. Policija proverava u fazi 5.
-- **VEH-14 Natpisi na vozilima:** kratak natpis u visini vozila (ADMIN, RENT, AUTO SKOLA, MEHANICAR; kasnije policija i ostali).
+- **VEH-14 Natpisi na vozilima:** kratak natpis u uglastim zagradama u visini vozila: `[ADMIN]` crni, `[RENT]` beli sa cenom ispod dok je slobodan, `[AUTO SKOLA]` plavi, `[MEHANICAR]` sivi; kasnije policija i ostali.
 
 ### PROP — Imovina
 - **PROP-1 Kuće:** kupovina, prodaja državi ili igraču, zaključavanje, enterijeri različite veličine.
@@ -96,7 +96,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### PHONE — Telefon
 - **PHONE-1 Broj telefona:** telefon i SIM kartica se kupuju odvojeno, broj je na nalogu; pozivi (`/pozovi`, `/javi`, `/prekini`), SMS i javni imenik se plaćaju kreditom; lični kontakti; meni `/telefon`; broj se gasi posle 6 meseci neaktivnosti.
-- **PHONE-2 Hitni brojevi:** 911 (policija/hitna/vatrogasci), taksi, mehaničar.
+- **PHONE-2 Hitni brojevi:** 911 (policija/hitna/vatrogasci), 555 mehaničar, kasnije taksi; brojevi službi su uvek na vrhu imenika i ne brišu se.
 - **PHONE-3 Govornice.**
 - **PHONE-4 Prisluškivanje / praćenje lokacije** (za policiju, sa nalogom).
 
@@ -149,7 +149,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 ### JOB — Civilni poslovi
 - **JOB-1 Okvir za poslove** (osnova urađena: `/posao` u opštini, `/oprema` na mestu posla, `/otkaz`, `/posaoinfo`; posao koji vozi traži dozvolu): posao se uzima u opštini ili na lokaciji. Postoje checkpoint misije, plata po turi i skill nivo posla.
 - **JOB-2 Kamiondžija:** dostava produkata firmama.
-- **JOB-3 Mehaničar:** popravka na terenu (motor do 60%, gume) i u radionici (sve), tjuning i farbanje u radionici, poziv na 555 sa GPS-om, šlep za pokvarena vozila.
+- **JOB-3 Mehaničar:** popravka po procentima sa fiksnom cenom: na terenu do 60% i pukle gume, u radionici do traženog procenta uz karoseriju srazmerno; mehaničar je zamrznut dok radi. Tjuning i farbanje (`/tune`) na mestu za tehnički pregled, deo se prvo proba pa plaća. Poziv na 555 sa GPS-om, šlep za pokvarena vozila.
 - **JOB-4 Ostali poslovi:** dostavljač pice, smetlar, autobuski vozač, čistač ulica, ribar, farmer, drvoseča, rudar, kurir.
 - **JOB-5 Taksi** (kao posao ili frakcija, vidi otvorena pitanja).
 
@@ -237,7 +237,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **VEH-3 Keys:** lock/unlock (Y key), one key copy for another player.
 - **VEH-4 Manual controls:** engine, lights, hood and trunk.
 - **VEH-5 Fuel:** consumption depends on vehicle type. Refuel at gas stations, or use a jerry can.
-- **VEH-6 Damage and repair:** the vehicle condition in percent (speedometer, `/v`, offers), mileage of personal vehicles; below 20% the engine fails and starts badly, below 7% it does not start and the vehicle is towed. Repairs at the mechanic or the workshop service.
+- **VEH-6 Damage and repair:** the vehicle condition in percent (speedometer, `/v`, offers), mileage of personal vehicles; below 20% the engine fails and starts at random (10–40%, 3 s between tries), below 7% it does not start and the vehicle is towed; aircraft and boats never stall while moving and start badly only while standing. Repairs at the mechanic or the workshop service; aircraft and boats at the aircraft and boat service (`hangar`), which is also their inspection.
 - **VEH-7 Parking** (`/v parkiraj`): the vehicle is always in the world and goes back to its parking spot after a server restart, destruction or admin reset.
 - **VEH-8 Trunk / glovebox:** in-vehicle inventory.
 - **VEH-9 Rentals and public job vehicles:** rentals stand on the map (airport, Unity), get in and `/rent [hours]`; job vehicles stand at the job's parking and only a worker on a shift drives them.
@@ -245,7 +245,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **VEH-11 Impound (tow service):** an impounded vehicle has to be bought back.
 - **VEH-12 Alarm and theft:** lockpicking, hotwiring, selling at a chop shop.
 - **VEH-13 Seatbelt and helmet:** `/pojas` in cars, vans, trucks and aircraft, `/kaciga` on motorbikes (the helmet is bought in the clothing shop). A crash without them costs HP, and a hard crash without a belt throws the player through the windscreen. Cameras fine a driver without a belt or helmet; on the car, motorbike and truck tests driving without them fails the test. Police check them in phase 5.
-- **VEH-14 Vehicle labels:** a short label at the vehicle's height (ADMIN, RENT, AUTO SKOLA, MEHANICAR; later the police and the rest).
+- **VEH-14 Vehicle labels:** a short label in square brackets at the vehicle's height: `[ADMIN]` black, `[RENT]` white with the price below while free, `[AUTO SKOLA]` blue, `[MEHANICAR]` grey; later the police and the rest.
 
 ### PROP — Property
 - **PROP-1 Houses:** buy, sell to the state or a player, lock, interiors of different sizes.
@@ -266,7 +266,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### PHONE — Phone
 - **PHONE-1 Phone number:** the phone and the SIM card are bought separately, the number belongs to the account; calls (`/pozovi`, `/javi`, `/prekini`), SMS and the public directory are paid with credit; personal contacts; a `/telefon` menu; the number is freed after 6 months of inactivity.
-- **PHONE-2 Emergency numbers:** 911 (police/EMS/fire), taxi, mechanic.
+- **PHONE-2 Emergency numbers:** 911 (police/EMS/fire), 555 mechanic, later taxi; service numbers always sit at the top of the contacts and cannot be deleted.
 - **PHONE-3 Payphones.**
 - **PHONE-4 Wiretap / location tracking** (police, with a warrant).
 
@@ -319,7 +319,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 ### JOB — Civilian jobs
 - **JOB-1 Job framework** (the base is done: `/posao` at the city hall, `/oprema` at the workplace, `/otkaz`, `/posaoinfo`; a job that drives needs the license): a job is taken at City Hall or on location. There are checkpoint missions, pay per run and a job skill level.
 - **JOB-2 Trucker:** delivers products to businesses.
-- **JOB-3 Mechanic:** field repairs (engine up to 60%, tyres) and workshop repairs (everything), tuning and paint in the workshop, the 555 call with GPS, a tow truck for broken-down vehicles.
+- **JOB-3 Mechanic:** repairs by percent at a fixed price: in the field up to 60% and popped tyres, in the workshop up to the asked percent with the body in proportion; the mechanic is frozen while working. Tuning and paint (`/tune`) on the inspection spot, a part is tried on first and then paid. The 555 call with GPS, a tow truck for broken-down vehicles.
 - **JOB-4 Other jobs:** pizza delivery, garbage collector, bus driver, street sweeper, fisherman, farmer, lumberjack, miner, courier.
 - **JOB-5 Taxi** (as a job or a faction, see open questions).
 

@@ -23,7 +23,7 @@ cmd:pomoc(playerid, params[])
         C_WHITE "/inv - inventar    /podigni - podizanje bacenog predmeta    F - baca cigaretu ili flasu iz ruke\n" \
         "/dodaci - stavljanje i skidanje naocara, kapa, ranca i torbe (kupuju se u prodavnici odece, /kupi)\n" \
         "Traka gladi je ispod novca: jedite u prodavnici 24/7, na nuli gubite HP\n" \
-        "/telefon - meni telefona (broj, kredit, imenik)    /pozovi /javi /prekini /sms /kontakti (911 - hitne sluzbe)\n" \
+        "/telefon - meni telefona (broj, kredit, imenik)    /pozovi /javi /prekini /sms /kontakti (911 i 555 su uvek u imeniku)\n" \
         "SIM kartica i dopuna kredita se kupuju u prodavnici 24/7 (/kupi)\n\n" \
         C_SERVER "Vozila\n" \
         C_WHITE "N - motor (pali se uz kljuc; upaljeno vozilo moze da vozi svako)    Y - zakljucavanje najblizeg vaseg vozila\n" \
@@ -35,10 +35,11 @@ cmd:pomoc(playerid, params[])
         "/tablice - tablice na salteru u policiji    /v tablice - postavljanje tablica    /kazne - kazne sa kamera (placaju se u opstini ili policiji)\n" \
         "/pojas - vezivanje pojasa u vozilu    /kaciga - kaciga na motoru (kupuje se u prodavnici odece)\n" \
         "/skola - auto skola (dozvole: teorija i voznja)    /dozvole - vase dozvole    /pokazidozvole - igracu pored vas\n" \
-        "/rent [sati] - u vozilu sa natpisom RENT    /vratirent - vracanje    /servis - popravka u radionici kad nema mehanicara    /pozovi 555 [opis] - mehanicar\n\n" \
+        "/rent [sati] - u vozilu sa natpisom [RENT]    /vratirent - vracanje (iz vozila)    /pozovi 555 [opis] - mehanicar\n" \
+        "/servis - popravka do 100% u radionici kad nema mehanicara (letelice i brodovi: servis letelica i brodova)\n\n" \
         C_SERVER "Posao\n" \
         C_WHITE "/posao - poslovi u opstini    /posaoinfo - uputstvo    /oprema - pocetak i kraj smene    /otkaz\n" \
-        "Mehanicar: /popravi [id] [cena]    /tjuning [id]    /prihvatipoziv [id]    /vuci (iz slepera)\n\n" \
+        "Mehanicar: /popravi [id] [do %]    /tune [id]    /prihvatipoziv [id]    /vuci (iz slepera)\n\n" \
         C_SERVER "Pomoc i podrska\n" \
         C_WHITE "/n - newbie chat (pitanja novih igraca)    /ask - pitanje helperima\n" \
         "/report - prijava igraca adminima    /admins, /helpers - tim online    /ahelp, /hhelp - komande tima\n\n" \
