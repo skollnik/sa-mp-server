@@ -304,7 +304,7 @@ cmd:mesta(playerid, params[])
 static const g_PointEditMenu[][E_MENU_ITEM] =
 {
     { ADMIN_LEVEL_HEAD, "Pomeri ovde (gde stojite)", "izmenimesto %s ovde", "" },
-    { ADMIN_LEVEL_HEAD, "Promeni tip", "izmenimesto %s tip", "Tip (banka, bankomat, opstina, prodavnica, odeca, pumpa...):" }
+    { ADMIN_LEVEL_HEAD, "Promeni tip", "izmenimesto %s tip", "Tip (npr. pregledservis; spisak: /napravimesto):" }
 };
 
 cmd:izmenimesto(playerid, params[])
@@ -353,7 +353,7 @@ cmd:izmenimesto(playerid, params[])
         }
         if (type == E_POINT_TYPE:-1)
         {
-            Msg_Error(playerid, "Nepoznat tip. Tipovi: banka, bankomat, opstina, prodavnica, odeca, pumpa, pregled, policija.");
+            Msg_Error(playerid, "Nepoznat tip. Spisak tipova otvara /napravimesto bez reci.");
             return 1;
         }
         g_Points[slot][ptType] = type;

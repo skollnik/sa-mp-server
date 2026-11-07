@@ -91,7 +91,7 @@ static stock Veh_CheckInspection(playerid)
             return -1;
         }
     }
-    else if (!Point_Require(playerid, POINT_INSPECTION))
+    else if (!Point_IsNear(playerid, POINT_INSPECTION_SERVICE) && !Point_Require(playerid, POINT_INSPECTION))
     {
         return -1;
     }

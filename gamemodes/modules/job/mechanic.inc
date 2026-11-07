@@ -137,7 +137,7 @@ stock Mech_OnPlayerDisconnect(playerid)
 }
 
 // Cars and motorbikes are serviced in the workshop; aircraft and boats at their own service, since they cannot get to the workshop.
-// The inspection bay counts as the workshop too, so the lift needs no second workshop point with its own /oprema.
+// An inspection placed as "pregledservis" is a workshop bay too, so the lift needs no second workshop point with its own /oprema.
 static stock bool:Mech_AtServicePlace(playerid, vehicleid)
 {
     new E_POINT_TYPE:type = Veh_ServicePoint(vehicleid);
@@ -145,7 +145,7 @@ static stock bool:Mech_AtServicePlace(playerid, vehicleid)
     {
         return Point_IsWithin(playerid, type, POINT_HANGAR_RADIUS);
     }
-    return Point_IsWithin(playerid, POINT_WORKSHOP, MECH_WORKSHOP_RADIUS) || Point_IsWithin(playerid, POINT_INSPECTION, MECH_WORKSHOP_RADIUS);
+    return Point_IsWithin(playerid, POINT_WORKSHOP, MECH_WORKSHOP_RADIUS) || Point_IsWithin(playerid, POINT_INSPECTION_SERVICE, MECH_WORKSHOP_RADIUS);
 }
 
 // Engine work on a car, van or truck is done from the front, under the open bonnet.
