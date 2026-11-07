@@ -36,7 +36,7 @@ cmd:pomoc(playerid, params[])
         "/pojas - vezivanje pojasa u vozilu    /kaciga - kaciga na motoru (kupuje se u prodavnici odece)\n" \
         "/skola - auto skola (dozvole: teorija i voznja)    /dozvole - vase dozvole    /pokazidozvole - igracu pored vas\n" \
         "/rent [sati] - u vozilu sa natpisom [RENT]    /vratirent - vracanje (iz vozila)    /pozovi 555 [opis] - mehanicar\n" \
-        "/servis - popravka do 100% u radionici kad nema mehanicara (letelice i brodovi: servis letelica i brodova)\n\n" \
+        "/servis - popravka do 100% u radionici kad nema mehanicara (letelice: servis letelica, brodovi: servis brodova; vozilo posla besplatno)\n\n" \
         C_SERVER "Posao\n" \
         C_WHITE "/posao - poslovi u opstini    /posaoinfo - uputstvo    /oprema - pocetak i kraj smene    /otkaz\n" \
         "Mehanicar: /popravi [id] [do %]    /tune [id]    /prihvatipoziv [id]    /vuci (iz slepera)\n\n" \

@@ -82,11 +82,12 @@ static stock Veh_CheckInspection(playerid)
         Msg_Error(playerid, "Bicikli se ne registruju.");
         return -1;
     }
-    if (Veh_NeedsHangar(vehicleid))
+    new E_POINT_TYPE:service = Veh_ServicePoint(vehicleid);
+    if (service != POINT_WORKSHOP)
     {
-        if (!Point_IsWithin(playerid, POINT_HANGAR, POINT_HANGAR_RADIUS))
+        if (!Point_IsWithin(playerid, service, POINT_HANGAR_RADIUS))
         {
-            Msg_Error(playerid, "Letelice i brodovi idu na pregled u servis letelica i brodova (/gps).");
+            Msg_Error(playerid, "Ovo vozilo ide na tehnicki pregled u: %s (/gps).", g_PointInfo[service][piName]);
             return -1;
         }
     }

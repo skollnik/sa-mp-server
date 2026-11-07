@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 3 | Vlasnik postavlja radionicu (`/napravimesto radionica`), servis letelica i brodova (`/napravimesto hangar`, na aerodromu i u luci) i GPS i testira korake 3.5 i 3.6; posle toga faza 4 (imovina) |
+| 3 | Vlasnik postavlja radionicu (`/napravimesto radionica`), servis letelica (`/napravimesto hangar`, aerodrom ~1990, -2348), servis brodova (`/napravimesto luka`, marina ~730, -1672), mesto za tjuning ispred radionice (`/napravimesto tjuning`) i GPS i testira korake 3.5 i 3.6; posle toga faza 4 (imovina) |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -287,6 +287,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 06.11.2026. | Saksija sa parkinga auto škole uklonjena; ostaje samo nevidljiv sudar tankog stuba (deo GTA zgrade) |
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 | 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
+| 07.11.2026. | Dopune 3.6: radionica 8 m; potvrda za `/servis`, besplatan servis vozila posla; posebni `hangar` (letelice) i `luka` (brodovi); mesto `tjuning` ispred radionice; popravka motora ispred haube; motor na ispitu pali kandidat; razmaknut lift za šlep; ispravljen dupli `%` u porukama; vraćanje boje uzima sačuvanu boju |
 | 07.11.2026. | Korak 3.6: nasumično paljenje motora i pravilo za letelice i brodove; popravka po procentima ($20/% teren do 60%, $15/% radionica, $50 guma, 60% mehaničaru), mehaničar zamrznut i stoji nad motorom; servis letelica i brodova (`hangar`) i njihov pregled; `/tjuning` je sada `/tune`, samo na mestu za tehnički pregled, proba pa plaćanje, ispravljena „Prva strana“; `/servis` na natpisu radionice i u odgovoru dispečera, cena po procentu; natpisi `[ADMIN]` crni, `[MEHANICAR]` sivi, `[RENT]` beli sa cenom; kazne sa kamera za vozila poslova vozaču; `/vratirent` iz vozila; 911 i 555 uvek u imeniku |
 | 06.11.2026. | Korak 3.5: stanje u procentima, kilometraža, kvar motora; osnova za poslove i mehaničar (popravka, tjuning, farbanje, poziv 555, šlep, servis); rent-a-car na mapi; natpisi na vozilima; pregled traži 900 HP; uvodni tekst posla (`/posaoinfo`) |
 
@@ -299,7 +300,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 3 | The owner places the workshop (`/napravimesto radionica`), the aircraft and boat service (`/napravimesto hangar`, at the airport and a dock) and GPS and tests steps 3.5 and 3.6; then phase 4 (property) |
+| 3 | The owner places the workshop (`/napravimesto radionica`), the aircraft service (`/napravimesto hangar`, airport ~1990, -2348), the boat service (`/napravimesto luka`, marina ~730, -1672), the tuning spot in front of the workshop (`/napravimesto tjuning`) and GPS and tests steps 3.5 and 3.6; then phase 4 (property) |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
@@ -579,5 +580,6 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-06 | The plant pot removed from the school lot; only the thin pole's invisible collision stays (part of the GTA building) |
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
 | 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |
+| 2026-11-07 | 3.6 additions: an 8 m workshop; a confirmation for `/servis`, a free service for job vehicles; separate `hangar` (aircraft) and `luka` (boats); the `tjuning` spot in front of the workshop; engine repairs at the bonnet; the candidate starts the engine on the test; the lift widened for the tow truck; the doubled `%` in messages fixed; undoing a colour uses the saved colour |
 | 2026-11-07 | Step 3.6: a random engine start and the rule for aircraft and boats; repairs by percent ($20/% field up to 60%, $15/% workshop, $50 a tyre, 60% to the mechanic), the mechanic frozen and standing over the engine; the aircraft and boat service (`hangar`) and their inspection; `/tjuning` is now `/tune`, only on the inspection spot, try then pay, the "first page" button fixed; `/servis` on the workshop label and in the dispatcher's reply, priced per percent; labels `[ADMIN]` black, `[MEHANICAR]` grey, `[RENT]` white with the price; camera fines for job vehicles go to the driver; `/vratirent` from the vehicle; 911 and 555 always in the contacts |
 | 2026-11-06 | Step 3.5: condition in percent, mileage, engine failure; the job framework and the mechanic (repairs, tuning, paint, the 555 call, towing, the service); rent-a-car on the map; vehicle labels; the inspection needs 900 HP; the job intro text (`/posaoinfo`) |

@@ -99,7 +99,7 @@ enum E_VEH
 }
 
 forward bool:Veh_CanStall(vehicleid);
-forward bool:Veh_NeedsHangar(vehicleid);
+forward E_POINT_TYPE:Veh_ServicePoint(vehicleid);
 forward bool:Rent_IsRentVehicle(vehicleid);
 forward bool:Rent_IsRenter(playerid, vehicleid);
 

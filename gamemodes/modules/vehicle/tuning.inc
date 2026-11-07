@@ -665,7 +665,10 @@ stock bool:Tune_OnDialogResponse(playerid, dialogid, response, const inputtext[]
         else if (Tune_AtMechanic(playerid))
         {
             new text[96];
-            GetVehicleColours(vehicleid, g_TuneOldColours[playerid][0], g_TuneOldColours[playerid][1]);
+            // The saved colours, not the game's, so "Vrati" always brings back what the owner paid for.
+            new slot = g_VehSlotOf[vehicleid];
+            g_TuneOldColours[playerid][0] = g_Veh[slot][vColor1];
+            g_TuneOldColours[playerid][1] = g_Veh[slot][vColor2];
             g_TuneColourPreview[playerid] = true;
             ChangeVehicleColours(vehicleid, colour1, colour2);
             format(text, sizeof(text), "Ovako izgleda boja %d %d.\n\nFarbanje kosta $%d.", colour1, colour2, TUNE_PRICE_PAINT);

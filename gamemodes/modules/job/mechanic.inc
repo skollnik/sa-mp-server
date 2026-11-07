@@ -1,7 +1,10 @@
 #define MECH_VEHICLE_MODEL      (525)
 #define MECH_VEHICLE_RESPAWN_S  (600)
-// From the workshop point, so the lift, the garages and the parking next to them all count as the workshop.
-#define MECH_WORKSHOP_RADIUS    (35.0)
+// Small, so a car on the street next to the workshop is not repaired; a bigger workshop gets more points.
+#define MECH_WORKSHOP_RADIUS    (8.0)
+// Where the mechanic stands in front of the bonnet, past the front of the vehicle.
+#define MECH_BONNET_GAP         (0.6)
+#define MECH_BONNET_REACH       (1.5)
 #define MECH_REACH              (6.0)
 #define MECH_SERVICE_MS         (30000)
 #define MECH_OFFER_S            (60)
@@ -133,14 +136,38 @@ stock Mech_OnPlayerDisconnect(playerid)
     }
 }
 
-// Cars and motorbikes are serviced in the workshop; aircraft and boats at the hangar point, since they cannot get to the workshop.
+// Cars and motorbikes are serviced in the workshop; aircraft and boats at their own service, since they cannot get to the workshop.
 static stock bool:Mech_AtServicePlace(playerid, vehicleid)
 {
-    if (Veh_NeedsHangar(vehicleid))
-    {
-        return Point_IsWithin(playerid, POINT_HANGAR, POINT_HANGAR_RADIUS);
-    }
-    return Point_IsWithin(playerid, POINT_WORKSHOP, MECH_WORKSHOP_RADIUS);
+    new E_POINT_TYPE:type = Veh_ServicePoint(vehicleid);
+    return Point_IsWithin(playerid, type, type == POINT_WORKSHOP ? MECH_WORKSHOP_RADIUS : POINT_HANGAR_RADIUS);
+}
+
+// Engine work on a car, van or truck is done from the front, under the open bonnet.
+static stock bool:Mech_NeedsBonnet(vehicleid)
+{
+    new E_VEH_CLASS:class = Veh_Class(GetVehicleModel(vehicleid));
+    return class == VEH_CLASS_CAR || class == VEH_CLASS_VAN || class == VEH_CLASS_TRUCK;
+}
+
+static stock Mech_BonnetSpot(vehicleid, &Float:x, &Float:y)
+{
+    new Float:z, Float:angle, Float:size_x, Float:size_y, Float:size_z;
+    GetVehiclePos(vehicleid, x, y, z);
+    GetVehicleZAngle(vehicleid, angle);
+    GetVehicleModelInfo(GetVehicleModel(vehicleid), VEHICLE_MODEL_INFO_SIZE, size_x, size_y, size_z);
+    new Float:distance = size_y / 2.0 + MECH_BONNET_GAP;
+    x -= distance * floatsin(angle, degrees);
+    y += distance * floatcos(angle, degrees);
+}
+
+// The mechanic walks to the bonnet on foot, so nobody is ever placed into a wall the vehicle is parked against.
+static stock bool:Mech_AtBonnet(mechanic, vehicleid)
+{
+    new Float:x, Float:y, Float:px, Float:py, Float:pz;
+    Mech_BonnetSpot(vehicleid, x, y);
+    GetPlayerPos(mechanic, px, py, pz);
+    return floatsqroot((px - x) * (px - x) + (py - y) * (py - y)) <= MECH_BONNET_REACH;
 }
 
 static stock Mech_OnDutyCount()
@@ -255,6 +282,17 @@ static stock Float:Mech_BodyShare(from, target)
         return 1.0;
     }
     return target > from ? float(target - from) / float(100 - from) : 0.0;
+}
+
+// Tells the mechanic to go to the bonnet when the repair needs it; returns true when it can start.
+static stock bool:Mech_CheckBonnet(mechanic, vehicleid, bool:engine)
+{
+    if (!engine || !Mech_NeedsBonnet(vehicleid) || Mech_AtBonnet(mechanic, vehicleid))
+    {
+        return true;
+    }
+    Msg_Error(mechanic, "Motor se popravlja ispred vozila: stanite ispred haube.");
+    return false;
 }
 
 static stock Mech_Price(percent, tyres, bool:shop)
@@ -376,6 +414,12 @@ static stock Mech_StartRepair(mechanic, customer)
     GetVehiclePos(vehicleid, g_MechWork[mechanic][mwX], g_MechWork[mechanic][mwY], g_MechWork[mechanic][mwZ]);
 
     TogglePlayerControllable(mechanic, false);
+    // Already within reach of the bonnet, so the short step onto its middle cannot end in a wall.
+    if (percent > 0 && Mech_NeedsBonnet(vehicleid))
+    {
+        Mech_BonnetSpot(vehicleid, px, py);
+        AC_SetPlayerPos(mechanic, px, py, pz);
+    }
     SetPlayerFacingAngle(mechanic, atan2(g_MechWork[mechanic][mwY] - py, g_MechWork[mechanic][mwX] - px) - 90.0);
     // Standing bent over the open engine; changing only tyres is done crouching by the wheel.
     if (percent > 0)
@@ -452,6 +496,14 @@ public Mech_RepairTick(mechanic, race)
 stock bool:Mech_OnDialogResponse(playerid, dialogid, response, listitem)
 {
     #pragma unused listitem
+    if (dialogid == DIALOG_MECH_SERVICE)
+    {
+        if (response)
+        {
+            Mech_StartService(playerid);
+        }
+        return true;
+    }
     if (dialogid != DIALOG_MECH_OFFER)
     {
         return false;
@@ -496,6 +548,11 @@ stock bool:Mech_OnDialogResponse(playerid, dialogid, response, listitem)
         Msg_Info(mechanic, "%s nema dovoljno novca za popravku.", Account_Name(playerid));
         return true;
     }
+    if (!Mech_CheckBonnet(mechanic, g_MechOffer[playerid][moVehicle], g_MechOffer[playerid][moTarget] > g_MechOffer[playerid][moFrom]))
+    {
+        Msg_Error(playerid, "Mehanicar mora da stoji ispred haube; prihvatite ponudu ponovo kad stane tamo.");
+        return true;
+    }
     Mech_StartRepair(mechanic, playerid);
     return true;
 }
@@ -514,7 +571,7 @@ stock Mech_TuningVehicle(customer, mechanic)
     }
     new vehicleid = GetPlayerVehicleID(customer), Float:x, Float:y, Float:z;
     GetPlayerPos(mechanic, x, y, z);
-    if (!Veh_IsOwner(customer, vehicleid) || !Point_IsNear(customer, POINT_INSPECTION) || GetVehicleDistanceFromPoint(vehicleid, x, y, z) > MECH_REACH * 2.0)
+    if (!Veh_IsOwner(customer, vehicleid) || !Point_IsNear(customer, POINT_TUNING) || GetVehicleDistanceFromPoint(vehicleid, x, y, z) > MECH_REACH * 2.0)
     {
         Msg_Error(customer, "Mehanicar vise nije pored vaseg vozila; tjuning je zavrsen.");
         return 0;
@@ -593,7 +650,7 @@ cmd:popravi(playerid, params[])
     new customer, asked;
     if (sscanf(params, "uI(100)", customer, asked))
     {
-        Msg_Usage(playerid, "/popravi [id ili ime vozaca] [do koliko %%, samo u radionici; bez broja do 100%%]");
+        Msg_Usage(playerid, "/popravi [id ili ime vozaca] [do koliko %, samo u radionici; bez broja do 100%]");
         return 1;
     }
     if (!Staff_CheckTarget(playerid, customer, "Svoje vozilo ne popravljate sami; pozovite drugog mehanicara."))
@@ -629,6 +686,10 @@ cmd:popravi(playerid, params[])
         }
         return 1;
     }
+    if (!Mech_CheckBonnet(playerid, vehicleid, percent > 0))
+    {
+        return 1;
+    }
     if (!shop && asked != 100 && asked != MECH_FIELD_PERCENT)
     {
         Msg_Info(playerid, "Na terenu se vozilo uvek popravlja do %d%%; procenat se bira u radionici.", MECH_FIELD_PERCENT);
@@ -643,7 +704,7 @@ cmd:tune(playerid, params[])
     {
         return 1;
     }
-    new customer = Staff_ParseTarget(playerid, params, "/tune [id ili ime vozaca] (vozilo stoji na mestu za tehnicki pregled)", "Svoje vozilo ne tjuningujete sami; zamolite drugog mehanicara.");
+    new customer = Staff_ParseTarget(playerid, params, "/tune [id ili ime vozaca] (vozilo stoji na mestu za tjuning)", "Svoje vozilo ne tjuningujete sami; zamolite drugog mehanicara.");
     if (customer == INVALID_PLAYER_ID)
     {
         return 1;
@@ -653,10 +714,10 @@ cmd:tune(playerid, params[])
     {
         return 1;
     }
-    // On the inspection spot only, so a car is never tuned on the street next to the workshop.
-    if (!Point_IsNear(customer, POINT_INSPECTION))
+    // On its own spot only, so a car is never tuned on the street next to the workshop.
+    if (!Point_IsNear(customer, POINT_TUNING))
     {
-        Msg_Error(playerid, "Tjuning i farbanje rade se samo kad vozilo stoji na mestu za tehnicki pregled.");
+        Msg_Error(playerid, "Tjuning i farbanje rade se samo kad vozilo stoji na mestu za tjuning (/gps).");
         return 1;
     }
     if (!Veh_IsOwner(customer, vehicleid))
@@ -732,69 +793,97 @@ cmd:vuci(playerid, params[])
     return 1;
 }
 
-// The workshop's own repair for when no mechanic is at work: always to 100%, dearer than a mechanic, the vehicle stands still while it lasts.
-cmd:servis(playerid, params[])
-{
-    if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
-    {
-        Msg_Error(playerid, "Sedite za volan vozila koje servisirate.");
-        return 1;
-    }
-    new vehicleid = GetPlayerVehicleID(playerid), count = Mech_OnDutyCount();
-    if (!Fuel_IsUsed(vehicleid))
-    {
-        Msg_Error(playerid, "Ovo vozilo se ne servisira.");
-        return 1;
-    }
-    if (!Mech_AtServicePlace(playerid, vehicleid))
-    {
-        if (Veh_NeedsHangar(vehicleid))
-        {
-            Msg_Error(playerid, "Letelice i brodovi se servisiraju u servisu letelica i brodova (/gps).");
-        }
-        else
-        {
-            Msg_Error(playerid, "Servis radi samo u mehanicarskoj radionici (/gps).");
-        }
-        return 1;
-    }
-    if (count > 0)
-    {
-        Msg_Error(playerid, "Mehanicari su na poslu (%d); pozovite ih: /pozovi 555 [opis].", count);
-        return 1;
-    }
-    if (g_MechServiceTimer[playerid] != 0)
-    {
-        Msg_Error(playerid, "Servis je vec u toku.");
-        return 1;
-    }
-    new price = Mech_ServicePrice(vehicleid);
-    if (price == 0)
-    {
-        Msg_Info(playerid, "Vozilo je ispravno (100%%) i ne treba mu servis.");
-        return 1;
-    }
-    if (g_Player[playerid][pCash] < price)
-    {
-        Msg_Error(playerid, "Servis ovog vozila kosta $%d (gotovinom).", price);
-        return 1;
-    }
-    Veh_SetParam(vehicleid, VEH_PARAM_ENGINE, false);
-    TogglePlayerControllable(playerid, false);
-    GameTextForPlayer(playerid, "~w~servis...", MECH_SERVICE_MS, 6);
-    Chat_Action(playerid, "predaje vozilo na servis.");
-    Msg_Info(playerid, "Servis traje %d sekundi i kosta $%d.", MECH_SERVICE_MS / 1000, price);
-    g_MechServiceTimer[playerid] = SetTimerEx("Mech_FinishService", MECH_SERVICE_MS, false, "ddd", playerid, vehicleid, g_AccountRace[playerid]);
-    return 1;
-}
-
 static stock Mech_ServicePrice(vehicleid)
 {
     return (100 - Veh_Condition(vehicleid)) * MECH_SERVICE_PERCENT + Mech_TyresPopped(vehicleid) * MECH_PRICE_TYRE;
 }
 
-forward Mech_FinishService(playerid, vehicleid, race);
-public Mech_FinishService(playerid, vehicleid, race)
+// The workshop's own repair: always to 100%, dearer than a mechanic, for when no mechanic is at work.
+// A job vehicle is the company's own, so its driver on duty gets it free and without waiting for mechanics to log off.
+// Returns the price (0 for a job vehicle) or -1 with the reason told.
+static stock Mech_ServiceCheck(playerid)
+{
+    if (GetPlayerState(playerid) != PLAYER_STATE_DRIVER)
+    {
+        Msg_Error(playerid, "Sedite za volan vozila koje servisirate.");
+        return -1;
+    }
+    new vehicleid = GetPlayerVehicleID(playerid);
+    if (!Fuel_IsUsed(vehicleid))
+    {
+        Msg_Error(playerid, "Ovo vozilo se ne servisira.");
+        return -1;
+    }
+    if (!Mech_AtServicePlace(playerid, vehicleid))
+    {
+        Msg_Error(playerid, "Ovo vozilo se servisira u: %s (/gps).", g_PointInfo[Veh_ServicePoint(vehicleid)][piName]);
+        return -1;
+    }
+    if (g_MechServiceTimer[playerid] != 0)
+    {
+        Msg_Error(playerid, "Servis je vec u toku.");
+        return -1;
+    }
+    new bool:company = g_JobVehicle[vehicleid] != JOB_NONE && Veh_HasKey(playerid, vehicleid), count = Mech_OnDutyCount();
+    if (!company && count > 0)
+    {
+        Msg_Error(playerid, "Mehanicari su na poslu (%d); pozovite ih: /pozovi 555 [opis].", count);
+        return -1;
+    }
+    if (Veh_Condition(vehicleid) >= 100 && Mech_TyresPopped(vehicleid) == 0)
+    {
+        Msg_Info(playerid, "Vozilo je ispravno (100%) i ne treba mu servis.");
+        return -1;
+    }
+    new price = company ? 0 : Mech_ServicePrice(vehicleid);
+    if (g_Player[playerid][pCash] < price)
+    {
+        Msg_Error(playerid, "Servis ovog vozila kosta $%d (gotovinom).", price);
+        return -1;
+    }
+    return price;
+}
+
+cmd:servis(playerid, params[])
+{
+    new price = Mech_ServiceCheck(playerid);
+    if (price == -1)
+    {
+        return 1;
+    }
+    new vehicleid = GetPlayerVehicleID(playerid), text[256], cost[48];
+    if (price == 0)
+    {
+        strcopy(cost, "besplatno (vozilo firme)");
+    }
+    else
+    {
+        format(cost, sizeof(cost), "$%d (gotovinom)", price);
+    }
+    format(text, sizeof(text), "Servis popravlja vozilo do 100%%, sa karoserijom i gumama.\n\nStanje sada: %d%%\nPukle gume: %d\nCena: %s\n\nServis traje %d sekundi; vozilo ne mozete pomerati.",
+        Veh_Condition(vehicleid), Mech_TyresPopped(vehicleid), cost, MECH_SERVICE_MS / 1000);
+    ShowPlayerDialog(playerid, DIALOG_MECH_SERVICE, DIALOG_STYLE_MSGBOX, "Servis vozila", text, "Servisiraj", "Odustani");
+    return 1;
+}
+
+// Everything is checked again, since the player could have driven off or lost money while the dialog was open.
+static stock Mech_StartService(playerid)
+{
+    new price = Mech_ServiceCheck(playerid);
+    if (price == -1)
+    {
+        return;
+    }
+    new vehicleid = GetPlayerVehicleID(playerid);
+    Veh_SetParam(vehicleid, VEH_PARAM_ENGINE, false);
+    TogglePlayerControllable(playerid, false);
+    GameTextForPlayer(playerid, "~w~servis...", MECH_SERVICE_MS, 6);
+    Chat_Action(playerid, "predaje vozilo na servis.");
+    g_MechServiceTimer[playerid] = SetTimerEx("Mech_FinishService", MECH_SERVICE_MS, false, "dddd", playerid, vehicleid, price, g_AccountRace[playerid]);
+}
+
+forward Mech_FinishService(playerid, vehicleid, price, race);
+public Mech_FinishService(playerid, vehicleid, price, race)
 {
     if (race != g_AccountRace[playerid])
     {
@@ -805,8 +894,7 @@ public Mech_FinishService(playerid, vehicleid, race)
     {
         TogglePlayerControllable(playerid, true);
     }
-    new price = Mech_ServicePrice(vehicleid);
-    if (GetPlayerVehicleID(playerid) != vehicleid || !Money_Take(playerid, price, "servis vozila"))
+    if (GetPlayerVehicleID(playerid) != vehicleid || (price > 0 && !Money_Take(playerid, price, "servis vozila")))
     {
         Msg_Error(playerid, "Servis nije uradjen.");
         return 1;
@@ -814,6 +902,13 @@ public Mech_FinishService(playerid, vehicleid, race)
     RepairVehicle(vehicleid);
     g_VehStallAt[vehicleid] = 0;
     Veh_SaveIfPersonal(vehicleid);
-    Msg_Success(playerid, "Vozilo je servisirano za $%d (stanje 100%%).", price);
+    if (price > 0)
+    {
+        Msg_Success(playerid, "Vozilo je servisirano za $%d (stanje 100%%).", price);
+    }
+    else
+    {
+        Msg_Success(playerid, "Vozilo firme je servisirano (stanje 100%).");
+    }
     return 1;
 }

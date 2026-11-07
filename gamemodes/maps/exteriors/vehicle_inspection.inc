@@ -67,10 +67,10 @@ stock Map_VehicleInspection()
     new STREAMER_TAG_OBJECT:garage_floor1 = Map_Exterior(18766, 1939.15076, -2030.66321, 12.05590, 90.00000, 180.00000, 90.00000);
     SetDynamicObjectMaterial(garage_floor, 0, 4570, "stolenbuild03", "Bow_Abattoir_Conc2");
     SetDynamicObjectMaterial(garage_floor1, 0, 4570, "stolenbuild03", "Bow_Abattoir_Conc2");
-    new STREAMER_TAG_OBJECT:lift = Map_Exterior(3440, 1937.95740, -2030.59961, 14.77788, 0.00000, 0.00000, 0.00000);
-    new STREAMER_TAG_OBJECT:lift1 = Map_Exterior(3440, 1937.96216, -2027.16748, 14.77788, 0.00000, 0.00000, 0.00000);
-    new STREAMER_TAG_OBJECT:lift2 = Map_Exterior(3440, 1934.95471, -2030.49597, 14.77788, 0.00000, 0.00000, 0.00000);
-    new STREAMER_TAG_OBJECT:lift3 = Map_Exterior(3440, 1934.78552, -2027.05859, 14.77788, 0.00000, 0.00000, 0.00000);
+    new STREAMER_TAG_OBJECT:lift = Map_Exterior(3440, 1937.95740, -2031.00000, 14.77788, 0.00000, 0.00000, 0.00000);
+    new STREAMER_TAG_OBJECT:lift1 = Map_Exterior(3440, 1937.96216, -2026.95000, 14.77788, 0.00000, 0.00000, 0.00000);
+    new STREAMER_TAG_OBJECT:lift2 = Map_Exterior(3440, 1934.95471, -2031.00000, 14.77788, 0.00000, 0.00000, 0.00000);
+    new STREAMER_TAG_OBJECT:lift3 = Map_Exterior(3440, 1934.78552, -2026.95000, 14.77788, 0.00000, 0.00000, 0.00000);
     SetDynamicObjectMaterial(lift, 0, 2361, "shopping_freezers", "white", 0xFF910610);
     SetDynamicObjectMaterial(lift1, 0, 2361, "shopping_freezers", "white", 0xFF910610);
     SetDynamicObjectMaterial(lift2, 0, 2361, "shopping_freezers", "white", 0xFF910610);
@@ -83,7 +83,7 @@ stock Map_VehicleInspection()
     SetDynamicObjectMaterial(lift_wall, 0, 2361, "shopping_freezers", "white", 0xFF910610);
     new STREAMER_TAG_OBJECT:cables = Map_Exterior(19089, 1941.67285, -2031.98425, 17.01465, 180.00000, 180.00000, 180.00000);
     new STREAMER_TAG_OBJECT:cables1 = Map_Exterior(19089, 1938.15198, -2019.60706, 13.94979, 0.00000, 90.00000, 90.00000);
-    new STREAMER_TAG_OBJECT:cables2 = Map_Exterior(19089, 1938.13782, -2026.70544, 13.94980, 180.00000, 180.00000, 180.00000);
+    new STREAMER_TAG_OBJECT:cables2 = Map_Exterior(19089, 1938.13782, -2026.50500, 13.94980, 180.00000, 180.00000, 180.00000);
     SetDynamicObjectMaterial(cables, 0, 2361, "shopping_freezers", "white", 0xFF000000);
     SetDynamicObjectMaterial(cables1, 0, 2361, "shopping_freezers", "white", 0xFF000000);
     SetDynamicObjectMaterial(cables2, 0, 2361, "shopping_freezers", "white", 0xFF000000);
@@ -113,7 +113,7 @@ stock Map_VehicleInspection()
     SetDynamicObjectMaterial(fence11, 0, 8839, "vgsecarshow", "sw_brewbrick01");
     Map_Exterior(1536, 1940.46484, -2015.92786, 12.51870, 0.00000, 0.00000, 90.37930);
     Map_Exterior(1536, 1940.42285, -2012.91736, 12.51870, 0.00000, 0.00000, 269.72070);
-    Map_Exterior(2886, 1938.07959, -2026.72119, 13.96710, 0.00000, 0.00000, 88.51147);
+    Map_Exterior(2886, 1938.07959, -2026.52000, 13.96710, 0.00000, 0.00000, 88.51147);
     Map_Exterior(1348, 1940.54248, -2033.38562, 13.18100, 0.00000, 0.00000, 0.00000);
     Map_Exterior(2610, 1932.55566, -2033.49219, 13.40200, 0.00000, 0.00000, 89.73080);
     Map_Exterior(2610, 1932.55566, -2033.01221, 13.40200, 0.00000, 0.00000, 89.73080);

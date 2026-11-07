@@ -253,7 +253,12 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Mehaničar prekine animaciju ili ode usred popravke | ✅ | Zamrznut je dok popravka traje; prekida se ako bude povređen, završi smenu, vozač ode ili se vozilo pomeri više od 1,5 m; plaća se tek na kraju |
 | Mehaničar ostane zamrznut posle popravke | ✅ | Odmrzava se na kraju i pri svakom prekidu, osim ako ga je admin zamrznuo (`/freeze`) |
 | Teren se koristi umesto radionice | ✅ | Na terenu najviše 60% i bez karoserije; sve preko toga samo u radionici (letelice i brodovi u servisu letelica i brodova) |
-| Tjuning na ulici pored radionice | ✅ | Samo kad vozilo stoji na mestu za tehnički pregled (6 m) |
+| Tjuning na ulici pored radionice | ✅ | Samo kad vozilo stoji na mestu `tjuning` (6 m) |
+| Popravka u radionici na putu pored nje | ✅ | Radionica je samo 8 m oko svoje tačke |
+| Servis slučajno pokrenut ili skuplji nego što je igrač mislio | ✅ | Dijalog sa cenom, stanjem i trajanjem; plaća se tek posle potvrde i završenog servisa, i proverava se sve ponovo |
+| Vozilo posla besplatno servisira neko ko ne radi taj posao | ✅ | Besplatno samo za radnika tog posla na smeni (isti ključ kao za paljenje) |
+| Mehaničar prebačen u zid kad ga popravka namesti ispred haube | ✅ | Mora sam da stoji do 1,5 m od haube; pomera se samo za taj korak |
+| Letelica se servisira u luci ili brod na aerodromu | ✅ | Svaka vrsta ima svoje mesto i svoju poruku gde se servisira |
 | Deo za probu ostane na vozilu bez plaćanja | ✅ | Proba se vraća pri izlasku iz liste, izboru drugog dela, zatvaranju menija, izlasku iz vozila, smrti i izlasku sa servera; isto za paintjob i boju |
 | Paljenje motora brzim pritiskanjem N | ✅ | Posle neuspelog paljenja motor se 3 s ne može paliti; šansa zavisi od stanja (10–40%) |
 | Letelica ili brod se ugasi u pokretu | ✅ | Motor letelica i brodova se nikad ne gasi u pokretu; teško pali samo dok stoje |
@@ -542,7 +547,12 @@ Every new system or change goes through these questions, against all existing sy
 | The mechanic breaks the animation or walks off mid-repair | ✅ | Frozen while the repair runs; it is broken off if the mechanic gets hurt, ends the shift, the driver leaves or the vehicle moves more than 1.5 m; payment only at the end |
 | The mechanic stays frozen after a repair | ✅ | Unfrozen at the end and on every break-off, unless an admin froze them (`/freeze`) |
 | The field used instead of the workshop | ✅ | The field goes to 60% at most and no body work; everything above only in the workshop (aircraft and boats at the aircraft and boat service) |
-| Tuning on the street next to the workshop | ✅ | Only while the vehicle stands on the inspection spot (6 m) |
+| Tuning on the street next to the workshop | ✅ | Only while the vehicle stands on the `tjuning` spot (6 m) |
+| A workshop repair on the road next to it | ✅ | The workshop is only 8 m around its point |
+| The service started by accident or dearer than the player thought | ✅ | A dialog with the price, condition and duration; payment only after confirming and a finished service, and everything is checked again |
+| Someone outside the job services a job vehicle for free | ✅ | Free only for that job's worker on duty (the same key as for the engine) |
+| The mechanic moved into a wall when centred at the bonnet | ✅ | They must stand within 1.5 m of the bonnet themselves; the move is only that step |
+| An aircraft serviced at the dock or a boat at the airport | ✅ | Each kind has its own place and its own message saying where |
 | A part being tried on stays without payment | ✅ | The trial is undone on leaving the list, picking another part, closing the menu, leaving the vehicle, death and disconnect; the same for paintjobs and colours |
 | Starting the engine by hammering N | ✅ | After a failed start the engine cannot be started for 3 s; the chance depends on the condition (10–40%) |
 | An aircraft or boat stalls while moving | ✅ | Aircraft and boat engines never stall while moving; they start badly only while standing |

@@ -161,6 +161,13 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 153 | 2026-11-07 | `/servis` košta $20 po procentu do 100% (plus gume) i piše na natpisu radionice | Isto kao mehaničar na terenu, a skuplje od radionice |
 | 154 | 2026-11-07 | Natpisi na vozilima su u uglastim zagradama: `[ADMIN]` crni (kao oznaka admina), `[MEHANICAR]` sivi, `[RENT]` beli sa zelenom cenom ispod dok je slobodan, `[AUTO SKOLA]` plavi | Zahtev vlasnika |
 | 155 | 2026-11-07 | Kazne sa kamera za vozila poslova stižu vozaču; `/vratirent` radi samo iz iznajmljenog vozila; 911 i 555 su uvek na vrhu imenika i ne brišu se | Zahtev vlasnika |
+| 156 | 2026-11-07 | Radionica važi 8 m oko tačke `radionica` (umesto 35 m); veća radionica dobija više tačaka | Vlasnik je popravljao auto na putu |
+| 157 | 2026-11-07 | `/servis` prvo pokazuje cenu, stanje i trajanje i traži potvrdu; vozilo posla njegov radnik na smeni servisira besplatno, i kad su mehaničari na poslu | Zahtev vlasnika; šlepove inače niko ne bi popravljao |
+| 158 | 2026-11-07 | Posebna mesta: `hangar` (servis letelica) i `luka` (servis brodova), svako u krugu od 40 m; tamo su njihova popravka, `/servis` i tehnički pregled. Preporuka: aerodrom ispred hangara (~1990, -2348) i marina (~730, -1672) | Zahtev vlasnika; mesta su ona gde referentni modovi drže letelice i brodove |
+| 159 | 2026-11-07 | Tjuning ima svoje mesto `tjuning` (6 m), ispred radionice, jer se u boksu za tehnički pregled kamera gleda u zid | Zahtev vlasnika |
+| 160 | 2026-11-07 | Motor se popravlja ispred haube: mehaničar mora sam da stane ispred auta, kombija ili kamiona (do 1,5 m), pa ga popravka namesti na sredinu; nikad se ne prebacuje kroz zid | Zahtev vlasnika: da ne radi pored vrata |
+| 161 | 2026-11-07 | Na ispitu auto škole motor pali kandidat (N) | Zahtev vlasnika |
+| 162 | 2026-11-07 | Stubovi lifta u boksu za tehnički pregled su razmaknuti (prolaz oko 3,4 m), da šlep može da uđe | Zahtev vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -343,6 +350,13 @@ This file records every important decision so it does not get re-discussed. Newe
 | 153 | 2026-11-07 | `/servis` costs $20 per percent to 100% (plus tyres) and is written on the workshop label | Same as a field mechanic, dearer than the workshop |
 | 154 | 2026-11-07 | Vehicle labels are in square brackets: `[ADMIN]` black (like the admin tag), `[MEHANICAR]` grey, `[RENT]` white with a green price below while free, `[AUTO SKOLA]` blue | Owner's request |
 | 155 | 2026-11-07 | Camera fines for job vehicles go to the driver; `/vratirent` works only from the rental; 911 and 555 always sit at the top of the contacts and cannot be deleted | Owner's request |
+| 156 | 2026-11-07 | The workshop covers 8 m around a `radionica` point (instead of 35 m); a bigger workshop gets more points | The owner was repairing a car on the road |
+| 157 | 2026-11-07 | `/servis` first shows the price, condition and duration and asks to confirm; a job vehicle is serviced free by its worker on duty, even while mechanics work | Owner's request; otherwise nobody would repair the tow trucks |
+| 158 | 2026-11-07 | Separate places: `hangar` (aircraft service) and `luka` (boat service), each a 40 m circle; their repairs, `/servis` and inspection are there. Suggested: the airport in front of the hangars (~1990, -2348) and the marina (~730, -1672) | Owner's request; the places where reference gamemodes keep aircraft and boats |
+| 159 | 2026-11-07 | Tuning has its own place `tjuning` (6 m) in front of the workshop, since in the inspection bay the camera looked at a wall | Owner's request |
+| 160 | 2026-11-07 | Engine work is done at the bonnet: the mechanic must walk in front of the car, van or truck (within 1.5 m) and the repair then centres them; nobody is ever moved through a wall | Owner's request: no working by the door |
+| 161 | 2026-11-07 | On the driving test the candidate starts the engine (N) | Owner's request |
+| 162 | 2026-11-07 | The lift posts in the inspection bay moved apart (about 3.4 m clear), so the tow truck can get in | Owner's request |
 
 ### Code architecture (proposal)
 ```

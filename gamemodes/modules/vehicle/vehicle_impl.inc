@@ -633,11 +633,15 @@ static stock Veh_CheckEngine(vehicleid, now)
     }
 }
 
-// Aircraft and boats cannot reach the workshop or the inspection, so the hangar point stands in for both.
-stock bool:Veh_NeedsHangar(vehicleid)
+// Where a vehicle is serviced: aircraft and boats cannot reach the workshop or the inspection, so each has its own place for both.
+stock E_POINT_TYPE:Veh_ServicePoint(vehicleid)
 {
-    new E_VEH_CLASS:class = Veh_Class(GetVehicleModel(vehicleid));
-    return class == VEH_CLASS_AIR || class == VEH_CLASS_BOAT;
+    switch (Veh_Class(GetVehicleModel(vehicleid)))
+    {
+        case VEH_CLASS_AIR: return POINT_HANGAR;
+        case VEH_CLASS_BOAT: return POINT_DOCK;
+    }
+    return POINT_WORKSHOP;
 }
 
 // Aircraft and boats never stall while running: a dead engine there means a crash or drifting with nobody able to tow.

@@ -54,6 +54,7 @@
 | Pukla guma (uz popravku ili servis) | $50 po gumi |
 | Mehaničar od popravke dobija 60%, ostatak su delovi (izlazi iz igre) | |
 | Servis do 100% kad nema mehaničara (izlazi iz igre) | $20 po procentu |
+| Servis vozila posla (radnik na smeni) | besplatno |
 | Tjuning kod mehaničara (mehaničar dobija 30%, ostatak izlazi iz igre): svetla i otvori $300, krov i auspuh $500, hauba i branici $600, pragovi $700, spojler i stereo $800, felne $1.200, hidraulika $3.000, nitro x2 / x5 / x10 $1.500 / $3.000 / $5.000, zaštite $400 | |
 | Farbanje / paintjob kod mehaničara | $300 / $1.500 |
 | Torba / ranac | $400 / $600 |
@@ -202,6 +203,7 @@ Auto škola (`/skola`): cena se plaća pre teorije, a posle pada ponovo. Uslovi:
 | Popped tyre (with a repair or the service) | $50 per tyre |
 | The mechanic keeps 60% of a repair, the rest are parts (leaves the game) | |
 | The service to 100% when no mechanic is working (leaves the game) | $20 per percent |
+| The service of a job vehicle (its worker on duty) | free |
 | Tuning at the mechanic (the mechanic gets 30%, the rest leaves the game): lights and vents $300, roof and exhaust $500, hood and bumpers $600, side skirts $700, spoiler and stereo $800, wheels $1,200, hydraulics $3,000, nitro x2 / x5 / x10 $1,500 / $3,000 / $5,000, guards $400 | |
 | Paint / paintjob at the mechanic | $300 / $1,500 |
 | Bag / backpack | $400 / $600 |

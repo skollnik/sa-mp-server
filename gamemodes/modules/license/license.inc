@@ -558,11 +558,10 @@ public Lic_SeatPlayer(playerid, vehicleid, tries)
     return 1;
 }
 
-// The engine starts only when the player sits in, so a helicopter rotor never spins next to them.
+// Starting the engine (N) is part of the test, so nobody starts it for the candidate.
 static stock Lic_OnSeated(playerid)
 {
     g_LicTest[playerid][ltSeated] = true;
-    Veh_SetParam(g_LicTest[playerid][ltVehicle], VEH_PARAM_ENGINE, true);
 }
 
 // bring_back: false on death and disconnect, where the player is not moved.
