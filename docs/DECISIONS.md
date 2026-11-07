@@ -168,6 +168,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 160 | 2026-11-07 | Motor se popravlja ispred haube: mehaničar mora sam da stane ispred auta, kombija ili kamiona (do 1,5 m), pa ga popravka namesti na sredinu; nikad se ne prebacuje kroz zid | Zahtev vlasnika: da ne radi pored vrata |
 | 161 | 2026-11-07 | Na ispitu auto škole motor pali kandidat (N) | Zahtev vlasnika |
 | 162 | 2026-11-07 | Stubovi lifta u boksu za tehnički pregled su razmaknuti (prolaz oko 3,4 m), da šlep može da uđe | Zahtev vlasnika |
+| 163 | 2026-11-07 | Mesto za tehnički pregled je ujedno i radionica (8 m) za popravku i `/servis`, pa za lift ne treba druga tačka radionice sa `/oprema` | Zahtev vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -357,6 +358,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 160 | 2026-11-07 | Engine work is done at the bonnet: the mechanic must walk in front of the car, van or truck (within 1.5 m) and the repair then centres them; nobody is ever moved through a wall | Owner's request: no working by the door |
 | 161 | 2026-11-07 | On the driving test the candidate starts the engine (N) | Owner's request |
 | 162 | 2026-11-07 | The lift posts in the inspection bay moved apart (about 3.4 m clear), so the tow truck can get in | Owner's request |
+| 163 | 2026-11-07 | The inspection spot is also a workshop (8 m) for repairs and `/servis`, so the lift needs no second workshop point with `/oprema` | Owner's request |
 
 ### Code architecture (proposal)
 ```

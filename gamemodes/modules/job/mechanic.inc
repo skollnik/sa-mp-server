@@ -137,10 +137,15 @@ stock Mech_OnPlayerDisconnect(playerid)
 }
 
 // Cars and motorbikes are serviced in the workshop; aircraft and boats at their own service, since they cannot get to the workshop.
+// The inspection bay counts as the workshop too, so the lift needs no second workshop point with its own /oprema.
 static stock bool:Mech_AtServicePlace(playerid, vehicleid)
 {
     new E_POINT_TYPE:type = Veh_ServicePoint(vehicleid);
-    return Point_IsWithin(playerid, type, type == POINT_WORKSHOP ? MECH_WORKSHOP_RADIUS : POINT_HANGAR_RADIUS);
+    if (type != POINT_WORKSHOP)
+    {
+        return Point_IsWithin(playerid, type, POINT_HANGAR_RADIUS);
+    }
+    return Point_IsWithin(playerid, POINT_WORKSHOP, MECH_WORKSHOP_RADIUS) || Point_IsWithin(playerid, POINT_INSPECTION, MECH_WORKSHOP_RADIUS);
 }
 
 // Engine work on a car, van or truck is done from the front, under the open bonnet.
@@ -388,6 +393,7 @@ static stock Mech_StopRepair(mechanic, const reason[])
     if (g_MechWork[mechanic][mwCustomerRace] == g_AccountRace[customer])
     {
         Msg_Error(customer, "Popravka je prekinuta: %s Nista niste platili.", reason);
+        HideGameTextForPlayer(customer, 6);
     }
 }
 
@@ -816,7 +822,15 @@ static stock Mech_ServiceCheck(playerid)
     }
     if (!Mech_AtServicePlace(playerid, vehicleid))
     {
-        Msg_Error(playerid, "Ovo vozilo se servisira u: %s (/gps).", g_PointInfo[Veh_ServicePoint(vehicleid)][piName]);
+        new E_POINT_TYPE:type = Veh_ServicePoint(vehicleid);
+        if (type == POINT_WORKSHOP)
+        {
+            Msg_Error(playerid, "Ovo vozilo se servisira u mehanicarskoj radionici ili na tehnickom pregledu (/gps).");
+        }
+        else
+        {
+            Msg_Error(playerid, "Ovo vozilo se servisira u: %s (/gps).", g_PointInfo[type][piName]);
+        }
         return -1;
     }
     if (g_MechServiceTimer[playerid] != 0)
