@@ -27,6 +27,10 @@ cmd:v(playerid, params[])
     {
         Veh_TogglePart(playerid, VEH_PARAM_BOOT, "otvara gepek.", "zatvara gepek.");
     }
+    else if (!strcmp(action, "neon", true))
+    {
+        Veh_ToggleNeon(playerid);
+    }
     else if (!strcmp(action, "parkiraj", true))
     {
         Veh_Park(playerid);
@@ -41,7 +45,7 @@ cmd:v(playerid, params[])
     }
     else
     {
-        Msg_Usage(playerid, "/v (lista, GPS i kljucevi) ili /v [motor / zakljucaj / svetla / hauba / gepek / parkiraj / kljuc / tablice]");
+        Msg_Usage(playerid, "/v (lista, GPS i kljucevi) ili /v [motor / zakljucaj / svetla / hauba / gepek / neon / parkiraj / kljuc / tablice]");
     }
     return 1;
 }

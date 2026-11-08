@@ -44,7 +44,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | ✅ Mesta gde se ne sme parkirati (korak 3.7; put se ne proverava, to čeka pauka u fazi 5) |
 | ✅ Kanister (korak 3.3); vožnja bez dozvole (korak 3.4) |
 | ✅ Anti-cheat za HP vozila (repair hack, korak 3.7). Ostaje: ulazak u zaključano vozilo |
-| ✅ VIP: mesto za još jedno vozilo (Silver+) i sopstvena tablica upola cene (Gold) već postoje. Neon (svetla ispod vozila) za Gold: čeka odgovor vlasnika da li uopšte treba |
+| ✅ VIP: mesto za još jedno vozilo (Silver+) i sopstvena tablica upola cene (Gold) već postoje. Neon je urađen u koraku 3.7 kao deo tjuninga (Gold VIP upola) |
 | Kad dođe policija (Faza 5): provera registracije i tablica, kazna i pauk za neregistrovano vozilo ili vozilo sa isteklom registracijom |
 | Kad dođu vozila poslova i frakcija: `/resetvozila` i `/respawnveh` da ih vraćaju na njihova mesta |
 | ✅ GTA radionice za tuning (Transfender i ostale) i Pay'n'spray ne menjaju lična vozila: drugi igrači ne vide promenu, a vozilo se vraća kakvo je bilo (naplaćena popravka u Pay'n'spray-u je u koraku 3.5) |
@@ -287,6 +287,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 06.11.2026. | Saksija sa parkinga auto škole uklonjena; ostaje samo nevidljiv sudar tankog stuba (deo GTA zgrade) |
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 | 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
+| 08.11.2026. | Neon u tjuningu (šest boja, $5.000, Gold VIP upola, `/v neon`); razmak za zabranu parkiranja 25 m |
 | 08.11.2026. | Korak 3.7: anti-cheat za popravku vozila (vraća štetu, upozorava admine), `/cw` šapat u vozilu, `/v parkiraj` odbija mesta bliže od 8 m ulazima, šalterima, rentu, parkingu mehaničara, pijaci i auto školi |
 | 08.11.2026. | `radionica` je samo `/oprema`; nova vrsta mesta `servis`; natpisi „/registruj   /servis“ svuda istim redom; promena vrste mesta sa liste |
 | 07.11.2026. | Nova vrsta mesta `pregledservis` (tehnički pregled i radionica za popravku i `/servis`), a obično `pregled` je samo pregled; natpis „popravka...“ se skida pri prekidu |
@@ -340,7 +341,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | ✅ No-parking spots (step 3.7; roads are not checked, that waits for the tow truck in phase 5) |
 | ✅ Jerry can (step 3.3); driving without a license (step 3.4) |
 | ✅ Anti-cheat for vehicle HP (repair hack, step 3.7). Left: entering a locked vehicle |
-| ✅ VIP: one more vehicle slot (Silver+) and a half-price custom plate (Gold) already exist. Neon (lights under the vehicle) for Gold: waits for the owner to say whether it is wanted at all |
+| ✅ VIP: one more vehicle slot (Silver+) and a half-price custom plate (Gold) already exist. Neon was done in step 3.7 as part of tuning (Gold VIP half) |
 | Once police exist (Phase 5): checking registration and plates, a fine and the tow truck for an unregistered or expired vehicle |
 | Once job and faction vehicles exist: `/resetvozila` and `/respawnveh` return them to their spots |
 | ✅ GTA tuning shops (Transfender and others) and Pay'n'spray do not change personal vehicles: other players never see the change and the vehicle goes back to how it was (a paid Pay'n'spray repair is in step 3.5) |
@@ -583,6 +584,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-06 | The plant pot removed from the school lot; only the thin pole's invisible collision stays (part of the GTA building) |
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
 | 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |
+| 2026-11-08 | Neon in tuning (six colours, $5,000, Gold VIP half, `/v neon`); the no-parking distance is 25 m |
 | 2026-11-08 | Step 3.7: anti-cheat for vehicle repairs (undoes the damage fix, alerts admins), the `/cw` whisper in a vehicle, `/v parkiraj` refuses spots within 8 m of entrances, counters, rentals, the mechanics' parking, the market and the driving school |
 | 2026-11-08 | `radionica` is only `/oprema`; a new point type `servis`; labels read "/registruj   /servis" in the same order everywhere; a point's type is changed from a list |
 | 2026-11-07 | A new point type `pregledservis` (inspection plus a workshop for repairs and `/servis`), while a plain `pregled` is the inspection alone; the "popravka..." text is removed on a break-off |

@@ -96,6 +96,8 @@ new const g_VipInventorySlots[] = { 0, 2, 4, 6 };
 #define TUNE_MECHANIC_SHARE         (30)
 #define TUNE_PRICE_PAINT            (300)
 #define TUNE_PRICE_PAINTJOB         (1500)
+// Gold VIP pays half, like a custom plate.
+#define TUNE_PRICE_NEON             (5000)
 #define TUNE_PRICE_NITRO_X2         (1500)
 #define TUNE_PRICE_NITRO_X5         (3000)
 #define TUNE_PRICE_NITRO_X10        (5000)

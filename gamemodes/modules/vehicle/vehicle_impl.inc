@@ -35,6 +35,8 @@ stock Veh_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `pending_plate` VARCHAR(12) NULL");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `parked` TINYINT UNSIGNED NOT NULL DEFAULT 1");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `mileage` FLOAT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `neon` TINYINT UNSIGNED NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `neon_on` TINYINT UNSIGNED NOT NULL DEFAULT 1");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD UNIQUE INDEX IF NOT EXISTS `vehicle_pending_plate` (`pending_plate`)");
     // Vehicles that got a plate before registration existed count as freshly registered.
     new query[512];
@@ -285,6 +287,86 @@ static stock Veh_ApplyTuning(slot)
     {
         ChangeVehiclePaintjob(vehicleid, g_Veh[slot][vPaintjob]);
     }
+    Veh_ApplyNeon(slot);
+}
+
+// SA-MP's own neon tubes, part of every client (0.3.7 and 0.3.DL), so nothing is downloaded.
+static const g_VehNeonModels[VEH_NEON_COLOURS] = { 18647, 18648, 18649, 18650, 18651, 18652 };
+
+// Called before the vehicle is destroyed, since tubes left behind would hang where it was.
+stock Veh_ClearNeon(vehicleid)
+{
+    for (new i = 0; i < 2; i++)
+    {
+        if (IsValidDynamicObject(g_VehNeon[vehicleid][i]))
+        {
+            DestroyDynamicObject(g_VehNeon[vehicleid][i]);
+        }
+        g_VehNeon[vehicleid][i] = STREAMER_TAG_OBJECT:INVALID_STREAMER_ID;
+    }
+}
+
+// Two tubes under the sills, where reference gamemodes put them.
+stock Veh_ShowNeon(vehicleid, colour)
+{
+    Veh_ClearNeon(vehicleid);
+    if (colour < 1 || colour > VEH_NEON_COLOURS)
+    {
+        return;
+    }
+    for (new i = 0; i < 2; i++)
+    {
+        g_VehNeon[vehicleid][i] = CreateDynamicObject(g_VehNeonModels[colour - 1], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        AttachDynamicObjectToVehicle(g_VehNeon[vehicleid][i], vehicleid, i == 0 ? -0.8 : 0.8, 0.0, -0.7, 0.0, 0.0, 0.0);
+    }
+}
+
+stock Veh_ApplyNeon(slot)
+{
+    new vehicleid = g_Veh[slot][vVehicleId];
+    if (vehicleid == INVALID_VEHICLE_ID)
+    {
+        return;
+    }
+    Veh_ShowNeon(vehicleid, g_Veh[slot][vNeonOn] ? g_Veh[slot][vNeon] : 0);
+}
+
+stock Veh_SetNeon(slot, colour)
+{
+    g_Veh[slot][vNeon] = colour;
+    g_Veh[slot][vNeonOn] = true;
+    Veh_ApplyNeon(slot);
+    Veh_SaveState(slot);
+}
+
+// Under a car, van or truck only; on a motorbike, boat or aircraft the tubes would float in the air.
+stock bool:Veh_CanHaveNeon(vehicleid)
+{
+    if (g_VehSlotOf[vehicleid] == -1)
+    {
+        return false;
+    }
+    new E_VEH_CLASS:class = Veh_Class(GetVehicleModel(vehicleid));
+    return class == VEH_CLASS_CAR || class == VEH_CLASS_VAN || class == VEH_CLASS_TRUCK;
+}
+
+stock Veh_ToggleNeon(playerid)
+{
+    new vehicleid = GetPlayerVehicleID(playerid), slot = vehicleid == 0 ? -1 : g_VehSlotOf[vehicleid];
+    if (slot == -1 || !Veh_HasKey(playerid, vehicleid))
+    {
+        Msg_Error(playerid, "Sedite u svoje vozilo (ili vozilo za koje imate kljuc).");
+        return;
+    }
+    if (g_Veh[slot][vNeon] == 0)
+    {
+        Msg_Error(playerid, "Ovo vozilo nema neon. Neon stavlja mehanicar (/tune na mestu za tjuning).");
+        return;
+    }
+    g_Veh[slot][vNeonOn] = !g_Veh[slot][vNeonOn];
+    Veh_ApplyNeon(slot);
+    Veh_SaveState(slot);
+    Chat_Action(playerid, g_Veh[slot][vNeonOn] ? ("pali neon na vozilu.") : ("gasi neon na vozilu."));
 }
 
 // GTA's mod shops and Pay'n'Spray would change a personal vehicle for free, and the change was lost the next time the vehicle
@@ -395,10 +477,10 @@ stock Veh_SaveState(slot)
     Veh_FormatMods(slot, mods);
     mysql_format(g_SQL, query, sizeof(query),
         "UPDATE `vehicles` SET `fuel` = %f, `health` = %f, `panels` = %d, `doors` = %d, `lights` = %d, `tyres` = %d, " \
-        "`locked` = %d, `color1` = %d, `color2` = %d, `key_holder` = %d, `mods` = '%e', `paintjob` = %d, `registered_until` = %d, `mileage` = %f WHERE `id` = %d",
+        "`locked` = %d, `color1` = %d, `color2` = %d, `key_holder` = %d, `mods` = '%e', `paintjob` = %d, `registered_until` = %d, `mileage` = %f, `neon` = %d, `neon_on` = %d WHERE `id` = %d",
         g_Veh[slot][vFuel], g_Veh[slot][vHealth], _:g_Veh[slot][vPanels], _:g_Veh[slot][vDoors], _:g_Veh[slot][vLights], _:g_Veh[slot][vTyres],
         g_Veh[slot][vLocked] ? 1 : 0, g_Veh[slot][vColor1], g_Veh[slot][vColor2], g_Veh[slot][vKeyDbId], mods, g_Veh[slot][vPaintjob],
-        g_Veh[slot][vRegisteredUntil], g_Veh[slot][vMileage], g_Veh[slot][vDbId]);
+        g_Veh[slot][vRegisteredUntil], g_Veh[slot][vMileage], g_Veh[slot][vNeon], g_Veh[slot][vNeonOn] ? 1 : 0, g_Veh[slot][vDbId]);
     mysql_tquery(g_SQL, query);
 }
 
@@ -420,6 +502,7 @@ stock Veh_Despawn(slot, bool:save)
     new vehicleid = g_Veh[slot][vVehicleId];
     if (vehicleid != INVALID_VEHICLE_ID)
     {
+        Veh_ClearNeon(vehicleid);
         DestroyVehicle(vehicleid);
         g_VehSlotOf[vehicleid] = -1;
     }
@@ -444,6 +527,7 @@ stock Veh_Rebuild(slot)
         seats[i] = IsPlayerInVehicle(i, vehicleid) ? GetPlayerVehicleSeat(i) : -1;
     }
 
+    Veh_ClearNeon(vehicleid);
     DestroyVehicle(vehicleid);
     g_VehSlotOf[vehicleid] = -1;
     if (!Veh_SpawnAt(slot, x, y, z, angle, interior, world))
@@ -503,6 +587,10 @@ static stock Veh_LoadRow(slot, row, ownerid)
     }
     sscanf(mods, "p<,>a<i>[" #VEH_TUNE_SLOTS "]", g_Veh[slot][vMods]);
     cache_get_value_name_int(row, "paintjob", g_Veh[slot][vPaintjob]);
+    new neon_on;
+    cache_get_value_name_int(row, "neon", g_Veh[slot][vNeon]);
+    cache_get_value_name_int(row, "neon_on", neon_on);
+    g_Veh[slot][vNeonOn] = neon_on != 0;
 }
 
 static stock Veh_QueryOwned(playerid, const where[], id, bool:remind)
@@ -588,6 +676,7 @@ static stock Veh_RespawnAfterDeath(slot)
 {
     new vehicleid = g_Veh[slot][vVehicleId];
     g_Veh[slot][vFuel] = g_VehFuel[vehicleid];
+    Veh_ClearNeon(vehicleid);
     DestroyVehicle(vehicleid);
     g_VehSlotOf[vehicleid] = -1;
 

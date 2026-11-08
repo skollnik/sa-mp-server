@@ -4,6 +4,7 @@
 #define TUNE_MENU_COLOUR        (100)
 #define TUNE_MENU_PAINTJOB      (101)
 #define TUNE_MENU_CLEAR         (102)
+#define TUNE_MENU_NEON          (103)
 // GTA's own menu sits on the left of the screen, so the vehicle stays in view while it is tuned; a dialog would cover it.
 // It holds at most 12 rows, so longer lists get a last row that turns the page.
 #define TUNE_MENU_ROWS          (12)
@@ -31,7 +32,8 @@ enum E_TUNE_VIEW
 {
     TUNE_VIEW_MAIN,
     TUNE_VIEW_PARTS,
-    TUNE_VIEW_PAINTJOB
+    TUNE_VIEW_PAINTJOB,
+    TUNE_VIEW_NEON
 }
 
 new Menu:g_TuneMenuId[MAX_PLAYERS] = { INVALID_MENU, ... };
@@ -49,6 +51,7 @@ new g_TuneMechanic[MAX_PLAYERS] = { INVALID_PLAYER_ID, ... };
 new g_TunePreview[MAX_PLAYERS];
 new g_TunePreviewOld[MAX_PLAYERS];
 new g_TunePreviewPaintjob[MAX_PLAYERS] = { -1, ... };
+new g_TunePreviewNeon[MAX_PLAYERS] = { -1, ... };
 new bool:g_TuneColourPreview[MAX_PLAYERS];
 new g_TuneOldColours[MAX_PLAYERS][2];
 new g_TuneVehicle[MAX_PLAYERS];
@@ -184,6 +187,15 @@ static stock Tune_RevertPreview(playerid, vehicleid)
         ChangeVehiclePaintjob(vehicleid, slot == -1 ? VEH_PAINTJOB_NONE : g_Veh[slot][vPaintjob]);
         g_TunePreviewPaintjob[playerid] = -1;
     }
+    if (g_TunePreviewNeon[playerid] != -1)
+    {
+        new slot = g_VehSlotOf[vehicleid];
+        if (slot != -1)
+        {
+            Veh_ApplyNeon(slot);
+        }
+        g_TunePreviewNeon[playerid] = -1;
+    }
     if (g_TuneColourPreview[playerid])
     {
         ChangeVehicleColours(vehicleid, g_TuneOldColours[playerid][0], g_TuneOldColours[playerid][1]);
@@ -200,6 +212,7 @@ stock Tune_Close(playerid)
     }
     g_TunePreview[playerid] = 0;
     g_TunePreviewPaintjob[playerid] = -1;
+    g_TunePreviewNeon[playerid] = -1;
     g_TuneColourPreview[playerid] = false;
     g_TuneMechanic[playerid] = INVALID_PLAYER_ID;
     if (!g_TuneActive[playerid])
@@ -290,6 +303,10 @@ static stock Tune_ShowMain(playerid, vehicleid)
     }
     Tune_Add(playerid, "Boja", TUNE_MENU_COLOUR);
     Tune_Add(playerid, "Paintjob", TUNE_MENU_PAINTJOB);
+    if (Veh_CanHaveNeon(vehicleid))
+    {
+        Tune_Add(playerid, "Neon", TUNE_MENU_NEON);
+    }
     Tune_Add(playerid, "Skini sav tuning", TUNE_MENU_CLEAR);
     Tune_Present(playerid);
 }
@@ -349,6 +366,39 @@ static stock Tune_ShowPaintjobs(playerid)
         Tune_Add(playerid, label, paintjob);
     }
     Tune_Add(playerid, "Bez paintjob-a", VEH_PAINTJOB_NONE);
+    Tune_Present(playerid);
+}
+
+static stock Tune_NeonPrice(playerid)
+{
+    return Vip_GetLevel(playerid) >= VIP_GOLD ? TUNE_PRICE_NEON / 2 : TUNE_PRICE_NEON;
+}
+
+static stock Tune_ShowNeon(playerid, vehicleid)
+{
+    new label[TUNE_LABEL_LENGTH], installed = g_Veh[g_VehSlotOf[vehicleid]][vNeon];
+    Tune_Begin(playerid, TUNE_VIEW_NEON, "Neon");
+    for (new colour = 1; colour <= VEH_NEON_COLOURS; colour++)
+    {
+        if (colour == g_TunePreviewNeon[playerid])
+        {
+            format(label, sizeof(label), "%s - kupi $%d", g_VehNeonNames[colour - 1], Tune_NeonPrice(playerid));
+        }
+        else if (colour == installed)
+        {
+            format(label, sizeof(label), "%s (stavljeno)", g_VehNeonNames[colour - 1]);
+        }
+        else if (Tune_AtMechanic(playerid))
+        {
+            format(label, sizeof(label), "%s ($%d)", g_VehNeonNames[colour - 1], Tune_NeonPrice(playerid));
+        }
+        else
+        {
+            strcopy(label, g_VehNeonNames[colour - 1]);
+        }
+        Tune_Add(playerid, label, colour);
+    }
+    Tune_Add(playerid, "Bez neona", 0);
     Tune_Present(playerid);
 }
 
@@ -422,6 +472,33 @@ static stock Tune_SetPart(playerid, vehicleid, slot, component)
     Tune_Saved(playerid, vehicleid, what);
 }
 
+static stock Tune_SetNeon(playerid, vehicleid, colour)
+{
+    new slot = g_VehSlotOf[vehicleid];
+    if (colour == g_Veh[slot][vNeon])
+    {
+        Tune_RevertPreview(playerid, vehicleid);
+        return;
+    }
+    if (colour != 0 && Tune_AtMechanic(playerid))
+    {
+        if (g_TunePreviewNeon[playerid] != colour)
+        {
+            g_TunePreviewNeon[playerid] = colour;
+            Veh_ShowNeon(vehicleid, colour);
+            return;
+        }
+        if (!Tune_Pay(playerid, Tune_NeonPrice(playerid), "neon"))
+        {
+            Tune_RevertPreview(playerid, vehicleid);
+            return;
+        }
+    }
+    g_TunePreviewNeon[playerid] = -1;
+    Veh_SetNeon(slot, colour);
+    Tune_Saved(playerid, vehicleid, colour == 0 ? ("neon skinut") : ("neon"));
+}
+
 static stock Tune_SetPaintjob(playerid, vehicleid, paintjob)
 {
     new slot = g_VehSlotOf[vehicleid];
@@ -451,6 +528,10 @@ static stock Tune_SetPaintjob(playerid, vehicleid, paintjob)
 static stock Tune_Clear(playerid, vehicleid)
 {
     Tune_RevertPreview(playerid, vehicleid);
+    if (g_VehSlotOf[vehicleid] != -1 && g_Veh[g_VehSlotOf[vehicleid]][vNeon] != 0)
+    {
+        Veh_SetNeon(g_VehSlotOf[vehicleid], 0);
+    }
     for (new slot = 0; slot < VEH_TUNE_SLOTS; slot++)
     {
         new component = GetVehicleComponentInSlot(vehicleid, CARMODTYPE:slot);
@@ -551,6 +632,10 @@ stock Tune_OnPlayerSelectedMenuRow(playerid, row)
                 {
                     Tune_ShowPaintjobs(playerid);
                 }
+                case TUNE_MENU_NEON:
+                {
+                    Tune_ShowNeon(playerid, vehicleid);
+                }
                 case TUNE_MENU_CLEAR:
                 {
                     Tune_Clear(playerid, vehicleid);
@@ -567,6 +652,18 @@ stock Tune_OnPlayerSelectedMenuRow(playerid, row)
         {
             Tune_SetPart(playerid, vehicleid, g_TuneSlot[playerid], value);
             Tune_ShowParts(playerid, vehicleid, g_TuneSlot[playerid], g_TunePage[playerid]);
+        }
+        case TUNE_VIEW_NEON:
+        {
+            Tune_SetNeon(playerid, vehicleid, value);
+            if (g_TunePreviewNeon[playerid] != -1)
+            {
+                Tune_ShowNeon(playerid, vehicleid);
+            }
+            else
+            {
+                Tune_ShowMain(playerid, vehicleid);
+            }
         }
         case TUNE_VIEW_PAINTJOB:
         {

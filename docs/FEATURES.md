@@ -149,7 +149,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 ### JOB — Civilni poslovi
 - **JOB-1 Okvir za poslove** (osnova urađena: `/posao` u opštini, `/oprema` na mestu posla, `/otkaz`, `/posaoinfo`; posao koji vozi traži dozvolu): posao se uzima u opštini ili na lokaciji. Postoje checkpoint misije, plata po turi i skill nivo posla.
 - **JOB-2 Kamiondžija:** dostava produkata firmama.
-- **JOB-3 Mehaničar:** popravka po procentima sa fiksnom cenom: na terenu do 60% i pukle gume, u radionici do traženog procenta uz karoseriju srazmerno; mehaničar je zamrznut dok radi, a motor popravlja ispred haube. Tjuning i farbanje (`/tune`) na mestu `tjuning`, deo se prvo proba pa plaća. Poziv na 555 sa GPS-om, šlep za pokvarena vozila.
+- **JOB-3 Mehaničar:** popravka po procentima sa fiksnom cenom: na terenu do 60% i pukle gume, u radionici do traženog procenta uz karoseriju srazmerno; mehaničar je zamrznut dok radi, a motor popravlja ispred haube. Tjuning, farbanje i neon (`/tune`, neon se pali sa `/v neon`) na mestu `tjuning`, deo se prvo proba pa plaća. Poziv na 555 sa GPS-om, šlep za pokvarena vozila.
 - **JOB-4 Ostali poslovi:** dostavljač pice, smetlar, autobuski vozač, čistač ulica, ribar, farmer, drvoseča, rudar, kurir.
 - **JOB-5 Taksi** (kao posao ili frakcija, vidi otvorena pitanja).
 
@@ -319,7 +319,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 ### JOB — Civilian jobs
 - **JOB-1 Job framework** (the base is done: `/posao` at the city hall, `/oprema` at the workplace, `/otkaz`, `/posaoinfo`; a job that drives needs the license): a job is taken at City Hall or on location. There are checkpoint missions, pay per run and a job skill level.
 - **JOB-2 Trucker:** delivers products to businesses.
-- **JOB-3 Mechanic:** repairs by percent at a fixed price: in the field up to 60% and popped tyres, in the workshop up to the asked percent with the body in proportion; the mechanic is frozen while working and does engine work at the bonnet. Tuning and paint (`/tune`) on the `tjuning` spot, a part is tried on first and then paid. The 555 call with GPS, a tow truck for broken-down vehicles.
+- **JOB-3 Mechanic:** repairs by percent at a fixed price: in the field up to 60% and popped tyres, in the workshop up to the asked percent with the body in proportion; the mechanic is frozen while working and does engine work at the bonnet. Tuning, paint and neon (`/tune`, the neon is switched with `/v neon`) on the `tjuning` spot, a part is tried on first and then paid. The 555 call with GPS, a tow truck for broken-down vehicles.
 - **JOB-4 Other jobs:** pizza delivery, garbage collector, bus driver, street sweeper, fisherman, farmer, lumberjack, miner, courier.
 - **JOB-5 Taxi** (as a job or a faction, see open questions).
 

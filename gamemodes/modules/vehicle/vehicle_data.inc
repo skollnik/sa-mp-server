@@ -49,7 +49,8 @@ enum E_VEH_CLASS
 #define VEH_HEALTH_FIRE         (250.0)
 #define VEH_LABEL_DISTANCE      (20.0)
 // How far a saved parking spot must be from doors, counters and other spots everyone needs to reach.
-#define VEH_NO_PARK_RANGE       (8.0)
+#define VEH_NO_PARK_RANGE       (25.0)
+#define VEH_NEON_COLOURS        (6)
 // Inside the body, so the label reads as written on the vehicle rather than floating above it.
 #define VEH_LABEL_OFFSET_Z      (0.3)
 #define VEH_REGISTRATION_DAYS   (60)
@@ -97,6 +98,9 @@ enum E_VEH
     vKeyName[MAX_PLAYER_NAME + 1],
     vMods[VEH_TUNE_SLOTS],
     vPaintjob,
+    // 0 for none, otherwise 1 to VEH_NEON_COLOURS; vNeonOn is the owner's switch (/v neon).
+    vNeon,
+    bool:vNeonOn,
     vDiedAt
 }
 
@@ -113,6 +117,8 @@ new Float:g_VehFuel[MAX_VEHICLES];
 new bool:g_VehFuelReserveWarned[MAX_VEHICLES];
 // When a weak engine that is running dies again; 0 means the next tick below the limit kills it.
 new g_VehStallAt[MAX_VEHICLES];
+new STREAMER_TAG_OBJECT:g_VehNeon[MAX_VEHICLES][2];
+new const g_VehNeonNames[VEH_NEON_COLOURS][] = { "Crveni", "Plavi", "Zeleni", "Zuti", "Roze", "Beli" };
 new g_VehStartRetryAt[MAX_VEHICLES];
 // The short label on special vehicles (ADMIN, RENT, AUTO SKOLA, MEHANICAR).
 new STREAMER_TAG_3D_TEXT_LABEL:g_VehLabel[MAX_VEHICLES];

@@ -257,7 +257,9 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Popravka u radionici na putu pored nje | ✅ | Servis je samo 8 m oko tačke `servis` ili `pregledservis`; tačka `radionica` je samo za `/oprema` |
 | Repair hack (cheat popravi vozilo bez mehaničara) | ✅ | HP i oštećenja se vraćaju na poslednje poznato stanje, adminima stiže upozorenje i upis u AC log |
 | Anti-cheat lažno prijavi serversku popravku | ✅ | Sve serverske popravke i nova vozila idu kroz `AC_*` funkcije, a klijent ima 3 s da prikaže promenu |
-| Parkiranje vozila ispred ulaza, šaltera ili mesta za rent da posle restarta smeta | ✅ | `/v parkiraj` odbija mesta bliže od 8 m; na putu i dalje rešava admin, kasnije policija |
+| Parkiranje vozila ispred ulaza, šaltera ili mesta za rent da posle restarta smeta | ✅ | `/v parkiraj` odbija mesta bliže od 25 m; na putu i dalje rešava admin, kasnije policija |
+| Neon cevi ostanu da vise posle brisanja vozila | ✅ | Neon se skida pre svakog brisanja i ponovnog pravljenja ličnog vozila |
+| Besplatan neon probom u tjuningu | ✅ | Proba se vraća kao i ostali delovi; plaća se drugim izborom |
 | `/cw` kao skriveni chat van vozila | ✅ | Radi samo u vozilu i čuju ga samo oni u istom vozilu; važe mute i spam pravila |
 | Natpis "popravka..." ostane na ekranu posle prekida | ✅ | Pri prekidu se natpis skida vozaču |
 | Servis slučajno pokrenut ili skuplji nego što je igrač mislio | ✅ | Dijalog sa cenom, stanjem i trajanjem; plaća se tek posle potvrde i završenog servisa, i proverava se sve ponovo |
@@ -292,7 +294,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Gorivo bez plaćanja: relog ili restart | ✅ | Gorivo se čuva pri odjavi, nestanku vozila, točenju, zaključavanju i restartu |
 | Točenje goriva iz daljine | ✅ | Mora se sedeti za volanom do 6 m od pumpe, uz ugašen motor |
 | Rezervoar se nikad ne napuni do kraja (piše 54/55, a „Rezervoar je pun“) | ✅ | Toči se do punog, a započet litar se plaća kao ceo |
-| Parkiranje vozila u enterijeru ili ispred vrata da smeta drugima | ✅ | U enterijeru ne može; ispred vrata, šaltera i ostalih mesta `/v parkiraj` odbija (8 m); na putu admin može `/respawnveh`, `/resetvozila` ili `/obrisivozilo` |
+| Parkiranje vozila u enterijeru ili ispred vrata da smeta drugima | ✅ | U enterijeru ne može; ispred vrata, šaltera i ostalih mesta `/v parkiraj` odbija (25 m); na putu admin može `/respawnveh`, `/resetvozila` ili `/obrisivozilo` |
 | Dve iste tablice | ✅ | Tablica se proverava u bazi pre upisa, a kolona je jedinstvena |
 | VIP farba ili popravlja tuđa vozila | ✅ | `/vcolor` samo na svom vozilu, `/vfix` na svom ili vozilu za koje ima ključ |
 | Taster Y ili N smeta drugim sistemima | ✅ | Y radi samo kad je u blizini vozilo sa ključem; N samo za vozača vozila sa motorom; vrata i inventar koriste F |
@@ -556,7 +558,9 @@ Every new system or change goes through these questions, against all existing sy
 | A workshop repair on the road next to it | ✅ | The service is only 8 m around a `servis` or `pregledservis` point; a `radionica` point is only for `/oprema` |
 | Repair hack (a cheat repairs the vehicle without a mechanic) | ✅ | Health and damage go back to the last known state, admins get an alert and an AC log entry |
 | Anti-cheat flags a server repair | ✅ | Every server repair and new vehicle goes through the `AC_*` functions, and the client gets 3 s to show the change |
-| A vehicle parked in front of an entrance, counter or rental spot gets in the way after restarts | ✅ | `/v parkiraj` refuses spots closer than 8 m; on roads admins handle it, later the police |
+| A vehicle parked in front of an entrance, counter or rental spot gets in the way after restarts | ✅ | `/v parkiraj` refuses spots closer than 25 m; on roads admins handle it, later the police |
+| Neon tubes left hanging after a vehicle is removed | ✅ | The neon is taken off before every removal and rebuild of a personal vehicle |
+| Free neon through the tuning trial | ✅ | The trial is undone like other parts; it is paid with the second pick |
 | `/cw` as a hidden chat outside vehicles | ✅ | Works only in a vehicle and only those in it hear it; mute and spam rules apply |
 | The "popravka..." text stays on screen after a break-off | ✅ | It is removed from the driver's screen when the repair breaks off |
 | The service started by accident or dearer than the player thought | ✅ | A dialog with the price, condition and duration; payment only after confirming and a finished service, and everything is checked again |
@@ -591,7 +595,7 @@ Every new system or change goes through these questions, against all existing sy
 | Free fuel through a relog or restart | ✅ | Fuel is saved on logout, despawn, refuelling, locking and restart |
 | Refuelling from a distance | ✅ | The player must sit at the wheel within 6 m of a pump, with the engine off |
 | The tank never fills up (shows 54/55, yet "Rezervoar je pun") | ✅ | A top-up fills to the brim, and a started litre is paid as a whole one |
-| Parking in an interior or in front of a door to annoy others | ✅ | Interiors are refused; `/v parkiraj` refuses spots within 8 m of doors, counters and the other spots; on roads admins can use `/respawnveh`, `/resetvozila` or `/obrisivozilo` |
+| Parking in an interior or in front of a door to annoy others | ✅ | Interiors are refused; `/v parkiraj` refuses spots within 25 m of doors, counters and the other spots; on roads admins can use `/respawnveh`, `/resetvozila` or `/obrisivozilo` |
 | Two identical plates | ✅ | The plate is checked in the DB before the insert, and the column is unique |
 | VIPs paint or repair other people's vehicles | ✅ | `/vcolor` only on their own vehicle, `/vfix` on their own or one they hold a key for |
 | The Y or N key clashes with other systems | ✅ | Y only acts when a vehicle with a key is nearby; N only for the driver of a vehicle with an engine; doors and the inventory use F |

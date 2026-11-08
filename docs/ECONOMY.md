@@ -57,6 +57,7 @@
 | Servis vozila posla (radnik na smeni) | besplatno |
 | Tjuning kod mehaničara (mehaničar dobija 30%, ostatak izlazi iz igre): svetla i otvori $300, krov i auspuh $500, hauba i branici $600, pragovi $700, spojler i stereo $800, felne $1.200, hidraulika $3.000, nitro x2 / x5 / x10 $1.500 / $3.000 / $5.000, zaštite $400 | |
 | Farbanje / paintjob kod mehaničara | $300 / $1.500 |
+| Neon kod mehaničara (Gold VIP upola) | $5.000 ($2.500) |
 | Torba / ranac | $400 / $600 |
 | Lična karta (opština) | $50 |
 | Radio | $700 |
@@ -206,6 +207,7 @@ Auto škola (`/skola`): cena se plaća pre teorije, a posle pada ponovo. Uslovi:
 | The service of a job vehicle (its worker on duty) | free |
 | Tuning at the mechanic (the mechanic gets 30%, the rest leaves the game): lights and vents $300, roof and exhaust $500, hood and bumpers $600, side skirts $700, spoiler and stereo $800, wheels $1,200, hydraulics $3,000, nitro x2 / x5 / x10 $1,500 / $3,000 / $5,000, guards $400 | |
 | Paint / paintjob at the mechanic | $300 / $1,500 |
+| Neon at the mechanic (Gold VIP half) | $5,000 ($2,500) |
 | Bag / backpack | $400 / $600 |
 | ID card (city hall) | $50 |
 | Radio | $700 |

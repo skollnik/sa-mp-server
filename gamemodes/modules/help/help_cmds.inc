@@ -28,7 +28,7 @@ cmd:pomoc(playerid, params[])
         C_SERVER "Vozila\n" \
         C_WHITE "N - motor (pali se uz kljuc; upaljeno vozilo moze da vozi svako)    Y - zakljucavanje najblizeg vaseg vozila\n" \
         "/v - vasa vozila (GPS, registracija, oduzimanje kopije kljuca)    /v parkiraj - mesto gde se vozilo vraca\n" \
-        "/v [motor / zakljucaj / svetla / hauba / gepek]    /v kljuc - kopija kljuca igracu pored vas\n" \
+        "/v [motor / zakljucaj / svetla / hauba / gepek / neon]    /v kljuc - kopija kljuca igracu pored vas\n" \
         "/gorivo [litara] - tocenje na pumpi (za volanom, ugasen motor; peske puni kanistere)    /registruj - tehnicki pregled (vazi 60 dana)\n" \
         "/gepek - stvari u gepeku (stanite iza vozila; otvoren sa /v gepek, vozilo otkljucano)    Kanister: /inv pored vozila\n" \
         "/pijaca - auto pijaca (kad je otvorena)    /kupivozilo - kupovina na pijaci    /ponudi - prodaja ili zamena vozila igracu pored vas\n" \
