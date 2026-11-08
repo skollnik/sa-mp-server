@@ -170,6 +170,10 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 162 | 2026-11-07 | Stubovi lifta u boksu za tehnički pregled su razmaknuti (prolaz oko 3,4 m), da šlep može da uđe | Zahtev vlasnika |
 | 163 | 2026-11-07 | Pri pravljenju mesta bira se: `pregled` (samo tehnički pregled), `radionica` (`/oprema` i servis) ili `pregledservis` (tehnički pregled i radionica za popravku i `/servis`, 8 m), da pregled i servis kasnije mogu biti odvojeni | Zahtev vlasnika |
 | 164 | 2026-11-08 | `radionica` je samo `/oprema` mehaničara; popravka u servisu i `/servis` rade kod mesta `servis` (samo servis) ili `pregledservis` (pregled i servis). Natpisi uvek redom „/registruj   /servis“. Promena vrste mesta bira se sa liste | Zahtev vlasnika |
+| 165 | 2026-11-08 | Anti-cheat za popravku vozila: server pamti HP i oštećenja svakog vozila; ako HP poraste ili šteta nestane bez serverske popravke, vraća se staro stanje i adminima stiže upozorenje (bez kicka). Sve serverske promene idu kroz `AC_CreateVehicle`, `AC_SetVehicleHealth`, `AC_RepairVehicle`, `AC_UpdateVehicleDamageStatus` | Odobrio vlasnik; isto kao provera armora |
+| 166 | 2026-11-08 | `/cw [tekst]`: šapat koji čuju samo oni u istom vozilu; okolina vidi oblačić „šapuće nešto u vozilu“ | Odobrio vlasnik |
+| 167 | 2026-11-08 | `/v parkiraj` odbija mesto bliže od 8 m ulazu u zgradu, bilo kom mestu (šalteri, pumpe, pregled, servis...), rent vozilima, parkingu mehaničara, vozilima na pijaci i mestima gde se pojavljuju vozila auto škole. Put se ne proverava (server nema podatke o putevima) | Odobrio vlasnik |
+| 168 | 2026-11-08 | VIP pogodnosti za vozila (mesto više, tablica upola cene) već postoje; neon za Gold čeka odgovor vlasnika | Vlasnik je pitao |
 
 ### Arhitektura koda (predlog)
 ```
@@ -361,6 +365,10 @@ This file records every important decision so it does not get re-discussed. Newe
 | 162 | 2026-11-07 | The lift posts in the inspection bay moved apart (about 3.4 m clear), so the tow truck can get in | Owner's request |
 | 163 | 2026-11-07 | When placing a point the admin picks: `pregled` (inspection only), `radionica` (`/oprema` and the service) or `pregledservis` (inspection plus a workshop for repairs and `/servis`, 8 m), so inspection and service can be apart later | Owner's request |
 | 164 | 2026-11-08 | `radionica` is only the mechanics' `/oprema`; service repairs and `/servis` work at a `servis` point (service only) or `pregledservis` (inspection and service). Labels always read "/registruj   /servis" in that order. A point's new type is picked from a list | Owner's request |
+| 165 | 2026-11-08 | Anti-cheat for vehicle repairs: the server remembers every vehicle's health and damage; if health rises or damage disappears without a server repair, the old state comes back and admins get an alert (no kick). Every server change goes through `AC_CreateVehicle`, `AC_SetVehicleHealth`, `AC_RepairVehicle`, `AC_UpdateVehicleDamageStatus` | Approved by the owner; same as the armour check |
+| 166 | 2026-11-08 | `/cw [text]`: a whisper heard only by those in the same vehicle; people around see a "whispers something in the vehicle" bubble | Approved by the owner |
+| 167 | 2026-11-08 | `/v parkiraj` refuses a spot closer than 8 m to a building entrance, any point (counters, pumps, inspection, service...), rentals, the mechanics' parking, the market's vehicles and where the driving school's vehicles appear. Roads are not checked (the server has no road data) | Approved by the owner |
+| 168 | 2026-11-08 | The VIP vehicle perks (one more slot, half-price plate) already exist; neon for Gold waits for the owner's answer | The owner asked |
 
 ### Code architecture (proposal)
 ```

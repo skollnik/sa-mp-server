@@ -78,7 +78,7 @@ static stock Market_UpdateLabel(slot)
 
 static stock Market_SpawnDisplayVehicle(slot)
 {
-    new vehicleid = CreateVehicle(g_MarketListings[slot][mlModel], g_MarketListings[slot][mlX], g_MarketListings[slot][mlY], g_MarketListings[slot][mlZ],
+    new vehicleid = AC_CreateVehicle(g_MarketListings[slot][mlModel], g_MarketListings[slot][mlX], g_MarketListings[slot][mlY], g_MarketListings[slot][mlZ],
         g_MarketListings[slot][mlA], 1, 1, -1);
     g_MarketListings[slot][mlVehicleId] = vehicleid;
     if (vehicleid != INVALID_VEHICLE_ID)
@@ -160,6 +160,18 @@ public Market_RestoreDisplay(dbid, vehicleid)
     g_IsMarketVehicle[vehicleid] = false;
     Market_SpawnDisplayVehicle(slot);
     return 1;
+}
+
+stock bool:Market_IsNearListing(vehicleid, Float:range)
+{
+    for (new i = 0; i < MAX_MARKET_LISTINGS; i++)
+    {
+        if (g_MarketListings[i][mlUsed] && GetVehicleDistanceFromPoint(vehicleid, g_MarketListings[i][mlX], g_MarketListings[i][mlY], g_MarketListings[i][mlZ]) < range)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 stock bool:Market_IsNearExit(vehicleid)

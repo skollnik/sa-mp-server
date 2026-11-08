@@ -3,7 +3,7 @@ cmd:pomoc(playerid, params[])
     ShowPlayerDialog(playerid, DIALOG_HELP, DIALOG_STYLE_MSGBOX, SERVER_NAME " - Pomoc",
         C_SERVER "Razgovor\n" \
         C_WHITE "Obican tekst - govor ljudima oko vas\n" \
-        "/s - vika    /l - tihi govor    /w - sapat jednom igracu\n\n" \
+        "/s - vika    /l - tihi govor    /w - sapat jednom igracu    /cw - sapat u vozilu\n\n" \
         C_SERVER "Radnje (RP)\n" \
         C_WHITE "/me - radnja vaseg karaktera    /do - opis okoline ili stanja\n" \
         "/ame i /ado - isto, ali se vidi iznad glave\n\n" \

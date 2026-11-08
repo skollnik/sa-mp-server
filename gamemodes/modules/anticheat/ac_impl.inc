@@ -269,6 +269,7 @@ stock AC_CheckMovement(playerid, PLAYER_STATE:player_state)
 forward AC_Tick();
 public AC_Tick()
 {
+    AC_CheckVehicles();
     for (new i = 0; i < MAX_PLAYERS; i++)
     {
         if (!Account_IsLoggedIn(i))

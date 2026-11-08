@@ -59,6 +59,33 @@ cmd:w(playerid, params[])
     return 1;
 }
 
+// Heard only by the people in the same vehicle; those around see a bubble that something is being whispered.
+cmd:cw(playerid, params[])
+{
+    if (isnull(params))
+    {
+        Msg_Usage(playerid, "/cw [tekst] (sapat u vozilu, cuju samo oni u vozilu)");
+        return 1;
+    }
+    new vehicleid = GetPlayerVehicleID(playerid);
+    if (vehicleid == 0)
+    {
+        Msg_Error(playerid, "Niste u vozilu; za sapat igracu pored vas koristite /w.");
+        return 1;
+    }
+    new message[192];
+    format(message, sizeof(message), "%s sapuce (u vozilu): %s", Account_Name(playerid), params);
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (Account_IsLoggedIn(i) && GetPlayerVehicleID(i) == vehicleid)
+        {
+            Chat_Send(i, COLOR_WHISPER, message);
+        }
+    }
+    SetPlayerChatBubble(playerid, "* sapuce nesto u vozilu", COLOR_PURPLE, CHAT_RADIUS_WHISPER, 3000);
+    return 1;
+}
+
 cmd:me(playerid, params[])
 {
     if (isnull(params))
@@ -203,6 +230,7 @@ cmd:pm(playerid, params[])
 flags:s(CMD_FLAG_CHAT)
 flags:l(CMD_FLAG_CHAT)
 flags:w(CMD_FLAG_CHAT)
+flags:cw(CMD_FLAG_CHAT)
 flags:me(CMD_FLAG_CHAT)
 flags:do(CMD_FLAG_CHAT)
 flags:ame(CMD_FLAG_CHAT)

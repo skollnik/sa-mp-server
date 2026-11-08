@@ -96,7 +96,7 @@ public OnRentSeedChecked()
 
 static stock Rent_Spawn(slot)
 {
-    new vehicleid = CreateVehicle(g_Rent[slot][rnModel], g_Rent[slot][rnX], g_Rent[slot][rnY], g_Rent[slot][rnZ], g_Rent[slot][rnA], 1, 1, -1);
+    new vehicleid = AC_CreateVehicle(g_Rent[slot][rnModel], g_Rent[slot][rnX], g_Rent[slot][rnY], g_Rent[slot][rnZ], g_Rent[slot][rnA], 1, 1, -1);
     g_Rent[slot][rnVehicle] = vehicleid;
     g_Rent[slot][rnRenter] = INVALID_PLAYER_ID;
     g_Rent[slot][rnAwaySince] = 0;
@@ -156,6 +156,18 @@ public OnRentLoaded()
 stock bool:Rent_IsRentVehicle(vehicleid)
 {
     return vehicleid > 0 && vehicleid < MAX_VEHICLES && g_RentOf[vehicleid] != -1;
+}
+
+stock bool:Rent_IsNearSpot(vehicleid, Float:range)
+{
+    for (new i = 0; i < MAX_RENT_VEHICLES; i++)
+    {
+        if (g_Rent[i][rnUsed] && GetVehicleDistanceFromPoint(vehicleid, g_Rent[i][rnX], g_Rent[i][rnY], g_Rent[i][rnZ]) < range)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 stock bool:Rent_IsRenter(playerid, vehicleid)

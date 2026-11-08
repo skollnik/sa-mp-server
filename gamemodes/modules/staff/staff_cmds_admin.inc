@@ -489,7 +489,7 @@ cmd:fixveh(playerid, params[])
         return 1;
     }
 
-    RepairVehicle(vehicleid);
+    AC_RepairVehicle(vehicleid);
     Msg_Admin(playerid, "Vozilo je popravljeno.");
     Staff_Log(playerid, "fixveh", INVALID_PLAYER_ID, "");
     return 1;
@@ -758,7 +758,7 @@ cmd:veh(playerid, params[])
     GetPlayerPos(playerid, x, y, z);
     GetPlayerFacingAngle(playerid, angle);
 
-    new vehicleid = CreateVehicle(model, x, y, z + 0.5, angle, -1, -1, -1);
+    new vehicleid = AC_CreateVehicle(model, x, y, z + 0.5, angle, -1, -1, -1);
     if (vehicleid == INVALID_VEHICLE_ID)
     {
         Msg_Error(playerid, "Vozilo nije moguce napraviti.");

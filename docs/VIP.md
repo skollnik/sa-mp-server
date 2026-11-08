@@ -36,7 +36,7 @@
 ### Pogodnosti koje dolaze sa drugim sistemima (odobrene)
 | Pogodnost | Bronze | Silver | Gold | Sistem |
 |-----------|:------:|:------:|:----:|--------|
-| Neon | – | – | ✅ | Faza 3 |
+| Neon (svetla ispod vozila) | – | – | ✅ | Faza 3, čeka odluku vlasnika da li treba |
 | Popust na oglase | 10% | 20% | 30% | Faza 5 |
 | Besplatna promena imena jednom mesečno | – | – | ✅ | bilo kada |
 | VIP klub (enterijer) | – | ✅ | ✅ | kad vlasnik napravi mapu |
@@ -84,7 +84,7 @@
 ### Perks coming with other systems (approved)
 | Perk | Bronze | Silver | Gold | System |
 |------|:------:|:------:|:----:|--------|
-| Neon | – | – | ✅ | Phase 3 |
+| Neon (lights under the vehicle) | – | – | ✅ | Phase 3, waiting for the owner to decide if it is wanted |
 | Discount on ads | 10% | 20% | 30% | Phase 5 |
 | Free name change once a month | – | – | ✅ | any time |
 | VIP club (interior) | – | ✅ | ✅ | once the owner makes the map |

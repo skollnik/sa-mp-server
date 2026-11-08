@@ -94,7 +94,7 @@ stock Mech_Init()
 {
     for (new i = 0; i < sizeof(g_MechVehicleSpots); i++)
     {
-        new vehicleid = CreateVehicle(MECH_VEHICLE_MODEL, g_MechVehicleSpots[i][0], g_MechVehicleSpots[i][1], g_MechVehicleSpots[i][2], g_MechVehicleSpots[i][3],
+        new vehicleid = AC_CreateVehicle(MECH_VEHICLE_MODEL, g_MechVehicleSpots[i][0], g_MechVehicleSpots[i][1], g_MechVehicleSpots[i][2], g_MechVehicleSpots[i][3],
             6, 1, MECH_VEHICLE_RESPAWN_S);
         if (vehicleid == INVALID_VEHICLE_ID)
         {
@@ -104,6 +104,18 @@ stock Mech_Init()
         Fuel_Set(vehicleid, float(Fuel_TankSize(MECH_VEHICLE_MODEL)));
         Veh_SetLabel(vehicleid, "[MEHANICAR]", COLOR_GREY);
     }
+}
+
+stock bool:Mech_IsNearVehicleSpot(vehicleid, Float:range)
+{
+    for (new i = 0; i < sizeof(g_MechVehicleSpots); i++)
+    {
+        if (GetVehicleDistanceFromPoint(vehicleid, g_MechVehicleSpots[i][0], g_MechVehicleSpots[i][1], g_MechVehicleSpots[i][2]) < range)
+        {
+            return true;
+        }
+    }
+    return false;
 }
 
 stock Mech_OnPlayerConnect(playerid)
@@ -276,7 +288,7 @@ static stock Mech_RepairBody(vehicleid, Float:share)
         }
         fix--;
     }
-    UpdateVehicleDamageStatus(vehicleid, VEHICLE_PANEL_STATUS:panels, VEHICLE_DOOR_STATUS:doors, VEHICLE_LIGHT_STATUS:lights, tyres);
+    AC_UpdateVehicleDamageStatus(vehicleid, VEHICLE_PANEL_STATUS:panels, VEHICLE_DOOR_STATUS:doors, VEHICLE_LIGHT_STATUS:lights, tyres);
 }
 
 // How much of the visible damage a workshop repair from one percent to another fixes: the same share as of the engine.
@@ -317,7 +329,7 @@ static stock Mech_ApplyRepair(vehicleid, from, target, bool:shop)
     GetVehicleHealth(vehicleid, health);
     if (health < repaired)
     {
-        SetVehicleHealth(vehicleid, repaired);
+        AC_SetVehicleHealth(vehicleid, repaired);
     }
     g_VehStallAt[vehicleid] = 0;
     if (shop)
@@ -326,7 +338,7 @@ static stock Mech_ApplyRepair(vehicleid, from, target, bool:shop)
     }
     new VEHICLE_PANEL_STATUS:panels, VEHICLE_DOOR_STATUS:doors, VEHICLE_LIGHT_STATUS:lights, VEHICLE_TYRE_STATUS:tyres;
     GetVehicleDamageStatus(vehicleid, panels, doors, lights, tyres);
-    UpdateVehicleDamageStatus(vehicleid, panels, doors, lights, VEHICLE_TYRE_STATUS:0);
+    AC_UpdateVehicleDamageStatus(vehicleid, panels, doors, lights, VEHICLE_TYRE_STATUS:0);
     Veh_SaveIfPersonal(vehicleid);
 }
 
@@ -913,7 +925,7 @@ public Mech_FinishService(playerid, vehicleid, price, race)
         Msg_Error(playerid, "Servis nije uradjen.");
         return 1;
     }
-    RepairVehicle(vehicleid);
+    AC_RepairVehicle(vehicleid);
     g_VehStallAt[vehicleid] = 0;
     Veh_SaveIfPersonal(vehicleid);
     if (price > 0)

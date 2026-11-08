@@ -48,6 +48,8 @@ enum E_VEH_CLASS
 #define VEH_HEALTH_FULL         (1000.0)
 #define VEH_HEALTH_FIRE         (250.0)
 #define VEH_LABEL_DISTANCE      (20.0)
+// How far a saved parking spot must be from doors, counters and other spots everyone needs to reach.
+#define VEH_NO_PARK_RANGE       (8.0)
 // Inside the body, so the label reads as written on the vehicle rather than floating above it.
 #define VEH_LABEL_OFFSET_Z      (0.3)
 #define VEH_REGISTRATION_DAYS   (60)
@@ -144,6 +146,10 @@ forward bool:Veh_IsRegistered(slot);
 forward bool:Veh_HasFreeSlot(playerid);
 forward E_VEH_CLASS:Veh_Class(model);
 forward bool:Market_IsNearExit(vehicleid);
+forward bool:Market_IsNearListing(vehicleid, Float:range);
+forward bool:Rent_IsNearSpot(vehicleid, Float:range);
+forward bool:Mech_IsNearVehicleSpot(vehicleid, Float:range);
+forward bool:Lic_IsNearStart(vehicleid, Float:range);
 forward bool:Market_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Offer_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Plate_StoreFromVehicle(playerid, slot);

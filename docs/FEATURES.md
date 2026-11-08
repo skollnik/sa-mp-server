@@ -166,7 +166,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### AC — Bezbednost i anti-cheat
 - **AC-1** Novac, oružje, HP i armor su isključivo serverski. Ono što klijent prijavi se ignoriše.
-- **AC-2 Detekcija:** teleport, speedhack, fly/airbreak, spawn vozila, jetpack.
+- **AC-2 Detekcija:** teleport, speedhack, fly/airbreak, spawn vozila, jetpack, popravka vozila (repair hack).
 - **AC-3 Zaštita dijaloga:** provera ID-a dijaloga.
 - **AC-4 Ograničenje komandi i chata** (flood zaštita).
 
@@ -336,7 +336,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### AC — Security and anti-cheat
 - **AC-1** Money, weapons, HP and armour are server-side only. What the client reports is ignored.
-- **AC-2 Detection:** teleport, speedhack, fly/airbreak, vehicle spawn, jetpack.
+- **AC-2 Detection:** teleport, speedhack, fly/airbreak, vehicle spawn, jetpack, vehicle repair (repair hack).
 - **AC-3 Dialog protection:** dialog ID validation.
 - **AC-4 Command and chat rate limiting** (flood protection).
 

@@ -211,7 +211,7 @@ cmd:izmenivozilo(playerid, params[])
     }
     else if (!strcmp(option, "popravi", true))
     {
-        RepairVehicle(vehicleid);
+        AC_RepairVehicle(vehicleid);
         Veh_SaveState(slot);
     }
     else if (!strcmp(option, "registracija", true))

@@ -328,7 +328,7 @@ stock Veh_OnExitModShop(playerid)
 
 static stock bool:Veh_SpawnAt(slot, Float:x, Float:y, Float:z, Float:angle, interior = 0, world = 0)
 {
-    new vehicleid = CreateVehicle(g_Veh[slot][vModel], x, y, z, angle, g_Veh[slot][vColor1], g_Veh[slot][vColor2], -1);
+    new vehicleid = AC_CreateVehicle(g_Veh[slot][vModel], x, y, z, angle, g_Veh[slot][vColor1], g_Veh[slot][vColor2], -1);
     if (vehicleid == INVALID_VEHICLE_ID)
     {
         printf("[VEHICLES] Vehicle %d could not be created (vehicle limit reached?).", g_Veh[slot][vDbId]);
@@ -351,7 +351,7 @@ static stock bool:Veh_SpawnAt(slot, Float:x, Float:y, Float:z, Float:angle, inte
         SetVehicleNumberPlate(vehicleid, " ");
     }
     SetVehicleHealth(vehicleid, g_Veh[slot][vHealth]);
-    UpdateVehicleDamageStatus(vehicleid, g_Veh[slot][vPanels], g_Veh[slot][vDoors], g_Veh[slot][vLights], g_Veh[slot][vTyres]);
+    AC_UpdateVehicleDamageStatus(vehicleid, g_Veh[slot][vPanels], g_Veh[slot][vDoors], g_Veh[slot][vLights], g_Veh[slot][vTyres]);
     Veh_ApplyTuning(slot);
     Fuel_Set(vehicleid, g_Veh[slot][vFuel]);
     SetVehicleParamsEx(vehicleid, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF, VEHICLE_PARAMS_OFF,
@@ -1269,6 +1269,51 @@ stock Veh_GiveKey(playerid, const params[])
     Msg_Info(targetid, "Dobili ste kopiju kljuca od vozila %s. Mozete ga otkljucati (Y) i voziti (N), i kad vlasnik nije tu.", Veh_Name(slot));
 }
 
+// Spots everyone needs to reach stay clear: a vehicle saved there would come back after every restart and block them.
+// Only the saved spot is checked; stopping there while driving is still fine. Fills what is in the way.
+static stock bool:Veh_ParkingBlockedBy(vehicleid, dest[], size = sizeof(dest))
+{
+    for (new i = 0; i < MAX_DOORS; i++)
+    {
+        if (g_Doors[i][dUsed] && g_Doors[i][dOutInterior] == 0 && g_Doors[i][dOutWorld] == 0
+            && GetVehicleDistanceFromPoint(vehicleid, g_Doors[i][dOutX], g_Doors[i][dOutY], g_Doors[i][dOutZ]) < VEH_NO_PARK_RANGE)
+        {
+            strcopy(dest, "ulaz u zgradu", size);
+            return true;
+        }
+    }
+    for (new i = 0; i < MAX_POINTS; i++)
+    {
+        if (g_Points[i][ptUsed] && g_Points[i][ptInterior] == 0 && g_Points[i][ptWorld] == 0
+            && GetVehicleDistanceFromPoint(vehicleid, g_Points[i][ptX], g_Points[i][ptY], g_Points[i][ptZ]) < VEH_NO_PARK_RANGE)
+        {
+            strcopy(dest, g_PointInfo[g_Points[i][ptType]][piName], size);
+            return true;
+        }
+    }
+    if (Rent_IsNearSpot(vehicleid, VEH_NO_PARK_RANGE))
+    {
+        strcopy(dest, "mesto za rent vozila", size);
+        return true;
+    }
+    if (Mech_IsNearVehicleSpot(vehicleid, VEH_NO_PARK_RANGE))
+    {
+        strcopy(dest, "parking mehanicara", size);
+        return true;
+    }
+    if (Market_IsNearListing(vehicleid, VEH_NO_PARK_RANGE))
+    {
+        strcopy(dest, "auto pijaca", size);
+        return true;
+    }
+    if (Lic_IsNearStart(vehicleid, VEH_NO_PARK_RANGE))
+    {
+        strcopy(dest, "vozila auto skole", size);
+        return true;
+    }
+    return false;
+}
+
 stock Veh_Park(playerid)
 {
     new vehicleid = GetPlayerVehicleID(playerid);
@@ -1291,6 +1336,12 @@ stock Veh_Park(playerid)
     if (Market_IsNearExit(vehicleid))
     {
         Msg_Error(playerid, "Na izlazu sa auto pijace se ne parkira; tu se pojavljuju kupljena vozila.");
+        return;
+    }
+    new blocked[40];
+    if (Veh_ParkingBlockedBy(vehicleid, blocked))
+    {
+        Msg_Error(playerid, "Ovde se ne parkira: vozilo je preblizu (%s). Odmaknite se bar %.0f m.", blocked, VEH_NO_PARK_RANGE);
         return;
     }
 

@@ -56,6 +56,7 @@
 #include "modules/staff/staff_menu.inc"
 
 #include "modules/anticheat/ac_impl.inc"
+#include "modules/anticheat/ac_vehicle.inc"
 #include "modules/anticheat/ac_cmds.inc"
 
 #include "modules/vip/vip_impl.inc"
@@ -341,6 +342,7 @@ public OnVehicleRespray(playerid, vehicleid, color1, color2)
 
 public OnVehicleSpawn(vehicleid)
 {
+    AC_OnVehicleSpawn(vehicleid);
     Job_OnVehicleSpawn(vehicleid);
     Rent_OnVehicleSpawn(vehicleid);
     return 1;

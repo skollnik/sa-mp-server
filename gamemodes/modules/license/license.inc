@@ -493,10 +493,24 @@ static stock Lic_ShowPoint(playerid)
         g_LicRoute[license][next][0], g_LicRoute[license][next][1], g_LicRoute[license][next][2], g_LicRoute[license][point][3]);
 }
 
+// Where the test vehicles appear: the school's own lot, the pier and the airport.
+stock bool:Lic_IsNearStart(vehicleid, Float:range)
+{
+    for (new E_LICENSE:license; license < E_LICENSE; license++)
+    {
+        if ((g_LicStart[license][0] != 0.0 || g_LicStart[license][1] != 0.0)
+            && GetVehicleDistanceFromPoint(vehicleid, g_LicStart[license][0], g_LicStart[license][1], g_LicStart[license][2]) < range)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 static stock Lic_StartDrive(playerid)
 {
     new E_LICENSE:license = g_LicTest[playerid][ltLicense];
-    new vehicleid = CreateVehicle(g_LicInfo[license][liModel], g_LicStart[license][0], g_LicStart[license][1], g_LicStart[license][2], g_LicStart[license][3], 1, 1, -1);
+    new vehicleid = AC_CreateVehicle(g_LicInfo[license][liModel], g_LicStart[license][0], g_LicStart[license][1], g_LicStart[license][2], g_LicStart[license][3], 1, 1, -1);
     if (vehicleid == INVALID_VEHICLE_ID)
     {
         Msg_Error(playerid, "Vozilo za ispit trenutno ne moze da se napravi; novac je vracen.");

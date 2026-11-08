@@ -183,7 +183,7 @@ cmd:vfix(playerid, params[])
         return 1;
     }
 
-    RepairVehicle(GetPlayerVehicleID(playerid));
+    AC_RepairVehicle(GetPlayerVehicleID(playerid));
     g_Vip[playerid][vLastFix] = gettime();
     Msg_Info(playerid, "Vozilo je popravljeno.");
     return 1;

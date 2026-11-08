@@ -14,6 +14,7 @@
 - `Msg_*` su makroi: poziv mora biti u jednom redu (bez preloma unutar zagrada). / `Msg_*` are macros: the call must stay on one line.
 - Sve što se ponavlja, u bilo kom modulu, ide u funkciju: imena (`Account_Name`), provere (`Staff_ParseTarget`, `Staff_CheckTarget`), poruke (`Staff_MessageAs`, `Staff_NotifyTarget`), slanje (`Chat_SendToAll`), logovi (`Staff_Log`, `AC_Log`). Kod se ne kopira. / Anything repeated, in any module, becomes a function (names, checks, messages, broadcasting, logs). No copy-pasted code.
 - Teleport, oružje i armor uvek preko `AC_SetPlayerPos`, `AC_GivePlayerWeapon`, `AC_ResetPlayerWeapons`, `AC_SetPlayerArmour`, inače ih anti-cheat prijavljuje. / Teleports, weapons and armour always go through the `AC_*` wrappers, otherwise anti-cheat flags them.
+- Vozila se prave i popravljaju samo preko `AC_CreateVehicle`, `AC_SetVehicleHealth`, `AC_RepairVehicle`, `AC_UpdateVehicleDamageStatus`, inače anti-cheat vraća štetu i prijavljuje vozača. / Vehicles are created and repaired only through these `AC_*` wrappers, otherwise anti-cheat undoes the repair and flags the driver.
 - Komande nad igračem imaju posebnu poruku za nepostojećeg igrača i posebnu za sebe (`Staff_CheckTarget` sa porukom za sebe). / Commands on a player have separate messages for a missing player and for targeting yourself.
 - Svi SQL upiti kroz `mysql_format` sa `%e` za stringove. / All SQL goes through `mysql_format` with `%e` for strings.
 
