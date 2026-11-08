@@ -641,7 +641,7 @@ stock E_POINT_TYPE:Veh_ServicePoint(vehicleid)
         case VEH_CLASS_AIR: return POINT_HANGAR;
         case VEH_CLASS_BOAT: return POINT_DOCK;
     }
-    return POINT_WORKSHOP;
+    return POINT_SERVICE;
 }
 
 // Aircraft and boats never stall while running: a dead engine there means a crash or drifting with nobody able to tow.

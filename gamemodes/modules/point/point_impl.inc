@@ -198,7 +198,10 @@ static stock Point_Create(playerid, E_POINT_TYPE:type)
     Msg_Admin(playerid, "Napravljeno je %s (%s).", details, g_PointInfo[g_Points[slot][ptType]][piName]);
 }
 
-static stock Point_ShowTypes(playerid)
+// The point being given a new type from the list, by its DB id.
+new g_PointRetype[MAX_PLAYERS];
+
+static stock Point_ShowTypes(playerid, dialogid = DIALOG_POINT_TYPE, const title[] = "Novo mesto (stanite tamo gde igrac treba da stoji)", const button[] = "Napravi")
 {
     new body[1024], line[72];
     for (new E_POINT_TYPE:t; t < E_POINT_TYPE; t++)
@@ -206,19 +209,28 @@ static stock Point_ShowTypes(playerid)
         format(line, sizeof(line), "%s\t%s\n", g_PointInfo[t][piName], g_PointInfo[t][piCommand]);
         strcat(body, line);
     }
-    ShowPlayerDialog(playerid, DIALOG_POINT_TYPE, DIALOG_STYLE_TABLIST, "Novo mesto (stanite tamo gde igrac treba da stoji)", body, "Napravi", "Zatvori");
+    ShowPlayerDialog(playerid, dialogid, DIALOG_STYLE_TABLIST, title, body, button, "Zatvori");
 }
 
 stock bool:Point_OnDialogResponse(playerid, dialogid, response, listitem)
 {
-    if (dialogid != DIALOG_POINT_TYPE)
+    if (dialogid != DIALOG_POINT_TYPE && dialogid != DIALOG_POINT_RETYPE)
     {
         return false;
     }
-    if (response && listitem >= 0 && listitem < _:E_POINT_TYPE && Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    if (!response || listitem < 0 || listitem >= _:E_POINT_TYPE || !Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+    {
+        return true;
+    }
+    if (dialogid == DIALOG_POINT_TYPE)
     {
         Point_Create(playerid, E_POINT_TYPE:listitem);
+        return true;
     }
+    // Through the command, so the change has the same checks and log as one typed by hand.
+    new line[48];
+    format(line, sizeof(line), "/izmenimesto %d tip %s", g_PointRetype[playerid], g_PointInfo[E_POINT_TYPE:listitem][piKey]);
+    PC_EmulateCommand(playerid, line);
     return true;
 }
 
@@ -304,7 +316,7 @@ cmd:mesta(playerid, params[])
 static const g_PointEditMenu[][E_MENU_ITEM] =
 {
     { ADMIN_LEVEL_HEAD, "Pomeri ovde (gde stojite)", "izmenimesto %s ovde", "" },
-    { ADMIN_LEVEL_HEAD, "Promeni tip", "izmenimesto %s tip", "Tip (npr. pregledservis; spisak: /napravimesto):" }
+    { ADMIN_LEVEL_HEAD, "Promeni tip", "izmenimesto %s tip", "" }
 };
 
 cmd:izmenimesto(playerid, params[])
@@ -316,7 +328,7 @@ cmd:izmenimesto(playerid, params[])
     new dbid, option[16], value[16];
     if (sscanf(params, "dS()[16]S()[16]", dbid, option, value))
     {
-        Msg_Usage(playerid, "/izmenimesto [id] (meni) ili /izmenimesto [id] [ovde / tip] [tip] (ID: /mesta)");
+        Msg_Usage(playerid, "/izmenimesto [id] (meni) ili /izmenimesto [id] [ovde / tip] (tip bez vrste otvara listu; ID: /mesta)");
         return 1;
     }
     new slot = Point_FindSlotByDbId(dbid);
@@ -340,6 +352,14 @@ cmd:izmenimesto(playerid, params[])
         GetPlayerFacingAngle(playerid, g_Points[slot][ptA]);
         g_Points[slot][ptInterior] = GetPlayerInterior(playerid);
         g_Points[slot][ptWorld] = GetPlayerVirtualWorld(playerid);
+    }
+    else if (!strcmp(option, "tip", true) && isnull(value))
+    {
+        new title[48];
+        format(title, sizeof(title), "Mesto %d: nova vrsta", dbid);
+        g_PointRetype[playerid] = dbid;
+        Point_ShowTypes(playerid, DIALOG_POINT_RETYPE, title, "Promeni");
+        return 1;
     }
     else if (!strcmp(option, "tip", true))
     {

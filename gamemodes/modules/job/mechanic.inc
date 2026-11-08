@@ -1,6 +1,6 @@
 #define MECH_VEHICLE_MODEL      (525)
 #define MECH_VEHICLE_RESPAWN_S  (600)
-// Small, so a car on the street next to the workshop is not repaired; a bigger workshop gets more points.
+// Around a service point; small, so a car on the street next to it is not repaired. A bigger service gets more points.
 #define MECH_WORKSHOP_RADIUS    (8.0)
 // Where the mechanic stands in front of the bonnet, past the front of the vehicle.
 #define MECH_BONNET_GAP         (0.6)
@@ -136,16 +136,16 @@ stock Mech_OnPlayerDisconnect(playerid)
     }
 }
 
-// Cars and motorbikes are serviced in the workshop; aircraft and boats at their own service, since they cannot get to the workshop.
-// An inspection placed as "pregledservis" is a workshop bay too, so the lift needs no second workshop point with its own /oprema.
+// Cars and motorbikes are serviced at a "servis" point or an inspection that is also a service ("pregledservis");
+// aircraft and boats at their own service, since they cannot get there. The workshop point itself is only the mechanics' /oprema.
 static stock bool:Mech_AtServicePlace(playerid, vehicleid)
 {
     new E_POINT_TYPE:type = Veh_ServicePoint(vehicleid);
-    if (type != POINT_WORKSHOP)
+    if (type != POINT_SERVICE)
     {
         return Point_IsWithin(playerid, type, POINT_HANGAR_RADIUS);
     }
-    return Point_IsWithin(playerid, POINT_WORKSHOP, MECH_WORKSHOP_RADIUS) || Point_IsWithin(playerid, POINT_INSPECTION_SERVICE, MECH_WORKSHOP_RADIUS);
+    return Point_IsWithin(playerid, POINT_SERVICE, MECH_WORKSHOP_RADIUS) || Point_IsWithin(playerid, POINT_INSPECTION_SERVICE, MECH_WORKSHOP_RADIUS);
 }
 
 // Engine work on a car, van or truck is done from the front, under the open bonnet.
@@ -348,7 +348,7 @@ static stock Mech_SendOffer(mechanic, customer, vehicleid, E_MECH_OFFER_KIND:kin
         new from = Veh_Condition(vehicleid), body[48], percent = target > from ? target - from : 0;
         if (!shop)
         {
-            strcopy(body, "samo u radionici");
+            strcopy(body, "samo u servisu");
         }
         else
         {
@@ -596,7 +596,7 @@ stock Mech_Call(playerid, const text[])
     new count = Mech_OnDutyCount();
     if (count == 0)
     {
-        Msg_Info(playerid, "Dispecer: nijedan mehanicar sada ne radi. Vozilo mozete sami popraviti u radionici: /servis.");
+        Msg_Info(playerid, "Dispecer: nijedan mehanicar sada ne radi. Vozilo mozete sami popraviti u servisu vozila: /servis.");
         return;
     }
     g_MechCallAt[playerid] = now;
@@ -656,7 +656,7 @@ cmd:popravi(playerid, params[])
     new customer, asked;
     if (sscanf(params, "uI(100)", customer, asked))
     {
-        Msg_Usage(playerid, "/popravi [id ili ime vozaca] [do koliko %, samo u radionici; bez broja do 100%]");
+        Msg_Usage(playerid, "/popravi [id ili ime vozaca] [do koliko %, samo u servisu; bez broja do 100%]");
         return 1;
     }
     if (!Staff_CheckTarget(playerid, customer, "Svoje vozilo ne popravljate sami; pozovite drugog mehanicara."))
@@ -688,7 +688,7 @@ cmd:popravi(playerid, params[])
         }
         else
         {
-            Msg_Error(playerid, "Na terenu se popravlja do %d%%, a vozilo je na %d%%. Za vise mora u radionicu.", MECH_FIELD_PERCENT, from);
+            Msg_Error(playerid, "Na terenu se popravlja do %d%%, a vozilo je na %d%%. Za vise mora u servis.", MECH_FIELD_PERCENT, from);
         }
         return 1;
     }
@@ -698,7 +698,7 @@ cmd:popravi(playerid, params[])
     }
     if (!shop && asked != 100 && asked != MECH_FIELD_PERCENT)
     {
-        Msg_Info(playerid, "Na terenu se vozilo uvek popravlja do %d%%; procenat se bira u radionici.", MECH_FIELD_PERCENT);
+        Msg_Info(playerid, "Na terenu se vozilo uvek popravlja do %d%%; procenat se bira u servisu.", MECH_FIELD_PERCENT);
     }
     Mech_SendOffer(playerid, customer, vehicleid, MECH_OFFER_REPAIR, percent > 0 ? target : from, tyres, Mech_Price(percent, tyres, shop), shop);
     return 1;
@@ -823,9 +823,9 @@ static stock Mech_ServiceCheck(playerid)
     if (!Mech_AtServicePlace(playerid, vehicleid))
     {
         new E_POINT_TYPE:type = Veh_ServicePoint(vehicleid);
-        if (type == POINT_WORKSHOP)
+        if (type == POINT_SERVICE)
         {
-            Msg_Error(playerid, "Ovo vozilo se servisira u mehanicarskoj radionici ili na tehnickom pregledu (/gps).");
+            Msg_Error(playerid, "Ovo vozilo se servisira u servisu vozila ili na tehnickom pregledu sa servisom (/gps).");
         }
         else
         {

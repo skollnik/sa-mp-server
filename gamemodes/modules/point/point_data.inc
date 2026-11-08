@@ -22,7 +22,8 @@ enum E_POINT_TYPE
     POINT_HANGAR,
     POINT_DOCK,
     POINT_TUNING,
-    POINT_INSPECTION_SERVICE
+    POINT_INSPECTION_SERVICE,
+    POINT_SERVICE
 }
 
 enum E_POINT_INFO
@@ -46,12 +47,13 @@ new const g_PointInfo[E_POINT_TYPE][E_POINT_INFO] =
     { "pregled",    "Tehnicki pregled", "/registruj", 6.0, POINT_PICKUP_MODEL },
     { "policija",   "Policija - salter", "/tablice", 2.0, POINT_PICKUP_MODEL },
     { "skola",      "Auto skola - salter", "/skola", 2.0, POINT_PICKUP_MODEL },
-    { "radionica",  "Mehanicarska radionica", "/oprema   /servis", 2.0, POINT_PICKUP_MODEL },
-    { "hangar",     "Servis letelica", "/servis   /registruj", 2.0, POINT_PICKUP_MODEL },
-    { "luka",       "Servis brodova", "/servis   /registruj", 2.0, POINT_PICKUP_MODEL },
+    { "radionica",  "Mehanicarska radionica", "/oprema", 2.0, POINT_PICKUP_MODEL },
+    { "hangar",     "Servis letelica", "/registruj   /servis", 2.0, POINT_PICKUP_MODEL },
+    { "luka",       "Servis brodova", "/registruj   /servis", 2.0, POINT_PICKUP_MODEL },
     { "tjuning",    "Tjuning i farbanje", "/tune (mehanicar)", 6.0, POINT_PICKUP_MODEL },
     // An inspection that is also a workshop bay, e.g. on a lift; a plain "pregled" is the inspection alone.
-    { "pregledservis", "Tehnicki pregled i servis", "/registruj   /servis", 6.0, POINT_PICKUP_MODEL }
+    { "pregledservis", "Tehnicki pregled i servis", "/registruj   /servis", 6.0, POINT_PICKUP_MODEL },
+    { "servis",     "Servis vozila", "/servis", 6.0, POINT_PICKUP_MODEL }
 };
 
 enum E_POINT

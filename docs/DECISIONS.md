@@ -169,6 +169,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 161 | 2026-11-07 | Na ispitu auto škole motor pali kandidat (N) | Zahtev vlasnika |
 | 162 | 2026-11-07 | Stubovi lifta u boksu za tehnički pregled su razmaknuti (prolaz oko 3,4 m), da šlep može da uđe | Zahtev vlasnika |
 | 163 | 2026-11-07 | Pri pravljenju mesta bira se: `pregled` (samo tehnički pregled), `radionica` (`/oprema` i servis) ili `pregledservis` (tehnički pregled i radionica za popravku i `/servis`, 8 m), da pregled i servis kasnije mogu biti odvojeni | Zahtev vlasnika |
+| 164 | 2026-11-08 | `radionica` je samo `/oprema` mehaničara; popravka u servisu i `/servis` rade kod mesta `servis` (samo servis) ili `pregledservis` (pregled i servis). Natpisi uvek redom „/registruj   /servis“. Promena vrste mesta bira se sa liste | Zahtev vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -359,6 +360,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 161 | 2026-11-07 | On the driving test the candidate starts the engine (N) | Owner's request |
 | 162 | 2026-11-07 | The lift posts in the inspection bay moved apart (about 3.4 m clear), so the tow truck can get in | Owner's request |
 | 163 | 2026-11-07 | When placing a point the admin picks: `pregled` (inspection only), `radionica` (`/oprema` and the service) or `pregledservis` (inspection plus a workshop for repairs and `/servis`, 8 m), so inspection and service can be apart later | Owner's request |
+| 164 | 2026-11-08 | `radionica` is only the mechanics' `/oprema`; service repairs and `/servis` work at a `servis` point (service only) or `pregledservis` (inspection and service). Labels always read "/registruj   /servis" in that order. A point's new type is picked from a list | Owner's request |
 
 ### Code architecture (proposal)
 ```

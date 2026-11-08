@@ -83,7 +83,7 @@ static stock Veh_CheckInspection(playerid)
         return -1;
     }
     new E_POINT_TYPE:service = Veh_ServicePoint(vehicleid);
-    if (service != POINT_WORKSHOP)
+    if (service != POINT_SERVICE)
     {
         if (!Point_IsWithin(playerid, service, POINT_HANGAR_RADIUS))
         {

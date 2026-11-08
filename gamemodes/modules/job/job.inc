@@ -4,8 +4,8 @@ static const g_JobIntro[E_JOB][] =
     "",
     "Mehanicar popravlja i sredjuje vozila.\n\n" \
     "- Opremu i sleper uzimate u radionici u Willowfield-u (/oprema), uz dozvolu za auto.\n" \
-    "- /popravi [id]: na terenu motor do 60% i pukle gume, da vozilo stigne do radionice.\n" \
-    "- /popravi [id] [do %]: u radionici do trazenog procenta, uz karoseriju srazmerno.\n" \
+    "- /popravi [id]: na terenu motor do 60% i pukle gume, da vozilo stigne do servisa.\n" \
+    "- /popravi [id] [do %]: u servisu do trazenog procenta, uz karoseriju srazmerno.\n" \
     "- Letelice popravljate u servisu letelica, a brodove u servisu brodova.\n" \
     "- /tune [id]: delovi i farbanje, kad vozilo stoji na mestu za tjuning.\n" \
     "- Pozivi stizu na broj 555; prihvatate ih sa /prihvatipoziv [id].\n" \
