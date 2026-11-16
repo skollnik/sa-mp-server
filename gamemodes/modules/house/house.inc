@@ -775,7 +775,7 @@ cmd:garaza(playerid, params[])
     }
     if (!House_GarageHasRoom(g_Houses[slot][hDbId]))
     {
-        Msg_Error(playerid, "Garaza je puna (%d mesta).", House_GarageCapacity(slot));
+        Msg_Error(playerid, "Garaza je puna (%d/%d).", Veh_GarageCount(g_Houses[slot][hDbId]), House_GarageCapacity(slot));
         return 1;
     }
     if (Veh_SpeedKmh(vehicleid) > 5.0)

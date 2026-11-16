@@ -1507,7 +1507,7 @@ static stock Veh_ParkInGarage(playerid, slot, house_dbid)
 {
     if (g_Veh[slot][vParkGarage] != house_dbid && Veh_GarageParkedCount(house_dbid) >= House_GarageCapacityOf(house_dbid))
     {
-        Msg_Error(playerid, "Garaza ima %d mesta i sva su vec parking drugim vozilima.", House_GarageCapacityOf(house_dbid));
+        Msg_Error(playerid, "Garaza je vec parking za druga vasa vozila i nema slobodnog mesta (%d/%d).", Veh_GarageParkedCount(house_dbid), House_GarageCapacityOf(house_dbid));
         return;
     }
     Veh_SetParkingHere(slot);
