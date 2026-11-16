@@ -322,7 +322,9 @@ static stock Veh_FindNearestAny(playerid, Float:range)
 }
 
 // Returns the vehicle ID typed after the command, or 0 with the usage or error already shown.
-static stock Veh_ParseAdminTarget(playerid, const params[], const usage[])
+// A vehicle in a garage has no ID in the world: by default the admin is told where it is; with garage_slot the caller
+// gets its slot instead (0 is returned either way).
+static stock Veh_ParseAdminTarget(playerid, const params[], const usage[], &garage_slot = -1, bool:want_garage = false)
 {
     new vehicleid;
     if (sscanf(params, "d", vehicleid))
@@ -332,7 +334,19 @@ static stock Veh_ParseAdminTarget(playerid, const params[], const usage[])
     }
     if (vehicleid < 1 || vehicleid >= MAX_VEHICLES || !IsValidVehicle(vehicleid))
     {
-        Msg_Error(playerid, "Vozilo sa tim ID-jem ne postoji (ID vozila se vidi sa /vinfo).");
+        new slot = (vehicleid < 1 || vehicleid >= MAX_VEHICLES) ? -1 : Veh_FindInGarageById(vehicleid);
+        if (slot == -1)
+        {
+            Msg_Error(playerid, "Vozilo sa tim ID-jem ne postoji (ID vozila se vidi sa /vinfo).");
+        }
+        else if (want_garage)
+        {
+            garage_slot = slot;
+        }
+        else
+        {
+            Msg_Error(playerid, "Vozilo %d (%s, vlasnik %s) je u garazi kuce %d. Sa /getveh %d ga vadite i dovodite do sebe.", vehicleid, Veh_Name(slot), g_Veh[slot][vOwnerName], g_Veh[slot][vGarage], vehicleid);
+        }
         return 0;
     }
     return vehicleid;
@@ -407,13 +421,40 @@ cmd:gotoveh(playerid, params[])
     return 1;
 }
 
+static stock Veh_BringFromGarage(playerid, slot)
+{
+    if (GetPlayerInterior(playerid) != 0 || GetPlayerVirtualWorld(playerid) != 0)
+    {
+        Msg_Error(playerid, "Vozilo iz garaze se dovodi samo napolju.");
+        return;
+    }
+    new Float:x, Float:y, Float:z, Float:angle, old_id = g_Veh[slot][vLastVehicleId], house = g_Veh[slot][vGarage];
+    GetPlayerPos(playerid, x, y, z);
+    GetPlayerFacingAngle(playerid, angle);
+    if (!Veh_TakeFromGarage(slot, x + 3.0, y, z, angle))
+    {
+        Msg_Error(playerid, "Vozilo nije moglo da se napravi (limit vozila na serveru).");
+        return;
+    }
+    new vehicleid = g_Veh[slot][vVehicleId], extra[24];
+    g_VehAdminMoved[vehicleid] = true;
+    format(extra, sizeof(extra), "iz garaze kuce %d", house);
+    Veh_LogAdmin(playerid, vehicleid, "getveh", extra);
+    Msg_Admin(playerid, "Vozilo %s je izvadjeno iz garaze kuce %d i dovedeno do vas (bilo je ID %d, sada je ID %d).", Veh_Name(slot), house, old_id, vehicleid);
+}
+
 cmd:getveh(playerid, params[])
 {
     if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_ADMIN))
     {
         return 1;
     }
-    new vehicleid = Veh_ParseAdminTarget(playerid, params, "/getveh [id vozila] (dovodi prazno vozilo do vas)");
+    new garage_slot = -1, vehicleid = Veh_ParseAdminTarget(playerid, params, "/getveh [id vozila] (dovodi prazno vozilo do vas, i iz garaze)", garage_slot, true);
+    if (garage_slot != -1)
+    {
+        Veh_BringFromGarage(playerid, garage_slot);
+        return 1;
+    }
     if (vehicleid == 0)
     {
         return 1;

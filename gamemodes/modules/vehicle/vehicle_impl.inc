@@ -567,6 +567,7 @@ static stock Veh_LoadRow(slot, row, ownerid)
     g_Veh[slot][vUsed] = true;
     g_Veh[slot][vOwnerId] = ownerid;
     g_Veh[slot][vVehicleId] = INVALID_VEHICLE_ID;
+    g_Veh[slot][vLastVehicleId] = INVALID_VEHICLE_ID;
     g_Veh[slot][vDiedAt] = 0;
     cache_get_value_name_int(row, "id", g_Veh[slot][vDbId]);
     cache_get_value_name_int(row, "owner_id", g_Veh[slot][vOwnerDbId]);
@@ -1474,13 +1475,31 @@ static stock bool:Veh_ParkingBlockedBy(playerid, vehicleid, dest[], &Float:range
 // The vehicle leaves the world; its data stays in the slot, so it still counts towards the owner's vehicle limit.
 stock Veh_StoreInGarage(slot, house_dbid)
 {
-    new vehicleid = g_Veh[slot][vVehicleId];
+    new vehicleid = g_Veh[slot][vVehicleId], other = Veh_FindInGarageById(vehicleid);
     Veh_SaveState(slot);
     Veh_ClearNeon(vehicleid);
     DestroyVehicle(vehicleid);
     g_VehSlotOf[vehicleid] = -1;
     g_Veh[slot][vVehicleId] = INVALID_VEHICLE_ID;
+    if (other != -1)
+    {
+        g_Veh[other][vLastVehicleId] = INVALID_VEHICLE_ID;
+    }
+    g_Veh[slot][vLastVehicleId] = vehicleid;
     Veh_SetGarage(slot, house_dbid);
+}
+
+// The garage vehicle that last had this ID, or -1. A newer vehicle in a garage takes the ID over (see Veh_StoreInGarage).
+stock Veh_FindInGarageById(vehicleid)
+{
+    for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
+    {
+        if (g_Veh[slot][vUsed] && g_Veh[slot][vGarage] != 0 && g_Veh[slot][vLastVehicleId] == vehicleid)
+        {
+            return slot;
+        }
+    }
+    return -1;
 }
 
 stock bool:Veh_TakeFromGarage(slot, Float:x, Float:y, Float:z, Float:angle)
@@ -1490,6 +1509,7 @@ stock bool:Veh_TakeFromGarage(slot, Float:x, Float:y, Float:z, Float:angle)
         return false;
     }
     Veh_SetGarage(slot, 0);
+    g_Veh[slot][vLastVehicleId] = INVALID_VEHICLE_ID;
     return true;
 }
 

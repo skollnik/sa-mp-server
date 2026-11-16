@@ -6,6 +6,8 @@
 #define HOUSE_GARAGE_RADIUS     (5.0)
 #define HOUSE_LABEL_DISTANCE    (15.0)
 #define HOUSE_ICON_DISTANCE     (400.0)
+// The owner sees their own house from anywhere on the map.
+#define HOUSE_OWN_ICON_DISTANCE (6000.0)
 #define HOUSE_PICKUP_SALE       (1273)
 #define HOUSE_PICKUP_OWNED      (1272)
 #define HOUSE_ICON_SALE         (31)

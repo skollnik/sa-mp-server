@@ -69,6 +69,35 @@ stock House_OnPlayerDisconnect(playerid)
     new query[96];
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `logout_at` = %d WHERE `id` = %d", gettime(), g_Player[playerid][pDbId]);
     mysql_tquery(g_SQL, query);
+    House_ShowOwnerIcons(playerid, false);
+}
+
+// The next player with this playerid must not see the icon, so it goes away the moment the owner leaves.
+static stock House_ShowOwnerIcons(playerid, bool:online)
+{
+    for (new slot = 0; slot < MAX_HOUSES; slot++)
+    {
+        if (g_Houses[slot][hUsed] && g_Houses[slot][hOwnerDbId] == g_Player[playerid][pDbId])
+        {
+            House_ShowIcon(slot, online ? playerid : INVALID_PLAYER_ID);
+        }
+    }
+}
+
+// Houses for sale are on everyone's map; a house with an owner only on the owner's, so hundreds of houses do not fill the map.
+static stock House_ShowIcon(slot, ownerid)
+{
+    if (IsValidDynamicMapIcon(g_Houses[slot][hIcon])) DestroyDynamicMapIcon(g_Houses[slot][hIcon]);
+    g_Houses[slot][hIcon] = STREAMER_TAG_MAP_ICON:INVALID_STREAMER_ID;
+    new Float:x = g_Houses[slot][hX], Float:y = g_Houses[slot][hY], Float:z = g_Houses[slot][hZ];
+    if (g_Houses[slot][hOwnerDbId] == 0)
+    {
+        g_Houses[slot][hIcon] = CreateDynamicMapIcon(x, y, z, HOUSE_ICON_SALE, 0, 0, 0, -1, HOUSE_ICON_DISTANCE, MAPICON_LOCAL);
+    }
+    else if (ownerid != INVALID_PLAYER_ID)
+    {
+        g_Houses[slot][hIcon] = CreateDynamicMapIcon(x, y, z, HOUSE_ICON_OWNED, 0, 0, 0, ownerid, HOUSE_OWN_ICON_DISTANCE, MAPICON_GLOBAL);
+    }
 }
 
 forward OnHousesLoaded();
@@ -212,7 +241,7 @@ stock House_Refresh(slot)
     g_Houses[slot][hPickup] = CreateDynamicPickup(for_sale ? HOUSE_PICKUP_SALE : HOUSE_PICKUP_OWNED, 1, x, y, z, 0, 0);
     g_Houses[slot][hLabel] = CreateDynamic3DTextLabel(text, for_sale ? COLOR_GREEN : COLOR_SERVER, x, y, z + 0.6, HOUSE_LABEL_DISTANCE,
         INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, 0, 0);
-    g_Houses[slot][hIcon] = CreateDynamicMapIcon(x, y, z, for_sale ? HOUSE_ICON_SALE : HOUSE_ICON_OWNED, 0, 0, 0, -1, HOUSE_ICON_DISTANCE, MAPICON_LOCAL);
+    House_ShowIcon(slot, for_sale ? INVALID_PLAYER_ID : Account_FindOnlineByDbId(g_Houses[slot][hOwnerDbId]));
 
     new interior = g_HouseInteriors[g_Houses[slot][hInterior]][hiInterior], Float:ix, Float:iy, Float:iz, Float:ia;
     House_ExitPos(slot, ix, iy, iz, ia);
@@ -438,6 +467,7 @@ stock House_OnLoadAccount(playerid)
     cache_get_value_name_int(0, "house_spawn", g_HouseSpawn[playerid]);
     cache_get_value_name_int(0, "logout_at", logout_at);
     g_HouseSpawnPending[playerid] = g_HouseSpawn[playerid] != 0 && gettime() - logout_at >= HOUSE_SPAWN_AWAY_S;
+    House_ShowOwnerIcons(playerid, true);
 }
 
 // Puts the player inside their spawn house when they chose one in /kuca; false when there is none.

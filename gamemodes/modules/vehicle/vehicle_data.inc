@@ -108,6 +108,8 @@ enum E_VEH
     vGarage,
     // The house whose garage is the vehicle's parking (DB id): restarts, deaths and resets put it in there.
     vParkGarage,
+    // The ID the vehicle had before it went into a garage, so admins who saw it (/vinfo) can still find it there.
+    vLastVehicleId,
     vDiedAt
 }
 

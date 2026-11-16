@@ -192,6 +192,8 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 184 | 2026-11-16 | Garaža se postavlja iz vozila, tačno gde i kako vozilo izlazi | Vozilo se odbijalo od zida |
 | 185 | 2026-11-16 | Vozilo koje admin dovuče sa `/getveh` ne dobija tu automatski parking | Vozila su se posle reseta vraćala gde ih je admin dovukao |
 | 186 | 2026-11-16 | `/gotokucu` je sada `/gotokuca` | Zahtev vlasnika |
+| 187 | 2026-11-16 | Na mapi su kuće na prodaju (svima, u blizini) i sopstvena kuća (samo vlasniku, sa cele mape); tuđe kuće se ne vide | Odobrio vlasnik; mapa nije puna kad bude stotine kuća |
+| 188 | 2026-11-16 | Vozilo u garaži pamti ID koji je imalo: `/gotoveh` i ostale admin komande kažu da je u garaži, a `/getveh` ga vadi i dovodi adminu (dobija novi ID) | Zahtev vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -405,6 +407,8 @@ This file records every important decision so it does not get re-discussed. Newe
 | 184 | 2026-11-16 | The garage is set from a vehicle, exactly where and how vehicles come out | Vehicles bounced off the wall |
 | 185 | 2026-11-16 | A vehicle an admin brings with `/getveh` does not take that spot as its automatic parking | Vehicles went back to where the admin had brought them after a reset |
 | 186 | 2026-11-16 | `/gotokucu` is now `/gotokuca` | Owner's request |
+| 187 | 2026-11-16 | The map shows houses for sale (to everyone, nearby) and your own house (only to the owner, from the whole map); other people's houses are hidden | Approved by the owner; the map does not fill up once there are hundreds of houses |
+| 188 | 2026-11-16 | A vehicle in a garage remembers the ID it had: `/gotoveh` and the other admin commands say it is in a garage, and `/getveh` takes it out to the admin (it gets a new ID) | Owner's request |
 
 ### Code architecture (proposal)
 ```

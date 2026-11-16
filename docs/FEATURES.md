@@ -78,7 +78,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **VEH-14 Natpisi na vozilima:** kratak natpis u uglastim zagradama u visini vozila: `[ADMIN]` crni, `[RENT]` beli sa cenom ispod dok je slobodan, `[AUTO SKOLA]` plavi, `[MEHANICAR]` sivi; kasnije policija i ostali.
 
 ### PROP — Imovina
-- **PROP-1 Kuće (urađeno 4.1):** admin ih pravi u igri (`/napravikucu`, 27 enterijera iz igre u tri veličine po oceni referentnog moda, izlaz može da se pomeri); zelena kućica na prodaju, plava sa vlasnikom, ikonice na mapi; `/kupikucu`, meni `/kuca` (informacije, zaključavanje, GPS, pojavljivanje u kući, prodaja državi za 70%), prodaja igraču preko `/ponudi`, `/kucaj`; posle 30 dana neaktivnosti kuća se vraća na prodaju uz 50% na račun. Prvobitni opis: kupovina, prodaja državi ili igraču, zaključavanje, enterijeri različite veličine.
+- **PROP-1 Kuće (urađeno 4.1):** admin ih pravi u igri (`/napravikucu`, 27 enterijera iz igre u tri veličine po oceni referentnog moda, izlaz može da se pomeri); zelena kućica na prodaju, plava sa vlasnikom; na mapi kuće na prodaju i sopstvena kuća; `/kupikucu`, meni `/kuca` (informacije, zaključavanje, GPS, pojavljivanje u kući, prodaja državi za 70%), prodaja igraču preko `/ponudi`, `/kucaj`; posle 30 dana neaktivnosti kuća se vraća na prodaju uz 50% na račun. Prvobitni opis: kupovina, prodaja državi ili igraču, zaključavanje, enterijeri različite veličine.
 - **PROP-2 Iznajmljivanje:** vlasnik izdaje sobe, a stanar plaća kiriju na payday.
 - **PROP-3 Kućni sef i ormar:** novac, oružje, droga, predmeti.
 - **PROP-4 Nameštaj:** postavljanje objekata u kući.
@@ -248,7 +248,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **VEH-14 Vehicle labels:** a short label in square brackets at the vehicle's height: `[ADMIN]` black, `[RENT]` white with the price below while free, `[AUTO SKOLA]` blue, `[MEHANICAR]` grey; later the police and the rest.
 
 ### PROP — Property
-- **PROP-1 Houses (done in 4.1):** admins create them in game (`/napravikucu`, 27 in-game interiors in three sizes by a reference gamemode's rating, a movable exit); a green house for sale, a blue one with an owner, map icons; `/kupikucu`, the `/kuca` menu (info, lock, GPS, spawning at home, selling to the state for 70%), selling to a player through `/ponudi`, `/kucaj`; after 30 days of inactivity the house goes back on sale with 50% to the bank. Original description: buy, sell to the state or a player, lock, interiors of different sizes.
+- **PROP-1 Houses (done in 4.1):** admins create them in game (`/napravikucu`, 27 in-game interiors in three sizes by a reference gamemode's rating, a movable exit); a green house for sale, a blue one with an owner; the map shows houses for sale and your own house; `/kupikucu`, the `/kuca` menu (info, lock, GPS, spawning at home, selling to the state for 70%), selling to a player through `/ponudi`, `/kucaj`; after 30 days of inactivity the house goes back on sale with 50% to the bank. Original description: buy, sell to the state or a player, lock, interiors of different sizes.
 - **PROP-2 Renting:** the owner rents out rooms, and the tenant pays rent on payday.
 - **PROP-3 House safe and wardrobe:** money, weapons, drugs, items.
 - **PROP-4 Furniture:** placing objects inside the house.
