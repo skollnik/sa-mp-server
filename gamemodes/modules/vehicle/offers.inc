@@ -12,7 +12,9 @@
 enum E_OFFER_KIND
 {
     OFFER_SALE,
-    OFFER_TRADE
+    OFFER_TRADE,
+    // A house the seller stands at; ofSlot and ofDbId are the house's.
+    OFFER_HOUSE
 }
 
 enum E_OFFER
@@ -71,6 +73,10 @@ static stock bool:Offer_IsVehicleReady(slot, dbid, owner, other)
         return false;
     }
     new vehicleid = g_Veh[slot][vVehicleId], Float:x, Float:y, Float:z, Float:ox, Float:oy, Float:oz;
+    if (vehicleid == INVALID_VEHICLE_ID)
+    {
+        return false;
+    }
     GetPlayerPos(owner, x, y, z);
     GetPlayerPos(other, ox, oy, oz);
     return !IsVehicleOccupied(vehicleid) && GetVehicleDistanceFromPoint(vehicleid, x, y, z) < OFFER_VEHICLE_RANGE
@@ -118,6 +124,21 @@ static stock bool:Offer_IsValid(seller, bool:tell)
     {
         strcopy(message, "Igraci vise nisu jedan pored drugog.");
     }
+    else if (g_Offer[seller][ofKind] == OFFER_HOUSE)
+    {
+        if (!House_IsSaleReady(g_Offer[seller][ofSlot], g_Offer[seller][ofDbId], seller))
+        {
+            strcopy(message, "Kuca vise nije spremna (prodavac mora stajati kod kuce, garaza mora biti prazna).");
+        }
+        else if (g_Player[target][pLevel] < House_Level(g_Offer[seller][ofSlot]) || !House_HasFreeSlot(target))
+        {
+            format(message, sizeof(message), "Kupac mora biti nivo %d+ i imati mesta za jos jednu kucu.", House_Level(g_Offer[seller][ofSlot]));
+        }
+        else
+        {
+            return true;
+        }
+    }
     else if (!Offer_IsVehicleReady(g_Offer[seller][ofSlot], g_Offer[seller][ofDbId], seller, target))
     {
         strcopy(message, "Vozilo vise nije spremno (neko sedi u njemu ili niste pored njega).");
@@ -130,7 +151,7 @@ static stock bool:Offer_IsValid(seller, bool:tell)
     {
         format(message, sizeof(message), "Kupac mora biti nivo %d+ i imati slobodno mesto za vozilo.", OFFER_MIN_LEVEL);
     }
-    else if (g_Offer[seller][ofSentAt] != 0 && (g_TrunkVersion[g_Offer[seller][ofSlot]] != g_Offer[seller][ofTrunkVersion]
+    else if (g_Offer[seller][ofSentAt] != 0 && g_Offer[seller][ofKind] != OFFER_HOUSE && (g_TrunkVersion[g_Offer[seller][ofSlot]] != g_Offer[seller][ofTrunkVersion]
         || (g_Offer[seller][ofKind] == OFFER_TRADE && g_TrunkVersion[g_Offer[seller][ofTheirSlot]] != g_Offer[seller][ofTheirTrunkVersion])))
     {
         strcopy(message, "Sadrzaj gepeka se promenio posle ponude; posaljite novu ponudu.");
@@ -154,6 +175,13 @@ static stock bool:Offer_IsValid(seller, bool:tell)
 static stock Offer_Describe(seller, dest[], size = sizeof(dest))
 {
     new slot = g_Offer[seller][ofSlot], registration[24], trunk[48];
+    if (g_Offer[seller][ofKind] == OFFER_HOUSE)
+    {
+        new house[160];
+        House_SaleText(slot, house);
+        format(dest, size, "%s vam prodaje kucu:\n\n%s\n\nCena: $%d (gotovinom)\n\nPonuda vazi %d sekundi.", Account_Name(seller), house, g_Offer[seller][ofAmount], OFFER_TIMEOUT_S);
+        return;
+    }
     Veh_RegistrationText(slot, registration);
     Trunk_Summary(slot, trunk);
     if (g_Offer[seller][ofKind] == OFFER_SALE)
@@ -189,13 +217,13 @@ static stock Offer_Send(seller)
     }
     new target = g_Offer[seller][ofTarget], text[512];
     g_Offer[seller][ofSentAt] = gettime();
-    g_Offer[seller][ofTrunkVersion] = g_TrunkVersion[g_Offer[seller][ofSlot]];
+    g_Offer[seller][ofTrunkVersion] = g_Offer[seller][ofKind] == OFFER_HOUSE ? 0 : g_TrunkVersion[g_Offer[seller][ofSlot]];
     g_Offer[seller][ofTheirTrunkVersion] = g_Offer[seller][ofKind] == OFFER_TRADE ? g_TrunkVersion[g_Offer[seller][ofTheirSlot]] : 0;
     g_OfferNextAt[seller] = gettime() + OFFER_COOLDOWN_S;
     g_OfferFrom[target] = seller;
     g_OfferFromRace[target] = g_AccountRace[seller];
     Offer_Describe(seller, text);
-    ShowPlayerDialog(target, DIALOG_OFFER_ACCEPT, DIALOG_STYLE_MSGBOX, "Ponuda za vozilo", text, "Prihvati", "Odbij");
+    ShowPlayerDialog(target, DIALOG_OFFER_ACCEPT, DIALOG_STYLE_MSGBOX, "Ponuda", text, "Prihvati", "Odbij");
     Msg_Info(seller, "Ponuda je poslata igracu %s.", Account_Name(target));
 }
 
@@ -218,6 +246,27 @@ static stock Offer_Complete(seller)
 {
     new target = g_Offer[seller][ofTarget], slot = g_Offer[seller][ofSlot], amount = g_Offer[seller][ofAmount], reason[64];
     g_OfferFrom[target] = INVALID_PLAYER_ID;
+    if (g_Offer[seller][ofKind] == OFFER_HOUSE)
+    {
+        if (g_Player[target][pCash] < amount)
+        {
+            Msg_Error(target, "Nemate dovoljno gotovine (potrebno je $%d).", amount);
+            Msg_Error(seller, "Kupac nema dovoljno gotovine.");
+            return;
+        }
+        new tax = Offer_Tax(amount);
+        format(reason, sizeof(reason), "kupovina kuce %d", House_DbId(slot));
+        Money_GiveCash(target, -amount, reason, g_Player[seller][pDbId]);
+        format(reason, sizeof(reason), "prodaja kuce %d (taksa $%d)", House_DbId(slot), tax);
+        Money_GiveCash(seller, amount - tax, reason, g_Player[target][pDbId]);
+        House_TransferTo(slot, seller, target, amount, tax);
+        Account_Save(seller);
+        Account_Save(target);
+        Chat_Action(seller, "predaje kljuceve od kuce.");
+        Msg_Success(seller, "Prodali ste kucu za $%d (taksa drzave $%d, dobili ste $%d).", amount, tax, amount - tax);
+        Msg_Success(target, "Kupili ste kucu za $%d. Meni kuce: /kuca", amount);
+        return;
+    }
     if (g_Offer[seller][ofKind] == OFFER_SALE)
     {
         if (g_Player[target][pCash] < amount)
@@ -283,7 +332,7 @@ cmd:ponudi(playerid, params[])
     new targetid;
     if (sscanf(params, "u", targetid))
     {
-        Msg_Usage(playerid, "/ponudi [id ili ime] (prodaja ili zamena vozila igracu pored vas)");
+        Msg_Usage(playerid, "/ponudi [id ili ime] (prodaja ili zamena vozila, ili prodaja kuce, igracu pored vas)");
         return 1;
     }
     if (targetid == INVALID_PLAYER_ID || !Account_IsLoggedIn(targetid))
@@ -311,14 +360,14 @@ cmd:ponudi(playerid, params[])
     g_Offer[playerid][ofTheirKeepPlate] = false;
     g_Offer[playerid][ofAmount] = 0;
     g_Offer[playerid][ofSentAt] = 0;
-    ShowPlayerDialog(playerid, DIALOG_OFFER_TYPE, DIALOG_STYLE_LIST, "Ponuda", "Prodaja vozila\nZamena vozila (uz doplatu ili bez)", "Izaberi", "Odustani");
+    ShowPlayerDialog(playerid, DIALOG_OFFER_TYPE, DIALOG_STYLE_LIST, "Ponuda", "Prodaja vozila\nZamena vozila (uz doplatu ili bez)\nProdaja kuce (stojite kod nje)", "Izaberi", "Odustani");
     return 1;
 }
 alias:ponudi("offer")
 
 static stock Offer_AskPlate(playerid)
 {
-    if (!g_Veh[g_Offer[playerid][ofSlot]][vPlate][0])
+    if (g_Offer[playerid][ofKind] == OFFER_HOUSE || !g_Veh[g_Offer[playerid][ofSlot]][vPlate][0])
     {
         Offer_Send(playerid);
         return;
@@ -337,6 +386,20 @@ stock bool:Offer_OnDialogResponse(playerid, dialogid, response, listitem, const 
             {
                 g_Offer[playerid][ofKind] = listitem == 0 ? OFFER_SALE : OFFER_TRADE;
                 Offer_ListVehicles(playerid, playerid, g_Offer[playerid][ofTarget], DIALOG_OFFER_VEHICLE, "Vase vozilo");
+            }
+            else if (response && listitem == 2)
+            {
+                new slot = House_FindOwnedHere(playerid);
+                if (slot == -1)
+                {
+                    Msg_Error(playerid, "Stanite kod svoje kuce (ispred vrata ili unutra), zajedno sa kupcem.");
+                    return true;
+                }
+                g_Offer[playerid][ofKind] = OFFER_HOUSE;
+                g_Offer[playerid][ofSlot] = slot;
+                g_Offer[playerid][ofDbId] = House_DbId(slot);
+                g_OfferExtraKind[playerid] = 0;
+                ShowPlayerDialog(playerid, DIALOG_OFFER_AMOUNT, DIALOG_STYLE_INPUT, "Cena", "Upisite cenu kuce (najmanje $1.000). Drzava uzima taksu 5% od cene.", "Dalje", "Odustani");
             }
         }
         case DIALOG_OFFER_VEHICLE:
@@ -391,7 +454,7 @@ stock bool:Offer_OnDialogResponse(playerid, dialogid, response, listitem, const 
                 return true;
             }
             new amount = Money_ParseAmount(inputtext);
-            new minimum = g_Offer[playerid][ofKind] == OFFER_SALE ? OFFER_MIN_PRICE : 1;
+            new minimum = g_Offer[playerid][ofKind] == OFFER_TRADE ? 1 : OFFER_MIN_PRICE;
             if (amount < minimum || amount > OFFER_MAX_PRICE)
             {
                 Msg_Error(playerid, "Iznos mora biti od $%d do $%d.", minimum, OFFER_MAX_PRICE);

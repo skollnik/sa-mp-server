@@ -376,6 +376,7 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_int(0, "respect", g_Player[playerid][pRespect]);
     cache_get_value_name_int(0, "cash", g_Player[playerid][pCash]);
     cache_get_value_name_int(0, "bank", g_Player[playerid][pBank]);
+    House_OnLoadAccount(playerid);
     cache_get_value_name_float(0, "pos_x", g_Player[playerid][pPosX]);
     cache_get_value_name_float(0, "pos_y", g_Player[playerid][pPosY]);
     cache_get_value_name_float(0, "pos_z", g_Player[playerid][pPosZ]);

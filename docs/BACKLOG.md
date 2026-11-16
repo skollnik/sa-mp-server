@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 3 | Vlasnik postavlja servis (`/napravimesto servis`, ili lift prebaci u `pregledservis`), servis letelica (`/napravimesto hangar`, aerodrom ~1990, -2348), servis brodova (`/napravimesto luka`, marina ~730, -1672), mesto za tjuning ispred radionice (`/napravimesto tjuning`) i GPS i testira korake 3.5 i 3.6; posle toga faza 4 (imovina) |
+| 4 | Vlasnik pravi kuće (`/napravikucu`) i garaže (`/izmenikucu [id]` → garaža) i testira 4.1 i 4.2; posle toga 4.3: sef i ormar u kući, iznajmljivanje soba i ključ za ukućane |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -48,7 +48,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Kad dođe policija (Faza 5): provera registracije i tablica, kazna i pauk za neregistrovano vozilo ili vozilo sa isteklom registracijom |
 | Kad dođu vozila poslova i frakcija: `/resetvozila` i `/respawnveh` da ih vraćaju na njihova mesta |
 | ✅ GTA radionice za tuning (Transfender i ostale) i Pay'n'spray ne menjaju lična vozila: drugi igrači ne vide promenu, a vozilo se vraća kakvo je bilo (naplaćena popravka u Pay'n'spray-u je u koraku 3.5) |
-| Kad dođu kuće i firme (Faza 4): prodaja i zamena kroz `/ponudi` |
+| ✅ Prodaja kuće kroz `/ponudi` (korak 4.1). Ostaje: firme kroz `/ponudi` kad dođu (4.5) |
 | Kad dođe policija (Faza 5): provera i oduzimanje dozvola, kazna za vožnju bez dozvole |
 | Auto škola u El Coroni: vlasnik postavlja ulaz (`/napraviulaz`, pa izlaz unutra), šalter (`/napravimesto skola`) i GPS lokaciju |
 | Kad dođe oružje kao predmet: oružje u gepeku |
@@ -287,6 +287,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 06.11.2026. | Saksija sa parkinga auto škole uklonjena; ostaje samo nevidljiv sudar tankog stuba (deo GTA zgrade) |
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 | 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
+| 16.11.2026. | Korak 4.1 i 4.2: kuće (pravljenje u igri, 18 enterijera iz igre, kupovina, meni `/kuca`, prodaja državi 70% i igraču preko `/ponudi`, `/kucaj`, pojavljivanje u kući, neaktivnost 30 dana uz 50%, ikonice na mapi) i garaže (`/garaza`, 1–3 mesta); parking 40 m (10 m od tuđe kuće); `/pomoc` kao lista tema |
 | 08.11.2026. | Neon u tjuningu (šest boja, $5.000, Gold VIP upola, `/v neon`); razmak za zabranu parkiranja 25 m |
 | 08.11.2026. | Korak 3.7: anti-cheat za popravku vozila (vraća štetu, upozorava admine), `/cw` šapat u vozilu, `/v parkiraj` odbija mesta bliže od 8 m ulazima, šalterima, rentu, parkingu mehaničara, pijaci i auto školi |
 | 08.11.2026. | `radionica` je samo `/oprema`; nova vrsta mesta `servis`; natpisi „/registruj   /servis“ svuda istim redom; promena vrste mesta sa liste |
@@ -304,7 +305,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 3 | The owner places the service (`/napravimesto servis`, or turns the lift into `pregledservis`), the aircraft service (`/napravimesto hangar`, airport ~1990, -2348), the boat service (`/napravimesto luka`, marina ~730, -1672), the tuning spot in front of the workshop (`/napravimesto tjuning`) and GPS and tests steps 3.5 and 3.6; then phase 4 (property) |
+| 4 | The owner creates houses (`/napravikucu`) and garages (`/izmenikucu [id]` → garage) and tests 4.1 and 4.2; then 4.3: house safe and wardrobe, renting rooms and a key for housemates |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
@@ -345,7 +346,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Once police exist (Phase 5): checking registration and plates, a fine and the tow truck for an unregistered or expired vehicle |
 | Once job and faction vehicles exist: `/resetvozila` and `/respawnveh` return them to their spots |
 | ✅ GTA tuning shops (Transfender and others) and Pay'n'spray do not change personal vehicles: other players never see the change and the vehicle goes back to how it was (a paid Pay'n'spray repair is in step 3.5) |
-| Once houses and businesses exist (Phase 4): selling and trading them through `/ponudi` |
+| ✅ Selling a house through `/ponudi` (step 4.1). Left: businesses through `/ponudi` once they exist (4.5) |
 | Once police exist (Phase 5): checking and revoking licenses, a fine for driving without one |
 | Driving school in El Corona: the owner places the entrance (`/napraviulaz`, then the exit inside), the counter (`/napravimesto skola`) and a GPS location |
 | Once weapons are items: weapons in the trunk |
@@ -584,6 +585,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-06 | The plant pot removed from the school lot; only the thin pole's invisible collision stays (part of the GTA building) |
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
 | 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |
+| 2026-11-16 | Steps 4.1 and 4.2: houses (created in game, 18 in-game interiors, buying, the `/kuca` menu, selling to the state for 70% and to a player through `/ponudi`, `/kucaj`, spawning at home, 30-day inactivity with 50% back, map icons) and garages (`/garaza`, 1–3 places); parking 40 m (10 m from someone else's house); `/pomoc` as a list of topics |
 | 2026-11-08 | Neon in tuning (six colours, $5,000, Gold VIP half, `/v neon`); the no-parking distance is 25 m |
 | 2026-11-08 | Step 3.7: anti-cheat for vehicle repairs (undoes the damage fix, alerts admins), the `/cw` whisper in a vehicle, `/v parkiraj` refuses spots within 8 m of entrances, counters, rentals, the mechanics' parking, the market and the driving school |
 | 2026-11-08 | `radionica` is only `/oprema`; a new point type `servis`; labels read "/registruj   /servis" in the same order everywhere; a point's type is changed from a list |

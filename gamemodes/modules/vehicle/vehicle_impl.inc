@@ -37,6 +37,7 @@ stock Veh_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `mileage` FLOAT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `neon` TINYINT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `neon_on` TINYINT UNSIGNED NOT NULL DEFAULT 1");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `garage_house` INT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD UNIQUE INDEX IF NOT EXISTS `vehicle_pending_plate` (`pending_plate`)");
     // Vehicles that got a plate before registration existed count as freshly registered.
     new query[512];
@@ -223,12 +224,17 @@ stock Float:Veh_HealthAt(percent)
 }
 
 // The condition players see: 100 for a new vehicle, 0 when it catches fire.
+stock Veh_ConditionOf(Float:health)
+{
+    new percent = floatround((health - VEH_HEALTH_FIRE) * 100.0 / (VEH_HEALTH_FULL - VEH_HEALTH_FIRE));
+    return percent < 0 ? 0 : (percent > 100 ? 100 : percent);
+}
+
 stock Veh_Condition(vehicleid)
 {
     new Float:health;
     GetVehicleHealth(vehicleid, health);
-    new percent = floatround((health - VEH_HEALTH_FIRE) * 100.0 / (VEH_HEALTH_FULL - VEH_HEALTH_FIRE));
-    return percent < 0 ? 0 : (percent > 100 ? 100 : percent);
+    return Veh_ConditionOf(health);
 }
 
 stock Veh_SetLabel(vehicleid, const text[], colour)
@@ -588,6 +594,7 @@ static stock Veh_LoadRow(slot, row, ownerid)
     sscanf(mods, "p<,>a<i>[" #VEH_TUNE_SLOTS "]", g_Veh[slot][vMods]);
     cache_get_value_name_int(row, "paintjob", g_Veh[slot][vPaintjob]);
     new neon_on;
+    cache_get_value_name_int(row, "garage_house", g_Veh[slot][vGarage]);
     cache_get_value_name_int(row, "neon", g_Veh[slot][vNeon]);
     cache_get_value_name_int(row, "neon_on", neon_on);
     g_Veh[slot][vNeonOn] = neon_on != 0;
@@ -632,6 +639,13 @@ public OnVehiclesLoaded(playerid, race, bool:remind)
             break;
         }
         Veh_LoadRow(slot, row, playerid);
+        // A vehicle in a house garage stays out of the world until the owner takes it out.
+        if (g_Veh[slot][vGarage] != 0)
+        {
+            Trunk_Load(slot);
+            loaded++;
+            continue;
+        }
         if (Veh_Spawn(slot))
         {
             Trunk_Load(slot);
@@ -1172,18 +1186,29 @@ stock Veh_ShowList(playerid)
         {
             continue;
         }
-        new vehicleid = g_Veh[slot][vVehicleId], fuel[8], Float:x, Float:y, Float:z;
-        if (Fuel_IsUsed(vehicleid))
+        new vehicleid = g_Veh[slot][vVehicleId], fuel[8], Float:x, Float:y, Float:z, condition;
+        new place[ZONE_NAME_LENGTH], key[MAX_PLAYER_NAME + 1], registration[24];
+        if (g_Veh[slot][vGarage] != 0)
         {
-            format(fuel, sizeof(fuel), "%d%%", Fuel_Percent(vehicleid));
+            new tank = Fuel_TankSize(g_Veh[slot][vModel]);
+            format(fuel, sizeof(fuel), "%d%%", tank == 0 ? 100 : floatround(g_Veh[slot][vFuel] * 100.0 / float(tank), floatround_floor));
+            format(place, sizeof(place), "Garaza kuce br. %d", g_Veh[slot][vGarage]);
+            condition = Veh_ConditionOf(g_Veh[slot][vHealth]);
         }
         else
         {
-            strcopy(fuel, "-");
+            if (Fuel_IsUsed(vehicleid))
+            {
+                format(fuel, sizeof(fuel), "%d%%", Fuel_Percent(vehicleid));
+            }
+            else
+            {
+                strcopy(fuel, "-");
+            }
+            GetVehiclePos(vehicleid, x, y, z);
+            Hud_ZoneName(x, y, place);
+            condition = Veh_Condition(vehicleid);
         }
-        GetVehiclePos(vehicleid, x, y, z);
-        new place[ZONE_NAME_LENGTH], key[MAX_PLAYER_NAME + 1], registration[24];
-        Hud_ZoneName(x, y, place);
         if (g_Veh[slot][vKeyDbId] != 0)
         {
             strcopy(key, g_Veh[slot][vKeyName]);
@@ -1193,7 +1218,7 @@ stock Veh_ShowList(playerid)
             strcopy(key, "nema");
         }
         Veh_RegistrationText(slot, registration);
-        format(line, sizeof(line), "%s\t%d%%, %.0f km\t%s\t%s\t%s\t%s\n", Veh_Name(slot), Veh_Condition(vehicleid), g_Veh[slot][vMileage], fuel, place, registration, key);
+        format(line, sizeof(line), "%s\t%d%%, %.0f km\t%s\t%s\t%s\t%s\n", Veh_Name(slot), condition, g_Veh[slot][vMileage], fuel, place, registration, key);
         strcat(body, line);
         g_VehListed[playerid][count++] = slot;
     }
@@ -1285,7 +1310,14 @@ stock bool:Veh_OnDialogResponse(playerid, dialogid, response, listitem)
             if (listitem == 0)
             {
                 new Float:x, Float:y, Float:z;
-                GetVehiclePos(g_Veh[slot][vVehicleId], x, y, z);
+                if (g_Veh[slot][vGarage] != 0)
+                {
+                    House_GaragePos(g_Veh[slot][vGarage], x, y, z);
+                }
+                else
+                {
+                    GetVehiclePos(g_Veh[slot][vVehicleId], x, y, z);
+                }
                 Gps_StartAt(playerid, -1, Veh_Name(slot), x, y, z);
             }
             else if (listitem == 1 && g_Veh[slot][vKeyDbId] != 0)
@@ -1360,7 +1392,7 @@ stock Veh_GiveKey(playerid, const params[])
 
 // Spots everyone needs to reach stay clear: a vehicle saved there would come back after every restart and block them.
 // Only the saved spot is checked; stopping there while driving is still fine. Fills what is in the way.
-static stock bool:Veh_ParkingBlockedBy(vehicleid, dest[], size = sizeof(dest))
+static stock bool:Veh_ParkingBlockedBy(playerid, vehicleid, dest[], size = sizeof(dest))
 {
     for (new i = 0; i < MAX_DOORS; i++)
     {
@@ -1400,7 +1432,70 @@ static stock bool:Veh_ParkingBlockedBy(vehicleid, dest[], size = sizeof(dest))
         strcopy(dest, "vozila auto skole", size);
         return true;
     }
+    if (House_IsOtherDoorNear(playerid, vehicleid, VEH_NO_PARK_HOUSE_RANGE))
+    {
+        strcopy(dest, "tudja kuca", size);
+        return true;
+    }
     return false;
+}
+
+// The vehicle leaves the world; its data stays in the slot, so it still counts towards the owner's vehicle limit.
+stock Veh_StoreInGarage(slot, house_dbid)
+{
+    new vehicleid = g_Veh[slot][vVehicleId];
+    Veh_SaveState(slot);
+    Veh_ClearNeon(vehicleid);
+    DestroyVehicle(vehicleid);
+    g_VehSlotOf[vehicleid] = -1;
+    g_Veh[slot][vVehicleId] = INVALID_VEHICLE_ID;
+    Veh_SetGarage(slot, house_dbid);
+}
+
+stock bool:Veh_TakeFromGarage(slot, Float:x, Float:y, Float:z, Float:angle)
+{
+    if (!Veh_SpawnAt(slot, x, y, z, angle))
+    {
+        return false;
+    }
+    Veh_SetGarage(slot, 0);
+    return true;
+}
+
+static stock Veh_SetGarage(slot, house_dbid)
+{
+    new query[96];
+    g_Veh[slot][vGarage] = house_dbid;
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `garage_house` = %d WHERE `id` = %d", house_dbid, g_Veh[slot][vDbId]);
+    mysql_tquery(g_SQL, query);
+}
+
+stock Veh_GarageCount(house_dbid)
+{
+    new count;
+    for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
+    {
+        if (g_Veh[slot][vUsed] && g_Veh[slot][vGarage] == house_dbid)
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+// A house that changes hands without its owner (inactivity, an admin) lets the vehicles out to their parking spots.
+stock Veh_EmptyGarage(house_dbid)
+{
+    for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
+    {
+        if (g_Veh[slot][vUsed] && g_Veh[slot][vGarage] == house_dbid)
+        {
+            Veh_TakeFromGarage(slot, g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ], g_Veh[slot][vParkA]);
+        }
+    }
+    new query[96];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `garage_house` = 0 WHERE `garage_house` = %d", house_dbid);
+    mysql_tquery(g_SQL, query);
 }
 
 stock Veh_Park(playerid)
@@ -1428,7 +1523,7 @@ stock Veh_Park(playerid)
         return;
     }
     new blocked[40];
-    if (Veh_ParkingBlockedBy(vehicleid, blocked))
+    if (Veh_ParkingBlockedBy(playerid, vehicleid, blocked))
     {
         Msg_Error(playerid, "Ovde se ne parkira: vozilo je preblizu (%s). Odmaknite se bar %.0f m.", blocked, VEH_NO_PARK_RANGE);
         return;

@@ -175,6 +175,15 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 167 | 2026-11-08 | `/v parkiraj` odbija mesto bliže od 8 m (kasnije 25 m, red 169) ulazu u zgradu, bilo kom mestu (šalteri, pumpe, pregled, servis...), rent vozilima, parkingu mehaničara, vozilima na pijaci i mestima gde se pojavljuju vozila auto škole. Put se ne proverava (server nema podatke o putevima) | Odobrio vlasnik |
 | 168 | 2026-11-08 | Neon je deo tjuninga za sva lična vozila (auto, kombi, kamion): šest boja iz SA-MP klijenta, $5.000 kod mehaničara, Gold VIP upola; vlasnik ga pali i gasi sa `/v neon`. Ostale VIP pogodnosti za vozila (mesto više, tablica upola) već postoje | Vlasnik je prepustio odluku |
 | 169 | 2026-11-08 | Razmak za zabranjena mesta za parkiranje je 25 m | Zahtev vlasnika |
+| 170 | 2026-11-16 | Razmak za zabranjena mesta za parkiranje je 40 m; ispred tuđe kuće ili garaže 10 m, jer kuće stoje blizu jedna druge; ispred svoje može | Zahtev vlasnika (40 m); 10 m za kuće da se ulica ne zatvori celom komšiluku |
+| 171 | 2026-11-16 | Kuće: admin ih pravi u igri; enterijeri su samo iz igre (open.mp lista), 18 u tri veličine; svaka kuća ima svoj virtuelni svet (5000 + ID) | Uobičajena praksa; bez skidanja modela |
+| 172 | 2026-11-16 | Najviše 1 kuća, Silver i Gold VIP 2; kad VIP istekne kuće ostaju, ali nova ne može dok je igrač na limitu | Odobrio vlasnik; isto kao za vozila |
+| 173 | 2026-11-16 | Prodaja državi vraća 70% cene; posle 30 dana bez ulaska na server kuća se vraća na prodaju, a vlasnik dobija 50% na račun | Odobrio vlasnik; referentni mod vraća vlasništvo posle oko 500 sati neaktivnosti |
+| 174 | 2026-11-16 | Na mapi se vide sve kuće: zelena ikonica na prodaju, crvena sa vlasnikom | Zahtev vlasnika |
+| 175 | 2026-11-16 | `/kucaj` čuju samo oni koji su u toj kući; u kuću na prodaju se ne ulazi (osim admina na dužnosti) | Vlasnik je pitao; da se prazne kuće ne koriste za skrivanje |
+| 176 | 2026-11-16 | Garaža: vozilo se ostavlja i nestaje iz sveta (bez enterijera garaže); i dalje se računa u limit vozila; kuća se ne prodaje dok garaža nije prazna, a kad je oduzme admin ili neaktivnost, vozila izlaze na svoje parking mesto | Odobrio vlasnik |
+| 177 | 2026-11-16 | Pojavljivanje u kući (meni `/kuca`) važi posle smrti i ulaska na server; zatvor ima prednost | Odobren predlog |
+| 178 | 2026-11-16 | `/pomoc` je lista tema; ceo tekst u jednom prozoru je prešao granicu dijaloga i kompajlera | Tehnička potreba |
 
 ### Arhitektura koda (predlog)
 ```
@@ -371,6 +380,15 @@ This file records every important decision so it does not get re-discussed. Newe
 | 167 | 2026-11-08 | `/v parkiraj` refuses a spot closer than 8 m (later 25 m, row 169) to a building entrance, any point (counters, pumps, inspection, service...), rentals, the mechanics' parking, the market's vehicles and where the driving school's vehicles appear. Roads are not checked (the server has no road data) | Approved by the owner |
 | 168 | 2026-11-08 | Neon is part of tuning for every personal vehicle (car, van, truck): six colours from the SA-MP client, $5,000 at the mechanic, Gold VIP half; the owner switches it with `/v neon`. The other VIP vehicle perks (one more slot, half-price plate) already exist | The owner left it to me |
 | 169 | 2026-11-08 | The no-parking distance is 25 m | Owner's request |
+| 170 | 2026-11-16 | The no-parking distance is 40 m; in front of someone else's house or garage 10 m, since houses stand close together; in front of your own it is allowed | Owner's request (40 m); 10 m for houses so a whole street is not closed |
+| 171 | 2026-11-16 | Houses: admins create them in game; interiors only from the game (open.mp list), 18 in three sizes; each house has its own virtual world (5000 + ID) | Common practice; nothing downloaded |
+| 172 | 2026-11-16 | At most 1 house, Silver and Gold VIP 2; when VIP ends the houses stay, but no new one while at the limit | Approved; same as vehicles |
+| 173 | 2026-11-16 | Selling to the state returns 70%; after 30 days without logging in the house goes back on sale and the owner gets 50% to the bank | Approved; a reference gamemode takes property back after about 500 hours of inactivity |
+| 174 | 2026-11-16 | Every house shows on the map: a green icon for sale, a red one with an owner | Owner's request |
+| 175 | 2026-11-16 | `/kucaj` is heard only by those inside that house; a house for sale cannot be entered (except by admins on duty) | The owner asked; empty houses are not hiding places |
+| 176 | 2026-11-16 | Garage: the vehicle is stored and leaves the world (no garage interior); it still counts towards the vehicle limit; a house is not sold while its garage is full, and when an admin or inactivity takes it, the vehicles go out to their parking spots | Approved |
+| 177 | 2026-11-16 | Spawning at home (`/kuca` menu) applies after death and login; jail comes first | Approved proposal |
+| 178 | 2026-11-16 | `/pomoc` is a list of topics; the whole text in one window ran past the dialog and compiler limits | Technical need |
 
 ### Code architecture (proposal)
 ```

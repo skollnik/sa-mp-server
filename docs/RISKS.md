@@ -257,7 +257,15 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Popravka u radionici na putu pored nje | ✅ | Servis je samo 8 m oko tačke `servis` ili `pregledservis`; tačka `radionica` je samo za `/oprema` |
 | Repair hack (cheat popravi vozilo bez mehaničara) | ✅ | HP i oštećenja se vraćaju na poslednje poznato stanje, adminima stiže upozorenje i upis u AC log |
 | Anti-cheat lažno prijavi serversku popravku | ✅ | Sve serverske popravke i nova vozila idu kroz `AC_*` funkcije, a klijent ima 3 s da prikaže promenu |
-| Parkiranje vozila ispred ulaza, šaltera ili mesta za rent da posle restarta smeta | ✅ | `/v parkiraj` odbija mesta bliže od 25 m; na putu i dalje rešava admin, kasnije policija |
+| Parkiranje vozila ispred ulaza, šaltera ili mesta za rent da posle restarta smeta | ✅ | `/v parkiraj` odbija mesta bliže od 40 m (10 m od tuđe kuće); na putu i dalje rešava admin, kasnije policija |
+| Prodaja kuće dok su vozila u garaži (kupac ih ne može izvaditi) | ✅ | Prodaja državi i preko `/ponudi` traži praznu garažu; kad kuću oduzme admin ili neaktivnost, vozila izlaze na svoje parking mesto |
+| Vozilo iz garaže prodato ili zamenjeno sa `/ponudi` | ✅ | Vozilo u garaži nije u svetu, pa ne može u ponudu |
+| Gomilanje vozila u garaži preko limita | ✅ | Vozilo u garaži se i dalje računa u limit vozila |
+| Skrivanje u praznoj kući | ✅ | U kuću na prodaju ulazi samo admin na dužnosti |
+| Kuća kao bekstvo iz borbe ili zatvora | ✅ | Ista pravila kao vrata: posle štete 30 s nema ulaza, zatvor i zamrzavanje sprečavaju ulaz |
+| Kupovina više kuća preko VIP-a pa istek | ✅ | Kuće ostaju, nova ne može dok je igrač na limitu |
+| Neaktivan vlasnik drži kuću zauvek | ✅ | Posle 30 dana kuća ide na prodaju uz 50% na račun |
+| Pojavljivanje u kući kao bekstvo iz zatvora | ✅ | Zatvor ima prednost; kuća mora i dalje biti igračeva |
 | Neon cevi ostanu da vise posle brisanja vozila | ✅ | Neon se skida pre svakog brisanja i ponovnog pravljenja ličnog vozila |
 | Besplatan neon probom u tjuningu | ✅ | Proba se vraća kao i ostali delovi; plaća se drugim izborom |
 | `/cw` kao skriveni chat van vozila | ✅ | Radi samo u vozilu i čuju ga samo oni u istom vozilu; važe mute i spam pravila |
@@ -558,7 +566,15 @@ Every new system or change goes through these questions, against all existing sy
 | A workshop repair on the road next to it | ✅ | The service is only 8 m around a `servis` or `pregledservis` point; a `radionica` point is only for `/oprema` |
 | Repair hack (a cheat repairs the vehicle without a mechanic) | ✅ | Health and damage go back to the last known state, admins get an alert and an AC log entry |
 | Anti-cheat flags a server repair | ✅ | Every server repair and new vehicle goes through the `AC_*` functions, and the client gets 3 s to show the change |
-| A vehicle parked in front of an entrance, counter or rental spot gets in the way after restarts | ✅ | `/v parkiraj` refuses spots closer than 25 m; on roads admins handle it, later the police |
+| A vehicle parked in front of an entrance, counter or rental spot gets in the way after restarts | ✅ | `/v parkiraj` refuses spots closer than 40 m (10 m from someone else's house); on roads admins handle it, later the police |
+| A house sold while vehicles are in its garage (the buyer could not take them out) | ✅ | Selling to the state and through `/ponudi` needs an empty garage; when an admin or inactivity takes the house, the vehicles go out to their parking spots |
+| A vehicle in a garage sold or traded with `/ponudi` | ✅ | A stored vehicle is not in the world, so it cannot be offered |
+| Piling vehicles into a garage beyond the limit | ✅ | A stored vehicle still counts towards the vehicle limit |
+| Hiding in an empty house | ✅ | Only admins on duty enter a house for sale |
+| A house as an escape from a fight or jail | ✅ | Same rules as doors: no entry for 30 s after damage, jail and freezing block it |
+| Buying more houses with VIP, then VIP ends | ✅ | The houses stay, no new one while at the limit |
+| An inactive owner keeps a house forever | ✅ | After 30 days it goes on sale with 50% to the bank |
+| Spawning at home as an escape from jail | ✅ | Jail comes first; the house must still be the player's |
 | Neon tubes left hanging after a vehicle is removed | ✅ | The neon is taken off before every removal and rebuild of a personal vehicle |
 | Free neon through the tuning trial | ✅ | The trial is undone like other parts; it is paid with the second pick |
 | `/cw` as a hidden chat outside vehicles | ✅ | Works only in a vehicle and only those in it hear it; mute and spam rules apply |

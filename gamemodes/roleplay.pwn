@@ -35,6 +35,7 @@
 #include "modules/vehicle/vehicle_data.inc"
 #include "modules/license/license_data.inc"
 #include "modules/job/job_data.inc"
+#include "modules/house/house_data.inc"
 #include "modules/vehicle/vehicle_names.inc"
 #include "modules/health/hunger_data.inc"
 #include "modules/help/cmd_menu.inc"
@@ -110,6 +111,7 @@
 #include "modules/license/license.inc"
 #include "modules/job/job.inc"
 #include "modules/job/mechanic.inc"
+#include "modules/house/house.inc"
 
 #include "modules/help/help_cmds.inc"
 
@@ -162,6 +164,7 @@ public OnGameModeInit()
     Lic_Init();
     Job_Init();
     Mech_Init();
+    House_Init();
     Rent_Init();
     Speedo_Init();
     Safety_Init();
@@ -215,6 +218,7 @@ public OnPlayerConnect(playerid)
     Fuel_OnPlayerConnect(playerid);
     Lic_OnPlayerConnect(playerid);
     Job_OnPlayerConnect(playerid);
+    House_OnPlayerConnect(playerid);
     Mech_OnPlayerConnect(playerid);
     Rent_OnPlayerConnect(playerid);
     Offer_OnPlayerConnect(playerid);
@@ -258,6 +262,7 @@ public OnPlayerSpawn(playerid)
 {
     AC_OnPlayerSpawn(playerid);
     Account_OnPlayerSpawn(playerid);
+    House_OnPlayerSpawn(playerid);
     Staff_OnPlayerSpawn(playerid);
     Punish_OnPlayerSpawn(playerid);
     Utils_PreloadAnimations(playerid);
@@ -366,6 +371,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
     Tune_Close(playerid);
     Lic_OnPlayerDeath(playerid);
     Job_OnPlayerDeath(playerid);
+    House_OnPlayerDeath(playerid);
     return 1;
 }
 
@@ -524,6 +530,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Job_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (Help_OnDialogResponse(playerid, dialogid, response, listitem))
+    {
+        return 1;
+    }
+    if (House_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
     {
         return 1;
     }

@@ -49,7 +49,9 @@ enum E_VEH_CLASS
 #define VEH_HEALTH_FIRE         (250.0)
 #define VEH_LABEL_DISTANCE      (20.0)
 // How far a saved parking spot must be from doors, counters and other spots everyone needs to reach.
-#define VEH_NO_PARK_RANGE       (25.0)
+#define VEH_NO_PARK_RANGE       (40.0)
+// Houses stand close together, so only the spot right in front of someone else's house is kept clear.
+#define VEH_NO_PARK_HOUSE_RANGE (10.0)
 #define VEH_NEON_COLOURS        (6)
 // Inside the body, so the label reads as written on the vehicle rather than floating above it.
 #define VEH_LABEL_OFFSET_Z      (0.3)
@@ -101,6 +103,8 @@ enum E_VEH
     // 0 for none, otherwise 1 to VEH_NEON_COLOURS; vNeonOn is the owner's switch (/v neon).
     vNeon,
     bool:vNeonOn,
+    // The house whose garage holds the vehicle (DB id), 0 when it is out in the world.
+    vGarage,
     vDiedAt
 }
 
@@ -156,6 +160,7 @@ forward bool:Market_IsNearListing(vehicleid, Float:range);
 forward bool:Rent_IsNearSpot(vehicleid, Float:range);
 forward bool:Mech_IsNearVehicleSpot(vehicleid, Float:range);
 forward bool:Lic_IsNearStart(vehicleid, Float:range);
+forward bool:House_IsOtherDoorNear(playerid, vehicleid, Float:range);
 forward bool:Market_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Offer_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Plate_StoreFromVehicle(playerid, slot);

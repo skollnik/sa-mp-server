@@ -108,11 +108,12 @@ Auto škola (`/skola`): cena se plaća pre teorije, a posle pada ponovo. Uslovi:
 ### Nekretnine
 | Tip | Cena |
 |-----|------|
-| Stan / prikolica | $60.000–90.000 |
-| Mala kuća | $120.000–200.000 |
-| Srednja kuća | $250.000–450.000 |
-| Velika kuća | $600.000–1.000.000 |
-| Vila | $1.500.000–3.000.000 |
+| Mala kuća ili stan (nivo 3) | $50.000–80.000 |
+| Srednja kuća (nivo 5) | $120.000–200.000 |
+| Velika kuća ili vila (nivo 8) | $300.000 i više |
+
+Tačnu cenu i nivo svake kuće admin određuje kad je pravi. Prodaja državi vraća **70%** cene. Ako vlasnik ne uđe na server **30 dana**, kuća se vraća na prodaju, a vlasnik dobija **50%** cene na račun u banci. Prodaja drugom igraču ide preko `/ponudi`, uz taksu od 5%.
+
 | Mala firma (24/7, bar) | $250.000–500.000 |
 | Velika firma (benzinska, klub) | $750.000–1.500.000 |
 
@@ -125,8 +126,8 @@ Auto škola (`/skola`): cena se plaća pre teorije, a posle pada ponovo. Uslovi:
 | Cilj | Potrebno vreme rada |
 |------|---------------------|
 | Jeftin auto ($12.000–20.000) | ~10–17 h |
-| Stan ($60.000–90.000) | ~50–75 h |
-| Mala kuća ($120.000–200.000) | ~100–170 h |
+| Mala kuća ($50.000–80.000) | ~40–70 h |
+| Srednja kuća ($120.000–200.000) | ~100–170 h |
 | Sportski auto ($80.000–200.000) | ~65–170 h |
 | Sultan ($350.000) | ~290 h |
 | Infernus ($900.000) | ~750 h |
@@ -146,7 +147,7 @@ Auto škola (`/skola`): cena se plaća pre teorije, a posle pada ponovo. Uslovi:
 
 ### Ograničenja
 - Najviše **2 lična vozila** po igraču.
-- Najviše **1 kuća** i **1 firma** po igraču.
+- Najviše **1 kuća** (Silver i Gold VIP 2; kad VIP istekne kuće ostaju, ali nova ne može dok je igrač na limitu) i **1 firma** po igraču.
 
 ---
 
@@ -259,9 +260,9 @@ Driving school (`/skola`): the price is paid before the theory and again after a
 | Type | Price |
 |------|-------|
 | Apartment / trailer | $60,000–90,000 |
-| Small house | $120,000–200,000 |
-| Medium house | $250,000–450,000 |
-| Large house | $600,000–1,000,000 |
+| Small house or flat (level 3) | $50,000–80,000 |
+| Medium house (level 5) | $120,000–200,000 |
+| Large house or mansion (level 8) | $300,000 and up |
 | Villa | $1,500,000–3,000,000 |
 | Small business (24/7, bar) | $250,000–500,000 |
 | Large business (gas station, club) | $750,000–1,500,000 |
@@ -276,7 +277,8 @@ Driving school (`/skola`): the price is paid before the theory and again after a
 |------|------------------|
 | Cheap car ($12,000–20,000) | ~10–17 h |
 | Apartment ($60,000–90,000) | ~50–75 h |
-| Small house ($120,000–200,000) | ~100–170 h |
+| Small house ($50,000–80,000) | ~40–70 h |
+| Medium house ($120,000–200,000) | ~100–170 h |
 | Sports car ($80,000–200,000) | ~65–170 h |
 | Sultan ($350,000) | ~290 h |
 | Infernus ($900,000) | ~750 h |
@@ -296,4 +298,4 @@ Driving school (`/skola`): the price is paid before the theory and again after a
 
 ### Limits
 - At most **2 personal vehicles** per player.
-- At most **1 house** and **1 business** per player.
+- At most **1 house** (Silver and Gold VIP 2; when VIP ends the houses stay, but no new one while at the limit) and **1 business** per player.

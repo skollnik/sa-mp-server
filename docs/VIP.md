@@ -29,6 +29,7 @@
 | Sopstvena tablica u policiji (`/tablice`) upola cene | – | – | ✅ |
 | Neon kod mehaničara (`/tune`) upola cene | – | – | ✅ |
 | Mesto za još jedno vozilo (kad VIP istekne, vozila ostaju, ali novo ne može dok ste na limitu) | – | +1 | +1 |
+| Još jedna kuća (kad VIP istekne, kuće ostaju, ali nova ne može dok ste na limitu) | – | +1 | +1 |
 
 **Oznaka iznad glave:** prikazuje se samo jedna, po prioritetu: admin na dužnosti, pa helper na dužnosti, pa VIP. Kad admin koji je VIP izađe sa dužnosti, vidi se [VIP].
 
@@ -77,6 +78,7 @@
 | Custom plate at the police (`/tablice`) at half price | – | – | ✅ |
 | Neon at the mechanic (`/tune`) at half price | – | – | ✅ |
 | One more vehicle slot (when VIP ends the vehicles stay, but no new one while you are at the limit) | – | +1 | +1 |
+| One more house (when VIP ends the houses stay, but no new one while you are at the limit) | – | +1 | +1 |
 
 **Tag above the head:** only one is shown, by priority: admin on duty, then helper on duty, then VIP. When an admin who is VIP goes off duty, [VIP] shows.
 

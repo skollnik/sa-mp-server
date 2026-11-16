@@ -346,5 +346,7 @@ stock Door_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
     if (slot != -1)
     {
         Door_Exit(playerid, slot);
+        return;
     }
+    House_TryUse(playerid, true, true);
 }
