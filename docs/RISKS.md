@@ -266,6 +266,11 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Kupovina više kuća preko VIP-a pa istek | ✅ | Kuće ostaju, nova ne može dok je igrač na limitu |
 | Neaktivan vlasnik drži kuću zauvek | ✅ | Posle 30 dana kuća ide na prodaju uz 50% na račun |
 | Pojavljivanje u kući kao bekstvo iz zatvora | ✅ | Zatvor ima prednost; kuća mora i dalje biti igračeva |
+| Izlazak i ulazak na server kao teleport kući | ✅ | Kuća važi pri ulasku tek posle 10 min van servera |
+| Smrt kao teleport kući | ✅ | Posle smrti uvek bolnica |
+| Obrisan ID ponovo dat, a neko je ostao u svetu obrisane kuće | ✅ | Pri brisanju se svi iz te kuće izbacuju ispred vrata |
+| Parking u garaži preko broja mesta | ✅ | Parking u garaži može imati najviše onoliko vozila koliko garaža prima; ako je garaža puna, vozilo staje ispred nje |
+| Prodaja kuće dok neko vozilo ima parking u garaži | ✅ | Prodaja se odbija dok se parking ne promeni |
 | Neon cevi ostanu da vise posle brisanja vozila | ✅ | Neon se skida pre svakog brisanja i ponovnog pravljenja ličnog vozila |
 | Besplatan neon probom u tjuningu | ✅ | Proba se vraća kao i ostali delovi; plaća se drugim izborom |
 | `/cw` kao skriveni chat van vozila | ✅ | Radi samo u vozilu i čuju ga samo oni u istom vozilu; važe mute i spam pravila |
@@ -575,6 +580,11 @@ Every new system or change goes through these questions, against all existing sy
 | Buying more houses with VIP, then VIP ends | ✅ | The houses stay, no new one while at the limit |
 | An inactive owner keeps a house forever | ✅ | After 30 days it goes on sale with 50% to the bank |
 | Spawning at home as an escape from jail | ✅ | Jail comes first; the house must still be the player's |
+| Leaving and rejoining as a teleport home | ✅ | The house applies on login only after 10 min away |
+| Death as a teleport home | ✅ | After death always the hospital |
+| A deleted id given out again while someone is still in the deleted house's world | ✅ | Deleting moves everyone inside out in front of the door |
+| Garage parking beyond the number of places | ✅ | A garage can be parking for at most as many vehicles as it holds; when it is full the vehicle stands in front of it |
+| Selling a house while a vehicle parks in its garage | ✅ | The sale is refused until the parking is changed |
 | Neon tubes left hanging after a vehicle is removed | ✅ | The neon is taken off before every removal and rebuild of a personal vehicle |
 | Free neon through the tuning trial | ✅ | The trial is undone like other parts; it is paid with the second pick |
 | `/cw` as a hidden chat outside vehicles | ✅ | Works only in a vehicle and only those in it hear it; mute and spam rules apply |

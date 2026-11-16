@@ -161,7 +161,8 @@ static stock Cam_FindByArea(STREAMER_TAG_AREA:areaid)
     return -1;
 }
 
-static stock Cam_FindByDbId(dbid)
+forward Cam_FindByDbId(dbid);
+public Cam_FindByDbId(dbid)
 {
     for (new i = 0; i < MAX_CAMERAS; i++)
     {
@@ -171,17 +172,6 @@ static stock Cam_FindByDbId(dbid)
         }
     }
     return -1;
-}
-
-// IDs of deleted cameras are given out again; called before the new slot is marked used.
-static stock Cam_FreeDbId()
-{
-    new dbid = 1;
-    while (Cam_FindByDbId(dbid) != -1)
-    {
-        dbid++;
-    }
-    return dbid;
 }
 
 static stock Cam_SpeedFine(over)
@@ -322,7 +312,7 @@ cmd:napravikameru(playerid, params[])
         return 1;
     }
 
-    g_Cameras[slot][camDbId] = Cam_FreeDbId();
+    g_Cameras[slot][camDbId] = Utils_FreeDbId("Cam_FindByDbId");
     g_Cameras[slot][camUsed] = true;
     g_Cameras[slot][camLimit] = limit;
     GetPlayerPos(playerid, g_Cameras[slot][camX], g_Cameras[slot][camY], g_Cameras[slot][camZ]);

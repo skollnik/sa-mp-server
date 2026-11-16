@@ -17,6 +17,8 @@
 - Vozila se prave i popravljaju samo preko `AC_CreateVehicle`, `AC_SetVehicleHealth`, `AC_RepairVehicle`, `AC_UpdateVehicleDamageStatus`, inače anti-cheat vraća štetu i prijavljuje vozača. / Vehicles are created and repaired only through these `AC_*` wrappers, otherwise anti-cheat undoes the repair and flags the driver.
 - Komande nad igračem imaju posebnu poruku za nepostojećeg igrača i posebnu za sebe (`Staff_CheckTarget` sa porukom za sebe). / Commands on a player have separate messages for a missing player and for targeting yourself.
 - Svi SQL upiti kroz `mysql_format` sa `%e` za stringove. / All SQL goes through `mysql_format` with `%e` for strings.
+- Zapisi koje admin pravi i briše (vrata, mesta, kamere, GPS, pijaca, kuće...) dobijaju ID preko `Utils_FreeDbId("Modul_FindSlotByDbId")`, da se obrisani ID ponovo koristi. / Admin-made records get their id through `Utils_FreeDbId`, so a deleted id is reused.
+- Poruke u chatu moraju stati u 144 znaka (duže klijent ne prikaže); dugi tekst ide u dijalog, a dijalog u delove (`strcat`) jer kompajler ne podnosi predugačak string. / Chat lines must fit 144 characters; long text goes into a dialog, built with `strcat` since the compiler hangs on very long literals.
 
 ## Dokumentacija / Docs
 - `docs/PLAN.md`: faze, status, otvorena pitanja / phases, status, open questions

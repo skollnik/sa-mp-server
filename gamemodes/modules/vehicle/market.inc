@@ -162,6 +162,15 @@ public Market_RestoreDisplay(dbid, vehicleid)
     return 1;
 }
 
+stock bool:Market_GetExit(&Float:x, &Float:y, &Float:z, &Float:angle)
+{
+    x = g_MarketExit[0];
+    y = g_MarketExit[1];
+    z = g_MarketExit[2];
+    angle = g_MarketExit[3];
+    return g_MarketHasExit;
+}
+
 stock bool:Market_IsNearListing(vehicleid, Float:range)
 {
     for (new i = 0; i < MAX_MARKET_LISTINGS; i++)
@@ -229,7 +238,8 @@ static stock Market_FindNearest(playerid, Float:range)
     return best;
 }
 
-static stock Market_FindByDbId(dbid)
+forward Market_FindByDbId(dbid);
+public Market_FindByDbId(dbid)
 {
     for (new i = 0; i < MAX_MARKET_LISTINGS; i++)
     {
@@ -239,16 +249,6 @@ static stock Market_FindByDbId(dbid)
         }
     }
     return -1;
-}
-
-static stock Market_FreeDbId()
-{
-    new dbid = 1;
-    while (Market_FindByDbId(dbid) != -1)
-    {
-        dbid++;
-    }
-    return dbid;
 }
 
 static stock Market_Open(playerid)
@@ -304,7 +304,7 @@ static stock Market_AddListing(playerid, model, price, pieces)
     new Float:x, Float:y, Float:z, Float:angle;
     GetPlayerPos(playerid, x, y, z);
     GetPlayerFacingAngle(playerid, angle);
-    g_MarketListings[slot][mlDbId] = Market_FreeDbId();
+    g_MarketListings[slot][mlDbId] = Utils_FreeDbId("Market_FindByDbId");
     g_MarketListings[slot][mlUsed] = true;
     g_MarketListings[slot][mlModel] = model;
     g_MarketListings[slot][mlPrice] = price;

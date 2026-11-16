@@ -38,6 +38,7 @@ stock Veh_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `neon` TINYINT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `neon_on` TINYINT UNSIGNED NOT NULL DEFAULT 1");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `garage_house` INT UNSIGNED NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `park_garage` INT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD UNIQUE INDEX IF NOT EXISTS `vehicle_pending_plate` (`pending_plate`)");
     // Vehicles that got a plate before registration existed count as freshly registered.
     new query[512];
@@ -325,6 +326,16 @@ stock Veh_ShowNeon(vehicleid, colour)
         g_VehNeon[vehicleid][i] = CreateDynamicObject(g_VehNeonModels[colour - 1], 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         AttachDynamicObjectToVehicle(g_VehNeon[vehicleid][i], vehicleid, i == 0 ? -0.8 : 0.8, 0.0, -0.7, 0.0, 0.0, 0.0);
     }
+    // The streamer skips players who stand still (a frozen tuning customer), so the new tubes are pushed to everyone close.
+    new Float:x, Float:y, Float:z;
+    GetVehiclePos(vehicleid, x, y, z);
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        if (IsPlayerConnected(i) && IsPlayerInRangeOfPoint(i, VEH_NEON_STREAM_RANGE, x, y, z))
+        {
+            Streamer_Update(i, STREAMER_TYPE_OBJECT);
+        }
+    }
 }
 
 stock Veh_ApplyNeon(slot)
@@ -427,6 +438,7 @@ static stock bool:Veh_SpawnAt(slot, Float:x, Float:y, Float:z, Float:angle, inte
     g_Veh[slot][vVehicleId] = vehicleid;
     g_VehSlotOf[vehicleid] = slot;
     g_VehShopChanged[vehicleid] = false;
+    g_VehAdminMoved[vehicleid] = false;
     LinkVehicleToInterior(vehicleid, interior);
     SetVehicleVirtualWorld(vehicleid, world);
     // A blank plate instead of the game's default text, which would look like a real registration.
@@ -595,6 +607,7 @@ static stock Veh_LoadRow(slot, row, ownerid)
     cache_get_value_name_int(row, "paintjob", g_Veh[slot][vPaintjob]);
     new neon_on;
     cache_get_value_name_int(row, "garage_house", g_Veh[slot][vGarage]);
+    cache_get_value_name_int(row, "park_garage", g_Veh[slot][vParkGarage]);
     cache_get_value_name_int(row, "neon", g_Veh[slot][vNeon]);
     cache_get_value_name_int(row, "neon_on", neon_on);
     g_Veh[slot][vNeonOn] = neon_on != 0;
@@ -639,7 +652,11 @@ public OnVehiclesLoaded(playerid, race, bool:remind)
             break;
         }
         Veh_LoadRow(slot, row, playerid);
-        // A vehicle in a house garage stays out of the world until the owner takes it out.
+        // A vehicle parked in a house garage starts the day in it, and one in a garage stays out of the world until taken out.
+        if (g_Veh[slot][vGarage] == 0 && g_Veh[slot][vParkGarage] != 0)
+        {
+            Veh_SetGarage(slot, g_Veh[slot][vParkGarage]);
+        }
         if (g_Veh[slot][vGarage] != 0)
         {
             Trunk_Load(slot);
@@ -701,6 +718,17 @@ static stock Veh_RespawnAfterDeath(slot)
     g_Veh[slot][vLights] = VEHICLE_LIGHT_STATUS:0;
     g_Veh[slot][vTyres] = VEHICLE_TYRE_STATUS:0;
     new ownerid = g_Veh[slot][vOwnerId];
+    if (g_Veh[slot][vParkGarage] != 0 && House_GarageHasRoom(g_Veh[slot][vParkGarage]))
+    {
+        g_Veh[slot][vVehicleId] = INVALID_VEHICLE_ID;
+        Veh_SaveState(slot);
+        Veh_SetGarage(slot, g_Veh[slot][vParkGarage]);
+        if (ownerid != INVALID_PLAYER_ID)
+        {
+            Msg_Info(ownerid, "Vase vozilo %s je unisteno i vraceno u garazu kuce, osteceno.", Veh_Name(slot));
+        }
+        return;
+    }
     if (!Veh_Spawn(slot))
     {
         return;
@@ -1139,7 +1167,7 @@ public OnVehicleInserted(adminid, targetid, race)
 stock Veh_OnPlayerExitVehicle(playerid, vehicleid)
 {
     new slot = g_VehSlotOf[vehicleid];
-    if (slot == -1 || g_Veh[slot][vParked] || !Veh_IsOwner(playerid, vehicleid) || Market_IsNearExit(vehicleid))
+    if (slot == -1 || g_Veh[slot][vParked] || !Veh_IsOwner(playerid, vehicleid) || Market_IsNearExit(vehicleid) || g_VehAdminMoved[vehicleid])
     {
         return;
     }
@@ -1154,9 +1182,10 @@ stock Veh_SetParkingHere(slot)
     GetVehiclePos(vehicleid, g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ]);
     GetVehicleZAngle(vehicleid, g_Veh[slot][vParkA]);
     g_Veh[slot][vParked] = true;
+    g_Veh[slot][vParkGarage] = 0;
 
-    new query[224];
-    mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `park_x` = %f, `park_y` = %f, `park_z` = %f, `park_a` = %f, `parked` = 1 WHERE `id` = %d",
+    new query[256];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `park_x` = %f, `park_y` = %f, `park_z` = %f, `park_a` = %f, `parked` = 1, `park_garage` = 0 WHERE `id` = %d",
         g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ], g_Veh[slot][vParkA], g_Veh[slot][vDbId]);
     mysql_tquery(g_SQL, query);
 }
@@ -1392,8 +1421,9 @@ stock Veh_GiveKey(playerid, const params[])
 
 // Spots everyone needs to reach stay clear: a vehicle saved there would come back after every restart and block them.
 // Only the saved spot is checked; stopping there while driving is still fine. Fills what is in the way.
-static stock bool:Veh_ParkingBlockedBy(playerid, vehicleid, dest[], size = sizeof(dest))
+static stock bool:Veh_ParkingBlockedBy(playerid, vehicleid, dest[], &Float:range, size = sizeof(dest))
 {
+    range = VEH_NO_PARK_RANGE;
     for (new i = 0; i < MAX_DOORS; i++)
     {
         if (g_Doors[i][dUsed] && g_Doors[i][dOutInterior] == 0 && g_Doors[i][dOutWorld] == 0
@@ -1434,6 +1464,7 @@ static stock bool:Veh_ParkingBlockedBy(playerid, vehicleid, dest[], size = sizeo
     }
     if (House_IsOtherDoorNear(playerid, vehicleid, VEH_NO_PARK_HOUSE_RANGE))
     {
+        range = VEH_NO_PARK_HOUSE_RANGE;
         strcopy(dest, "tudja kuca", size);
         return true;
     }
@@ -1467,6 +1498,66 @@ static stock Veh_SetGarage(slot, house_dbid)
     new query[96];
     g_Veh[slot][vGarage] = house_dbid;
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `garage_house` = %d WHERE `id` = %d", house_dbid, g_Veh[slot][vDbId]);
+    mysql_tquery(g_SQL, query);
+}
+
+// The garage as parking: the vehicle goes in there after a restart, its destruction or an admin reset.
+// Only as many vehicles as the garage holds may have it as parking.
+static stock Veh_ParkInGarage(playerid, slot, house_dbid)
+{
+    if (g_Veh[slot][vParkGarage] != house_dbid && Veh_GarageParkedCount(house_dbid) >= House_GarageCapacityOf(house_dbid))
+    {
+        Msg_Error(playerid, "Garaza ima %d mesta i sva su vec parking drugim vozilima.", House_GarageCapacityOf(house_dbid));
+        return;
+    }
+    Veh_SetParkingHere(slot);
+    g_Veh[slot][vParkGarage] = house_dbid;
+    new query[96];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `park_garage` = %d WHERE `id` = %d", house_dbid, g_Veh[slot][vDbId]);
+    mysql_tquery(g_SQL, query);
+    Msg_Success(playerid, "Parking vozila %s je garaza vase kuce: posle restarta, unistenja i admin reseta vozilo je u garazi.", Veh_Name(slot));
+}
+
+stock Veh_GarageParkedCount(house_dbid)
+{
+    new count;
+    for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
+    {
+        if (g_Veh[slot][vUsed] && g_Veh[slot][vParkGarage] == house_dbid)
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
+// A house taken from its owner: vehicles parked in its garage get a temporary spot at the market exit (or the spawn),
+// like a newly bought vehicle, until the owner parks them somewhere else.
+stock Veh_ReleaseGarageParking(house_dbid)
+{
+    new Float:x, Float:y, Float:z, Float:angle;
+    if (!Market_GetExit(x, y, z, angle))
+    {
+        x = NEW_SPAWN_X;
+        y = NEW_SPAWN_Y;
+        z = NEW_SPAWN_Z;
+        angle = NEW_SPAWN_A;
+    }
+    for (new slot = 0; slot < MAX_PERSONAL_VEHICLES; slot++)
+    {
+        if (g_Veh[slot][vUsed] && g_Veh[slot][vParkGarage] == house_dbid)
+        {
+            g_Veh[slot][vParkGarage] = 0;
+            g_Veh[slot][vParkX] = x;
+            g_Veh[slot][vParkY] = y;
+            g_Veh[slot][vParkZ] = z;
+            g_Veh[slot][vParkA] = angle;
+            g_Veh[slot][vParked] = false;
+        }
+    }
+    new query[256];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `park_garage` = 0, `park_x` = %f, `park_y` = %f, `park_z` = %f, `park_a` = %f, `parked` = 0 WHERE `park_garage` = %d",
+        x, y, z, angle, house_dbid);
     mysql_tquery(g_SQL, query);
 }
 
@@ -1522,14 +1613,19 @@ stock Veh_Park(playerid)
         Msg_Error(playerid, "Na izlazu sa auto pijace se ne parkira; tu se pojavljuju kupljena vozila.");
         return;
     }
-    new blocked[40];
-    if (Veh_ParkingBlockedBy(playerid, vehicleid, blocked))
+    new slot = g_VehSlotOf[vehicleid], garage = House_OwnGarageAt(playerid);
+    if (garage != 0)
     {
-        Msg_Error(playerid, "Ovde se ne parkira: vozilo je preblizu (%s). Odmaknite se bar %.0f m.", blocked, VEH_NO_PARK_RANGE);
+        Veh_ParkInGarage(playerid, slot, garage);
+        return;
+    }
+    new blocked[40], Float:range;
+    if (Veh_ParkingBlockedBy(playerid, vehicleid, blocked, range))
+    {
+        Msg_Error(playerid, "Ovde se ne parkira: vozilo je preblizu (%s). Odmaknite se bar %.0f m.", blocked, range);
         return;
     }
 
-    new slot = g_VehSlotOf[vehicleid];
     Veh_SetParkingHere(slot);
     Msg_Success(playerid, "Vozilo %s je parkirano ovde. Ovde se vraca posle restarta servera, unistenja ili admin reseta.", Veh_Name(slot));
 }
@@ -1541,6 +1637,11 @@ stock bool:Veh_ReturnToParking(slot)
     if (!g_Veh[slot][vUsed] || vehicleid == INVALID_VEHICLE_ID || g_Veh[slot][vDiedAt] != 0 || IsVehicleOccupied(vehicleid))
     {
         return false;
+    }
+    if (g_Veh[slot][vParkGarage] != 0 && House_GarageHasRoom(g_Veh[slot][vParkGarage]))
+    {
+        Veh_StoreInGarage(slot, g_Veh[slot][vParkGarage]);
+        return true;
     }
     SetVehicleVelocity(vehicleid, 0.0, 0.0, 0.0);
     SetVehiclePos(vehicleid, g_Veh[slot][vParkX], g_Veh[slot][vParkY], g_Veh[slot][vParkZ]);

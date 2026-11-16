@@ -78,11 +78,11 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **VEH-14 Natpisi na vozilima:** kratak natpis u uglastim zagradama u visini vozila: `[ADMIN]` crni, `[RENT]` beli sa cenom ispod dok je slobodan, `[AUTO SKOLA]` plavi, `[MEHANICAR]` sivi; kasnije policija i ostali.
 
 ### PROP — Imovina
-- **PROP-1 Kuće (urađeno 4.1):** admin ih pravi u igri (`/napravikucu`, 18 enterijera iz igre u tri veličine); zelena kućica na prodaju, plava sa vlasnikom, ikonice na mapi; `/kupikucu`, meni `/kuca` (informacije, zaključavanje, GPS, pojavljivanje u kući, prodaja državi za 70%), prodaja igraču preko `/ponudi`, `/kucaj`; posle 30 dana neaktivnosti kuća se vraća na prodaju uz 50% na račun. Prvobitni opis: kupovina, prodaja državi ili igraču, zaključavanje, enterijeri različite veličine.
+- **PROP-1 Kuće (urađeno 4.1):** admin ih pravi u igri (`/napravikucu`, 27 enterijera iz igre u tri veličine po oceni referentnog moda, izlaz može da se pomeri); zelena kućica na prodaju, plava sa vlasnikom, ikonice na mapi; `/kupikucu`, meni `/kuca` (informacije, zaključavanje, GPS, pojavljivanje u kući, prodaja državi za 70%), prodaja igraču preko `/ponudi`, `/kucaj`; posle 30 dana neaktivnosti kuća se vraća na prodaju uz 50% na račun. Prvobitni opis: kupovina, prodaja državi ili igraču, zaključavanje, enterijeri različite veličine.
 - **PROP-2 Iznajmljivanje:** vlasnik izdaje sobe, a stanar plaća kiriju na payday.
 - **PROP-3 Kućni sef i ormar:** novac, oružje, droga, predmeti.
 - **PROP-4 Nameštaj:** postavljanje objekata u kući.
-- **PROP-5 Garaže** vezane za kuću (urađeno 4.2): admin postavi mesto ispred garažnih vrata; `/garaza` za volanom ostavlja vozilo (nestane iz sveta, bezbedno), peške ga vadi; mala kuća 1, srednja 2, velika 3 mesta.
+- **PROP-5 Garaže** vezane za kuću (urađeno 4.2): admin postavi mesto ispred garažnih vrata; `/garaza` za volanom ostavlja vozilo (nestane iz sveta, bezbedno), peške ga vadi; mala kuća 1, srednja 2, velika 3 mesta; garaža može biti parking vozila (`/v parkiraj` ispred nje).
 - **PROP-6 Firme (biznisi):** 24/7, prodavnica oružja, benzinska, restoran/brza hrana, bar/klub, prodavnica odeće, mehaničarska radionica. Salona vozila nema (vidi ADM-8).
 - **PROP-7 Ekonomija firmi:** zalihe/produkti, cene koje postavlja vlasnik, kasa firme, zaposleni.
 - **PROP-8 Dostava produkata** firmama (posao kamiondžije), čime se pravi lanac ekonomije.
@@ -248,11 +248,11 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **VEH-14 Vehicle labels:** a short label in square brackets at the vehicle's height: `[ADMIN]` black, `[RENT]` white with the price below while free, `[AUTO SKOLA]` blue, `[MEHANICAR]` grey; later the police and the rest.
 
 ### PROP — Property
-- **PROP-1 Houses (done in 4.1):** admins create them in game (`/napravikucu`, 18 in-game interiors in three sizes); a green house for sale, a blue one with an owner, map icons; `/kupikucu`, the `/kuca` menu (info, lock, GPS, spawning at home, selling to the state for 70%), selling to a player through `/ponudi`, `/kucaj`; after 30 days of inactivity the house goes back on sale with 50% to the bank. Original description: buy, sell to the state or a player, lock, interiors of different sizes.
+- **PROP-1 Houses (done in 4.1):** admins create them in game (`/napravikucu`, 27 in-game interiors in three sizes by a reference gamemode's rating, a movable exit); a green house for sale, a blue one with an owner, map icons; `/kupikucu`, the `/kuca` menu (info, lock, GPS, spawning at home, selling to the state for 70%), selling to a player through `/ponudi`, `/kucaj`; after 30 days of inactivity the house goes back on sale with 50% to the bank. Original description: buy, sell to the state or a player, lock, interiors of different sizes.
 - **PROP-2 Renting:** the owner rents out rooms, and the tenant pays rent on payday.
 - **PROP-3 House safe and wardrobe:** money, weapons, drugs, items.
 - **PROP-4 Furniture:** placing objects inside the house.
-- **PROP-5 Garages** tied to a house (done in 4.2): an admin places a spot in front of the garage door; `/garaza` at the wheel stores the vehicle (it leaves the world, safe), on foot takes it out; a small house holds 1, medium 2, large 3.
+- **PROP-5 Garages** tied to a house (done in 4.2): an admin places a spot in front of the garage door; `/garaza` at the wheel stores the vehicle (it leaves the world, safe), on foot takes it out; a small house holds 1, medium 2, large 3; the garage can be a vehicle's parking (`/v parkiraj` in front of it).
 - **PROP-6 Businesses:** 24/7, gun shop, gas station, restaurant/fast food, bar/club, clothing store, mechanic shop. There is no dealership (see ADM-8).
 - **PROP-7 Business economy:** stock/products, owner-set prices, business till, employees.
 - **PROP-8 Product delivery** to businesses (trucker job), which creates an economy chain.

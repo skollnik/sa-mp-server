@@ -184,6 +184,14 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 176 | 2026-11-16 | Garaža: vozilo se ostavlja i nestaje iz sveta (bez enterijera garaže); i dalje se računa u limit vozila; kuća se ne prodaje dok garaža nije prazna, a kad je oduzme admin ili neaktivnost, vozila izlaze na svoje parking mesto | Odobrio vlasnik |
 | 177 | 2026-11-16 | Pojavljivanje u kući (meni `/kuca`) važi posle smrti i ulaska na server; zatvor ima prednost | Odobren predlog |
 | 178 | 2026-11-16 | `/pomoc` je lista tema; ceo tekst u jednom prozoru je prešao granicu dijaloga i kompajlera | Tehnička potreba |
+| 179 | 2026-11-16 | Enterijeri kuća su oni koje referentni modovi koriste za kuće, a veličina po njihovoj oceni (1–10): mala do 3, srednja 4–6, velika 7 i više; 27 enterijera. Postojeće kuće su jednom prebačene na isti enterijer u novoj listi | Vlasnik je primetio da su neke srednje manje od malih |
+| 180 | 2026-11-16 | Admin može da pomeri izlaz u kući (`/izmenikucu [id]` → izlaz, stoji unutra); promena enterijera vraća izlaz na podrazumevan | Zahtev vlasnika |
+| 181 | 2026-11-16 | Posle smrti igrač se uvek pojavljuje ispred bolnice sa 50 HP i odmah može kroz vrata; kuća važi samo pri ulasku na server (ako nije bio na serveru bar 10 min, da izlazak i ulazak ne bude teleport kući) i posle zatvora | Uobičajena praksa; vlasnik je pitao kako je na drugim serverima |
+| 182 | 2026-11-16 | Jedna funkcija `Utils_FreeDbId` za sve module: obrisani ID se ponovo koristi (vrata, mesta, kamere, GPS, pijaca, kuće) | Zahtev vlasnika: popraviti globalno |
+| 183 | 2026-11-16 | Parking u garaži: `/v parkiraj` ispred garaže svoje kuće; vozilo se posle restarta, uništenja i reseta vraća u garažu (dok ima mesta). Kuća se ne prodaje dok neko vozilo ima parking u njoj; kad je oduzme admin ili neaktivnost, ta vozila dobijaju privremeni parking na izlazu sa pijace (kao novo kupljeno vozilo) | Zahtev vlasnika |
+| 184 | 2026-11-16 | Garaža se postavlja iz vozila, tačno gde i kako vozilo izlazi | Vozilo se odbijalo od zida |
+| 185 | 2026-11-16 | Vozilo koje admin dovuče sa `/getveh` ne dobija tu automatski parking | Vozila su se posle reseta vraćala gde ih je admin dovukao |
+| 186 | 2026-11-16 | `/gotokucu` je sada `/gotokuca` | Zahtev vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -389,6 +397,14 @@ This file records every important decision so it does not get re-discussed. Newe
 | 176 | 2026-11-16 | Garage: the vehicle is stored and leaves the world (no garage interior); it still counts towards the vehicle limit; a house is not sold while its garage is full, and when an admin or inactivity takes it, the vehicles go out to their parking spots | Approved |
 | 177 | 2026-11-16 | Spawning at home (`/kuca` menu) applies after death and login; jail comes first | Approved proposal |
 | 178 | 2026-11-16 | `/pomoc` is a list of topics; the whole text in one window ran past the dialog and compiler limits | Technical need |
+| 179 | 2026-11-16 | House interiors are the ones reference gamemodes use for houses, sized by their rating (1–10): small up to 3, medium 4–6, large 7 and up; 27 interiors. Existing houses were moved once to the same interior in the new list | The owner noticed some medium ones were smaller than small ones |
+| 180 | 2026-11-16 | An admin can move the exit inside a house (`/izmenikucu [id]` → exit, standing inside); changing the interior resets the exit | Owner's request |
+| 181 | 2026-11-16 | After death the player always wakes up in front of the hospital with 50 HP and can use doors right away; the house applies only on login (after at least 10 min away, so rejoining is no teleport home) and after jail | Common practice; the owner asked how other servers do it |
+| 182 | 2026-11-16 | One `Utils_FreeDbId` for every module: a deleted id is reused (doors, points, cameras, GPS, market, houses) | Owner's request: fix it globally |
+| 183 | 2026-11-16 | Parking in a garage: `/v parkiraj` in front of your house's garage; after a restart, destruction or reset the vehicle goes back in (while there is room). A house is not sold while a vehicle parks in it; when an admin or inactivity takes it, those vehicles get a temporary spot at the market exit (like a newly bought vehicle) | Owner's request |
+| 184 | 2026-11-16 | The garage is set from a vehicle, exactly where and how vehicles come out | Vehicles bounced off the wall |
+| 185 | 2026-11-16 | A vehicle an admin brings with `/getveh` does not take that spot as its automatic parking | Vehicles went back to where the admin had brought them after a reset |
+| 186 | 2026-11-16 | `/gotokucu` is now `/gotokuca` | Owner's request |
 
 ### Code architecture (proposal)
 ```

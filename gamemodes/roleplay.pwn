@@ -84,6 +84,7 @@
 #include "modules/world/time.inc"
 #include "modules/world/hud.inc"
 #include "modules/health/hunger.inc"
+#include "modules/health/respawn.inc"
 
 #include "modules/cityhall/cityhall.inc"
 
@@ -219,6 +220,7 @@ public OnPlayerConnect(playerid)
     Lic_OnPlayerConnect(playerid);
     Job_OnPlayerConnect(playerid);
     House_OnPlayerConnect(playerid);
+    Respawn_OnPlayerConnect(playerid);
     Mech_OnPlayerConnect(playerid);
     Rent_OnPlayerConnect(playerid);
     Offer_OnPlayerConnect(playerid);
@@ -235,6 +237,7 @@ public OnPlayerDisconnect(playerid, reason)
 {
     Lic_OnPlayerDisconnect(playerid);
     Mech_OnPlayerDisconnect(playerid);
+    House_OnPlayerDisconnect(playerid);
     Rent_OnPlayerDisconnect(playerid);
     Fuel_CancelCanister(playerid);
     Tune_Close(playerid);
@@ -263,6 +266,7 @@ public OnPlayerSpawn(playerid)
     AC_OnPlayerSpawn(playerid);
     Account_OnPlayerSpawn(playerid);
     House_OnPlayerSpawn(playerid);
+    Respawn_OnPlayerSpawn(playerid);
     Staff_OnPlayerSpawn(playerid);
     Punish_OnPlayerSpawn(playerid);
     Utils_PreloadAnimations(playerid);
@@ -371,7 +375,7 @@ public OnPlayerDeath(playerid, killerid, WEAPON:reason)
     Tune_Close(playerid);
     Lic_OnPlayerDeath(playerid);
     Job_OnPlayerDeath(playerid);
-    House_OnPlayerDeath(playerid);
+    Respawn_OnPlayerDeath(playerid);
     return 1;
 }
 

@@ -427,6 +427,7 @@ cmd:getveh(playerid, params[])
     GetPlayerPos(playerid, x, y, z);
     SetVehicleVelocity(vehicleid, 0.0, 0.0, 0.0);
     SetVehiclePos(vehicleid, x + 3.0, y, z);
+    g_VehAdminMoved[vehicleid] = true;
     LinkVehicleToInterior(vehicleid, GetPlayerInterior(playerid));
     SetVehicleVirtualWorld(vehicleid, GetPlayerVirtualWorld(playerid));
     Veh_LogAdmin(playerid, vehicleid, "getveh");

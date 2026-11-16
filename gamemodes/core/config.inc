@@ -17,6 +17,12 @@
 #define NEW_SPAWN_Z         (13.55)
 #define NEW_SPAWN_A         (180.0)
 
+// Where players wake up after death: in front of All Saints hospital, facing away from the door.
+#define HOSPITAL_SPAWN_X    (1175.00)
+#define HOSPITAL_SPAWN_Y    (-1323.70)
+#define HOSPITAL_SPAWN_Z    (15.40)
+#define HOSPITAL_SPAWN_A    (270.0)
+
 // Login screen camera: slow pan above the Vinewood hills, looking south over the city.
 #define LOGIN_CAMERA_FROM_X (1100.0)
 #define LOGIN_CAMERA_FROM_Y (-800.0)

@@ -75,6 +75,7 @@ static stock Help_ShowTopic(playerid, topic)
             strcat(body, "/kuca - meni kuce (informacije, zakljucavanje, GPS, pojavljivanje u kuci, prodaja drzavi)\n");
             strcat(body, "F ili /udji, /izadji - ulaz i izlaz    /kucaj - kucanje na vrata (cuju oni u kuci)\n");
             strcat(body, "/garaza - ispred garaze kuce: za volanom ostavlja vozilo, peske ga vadi\n");
+            strcat(body, "/v parkiraj ispred garaze svoje kuce - parking u garazi (vozilo se tu vraca posle restarta i unistenja)\n");
             strcat(body, "/ponudi - prodaja kuce igracu pored vas (stojite kod kuce)");
         }
         case 6:

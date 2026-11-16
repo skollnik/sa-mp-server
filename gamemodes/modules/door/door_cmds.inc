@@ -64,7 +64,7 @@ cmd:napraviulaz(playerid, params[])
         return 1;
     }
 
-    g_Doors[slot][dDbId] = Door_FreeDbId();
+    g_Doors[slot][dDbId] = Utils_FreeDbId("Door_FindSlotByDbId");
     g_Doors[slot][dUsed] = true;
     g_Doors[slot][dHasExit] = false;
     g_Doors[slot][dLocked] = false;

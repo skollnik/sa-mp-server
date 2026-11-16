@@ -213,10 +213,13 @@ stock Punish_Release(playerid)
     g_Player[playerid][pJailSeconds] = 0;
     g_Player[playerid][pJailReason][0] = '\0';
 
-    SetPlayerInterior(playerid, 0);
-    SetPlayerVirtualWorld(playerid, 0);
-    AC_SetPlayerPos(playerid, NEW_SPAWN_X, NEW_SPAWN_Y, NEW_SPAWN_Z);
-    SetPlayerFacingAngle(playerid, NEW_SPAWN_A);
+    if (!House_MoveToSpawn(playerid))
+    {
+        SetPlayerInterior(playerid, 0);
+        SetPlayerVirtualWorld(playerid, 0);
+        AC_SetPlayerPos(playerid, NEW_SPAWN_X, NEW_SPAWN_Y, NEW_SPAWN_Z);
+        SetPlayerFacingAngle(playerid, NEW_SPAWN_A);
+    }
     Account_Save(playerid);
 }
 

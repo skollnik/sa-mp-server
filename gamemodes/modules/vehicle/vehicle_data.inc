@@ -53,6 +53,7 @@ enum E_VEH_CLASS
 // Houses stand close together, so only the spot right in front of someone else's house is kept clear.
 #define VEH_NO_PARK_HOUSE_RANGE (10.0)
 #define VEH_NEON_COLOURS        (6)
+#define VEH_NEON_STREAM_RANGE   (100.0)
 // Inside the body, so the label reads as written on the vehicle rather than floating above it.
 #define VEH_LABEL_OFFSET_Z      (0.3)
 #define VEH_REGISTRATION_DAYS   (60)
@@ -105,6 +106,8 @@ enum E_VEH
     bool:vNeonOn,
     // The house whose garage holds the vehicle (DB id), 0 when it is out in the world.
     vGarage,
+    // The house whose garage is the vehicle's parking (DB id): restarts, deaths and resets put it in there.
+    vParkGarage,
     vDiedAt
 }
 
@@ -122,6 +125,8 @@ new bool:g_VehFuelReserveWarned[MAX_VEHICLES];
 // When a weak engine that is running dies again; 0 means the next tick below the limit kills it.
 new g_VehStallAt[MAX_VEHICLES];
 new STREAMER_TAG_OBJECT:g_VehNeon[MAX_VEHICLES][2];
+// Set by /getveh: an admin's move must not become the parking spot of a vehicle that has none yet.
+new bool:g_VehAdminMoved[MAX_VEHICLES];
 new const g_VehNeonNames[VEH_NEON_COLOURS][] = { "Crveni", "Plavi", "Zeleni", "Zuti", "Roze", "Beli" };
 new g_VehStartRetryAt[MAX_VEHICLES];
 // The short label on special vehicles (ADMIN, RENT, AUTO SKOLA, MEHANICAR).
@@ -161,6 +166,7 @@ forward bool:Rent_IsNearSpot(vehicleid, Float:range);
 forward bool:Mech_IsNearVehicleSpot(vehicleid, Float:range);
 forward bool:Lic_IsNearStart(vehicleid, Float:range);
 forward bool:House_IsOtherDoorNear(playerid, vehicleid, Float:range);
+forward bool:Market_GetExit(&Float:x, &Float:y, &Float:z, &Float:angle);
 forward bool:Market_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Offer_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Plate_StoreFromVehicle(playerid, slot);

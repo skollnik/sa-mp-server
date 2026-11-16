@@ -75,7 +75,8 @@ stock Point_Destroy(slot)
     g_Points[slot] = empty;
 }
 
-stock Point_FindSlotByDbId(dbid)
+forward Point_FindSlotByDbId(dbid);
+public Point_FindSlotByDbId(dbid)
 {
     for (new i = 0; i < MAX_POINTS; i++)
     {
@@ -85,18 +86,6 @@ stock Point_FindSlotByDbId(dbid)
         }
     }
     return -1;
-}
-
-// IDs of deleted points are given out again, so the IDs admins see stay short. Called before the new slot is marked used:
-// a reused slot still holds the deleted entry's ID, which would look taken.
-stock Point_FreeDbId()
-{
-    new dbid = 1;
-    while (Point_FindSlotByDbId(dbid) != -1)
-    {
-        dbid++;
-    }
-    return dbid;
 }
 
 // Used when the door that led into this world is deleted; returns how many points were removed.
@@ -177,7 +166,7 @@ static stock Point_Create(playerid, E_POINT_TYPE:type)
         return;
     }
 
-    g_Points[slot][ptDbId] = Point_FreeDbId();
+    g_Points[slot][ptDbId] = Utils_FreeDbId("Point_FindSlotByDbId");
     g_Points[slot][ptUsed] = true;
     g_Points[slot][ptType] = type;
     GetPlayerPos(playerid, g_Points[slot][ptX], g_Points[slot][ptY], g_Points[slot][ptZ]);

@@ -19,6 +19,8 @@
 #define HOUSE_INACTIVE_CHECK_MS (3600000)
 #define HOUSE_MIN_PRICE         (1000)
 #define HOUSE_MAX_PRICE         (100000000)
+// Spawning at home on login only after this long away, so leaving and rejoining is no quicker than driving home.
+#define HOUSE_SPAWN_AWAY_S      (600)
 
 enum E_HOUSE_SIZE
 {
@@ -33,34 +35,45 @@ enum E_HOUSE_INTERIOR
 {
     hiName[32],
     E_HOUSE_SIZE:hiSize,
+    // How a reference gamemode rates the interior (1-10 stars); 0 where it gives no rating.
+    hiStars,
     hiInterior,
     Float:hiX,
     Float:hiY,
     Float:hiZ
 }
 
-// GTA's own house interiors (open.mp interior list), so nothing has to be downloaded. New ones are only appended,
-// since a house stores its interior by index.
+// GTA's own house interiors, the ones reference gamemodes use for houses, sorted into sizes by their rating.
+// A house stores its interior by index, so new ones are only appended.
 new const g_HouseInteriors[][E_HOUSE_INTERIOR] =
 {
-    { "Soba (Safehouse 1)",       HOUSE_SMALL,  5,  2233.6919, -1112.8107, 1050.8828 },
-    { "Mala kuca 1",              HOUSE_SMALL,  1,  224.2880,  1289.1907,  1082.1406 },
-    { "Mala kuca 2",              HOUSE_SMALL,  4,  261.1165,  1287.2197,  1080.2578 },
-    { "Mala kuca 3",              HOUSE_SMALL,  3,  234.6087,  1187.8195,  1080.2578 },
-    { "Stan (Safehouse 4)",       HOUSE_SMALL,  10, 2261.0977, -1137.8833, 1050.6328 },
-    { "Ryder-ova kuca",           HOUSE_SMALL,  2,  2447.8704, -1704.4509, 1013.5078 },
-    { "Johnson kuca",             HOUSE_MEDIUM, 3,  2496.0549, -1695.1749, 1014.7422 },
-    { "Srednja kuca 1",           HOUSE_MEDIUM, 2,  225.5707,  1240.0643,  1082.1406 },
-    { "Srednja kuca 2",           HOUSE_MEDIUM, 15, 295.1391,  1473.3719,  1080.2578 },
-    { "Srednja kuca 3",           HOUSE_MEDIUM, 4,  221.6766,  1142.4962,  1082.6094 },
-    { "Stan (Willowfield)",       HOUSE_MEDIUM, 11, 2282.9766, -1140.2861, 1050.8984 },
-    { "Stan (Verdant Bluffs)",    HOUSE_MEDIUM, 8,  2365.1089, -1133.0795, 1050.8750 },
-    { "Velika kuca 1",            HOUSE_LARGE,  5,  140.3679,  1367.8837,  1083.8621 },
-    { "Velika kuca 2",            HOUSE_LARGE,  6,  234.2826,  1065.2290,  1084.2101 },
-    { "Velika kuca 3",            HOUSE_LARGE,  5,  227.7559,  1114.3844,  1080.9922 },
-    { "Velika kuca 4",            HOUSE_LARGE,  9,  84.9244,   1324.2983,  1083.8594 },
-    { "Velika kuca 5 (Safehouse)", HOUSE_LARGE, 12, 2323.7063, -1147.6509, 1050.7101 },
-    { "Vila (Madd Dogg)",         HOUSE_LARGE,  5,  1267.8407, -776.9587,  1091.9063 }
+    { "Mala kuca 1",   HOUSE_SMALL,  1,  10, 2259.5068, -1135.9337, 1050.6328 },
+    { "Mala kuca 2",   HOUSE_SMALL,  2,  6,  -68.8411,  1351.3397,  1080.2109 },
+    { "Mala kuca 3",   HOUSE_SMALL,  2,  9,  260.8800,  1237.2365,  1084.2578 },
+    { "Mala kuca 4",   HOUSE_SMALL,  3,  2,  226.4436,  1239.9277,  1082.1406 },
+    { "Mala kuca 5",   HOUSE_SMALL,  3,  8,  -42.5525,  1405.6432,  1084.4297 },
+    { "Mala kuca 6",   HOUSE_SMALL,  3,  11, 2282.8831, -1140.0713, 1050.8984 },
+    { "Mala kuca 7",   HOUSE_SMALL,  3,  1,  2218.3875, -1076.1580, 1050.4844 },
+    { "Mala kuca 8",   HOUSE_SMALL,  0,  1,  224.2880,  1289.1907,  1082.1406 },
+    { "Srednja kuca 1", HOUSE_MEDIUM, 4, 15, 295.2479,  1472.2650,  1080.2578 },
+    { "Srednja kuca 2", HOUSE_MEDIUM, 4, 4,  261.1874,  1284.2982,  1080.2578 },
+    { "Srednja kuca 3", HOUSE_MEDIUM, 5, 15, -283.6001, 1471.2211,  1084.3750 },
+    { "Srednja kuca 4", HOUSE_MEDIUM, 5, 5,  22.9848,   1403.3345,  1084.4370 },
+    { "Srednja kuca 5", HOUSE_MEDIUM, 6, 3,  235.2748,  1186.6809,  1080.2578 },
+    { "Srednja kuca 6", HOUSE_MEDIUM, 6, 5,  226.2956,  1114.1615,  1080.9929 },
+    { "Srednja kuca 7", HOUSE_MEDIUM, 6, 8,  2365.3345, -1135.5907, 1050.8826 },
+    { "Srednja kuca 8", HOUSE_MEDIUM, 6, 2,  2468.2080, -1698.2988, 1013.5078 },
+    { "Srednja kuca 9 (Johnson)", HOUSE_MEDIUM, 0, 3, 2496.0549, -1695.1749, 1014.7422 },
+    { "Velika kuca 1", HOUSE_LARGE,  7,  9,  2317.7983, -1026.7651, 1050.2178 },
+    { "Velika kuca 2", HOUSE_LARGE,  7,  6,  2196.8469, -1204.3524, 1049.0234 },
+    { "Velika kuca 3", HOUSE_LARGE,  8,  4,  -260.4934, 1456.8430,  1084.3672 },
+    { "Velika kuca 4", HOUSE_LARGE,  8,  10, 24.0716,   1340.1615,  1084.3750 },
+    { "Velika kuca 5", HOUSE_LARGE,  9,  5,  140.2660,  1366.1091,  1083.8594 },
+    { "Velika kuca 6", HOUSE_LARGE,  9,  6,  234.1541,  1063.7206,  1084.2123 },
+    { "Velika kuca 7", HOUSE_LARGE,  9,  9,  83.0791,   1322.2808,  1083.8662 },
+    { "Velika kuca 8", HOUSE_LARGE,  9,  2,  447.2238,  1397.2926,  1084.3047 },
+    { "Velika kuca 9", HOUSE_LARGE,  10, 2,  2237.5413, -1081.1516, 1049.0400 },
+    { "Vila (Madd Dogg)", HOUSE_LARGE, 10, 5, 1267.8407, -776.9587, 1091.9063 }
 };
 
 enum E_HOUSE
@@ -76,6 +89,11 @@ enum E_HOUSE
     Float:hY,
     Float:hZ,
     Float:hA,
+    // Where the exit stands inside; all zero means the interior's own entry spot.
+    Float:hExitX,
+    Float:hExitY,
+    Float:hExitZ,
+    Float:hExitA,
     bool:hLocked,
     bool:hHasGarage,
     Float:hGarageX,
@@ -102,3 +120,5 @@ forward bool:House_OnDialogResponse(playerid, dialogid, response, listitem, cons
 forward bool:House_TryUse(playerid, bool:enter, bool:leave);
 forward bool:House_IsSaleReady(slot, dbid, seller);
 forward bool:House_HasFreeSlot(playerid);
+forward bool:House_GarageHasRoom(house_dbid);
+forward bool:House_MoveToSpawn(playerid);

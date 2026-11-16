@@ -57,7 +57,8 @@ public OnDoorsLoaded()
     return 1;
 }
 
-stock Door_FindSlotByDbId(dbid)
+forward Door_FindSlotByDbId(dbid);
+public Door_FindSlotByDbId(dbid)
 {
     for (new i = 0; i < MAX_DOORS; i++)
     {
@@ -161,18 +162,6 @@ stock Door_SetInside(slot, playerid)
     }
     g_Doors[slot][dHasExit] = true;
     SetPlayerVirtualWorld(playerid, g_Doors[slot][dInWorld]);
-}
-
-// IDs of deleted doors are given out again, so the IDs admins type stay short. Called before the new slot is marked used:
-// a reused slot still holds the deleted entry's ID, which would look taken.
-stock Door_FreeDbId()
-{
-    new dbid = 1;
-    while (Door_FindSlotByDbId(dbid) != -1)
-    {
-        dbid++;
-    }
-    return dbid;
 }
 
 // Whoever is inside a deleted door's own world would be stuck without an exit, and since IDs are reused,

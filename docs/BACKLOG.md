@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 4 | Vlasnik pravi kuće (`/napravikucu`) i garaže (`/izmenikucu [id]` → garaža) i testira 4.1 i 4.2; posle toga 4.3: sef i ormar u kući, iznajmljivanje soba i ključ za ukućane |
+| 4 | Vlasnik testira 4.1 i 4.2 i odgovara: neaktivna kuća — da li vlasnik dobija 50% i šta biva sa njegovim vozilima (danas izlaze na svoje parking mesto). Posle toga 4.3: sef i ormar u kući, iznajmljivanje soba i ključ za ukućane |
 | 4 | Kuće, iznajmljivanje, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -287,6 +287,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 06.11.2026. | Saksija sa parkinga auto škole uklonjena; ostaje samo nevidljiv sudar tankog stuba (deo GTA zgrade) |
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 | 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
+| 16.11.2026. | Dopune 4.1/4.2: enterijeri po oceni referentnog moda (27, migracija postojećih), pomeriv izlaz, `/gotokuca`, kraće poruke za `/izmenikucu` i `/napravikucu`; posle smrti bolnica sa 50 HP i bez zabrane vrata; kuća pri ulasku (10 min van servera) i posle zatvora; `Utils_FreeDbId` za sve module; parking u garaži; garaža se postavlja iz vozila; `/getveh` ne pravi parking; neon se odmah vidi u tjuningu; poruka o parkingu sa tačnim razmakom |
 | 16.11.2026. | Korak 4.1 i 4.2: kuće (pravljenje u igri, 18 enterijera iz igre, kupovina, meni `/kuca`, prodaja državi 70% i igraču preko `/ponudi`, `/kucaj`, pojavljivanje u kući, neaktivnost 30 dana uz 50%, ikonice na mapi) i garaže (`/garaza`, 1–3 mesta); parking 40 m (10 m od tuđe kuće); `/pomoc` kao lista tema |
 | 08.11.2026. | Neon u tjuningu (šest boja, $5.000, Gold VIP upola, `/v neon`); razmak za zabranu parkiranja 25 m |
 | 08.11.2026. | Korak 3.7: anti-cheat za popravku vozila (vraća štetu, upozorava admine), `/cw` šapat u vozilu, `/v parkiraj` odbija mesta bliže od 8 m ulazima, šalterima, rentu, parkingu mehaničara, pijaci i auto školi |
@@ -305,7 +306,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 4 | The owner creates houses (`/napravikucu`) and garages (`/izmenikucu [id]` → garage) and tests 4.1 and 4.2; then 4.3: house safe and wardrobe, renting rooms and a key for housemates |
+| 4 | The owner tests 4.1 and 4.2 and answers: an inactive house — does the owner get 50%, and what happens to their vehicles (today they go out to their parking spot). Then 4.3: house safe and wardrobe, renting rooms and a key for housemates |
 | 4 | Houses, renting, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
@@ -585,6 +586,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-06 | The plant pot removed from the school lot; only the thin pole's invisible collision stays (part of the GTA building) |
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
 | 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |
+| 2026-11-16 | 4.1/4.2 additions: interiors by a reference gamemode's rating (27, existing houses migrated), a movable exit, `/gotokuca`, shorter `/izmenikucu` and `/napravikucu` messages; after death the hospital with 50 HP and no door lock; the house on login (10 min away) and after jail; `Utils_FreeDbId` for every module; garage parking; the garage set from a vehicle; `/getveh` makes no parking; the neon shows right away in tuning; the parking message shows the right distance |
 | 2026-11-16 | Steps 4.1 and 4.2: houses (created in game, 18 in-game interiors, buying, the `/kuca` menu, selling to the state for 70% and to a player through `/ponudi`, `/kucaj`, spawning at home, 30-day inactivity with 50% back, map icons) and garages (`/garaza`, 1–3 places); parking 40 m (10 m from someone else's house); `/pomoc` as a list of topics |
 | 2026-11-08 | Neon in tuning (six colours, $5,000, Gold VIP half, `/v neon`); the no-parking distance is 25 m |
 | 2026-11-08 | Step 3.7: anti-cheat for vehicle repairs (undoes the damage fix, alerts admins), the `/cw` whisper in a vehicle, `/v parkiraj` refuses spots within 8 m of entrances, counters, rentals, the mechanics' parking, the market and the driving school |

@@ -37,6 +37,19 @@ stock Utils_MoveInto(playerid, Float:x, Float:y, Float:z, Float:angle, interior,
     SetCameraBehindPlayer(playerid);
 }
 
+// The lowest DB id not in use, so a deleted entry's id goes to the next new one and the ids admins type stay short.
+// finder is the module's public "slot by DB id" function (-1 when free). Call it before the new slot is marked used,
+// since a reused slot still holds the deleted entry's id.
+stock Utils_FreeDbId(const finder[])
+{
+    new dbid = 1;
+    while (CallLocalFunction(finder, "d", dbid) != -1)
+    {
+        dbid++;
+    }
+    return dbid;
+}
+
 stock Float:Utils_FloatMin(Float:a, Float:b)
 {
     return a < b ? a : b;
