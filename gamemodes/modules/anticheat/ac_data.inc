@@ -11,6 +11,8 @@ forward bool:AC_CheckCommand(playerid);
 #define AC_ARMOUR_SYNC_S            (5)
 #define AC_WEAPON_SYNC_S            (3)
 #define AC_VEHICLE_SYNC_S           (3)
+// A late report can show a vehicle worse than the server made it and catch up later; that is not a repair.
+#define AC_VEHICLE_CONFIRM_S        (30)
 
 // Sprinting is about 9 m/s; anything far above that on foot, horizontally, is not legit movement.
 #define AC_MAX_FOOT_SPEED           (20.0)
@@ -79,14 +81,14 @@ enum E_AC_STATE
 new g_Ac[MAX_PLAYERS][E_AC_STATE];
 new g_AcTimer;
 
-// The last legit state of each vehicle, as raw damage bits; see ac_vehicle.inc.
+// The last legit state of each vehicle and the one the server last set; see ac_vehicle.inc.
 enum E_AC_VEHICLE
 {
     Float:avHealth,
-    avPanels,
-    avDoors,
-    avLights,
     avTyres,
+    Float:avSetHealth,
+    avSetTyres,
+    avSetAt,
     avSyncUntil
 }
 

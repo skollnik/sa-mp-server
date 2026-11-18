@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 4 | Neaktivnost vozila: odobreno brisanje posle 30 dana uz 50% cene, čeka odgovor koja je cena (vozila je ne pamte). Posle toga 4.3: sef i ormar u kući, ključ za ukućane (čeka odluku vlasnika) |
+| 4 | Neaktivnost vozila: odobreno brisanje posle 30 dana uz 50% cene, čeka odgovor koja je cena (vozila je ne pamte). Posle toga 4.3: sef, ormar i iznajmljivanje (vlasnik ga je vratio 18.11.2026; odobreno, ormar se dorađuje: kupljena odeća ne sme sama da se stvori u ormaru), pregled enterijera kuće na prodaju; admin (nivo 5+) rocketman i god mode, predlog poslat |
 | 4 | Kuće, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -288,6 +288,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 | 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
 | 18.11.2026. | Ikonica sopstvene kuće se uvek vidi (pravi se na prvom spawnu); `/respawnveh` i ostale admin komande nalaze i vozilo koje je posle uništenja vraćeno u garažu; iznajmljivanje soba otpada |
+| 18.11.2026. | Anti-cheat više ne prijavljuje popravku posle mehaničara (proverava samo HP i gume, prihvata zakasnelu potvrdu klijenta) |
 | 16.11.2026. | Na mapi samo kuće na prodaju i sopstvena kuća; `/gotoveh` za vozilo u garaži kaže gde je, a `/getveh` ga vadi iz garaže; neaktivna kuća ostaje na 50% (odluka vlasnika) |
 | 16.11.2026. | Ispravljena poruka kad je garaÅ¾a puna (`/garaza` i `/v parkiraj`): sada piÅ¡e zauzeto/ukupno |
 | 16.11.2026. | Dopune 4.1/4.2: enterijeri po oceni referentnog moda (27, migracija postojećih), pomeriv izlaz, `/gotokuca`, kraće poruke za `/izmenikucu` i `/napravikucu`; posle smrti bolnica sa 50 HP i bez zabrane vrata; kuća pri ulasku (10 min van servera) i posle zatvora; `Utils_FreeDbId` za sve module; parking u garaži; garaža se postavlja iz vozila; `/getveh` ne pravi parking; neon se odmah vidi u tjuningu; poruka o parkingu sa tačnim razmakom |
@@ -309,7 +310,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 4 | Vehicle inactivity: deleting after 30 days with 50% of the price is approved, waiting for which price (vehicles do not store one). Then 4.3: house safe and wardrobe, a key for housemates (waiting for the owner's decision) |
+| 4 | Vehicle inactivity: deleting after 30 days with 50% of the price is approved, waiting for which price (vehicles do not store one). Then 4.3: safe, wardrobe and renting (the owner brought it back on 2026-11-18; approved, the wardrobe is being reworked: bought clothes must not appear in it by themselves), viewing the interior of a house for sale; admin (level 5+) rocketman and god mode, proposal sent |
 | 4 | Houses, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
@@ -590,6 +591,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
 | 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |
 | 2026-11-18 | The own-house icon always shows (made on the first spawn); `/respawnveh` and the other admin commands find a vehicle put back into a garage after its destruction; renting rooms is dropped |
+| 2026-11-18 | Anti-cheat no longer flags a repair after a mechanic (checks only health and tyres, accepts a late client confirmation) |
 | 2026-11-16 | The map shows only houses for sale and your own house; `/gotoveh` for a garage vehicle says where it is and `/getveh` takes it out; an inactive house keeps the 50% (owner's decision) |
 | 2026-11-16 | Fixed the full-garage message (`/garaza` and `/v parkiraj`): it now shows taken/total |
 | 2026-11-16 | 4.1/4.2 additions: interiors by a reference gamemode's rating (27, existing houses migrated), a movable exit, `/gotokuca`, shorter `/izmenikucu` and `/napravikucu` messages; after death the hospital with 50 HP and no door lock; the house on login (10 min away) and after jail; `Utils_FreeDbId` for every module; garage parking; the garage set from a vehicle; `/getveh` makes no parking; the neon shows right away in tuning; the parking message shows the right distance |

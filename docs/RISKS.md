@@ -255,8 +255,8 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Teren se koristi umesto radionice | ✅ | Na terenu najviše 60% i bez karoserije; sve preko toga samo u radionici (letelice i brodovi u servisu letelica i brodova) |
 | Tjuning na ulici pored radionice | ✅ | Samo kad vozilo stoji na mestu `tjuning` (6 m) |
 | Popravka u radionici na putu pored nje | ✅ | Servis je samo 8 m oko tačke `servis` ili `pregledservis`; tačka `radionica` je samo za `/oprema` |
-| Repair hack (cheat popravi vozilo bez mehaničara) | ✅ | HP i oštećenja se vraćaju na poslednje poznato stanje, adminima stiže upozorenje i upis u AC log |
-| Anti-cheat lažno prijavi serversku popravku | ✅ | Sve serverske popravke i nova vozila idu kroz `AC_*` funkcije, a klijent ima 3 s da prikaže promenu |
+| Repair hack (cheat popravi vozilo bez mehaničara) | ✅ | HP i pukle gume se vraćaju na poslednje poznato stanje, adminima stiže upozorenje i upis u AC log. Udubljenja, vrata i svetla se ne proveravaju: klijent ih posle popravke javlja na svoj način (lažne prijave), a samo su izgled |
+| Anti-cheat lažno prijavi serversku popravku | ✅ | Sve serverske popravke i nova vozila idu kroz `AC_*` funkcije, a klijent ima 3 s da prikaže promenu; još 30 s se prihvata kad se vozilo, posle zakasnele prijave, vrati do stanja koje je server postavio |
 | Parkiranje vozila ispred ulaza, šaltera ili mesta za rent da posle restarta smeta | ✅ | `/v parkiraj` odbija mesta bliže od 40 m (10 m od tuđe kuće); na putu i dalje rešava admin, kasnije policija |
 | Prodaja kuće dok su vozila u garaži (kupac ih ne može izvaditi) | ✅ | Prodaja državi i preko `/ponudi` traži praznu garažu; kad kuću oduzme admin ili neaktivnost, vozila izlaze na svoje parking mesto |
 | Vozilo iz garaže prodato ili zamenjeno sa `/ponudi` | ✅ | Vozilo u garaži nije u svetu, pa ne može u ponudu |
@@ -571,8 +571,8 @@ Every new system or change goes through these questions, against all existing sy
 | The field used instead of the workshop | ✅ | The field goes to 60% at most and no body work; everything above only in the workshop (aircraft and boats at the aircraft and boat service) |
 | Tuning on the street next to the workshop | ✅ | Only while the vehicle stands on the `tjuning` spot (6 m) |
 | A workshop repair on the road next to it | ✅ | The service is only 8 m around a `servis` or `pregledservis` point; a `radionica` point is only for `/oprema` |
-| Repair hack (a cheat repairs the vehicle without a mechanic) | ✅ | Health and damage go back to the last known state, admins get an alert and an AC log entry |
-| Anti-cheat flags a server repair | ✅ | Every server repair and new vehicle goes through the `AC_*` functions, and the client gets 3 s to show the change |
+| Repair hack (a cheat repairs the vehicle without a mechanic) | ✅ | Health and popped tyres go back to the last known state, admins get an alert and an AC log entry. Dents, doors and lights are not checked: after a repair the client reports them its own way (false alerts), and they are only looks |
+| Anti-cheat flags a server repair | ✅ | Every server repair and new vehicle goes through the `AC_*` functions, and the client gets 3 s to show the change; for 30 s more, a vehicle that comes back up to what the server set after a late report is accepted |
 | A vehicle parked in front of an entrance, counter or rental spot gets in the way after restarts | ✅ | `/v parkiraj` refuses spots closer than 40 m (10 m from someone else's house); on roads admins handle it, later the police |
 | A house sold while vehicles are in its garage (the buyer could not take them out) | ✅ | Selling to the state and through `/ponudi` needs an empty garage; when an admin or inactivity takes the house, the vehicles go out to their parking spots |
 | A vehicle in a garage sold or traded with `/ponudi` | ✅ | A stored vehicle is not in the world, so it cannot be offered |
