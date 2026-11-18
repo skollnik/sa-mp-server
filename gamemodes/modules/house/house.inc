@@ -63,6 +63,7 @@ stock House_OnPlayerConnect(playerid)
     g_HouseIconsShown[playerid] = false;
     g_HouseInteriorFor[playerid] = 0;
     g_RoomHouse[playerid] = 0;
+    g_RoomPaid[playerid] = 0;
     g_RoomIcon[playerid] = STREAMER_TAG_MAP_ICON:INVALID_STREAMER_ID;
     g_HouseViewing[playerid] = 0;
     g_HouseViewBlocked[playerid] = 0;
@@ -533,6 +534,7 @@ stock House_OnLoadAccount(playerid)
     cache_get_value_name_int(0, "house_spawn", g_HouseSpawn[playerid]);
     cache_get_value_name_int(0, "logout_at", logout_at);
     cache_get_value_name_int(0, "room_house", g_RoomHouse[playerid]);
+    cache_get_value_name_int(0, "room_paid", g_RoomPaid[playerid]);
     g_HouseSpawnPending[playerid] = g_HouseSpawn[playerid] != 0 && gettime() - logout_at >= HOUSE_SPAWN_AWAY_S;
 }
 
@@ -772,22 +774,35 @@ stock House_SetSpawn(playerid, dbid)
 }
 
 // A house changes hands only with nothing of the old owner's in its garage (stored or parked there) or in its safe.
-static stock bool:House_CheckEmpty(playerid, slot)
+// Writes what is still there and returns true, or false when the house is empty.
+static stock bool:House_FindLeftover(slot, problem[], size)
 {
     new dbid = g_Houses[slot][hDbId];
     if (!Safe_IsEmpty(slot))
     {
-        Msg_Error(playerid, "Prvo ispraznite sef (/sef): i novac i predmete.");
+        strcopy(problem, "Prvo ispraznite sef (/sef): i novac i predmete.", size);
+    }
+    else if (Veh_GarageCount(dbid) > 0)
+    {
+        strcopy(problem, "Prvo izvadite vozila iz garaze (/garaza).", size);
+    }
+    else if (Veh_GarageParkedCount(dbid) > 0)
+    {
+        strcopy(problem, "Neko vozilo ima parking u garazi; parkirajte ga negde drugde (/v parkiraj).", size);
+    }
+    else
+    {
         return false;
     }
-    if (Veh_GarageCount(dbid) > 0)
+    return true;
+}
+
+static stock bool:House_CheckEmpty(playerid, slot)
+{
+    new problem[96];
+    if (House_FindLeftover(slot, problem, sizeof(problem)))
     {
-        Msg_Error(playerid, "Prvo izvadite vozila iz garaze (/garaza).");
-        return false;
-    }
-    if (Veh_GarageParkedCount(dbid) > 0)
-    {
-        Msg_Error(playerid, "Neko vozilo ima parking u ovoj garazi; parkirajte ga negde drugde (/v parkiraj).");
+        Msg_Error(playerid, "%s", problem);
         return false;
     }
     return true;
@@ -808,11 +823,20 @@ static stock House_SellToState(playerid, slot)
     Msg_Success(playerid, "Prodali ste kucu drzavi za $%d.", amount);
 }
 
-// Called by /ponudi: the house the seller stands at, ready to change hands right now.
-stock bool:House_IsSaleReady(slot, dbid, seller)
+// Called by /ponudi: the house the seller stands at, ready to change hands right now; otherwise problem says why.
+stock bool:House_IsSaleReady(slot, dbid, seller, problem[], size)
 {
-    return slot >= 0 && slot < MAX_HOUSES && g_Houses[slot][hUsed] && g_Houses[slot][hDbId] == dbid && House_IsOwner(seller, slot)
-        && House_FindHere(seller) == slot && Veh_GarageCount(dbid) == 0 && Veh_GarageParkedCount(dbid) == 0 && Safe_IsEmpty(slot);
+    if (slot < 0 || slot >= MAX_HOUSES || !g_Houses[slot][hUsed] || g_Houses[slot][hDbId] != dbid || !House_IsOwner(seller, slot))
+    {
+        strcopy(problem, "Kuca vise nije prodavceva.", size);
+        return false;
+    }
+    if (House_FindHere(seller) != slot)
+    {
+        strcopy(problem, "Prodavac mora stajati kod kuce (ispred vrata ili unutra).", size);
+        return false;
+    }
+    return !House_FindLeftover(slot, problem, size);
 }
 
 stock House_Level(slot)
@@ -1101,8 +1125,15 @@ cmd:izmenikucu(playerid, params[])
     }
     if (isnull(option))
     {
-        new title[32], subject[8];
-        format(title, sizeof(title), "Kuca %d", dbid);
+        new title[64], subject[8];
+        if (g_Houses[slot][hOwnerDbId] != 0)
+        {
+            format(title, sizeof(title), "Kuca %d - vlasnik %s", dbid, g_Houses[slot][hOwnerName]);
+        }
+        else
+        {
+            format(title, sizeof(title), "Kuca %d - na prodaju", dbid);
+        }
         valstr(subject, dbid);
         Menu_Show(playerid, title, g_HouseEditMenu, sizeof(g_HouseEditMenu), subject);
         return 1;

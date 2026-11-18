@@ -58,7 +58,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Ban IP-a zaključa sve na istoj mreži | 👁 | Namerno; `127.0.0.1` se nikad ne banuje. `/unban` skida ceo ban |
 | Ban po serijskom broju pogodi sve naloge na istom računaru | 👁 | Namerno (sprečava zaobilaženje bana). Vlasnik je izuzet |
 | Admin postavi respect veći od potrebnog, pa igrač na sledećem payday-u preskoči 20 nivoa | ✅ | `/setrespect` prima samo manje od potrebnog za sledeći nivo; `/setlevel` nuluje respect ako je preko potrebnog za novi nivo |
-| Admin ostavi jetpack ili god mode upaljen van dužnosti, ili ga anti-cheat prijavi | ✅ | Obe moći rade samo na dužnosti (vlasnik i van nje) i gase se sa dužnošću ili spuštanjem nivoa ispod 5; anti-cheat ih prepoznaje (i 3 s posle gašenja); HP 99999 se ne pamti pri odjavi |
+| Admin ostavi jetpack ili god mode upaljen van dužnosti, ili ga anti-cheat prijavi | ✅ | Obe moći rade samo na dužnosti (vlasnik i van nje) i gase se sa dužnošću ili spuštanjem nivoa ispod 5; anti-cheat nikad ne izbacuje admina nivoa 5+ zbog jetpacka (u vazduhu klijent kasni), već mu jetpack samo skine ako je moć ugašena; HP 99999 se ne pamti pri odjavi |
 
 ### VIP
 | Rizik | Status | Kako je rešeno |
@@ -282,6 +282,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Kirija: igrač izbegava plaćanje (prazan račun, AFK) | ✅ | Kirija ide sa plate koju stanar dobije: račun, pa džep; bez novca se iseljava; bez plate (AFK) nema ni kirije, ali ni zarade |
 | Stanar zloupotrebi kuću (sef, garaža, zaključavanje, prodaja) | ✅ | Stanar samo ulazi (i kad je zaključano), pojavljuje se u kući i koristi svoj ormar; sve ostalo traži vlasnika |
 | Stanar ostane posle promene vlasnika ili kad prestane da igra | ✅ | Svaka promena vlasnika iseljava sve stanare (i van servera, u bazi); 30 dana bez ulaska na server iseljava; pojavljivanje u sobi se briše zajedno sa sobom |
+| Vlasnik iseli stanara odmah posle plate i zadrži kiriju | ✅ | Pri iseljenju vlasnik vraća poslednju plaćenu kiriju; bez novca iseljenje se odbija; ako je stanar u međuvremenu sam otišao, ništa se ne plaća |
 | Igrač ima kuću i sobu (dva besplatna spawna) | ✅ | Soba se ne iznajmljuje ako igrač ima kuću; kupovina ili prijem kuće iseljava iz sobe |
 | Odeća: dupliranje kese ili VIP skin kao kesa za prodaju | ✅ | Obučena odeća ide u istu kesu ili isto mesto u ormaru; VIP skinovi, uniforme, admin i posebni skinovi nikad ne postaju kesa (bacaju se uz poruku) |
 | Odeća: presvlačenje ispod uniforme ili admin skina, ili tuđeg pola | ✅ | Presvlači se samo bez smene i admin dužnosti, peške; oblači se samo odeća za pol igrača |
@@ -389,7 +390,7 @@ Every new system or change goes through these questions, against all existing sy
 | An IP ban locks everyone on the same network | 👁 | By design; `127.0.0.1` is never banned. `/unban` lifts the whole ban |
 | A serial ban hits every account on the same computer | 👁 | By design (stops ban evasion). The owner is exempt |
 | An admin sets more respect than needed, so the player skips 20 levels on the next payday | ✅ | `/setrespect` only takes less than the next level needs; `/setlevel` clears respect when it is over the new level's need |
-| An admin leaves jetpack or god mode on off duty, or anti-cheat flags it | ✅ | Both powers work only on duty (the owner also off duty) and end with duty or when the level drops below 5; anti-cheat knows them (and for 3 s after they end); 99999 HP is never saved on logout |
+| An admin leaves jetpack or god mode on off duty, or anti-cheat flags it | ✅ | Both powers work only on duty (the owner also off duty) and end with duty or when the level drops below 5; anti-cheat never kicks a level 5+ admin for a jetpack (in the air the client is late), it only takes the jetpack when the power is off; 99999 HP is never saved on logout |
 
 ### VIP
 | Risk | Status | How it is handled |
@@ -613,6 +614,7 @@ Every new system or change goes through these questions, against all existing sy
 | Rent: a tenant avoids paying (empty account, AFK) | ✅ | Rent comes with the payday the tenant gets: bank, then cash; without money the tenant moves out; no payday (AFK) means no rent, but no pay either |
 | A tenant abuses the house (safe, garage, lock, sale) | ✅ | A tenant only enters (also when locked), spawns there and uses their own wardrobe; everything else needs the owner |
 | A tenant stays after a change of owner or after quitting | ✅ | Every change of owner evicts all tenants (offline ones in the database); 30 days without logging in evicts; the room spawn goes with the room |
+| The owner evicts a tenant right after payday and keeps the rent | ✅ | On eviction the owner gives back the last rent paid; without the money the eviction is refused; if the tenant already left, nothing is paid |
 | A player holds a house and a room (two free spawns) | ✅ | A room is not rented to a player with a house; buying or receiving a house ends the room |
 | Clothes: copying a bag or a VIP skin as a bag to sell | ✅ | The clothes taken off go into the same bag or the same wardrobe place; VIP skins, uniforms, admin and special skins never become a bag (dropped with a message) |
 | Clothes: changing under a uniform or the admin skin, or the other gender's clothes | ✅ | Only without a shift and admin duty, on foot; only clothes for the player's gender can be worn |

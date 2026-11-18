@@ -142,7 +142,7 @@ stock Store_ListItemsInto(E_STORE_KIND:kind, ref, body[], size, listed[STORE_MAX
         {
             continue;
         }
-        format(line, sizeof(line), "%s\t%d\n", g_ItemInfo[item][itName], amount);
+        format(line, sizeof(line), "%s\t%d\n", g_ItemInfo[item][itName], Item_ShownAmount(item, amount));
         strcat(body, line, size);
         listed[count++] = i;
     }
@@ -205,7 +205,7 @@ static stock Store_ShowPut(playerid)
         {
             continue;
         }
-        format(line, sizeof(line), "%s\t%d\n", g_ItemInfo[g_Inv[playerid][slot][isItem]][itName], g_Inv[playerid][slot][isAmount]);
+        format(line, sizeof(line), "%s\t%d\n", g_ItemInfo[g_Inv[playerid][slot][isItem]][itName], Item_ShownAmount(g_Inv[playerid][slot][isItem], g_Inv[playerid][slot][isAmount]));
         strcat(body, line);
         g_InvListed[playerid][count++] = slot;
     }

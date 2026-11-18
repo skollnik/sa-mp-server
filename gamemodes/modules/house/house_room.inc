@@ -2,6 +2,7 @@
 static g_RoomPriceSeen[MAX_PLAYERS];
 static g_RoomTenantIds[MAX_PLAYERS][3];
 static g_RoomTenantNames[MAX_PLAYERS][3][MAX_PLAYER_NAME + 1];
+static g_RoomTenantPaid[MAX_PLAYERS][3];
 static g_RoomEvictPick[MAX_PLAYERS];
 
 stock Room_Init()
@@ -10,6 +11,7 @@ stock Room_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `houses` ADD COLUMN IF NOT EXISTS `room_price` INT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `room_house` INT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD INDEX IF NOT EXISTS `account_room_house` (`room_house`)");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `room_paid` INT NOT NULL DEFAULT 0");
 }
 
 stock Room_OnHouseLoaded(row)
@@ -108,15 +110,24 @@ static stock Room_Forget(playerid)
         g_HouseSpawn[playerid] = 0;
     }
     g_RoomHouse[playerid] = 0;
+    g_RoomPaid[playerid] = 0;
     Room_HideIcon(playerid);
 }
 
 // The spawn in the room goes with the room; the same column order keeps house_spawn readable before room_house is cleared.
-#define ROOM_LEAVE_SET "`house_spawn` = IF(`house_spawn` = `room_house`, 0, `house_spawn`), `room_house` = 0"
+#define ROOM_LEAVE_SET "`house_spawn` = IF(`house_spawn` = `room_house`, 0, `house_spawn`), `room_house` = 0, `room_paid` = 0"
+
+static stock Room_SetPaid(playerid, amount)
+{
+    new query[96];
+    g_RoomPaid[playerid] = amount;
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `room_paid` = %d WHERE `id` = %d", amount, g_Player[playerid][pDbId]);
+    mysql_tquery(g_SQL, query);
+}
 
 stock Room_End(playerid, slot)
 {
-    new query[160];
+    new query[256];
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET " ROOM_LEAVE_SET " WHERE `id` = %d", g_Player[playerid][pDbId]);
     mysql_tquery(g_SQL, query);
     Room_Forget(playerid);
@@ -129,7 +140,7 @@ stock Room_End(playerid, slot)
 
 stock Room_EvictAll(slot)
 {
-    new query[160], dbid = g_Houses[slot][hDbId], address[48];
+    new query[256], dbid = g_Houses[slot][hDbId], address[48];
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET " ROOM_LEAVE_SET " WHERE `room_house` = %d", dbid);
     mysql_tquery(g_SQL, query);
     House_Address(slot, address);
@@ -159,7 +170,7 @@ stock Room_EndForAccount(account_dbid)
 // Tenants away too long; online tenants cannot match, since a login renews last_login.
 stock Room_CheckInactive()
 {
-    new query[192];
+    new query[256];
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET " ROOM_LEAVE_SET " WHERE `room_house` <> 0 AND `last_login` < NOW() - INTERVAL %d DAY",
         ROOM_INACTIVE_DAYS);
     mysql_tquery(g_SQL, query);
@@ -204,6 +215,10 @@ stock Room_ChargeRent(playerid)
     new price = g_Houses[slot][hRoomPrice];
     if (price == 0)
     {
+        if (g_RoomPaid[playerid] != 0)
+        {
+            Room_SetPaid(playerid, 0);
+        }
         return;
     }
     new reason[48];
@@ -220,6 +235,7 @@ stock Room_ChargeRent(playerid)
         return;
     }
     Room_PayOwner(playerid, slot, price);
+    Room_SetPaid(playerid, price);
     SendClientMessage(playerid, COLOR_WHITE, "Kirija za sobu: " C_RED "-$%d" C_WHITE " (placa se sa racuna, a bez dovoljno na racunu iz dzepa).", price);
 }
 
@@ -294,8 +310,9 @@ static stock Room_Rent(playerid, slot)
         Room_PayOwner(playerid, slot, price);
     }
     g_RoomHouse[playerid] = g_Houses[slot][hDbId];
-    new query[96];
-    mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `room_house` = %d WHERE `id` = %d", g_RoomHouse[playerid], g_Player[playerid][pDbId]);
+    g_RoomPaid[playerid] = price;
+    new query[128];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `room_house` = %d, `room_paid` = %d WHERE `id` = %d", g_RoomHouse[playerid], price, g_Player[playerid][pDbId]);
     mysql_tquery(g_SQL, query);
     Account_Save(playerid);
     g_Houses[slot][hTenants]++;
@@ -432,7 +449,7 @@ static stock Room_SetPrice(playerid, slot, price)
 static stock Room_ListTenants(playerid, slot)
 {
     new query[128];
-    mysql_format(g_SQL, query, sizeof(query), "SELECT `id`, `name` FROM `accounts` WHERE `room_house` = %d LIMIT 3", g_Houses[slot][hDbId]);
+    mysql_format(g_SQL, query, sizeof(query), "SELECT `id`, `name`, `room_paid` FROM `accounts` WHERE `room_house` = %d LIMIT 3", g_Houses[slot][hDbId]);
     mysql_tquery(g_SQL, query, "OnRoomTenantsListed", "ddd", playerid, g_AccountRace[playerid], g_Houses[slot][hDbId]);
 }
 
@@ -455,6 +472,7 @@ public OnRoomTenantsListed(playerid, race, house_dbid)
     {
         cache_get_value_name_int(row, "id", g_RoomTenantIds[playerid][row]);
         cache_get_value_name(row, "name", g_RoomTenantNames[playerid][row], MAX_PLAYER_NAME + 1);
+        cache_get_value_name_int(row, "room_paid", g_RoomTenantPaid[playerid][row]);
         strcat(body, g_RoomTenantNames[playerid][row]);
         strcat(body, "\n");
     }
@@ -463,23 +481,63 @@ public OnRoomTenantsListed(playerid, race, house_dbid)
     return 1;
 }
 
-// The tenant may be offline: then only the database changes, and the count is read again from it.
-static stock Room_Evict(playerid, slot, account_id, const name[])
+// The last rent the tenant paid; an online tenant's own value is newer than the list the owner opened.
+static stock Room_EvictRefund(playerid, pick)
 {
+    new tenant = Account_FindOnlineByDbId(g_RoomTenantIds[playerid][pick]);
+    return tenant != INVALID_PLAYER_ID && g_RoomHouse[tenant] != 0 ? g_RoomPaid[tenant] : g_RoomTenantPaid[playerid][pick];
+}
+
+// The owner gives back the last rent paid, since the tenant paid for a payday they will not live there.
+// The tenant may be offline: then only the database changes, and the count is read again from it.
+static stock Room_Evict(playerid, slot, pick)
+{
+    new account_id = g_RoomTenantIds[playerid][pick], refund = Room_EvictRefund(playerid, pick), reason[48];
+    new online = Account_FindOnlineByDbId(account_id);
+    if (online != INVALID_PLAYER_ID && !Room_IsTenant(online, slot))
+    {
+        Msg_Error(playerid, "%s vise nije stanar u ovoj kuci.", g_RoomTenantNames[playerid][pick]);
+        return;
+    }
+    if (refund > 0)
+    {
+        format(reason, sizeof(reason), "vracena kirija (iseljenje iz kuce %d)", g_Houses[slot][hDbId]);
+        if (!Room_TakeRent(playerid, refund, reason))
+        {
+            Msg_Error(playerid, "Pri iseljenju vracate poslednju kiriju ($%d), a nemate toliko ni na racunu ni u dzepu.", refund);
+            return;
+        }
+        Account_Save(playerid);
+        Money_PayAccount(account_id, refund, reason);
+    }
     new tenant = Account_FindOnlineByDbId(account_id);
     if (tenant != INVALID_PLAYER_ID && Room_IsTenant(tenant, slot))
     {
         Room_End(tenant, slot);
-        Msg_Info(tenant, "Vlasnik kuce vas je iselio iz sobe.");
+        if (refund > 0)
+        {
+            Msg_Info(tenant, "Vlasnik kuce vas je iselio iz sobe i vratio poslednju kiriju ($%d) u banku.", refund);
+        }
+        else
+        {
+            Msg_Info(tenant, "Vlasnik kuce vas je iselio iz sobe.");
+        }
     }
     else
     {
-        new query[192];
+        new query[256];
         mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET " ROOM_LEAVE_SET " WHERE `id` = %d AND `room_house` = %d", account_id, g_Houses[slot][hDbId]);
         mysql_tquery(g_SQL, query);
         Room_CountTenants();
     }
-    Msg_Success(playerid, "Iselili ste stanara %s.", name);
+    if (refund > 0)
+    {
+        Msg_Success(playerid, "Iselili ste stanara %s i vratili mu poslednju kiriju ($%d).", g_RoomTenantNames[playerid][pick], refund);
+    }
+    else
+    {
+        Msg_Success(playerid, "Iselili ste stanara %s.", g_RoomTenantNames[playerid][pick]);
+    }
 }
 
 stock bool:Room_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[])
@@ -599,8 +657,16 @@ stock bool:Room_OnDialogResponse(playerid, dialogid, response, listitem, const i
                 return true;
             }
             g_RoomEvictPick[playerid] = listitem;
-            new text[96];
-            format(text, sizeof(text), "Iseljavate stanara %s? Placena kirija se ne vraca.", g_RoomTenantNames[playerid][listitem]);
+            new text[160], refund = Room_EvictRefund(playerid, listitem);
+            if (refund > 0)
+            {
+                format(text, sizeof(text), "Iseljavate stanara %s?\n\nVracate mu poslednju placenu kiriju: $%d (sa racuna, a ako nema dovoljno iz dzepa).",
+                    g_RoomTenantNames[playerid][listitem], refund);
+            }
+            else
+            {
+                format(text, sizeof(text), "Iseljavate stanara %s?", g_RoomTenantNames[playerid][listitem]);
+            }
             ShowPlayerDialog(playerid, DIALOG_ROOM_EVICT, DIALOG_STYLE_MSGBOX, "Iseljenje stanara", text, "Iseli", "Odustani");
         }
         case DIALOG_ROOM_EVICT:
@@ -608,7 +674,7 @@ stock bool:Room_OnDialogResponse(playerid, dialogid, response, listitem, const i
             new slot = g_HouseSelected[playerid], pick = g_RoomEvictPick[playerid];
             if (response && House_IsOwner(playerid, slot))
             {
-                Room_Evict(playerid, slot, g_RoomTenantIds[playerid][pick], g_RoomTenantNames[playerid][pick]);
+                Room_Evict(playerid, slot, pick);
             }
         }
         default:

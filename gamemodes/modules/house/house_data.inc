@@ -137,6 +137,8 @@ new bool:g_HouseSafesLoaded;
 // The house a player rents a room in (DB id or 0) and its map icon.
 new g_RoomHouse[MAX_PLAYERS];
 new STREAMER_TAG_MAP_ICON:g_RoomIcon[MAX_PLAYERS];
+// The last rent the tenant paid, given back when the owner evicts them.
+new g_RoomPaid[MAX_PLAYERS];
 // The house for sale a player is looking at (DB id or 0), until when, and the house they were last put out of.
 new g_HouseViewing[MAX_PLAYERS];
 new g_HouseViewEnd[MAX_PLAYERS];
@@ -156,7 +158,7 @@ new g_HouseGarageListed[MAX_PLAYERS][4];
 forward bool:House_GaragePos(house_dbid, &Float:x, &Float:y, &Float:z);
 forward bool:House_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:House_TryUse(playerid, bool:enter, bool:leave);
-forward bool:House_IsSaleReady(slot, dbid, seller);
+forward bool:House_IsSaleReady(slot, dbid, seller, problem[], size);
 forward bool:House_HasFreeSlot(playerid);
 forward bool:House_GarageHasRoom(house_dbid);
 forward bool:House_MoveToSpawn(playerid);

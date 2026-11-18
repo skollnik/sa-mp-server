@@ -158,7 +158,7 @@ stock Acc_ShowShop(playerid)
 {
     new body[640], line[64];
     strcopy(body, "Predmet\tDeo tela\tCena\n");
-    format(line, sizeof(line), "Odeca (izbor skina)\tskin\t$%d\n", CLOTHES_PRICE);
+    format(line, sizeof(line), "Garderoba (izbor sa slikama)\t-\t$%d\n", CLOTHES_PRICE);
     strcat(body, line);
     for (new i = 0; i < sizeof(g_AccInfo); i++)
     {

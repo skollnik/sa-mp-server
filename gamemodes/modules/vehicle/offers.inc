@@ -127,17 +127,14 @@ static stock bool:Offer_IsValid(seller, bool:tell)
     }
     else if (g_Offer[seller][ofKind] == OFFER_HOUSE)
     {
-        if (!House_IsSaleReady(g_Offer[seller][ofSlot], g_Offer[seller][ofDbId], seller))
+        // The sale check writes its own reason into message.
+        if (House_IsSaleReady(g_Offer[seller][ofSlot], g_Offer[seller][ofDbId], seller, message, sizeof(message)))
         {
-            strcopy(message, "Kuca vise nije spremna (prodavac stoji kod kuce, garaza i sef su prazni).");
-        }
-        else if (g_Player[target][pLevel] < House_Level(g_Offer[seller][ofSlot]) || !House_HasFreeSlot(target))
-        {
+            if (g_Player[target][pLevel] >= House_Level(g_Offer[seller][ofSlot]) && House_HasFreeSlot(target))
+            {
+                return true;
+            }
             format(message, sizeof(message), "Kupac mora biti nivo %d+ i imati mesta za jos jednu kucu.", House_Level(g_Offer[seller][ofSlot]));
-        }
-        else
-        {
-            return true;
         }
     }
     else if (!Offer_IsVehicleReady(g_Offer[seller][ofSlot], g_Offer[seller][ofDbId], seller, target))
@@ -391,10 +388,15 @@ stock bool:Offer_OnDialogResponse(playerid, dialogid, response, listitem, const 
             }
             else if (response && listitem == 2)
             {
-                new slot = House_FindOwnedHere(playerid);
+                new slot = House_FindOwnedHere(playerid), problem[96];
                 if (slot == -1)
                 {
                     Msg_Error(playerid, "Stanite kod svoje kuce (ispred vrata ili unutra), zajedno sa kupcem.");
+                    return true;
+                }
+                if (!House_IsSaleReady(slot, House_DbId(slot), playerid, problem, sizeof(problem)))
+                {
+                    Msg_Error(playerid, "%s", problem);
                     return true;
                 }
                 g_Offer[playerid][ofKind] = OFFER_HOUSE;

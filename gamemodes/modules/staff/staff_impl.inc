@@ -522,9 +522,12 @@ stock bool:Staff_HasGod(playerid)
     return g_Staff[playerid][sGod];
 }
 
+// Management is never kicked for a jetpack: in the air the client may keep one that was taken away, or show one given
+// a moment ago only after landing. Staff_CheckPowers takes it away again when the power is off.
 stock bool:Staff_AllowsJetpack(playerid)
 {
-    return g_Staff[playerid][sJetpack] || gettime() - g_Staff[playerid][sJetpackChangedAt] < STAFF_POWER_SYNC_S;
+    return g_Staff[playerid][sJetpack] || gettime() - g_Staff[playerid][sJetpackChangedAt] < STAFF_POWER_SYNC_S
+        || g_Player[playerid][pAdminLevel] >= ADMIN_LEVEL_MANAGEMENT;
 }
 
 stock bool:Staff_AllowsHighHealth(playerid)
@@ -565,14 +568,14 @@ stock Staff_EndPowers(playerid)
     }
 }
 
-// A jetpack the admin took off or lost (spectating, a vehicle) is not handed back later;
-// health that food, /vheal or a respawn set back to normal is raised again while god mode is on.
+// A jetpack still on after the power was turned off is taken again; health that food, /vheal or a respawn
+// set back to normal is raised again while god mode is on.
 stock Staff_CheckPowers(playerid)
 {
-    if (g_Staff[playerid][sJetpack] && gettime() - g_Staff[playerid][sJetpackChangedAt] >= STAFF_POWER_SYNC_S
-        && GetPlayerSpecialAction(playerid) != SPECIAL_ACTION_USEJETPACK)
+    if (!g_Staff[playerid][sJetpack] && GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK
+        && g_Player[playerid][pAdminLevel] >= ADMIN_LEVEL_MANAGEMENT)
     {
-        g_Staff[playerid][sJetpack] = false;
+        SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
     }
     if (g_Staff[playerid][sGod])
     {

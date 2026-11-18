@@ -205,6 +205,8 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 197 | 2026-11-18 | Kuća na prodaju se razgleda iznutra 5 minuta, posle izbacivanja ista kuća 5 minuta čeka | Igrač vidi šta kupuje, a prazna kuća ne postaje skrovište |
 | 198 | 2026-11-18 | Vozila vlasnika koji nije ušao 30 dana se brišu uz 50% plaćene cene; cena se čuva od sada (pijaca, `/ponudi`, admin $0), stara vozila dobijaju današnju cenu sa pijace ili $0 | Mrtva vozila ne zauzimaju bazu i tablice, a vlasnik ne gubi sve |
 | 199 | 2026-11-18 | `/jetpack` i `/god` za nivo 5+, samo na admin dužnosti (vlasnik i van nje), gase se sa dužnošću; god ne štiti vozilo | Moći uprave ne smeju ostati upaljene van posla |
+| 200 | 2026-11-18 | Kad vlasnik iseli stanara, vraća mu poslednju plaćenu kiriju (sa računa, pa iz džepa; bez novca iseljenje se odbija); stanar koji sam ode ili ne plati ne dobija ništa | Zahtev vlasnika: stanar je platio platu u kojoj više ne živi tu |
+| 201 | 2026-11-18 | Anti-cheat nikad ne izbacuje admina nivoa 5+ zbog jetpacka; ako mu je moć ugašena, jetpack se samo skida | U vazduhu klijent kasni sa uzimanjem i skidanjem jetpacka, pa je admin dobio kick |
 
 ### Arhitektura koda (predlog)
 ```
@@ -431,6 +433,8 @@ This file records every important decision so it does not get re-discussed. Newe
 | 197 | 2026-11-18 | A house for sale can be viewed from inside for 5 minutes; after being put out, the same house waits 5 minutes | Players see what they buy, and an empty house is no hideout |
 | 198 | 2026-11-18 | Vehicles of owners away 30 days are deleted with 50% of the price paid; the price is kept from now on (market, `/ponudi`, admin $0), old vehicles get today's market price or $0 | Dead vehicles do not hold the database and plates, and the owner does not lose everything |
 | 199 | 2026-11-18 | `/jetpack` and `/god` for level 5+, only on admin duty (the owner also off duty), ending with duty; god does not protect the vehicle | Management powers must not stay on outside work |
+| 200 | 2026-11-18 | When the owner evicts a tenant, the last rent paid goes back (from the bank, then cash; without money the eviction is refused); a tenant who leaves or does not pay gets nothing | The owner's request: the tenant paid for a payday they no longer live there |
+| 201 | 2026-11-18 | Anti-cheat never kicks a level 5+ admin for a jetpack; with the power off the jetpack is just taken away | In the air the client is late in giving and taking the jetpack, so an admin was kicked |
 
 ### Code architecture (proposal)
 ```

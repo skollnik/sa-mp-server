@@ -83,7 +83,7 @@ stock Clothes_WearBag(playerid, inv_slot)
     }
     if (!Clothes_IsForGender(playerid, skin))
     {
-        Msg_Error(playerid, "Ta odeca nije za vas pol.");
+        Msg_Error(playerid, "Ta garderoba nije za vas pol.");
         return;
     }
     if (!Clothes_CanChange(playerid))
@@ -95,18 +95,18 @@ stock Clothes_WearBag(playerid, inv_slot)
     Inv_SetSlot(playerid, inv_slot, old ? ITEM_CLOTHES : ITEM_NONE, old);
     if (old)
     {
-        Msg_Success(playerid, "Obukli ste skin %d; stara odeca (skin %d) je u kesi u inventaru.", skin, old);
+        Msg_Success(playerid, "Obukli ste garderobu iz kese; stara garderoba je sada u toj kesi.");
     }
     else
     {
-        Msg_Success(playerid, "Obukli ste skin %d. Stara odeca se ne cuva (VIP ili posebna odeca).", skin);
+        Msg_Success(playerid, "Obukli ste garderobu iz kese. Stara se ne cuva (VIP ili posebna garderoba).");
     }
 }
 
 stock Clothes_ShowShop(playerid)
 {
     new title[32];
-    format(title, sizeof(title), "Odeca ($%d)", CLOTHES_PRICE);
+    format(title, sizeof(title), "Garderoba ($%d)", CLOTHES_PRICE);
     if (g_Player[playerid][pGender] == GENDER_FEMALE)
     {
         Preview_Show(playerid, PREVIEW_CLOTHES_SHOP, PREVIEW_KIND_SKIN, title, g_ShopSkinsFemale, sizeof(g_ShopSkinsFemale));
@@ -126,8 +126,8 @@ stock Clothes_OnSkinSelected(playerid, index)
     }
     g_ClothesPick[playerid] = female ? g_ShopSkinsFemale[index] : g_ShopSkinsMale[index];
     new body[128], title[32];
-    format(body, sizeof(body), "Obuci odmah (stara odeca ide u kesu u inventaru)\nSpakuj u kesu (u inventar)");
-    format(title, sizeof(title), "Skin %d za $%d", g_ClothesPick[playerid], CLOTHES_PRICE);
+    format(body, sizeof(body), "Obuci odmah (stara garderoba ide u kesu u inventaru)\nSpakuj u kesu (u inventar)");
+    format(title, sizeof(title), "Garderoba za $%d", CLOTHES_PRICE);
     ShowPlayerDialog(playerid, DIALOG_CLOTHES_BUY, DIALOG_STYLE_LIST, title, body, "Kupi", "Odustani");
 }
 
@@ -144,11 +144,11 @@ static stock Clothes_Buy(playerid, bool:wear)
     }
     if (!wear && !Inv_CanAdd(playerid, ITEM_CLOTHES, skin))
     {
-        Msg_Error(playerid, "Nemate mesta u inventaru za kesu.");
+        Msg_Error(playerid, "Nemate mesta u inventaru za kesu sa garderobom.");
         return;
     }
     new reason[32];
-    format(reason, sizeof(reason), "kupovina odece (skin %d)", skin);
+    strcopy(reason, "kupovina garderobe");
     if (!Money_Take(playerid, CLOTHES_PRICE, reason))
     {
         return;
@@ -157,21 +157,21 @@ static stock Clothes_Buy(playerid, bool:wear)
     {
         Inv_Add(playerid, ITEM_CLOTHES, skin);
         Account_Save(playerid);
-        Msg_Success(playerid, "Kupili ste odecu (skin %d) za $%d. Kesa je u inventaru; oblaci se kod kuce ili ovde (/inv).", skin, CLOTHES_PRICE);
+        Msg_Success(playerid, "Kupili ste garderobu za $%d. Kesa je u inventaru; oblaci se kod kuce ili ovde (/inv).", CLOTHES_PRICE);
         return;
     }
     new old = Clothes_Wear(playerid, skin);
     if (old == 0)
     {
-        Msg_Success(playerid, "Kupili ste i obukli skin %d. Stara odeca se ne cuva (VIP ili posebna odeca).", skin);
+        Msg_Success(playerid, "Kupili ste i obukli novu garderobu. Stara se ne cuva (VIP ili posebna garderoba).");
     }
     else if (Inv_Add(playerid, ITEM_CLOTHES, old))
     {
-        Msg_Success(playerid, "Kupili ste i obukli skin %d. Stara odeca (skin %d) je u kesi u inventaru.", skin, old);
+        Msg_Success(playerid, "Kupili ste i obukli novu garderobu. Stara je u kesi u inventaru.");
     }
     else
     {
-        Msg_Success(playerid, "Kupili ste i obukli skin %d. Nemate mesta u inventaru, pa je stara odeca ostala u prodavnici.", skin);
+        Msg_Success(playerid, "Kupili ste i obukli novu garderobu. Nemate mesta u inventaru, pa je stara ostala u prodavnici.");
     }
 }
 

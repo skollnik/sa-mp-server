@@ -116,7 +116,7 @@ Auto škola (`/skola`): cena se plaća pre teorije, a posle pada ponovo. Uslovi:
 Tačnu cenu i nivo svake kuće admin određuje kad je pravi. Prodaja državi vraća **70%** cene. Ako vlasnik ne uđe na server **30 dana**, kuća se vraća na prodaju, a vlasnik dobija **50%** cene na račun u banci. Prodaja drugom igraču ide preko `/ponudi`, uz taksu od 5%.
 
 - **Sef** u kući: **$5.000** (kupuje se u `/kuca`). Novac bez ograničenja, predmeti 10 / 20 / 30 po veličini kuće. Kad se kuća oduzme, novac iz sefa ide vlasniku u banku, a predmeti propadaju.
-- **Izdavanje soba:** 1 / 2 / 3 sobe po veličini kuće, kirija od **$0 do $300** po plati (vlasnik bira; $0 je za porodicu i prijatelje). Prva kirija se plaća odmah, posle na svakoj plati koju stanar dobije: sa računa, pa iz džepa; bez novca stanar se iseljava. Kirija ide vlasniku na račun.
+- **Izdavanje soba:** 1 / 2 / 3 sobe po veličini kuće, kirija od **$0 do $300** po plati (vlasnik bira; $0 je za porodicu i prijatelje). Prva kirija se plaća odmah, posle na svakoj plati koju stanar dobije: sa računa, pa iz džepa; bez novca stanar se iseljava. Kirija ide vlasniku na račun; kad vlasnik iseli stanara, vraća mu poslednju plaćenu kiriju.
 - **Vozilo** čiji vlasnik ne uđe na server **30 dana** briše se, a vlasnik dobija **50%** plaćene cene na račun (cena sa pijace ili iz `/ponudi`; vozilo od admina $0). Posle 14 dana vozilo se samo ne prikazuje.
 
 | Mala firma (24/7, bar) | $250.000–500.000 |
@@ -276,7 +276,7 @@ Driving school (`/skola`): the price is paid before the theory and again after a
 Each house's price and level are set by the admin who makes it. Selling to the state returns **70%**. An owner away **30 days** loses the house and gets **50%** of the price in the bank. Selling to a player goes through `/ponudi` with a 5% fee.
 
 - **Safe** in a house: **$5,000** (bought in `/kuca`). Unlimited money, 10 / 20 / 30 items by house size. When the house is taken, the safe's money goes to the owner's bank and the items are lost.
-- **Renting rooms:** 1 / 2 / 3 rooms by house size, rent **$0 to $300** per payday (the owner picks; $0 is for family and friends). The first rent is paid at once, then on every payday the tenant gets: from the bank, else from cash; without money the tenant moves out. The rent goes to the owner's bank.
+- **Renting rooms:** 1 / 2 / 3 rooms by house size, rent **$0 to $300** per payday (the owner picks; $0 is for family and friends). The first rent is paid at once, then on every payday the tenant gets: from the bank, else from cash; without money the tenant moves out. The rent goes to the owner's bank; an owner who evicts a tenant gives back the last rent paid.
 - A **vehicle** whose owner is away **30 days** is deleted, and the owner gets **50%** of the price paid in the bank (the market or `/ponudi` price; an admin-given vehicle $0). After 14 days the vehicle is only hidden.
 
 ### Taxes and upkeep (payday)

@@ -117,44 +117,53 @@ static stock Wardrobe_Show(playerid)
     {
         return;
     }
-    new body[384], line[48], count;
+    new body[128], title[48];
+    format(body, sizeof(body), "Uzmi ili obuci garderobu (%d u ormaru)\nOstavi garderobu iz inventara", Wardrobe_Count(playerid));
+    format(title, sizeof(title), "Ormar (%d/%d mesta)", Wardrobe_Count(playerid), Wardrobe_Capacity(slot));
+    ShowPlayerDialog(playerid, DIALOG_WARDROBE, DIALOG_STYLE_LIST, title, body, "Izaberi", "Zatvori");
+}
+
+// The outfits are picked by their pictures, so no list has to name them.
+static stock Wardrobe_ShowTake(playerid)
+{
+    new skins[WARDROBE_MAX_SLOTS], count;
     for (new i = 0; i < WARDROBE_MAX_SLOTS; i++)
     {
         if (g_Wardrobe[playerid][i] != 0)
         {
-            format(line, sizeof(line), "Odeca (skin %d)\n", g_Wardrobe[playerid][i]);
-            strcat(body, line);
+            skins[count] = g_Wardrobe[playerid][i];
             g_WardrobeListed[playerid][count++] = i;
         }
     }
-    g_WardrobeRows[playerid] = count;
-    strcat(body, "> Ostavi kesu sa odecom iz inventara");
-    new title[48];
-    format(title, sizeof(title), "Ormar (%d/%d mesta)", count, Wardrobe_Capacity(slot));
-    ShowPlayerDialog(playerid, DIALOG_WARDROBE, DIALOG_STYLE_LIST, title, body, "Izaberi", "Zatvori");
+    if (count == 0)
+    {
+        Msg_Error(playerid, "Ormar je prazan.");
+        Wardrobe_Show(playerid);
+        return;
+    }
+    Preview_Show(playerid, PREVIEW_WARDROBE_TAKE, PREVIEW_KIND_SKIN, "Ormar", skins, count);
 }
 
 static stock Wardrobe_ShowPut(playerid)
 {
-    new body[512], line[48], count;
+    new skins[INV_MAX_SLOTS], count;
     for (new i = 0; i < INV_MAX_SLOTS; i++)
     {
         if (g_Inv[playerid][i][isItem] == ITEM_CLOTHES)
         {
-            format(line, sizeof(line), "Kesa: skin %d\n", g_Inv[playerid][i][isAmount]);
-            strcat(body, line);
-            g_WardrobePutSkin[playerid][count] = g_Inv[playerid][i][isAmount];
+            skins[count] = g_Inv[playerid][i][isAmount];
+            g_WardrobePutSkin[playerid][count] = skins[count];
             g_InvListed[playerid][count++] = i;
         }
     }
     if (count == 0)
     {
-        Msg_Error(playerid, "Nemate kesu sa odecom. Kupuje se u prodavnici odece (/kupi).");
+        Msg_Error(playerid, "Nemate garderobu u inventaru. Kupuje se u prodavnici odece (/kupi).");
         Wardrobe_Show(playerid);
         return;
     }
     g_WardrobeRows[playerid] = count;
-    ShowPlayerDialog(playerid, DIALOG_WARDROBE_PUT, DIALOG_STYLE_LIST, "Ostavi u ormar", body, "Ostavi", "Nazad");
+    Preview_Show(playerid, PREVIEW_WARDROBE_PUT, PREVIEW_KIND_SKIN, "Ostavi u ormar", skins, count);
 }
 
 static stock Wardrobe_Put(playerid, inv_slot, skin)
@@ -166,7 +175,7 @@ static stock Wardrobe_Put(playerid, inv_slot, skin)
     }
     if (g_Inv[playerid][inv_slot][isItem] != ITEM_CLOTHES || g_Inv[playerid][inv_slot][isAmount] != skin)
     {
-        Msg_Error(playerid, "Te kese vise nemate.");
+        Msg_Error(playerid, "Te garderobe vise nema u inventaru.");
         Wardrobe_Show(playerid);
         return;
     }
@@ -183,7 +192,7 @@ static stock Wardrobe_Put(playerid, inv_slot, skin)
             // Out of the inventory before into the wardrobe, so nothing is ever in both.
             Inv_SetSlot(playerid, inv_slot, ITEM_NONE, 0);
             Wardrobe_Set(playerid, i, skin);
-            Chat_Action(playerid, "ostavlja odecu u ormar.");
+            Chat_Action(playerid, "ostavlja garderobu u ormar.");
             break;
         }
     }
@@ -206,7 +215,7 @@ static stock Wardrobe_Take(playerid, bool:wear)
     {
         if (!Clothes_IsForGender(playerid, skin))
         {
-            Msg_Error(playerid, "Ta odeca nije za vas pol.");
+            Msg_Error(playerid, "Ta garderoba nije za vas pol.");
             return;
         }
         if (!Clothes_CanChange(playerid))
@@ -215,20 +224,40 @@ static stock Wardrobe_Take(playerid, bool:wear)
         }
         // The clothes taken off go to the same place, so the wardrobe never needs room for them.
         Wardrobe_Set(playerid, index, Clothes_Wear(playerid, skin));
-        Msg_Success(playerid, "Obukli ste skin %d iz ormara.", skin);
+        Msg_Success(playerid, "Obukli ste garderobu iz ormara.");
     }
     else
     {
         if (!Inv_CanAdd(playerid, ITEM_CLOTHES, skin))
         {
-            Msg_Error(playerid, "Nemate mesta u inventaru za kesu.");
+            Msg_Error(playerid, "Nemate mesta u inventaru za kesu sa garderobom.");
             return;
         }
         Wardrobe_Set(playerid, index, 0);
         Inv_Add(playerid, ITEM_CLOTHES, skin);
-        Chat_Action(playerid, "pakuje odecu iz ormara u kesu.");
+        Chat_Action(playerid, "pakuje garderobu iz ormara u kesu.");
     }
     Wardrobe_Show(playerid);
+}
+
+stock Wardrobe_OnTakeSelected(playerid, index)
+{
+    new count = Wardrobe_Count(playerid);
+    if (index < 0 || index >= count)
+    {
+        return;
+    }
+    g_WardrobePick[playerid] = g_WardrobeListed[playerid][index];
+    g_WardrobePickSkin[playerid] = g_Wardrobe[playerid][g_WardrobePick[playerid]];
+    ShowPlayerDialog(playerid, DIALOG_WARDROBE_ITEM, DIALOG_STYLE_LIST, "Garderoba", "Obuci (sadasnja garderoba ide na njeno mesto)\nSpakuj u kesu (u inventar)", "Izaberi", "Nazad");
+}
+
+stock Wardrobe_OnPutSelected(playerid, index)
+{
+    if (index >= 0 && index < g_WardrobeRows[playerid])
+    {
+        Wardrobe_Put(playerid, g_InvListed[playerid][index], g_WardrobePutSkin[playerid][index]);
+    }
 }
 
 cmd:ormar(playerid, params[])
@@ -245,23 +274,18 @@ stock bool:Wardrobe_OnDialogResponse(playerid, dialogid, response, listitem, con
     {
         case DIALOG_WARDROBE:
         {
-            if (!response || listitem < 0 || listitem > g_WardrobeRows[playerid])
+            if (!response || Wardrobe_HouseHere(playerid) == -1)
             {
                 return true;
             }
-            if (listitem == g_WardrobeRows[playerid])
+            if (listitem == 0)
             {
-                if (Wardrobe_HouseHere(playerid) != -1)
-                {
-                    Wardrobe_ShowPut(playerid);
-                }
-                return true;
+                Wardrobe_ShowTake(playerid);
             }
-            new index = g_WardrobeListed[playerid][listitem], title[32];
-            g_WardrobePick[playerid] = index;
-            g_WardrobePickSkin[playerid] = g_Wardrobe[playerid][index];
-            format(title, sizeof(title), "Odeca (skin %d)", g_Wardrobe[playerid][index]);
-            ShowPlayerDialog(playerid, DIALOG_WARDROBE_ITEM, DIALOG_STYLE_LIST, title, "Obuci (sadasnja odeca ide na njeno mesto)\nSpakuj u kesu (u inventar)", "Izaberi", "Nazad");
+            else
+            {
+                Wardrobe_ShowPut(playerid);
+            }
         }
         case DIALOG_WARDROBE_ITEM:
         {
@@ -271,15 +295,6 @@ stock bool:Wardrobe_OnDialogResponse(playerid, dialogid, response, listitem, con
                 return true;
             }
             Wardrobe_Take(playerid, listitem == 0);
-        }
-        case DIALOG_WARDROBE_PUT:
-        {
-            if (!response || listitem < 0 || listitem >= g_WardrobeRows[playerid])
-            {
-                Wardrobe_Show(playerid);
-                return true;
-            }
-            Wardrobe_Put(playerid, g_InvListed[playerid][listitem], g_WardrobePutSkin[playerid][listitem]);
         }
         default:
         {

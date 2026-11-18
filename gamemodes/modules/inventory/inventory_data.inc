@@ -99,7 +99,7 @@ new const g_ItemInfo[E_ITEM][E_ITEM_INFO] =
     { "Kaciga (crvena)",    1,  0,   0,  18977, 0 },
     { "Kaciga (bela)",      1,  0,   0,  18978, 0 },
     // Clothes bought or taken out of a wardrobe; the amount is the skin inside (Item_IsWhole), the stack the highest skin.
-    { "Kesa sa odecom (skin)", 311, 0,  0,  2843,  0 }
+    { "Garderoba",          311, 0,  0,  2843,  0 }
 };
 
 enum E_INV_SLOT

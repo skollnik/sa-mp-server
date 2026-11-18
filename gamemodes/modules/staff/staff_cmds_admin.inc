@@ -505,7 +505,8 @@ cmd:jetpack(playerid, params[])
     {
         return 1;
     }
-    if (g_Staff[playerid][sJetpack])
+    // Someone who stepped off the jetpack gets it back instead of turning the power off.
+    if (g_Staff[playerid][sJetpack] && GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK)
     {
         Staff_SetJetpack(playerid, false);
         Msg_Admin(playerid, "Jetpack je skinut.");
@@ -807,7 +808,10 @@ cmd:veh(playerid, params[])
     GetPlayerPos(playerid, x, y, z);
     GetPlayerFacingAngle(playerid, angle);
 
-    new vehicleid = AC_CreateVehicle(model, x, y, z + 0.5, angle, -1, -1, -1);
+    // The colour is picked once here instead of passing -1, so it is the same for everyone and stays the same.
+    new colour1, colour2;
+    GetRandomVehicleColourPair(model, colour1, colour2);
+    new vehicleid = AC_CreateVehicle(model, x, y, z + 0.5, angle, colour1, colour2, -1);
     if (vehicleid == INVALID_VEHICLE_ID)
     {
         Msg_Error(playerid, "Vozilo nije moguce napraviti.");

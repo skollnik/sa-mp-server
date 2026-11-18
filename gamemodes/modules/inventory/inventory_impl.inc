@@ -105,6 +105,12 @@ stock bool:Item_IsWhole(E_ITEM:item)
     return item == ITEM_CANISTER_FULL || item == ITEM_CLOTHES;
 }
 
+// What the player sees as the amount: clothes are one piece, whichever outfit is inside.
+stock Item_ShownAmount(E_ITEM:item, amount)
+{
+    return item == ITEM_CLOTHES ? 1 : amount;
+}
+
 // Free room for an item in a set of slots (inventory or trunk); a new stack may only start in the first `capacity` slots.
 static stock Container_Room(const slots[][E_INV_SLOT], size, capacity, E_ITEM:item)
 {
@@ -260,7 +266,7 @@ stock Inv_Show(playerid)
             continue;
         }
         used++;
-        format(line, sizeof(line), "%s\t%d\n", g_ItemInfo[g_Inv[playerid][slot][isItem]][itName], g_Inv[playerid][slot][isAmount]);
+        format(line, sizeof(line), "%s\t%d\n", g_ItemInfo[g_Inv[playerid][slot][isItem]][itName], Item_ShownAmount(g_Inv[playerid][slot][isItem], g_Inv[playerid][slot][isAmount]));
         strcat(body, line);
         g_InvListed[playerid][count++] = slot;
     }
@@ -437,9 +443,9 @@ stock Inv_Give(playerid, slot, targetid, amount)
     Inv_Add(targetid, item, amount);
 
     new action[96];
-    format(action, sizeof(action), "daje %s (%d) osobi %s.", g_ItemInfo[item][itName], amount, Account_Name(targetid));
+    format(action, sizeof(action), "daje %s (%d) osobi %s.", g_ItemInfo[item][itName], Item_ShownAmount(item, amount), Account_Name(targetid));
     Chat_Action(playerid, action);
-    Msg_Info(targetid, "%s vam je dao: %s (%d).", Account_Name(playerid), g_ItemInfo[item][itName], amount);
+    Msg_Info(targetid, "%s vam je dao: %s (%d).", Account_Name(playerid), g_ItemInfo[item][itName], Item_ShownAmount(item, amount));
 }
 
 stock Inv_Drop(playerid, slot)
@@ -480,7 +486,7 @@ stock Inv_Drop(playerid, slot)
     g_Drops[drop][drCreatedAt] = gettime();
 
     new text[48];
-    format(text, sizeof(text), "%s (%d)\n" C_GREY "/podigni", g_ItemInfo[item][itName], amount);
+    format(text, sizeof(text), "%s (%d)\n" C_GREY "/podigni", g_ItemInfo[item][itName], Item_ShownAmount(item, amount));
     g_Drops[drop][drObject] = CreateDynamicObject(g_ItemInfo[item][itModel], x, y, z - 0.95, 0.0, 0.0, 0.0, g_Drops[drop][drWorld], g_Drops[drop][drInterior]);
     g_Drops[drop][drLabel] = CreateDynamic3DTextLabel(text, COLOR_WHITE, x, y, z - 0.6, 5.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1,
         g_Drops[drop][drWorld], g_Drops[drop][drInterior]);
