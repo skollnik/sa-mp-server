@@ -884,6 +884,7 @@ stock Account_CompleteLogin(playerid, bool:is_new)
     }
 
     Inv_OnLogin(playerid);
+    Wardrobe_OnLogin(playerid);
     Phone_OnLogin(playerid);
     Veh_OnLogin(playerid);
     Fine_OnLogin(playerid);
@@ -932,6 +933,10 @@ stock Account_Save(playerid, bool:sync = false)
         g_Player[playerid][pInterior] = GetPlayerInterior(playerid);
         g_Player[playerid][pVirtualWorld] = GetPlayerVirtualWorld(playerid);
         GetPlayerHealth(playerid, g_Player[playerid][pHealth]);
+        if (Staff_HasGod(playerid))
+        {
+            g_Player[playerid][pHealth] = 100.0;
+        }
         GetPlayerArmour(playerid, g_Player[playerid][pArmour]);
     }
 

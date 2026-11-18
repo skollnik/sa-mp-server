@@ -2,6 +2,9 @@ forward bool:Staff_IsAdmin(playerid);
 forward bool:Staff_IsHelper(playerid);
 forward bool:Staff_IsStaff(playerid);
 forward bool:Staff_IsAdminOnDuty(playerid);
+forward bool:Staff_HasGod(playerid);
+forward bool:Staff_AllowsJetpack(playerid);
+forward bool:Staff_AllowsHighHealth(playerid);
 forward bool:Staff_CheckAdmin(playerid, level);
 forward bool:Staff_CheckHelper(playerid, level);
 forward bool:Staff_CheckTarget(playerid, targetid, const self_error[] = "");
@@ -31,6 +34,12 @@ forward bool:Staff_CheckOutranks(playerid, targetid);
 #define JAIL_INTERIOR           (6)
 #define JAIL_WORLD              (9999)
 #define JAIL_ESCAPE_RADIUS      (15.0)
+
+// Health while god mode is on; anything at or below normal health is put back up every second.
+#define STAFF_GOD_HEALTH        (99999.0)
+#define STAFF_GOD_RESTORE_BELOW (200.0)
+// The client shows a jetpack or health change from the server a moment later.
+#define STAFF_POWER_SYNC_S      (3)
 
 #define MAX_WARNINGS            (3)
 #define WARNING_BAN_DAYS        (3)
@@ -88,6 +97,11 @@ enum E_STAFF_STATE
     sLastAsk,
     sLastNewbie,
     bool:sHasOpenQuestion,
+    // Management powers; they end with admin duty, so only the owner keeps them off duty.
+    bool:sJetpack,
+    sJetpackChangedAt,
+    bool:sGod,
+    sGodChangedAt,
     STREAMER_TAG_3D_TEXT_LABEL:sDutyTag
 }
 

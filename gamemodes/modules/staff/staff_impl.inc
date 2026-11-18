@@ -516,3 +516,71 @@ stock Staff_CooldownLeft(playerid, last_used, base_seconds)
 {
     return last_used + Vip_Cooldown(playerid, base_seconds) - gettime();
 }
+
+stock bool:Staff_HasGod(playerid)
+{
+    return g_Staff[playerid][sGod];
+}
+
+stock bool:Staff_AllowsJetpack(playerid)
+{
+    return g_Staff[playerid][sJetpack] || gettime() - g_Staff[playerid][sJetpackChangedAt] < STAFF_POWER_SYNC_S;
+}
+
+stock bool:Staff_AllowsHighHealth(playerid)
+{
+    return g_Staff[playerid][sGod] || gettime() - g_Staff[playerid][sGodChangedAt] < STAFF_POWER_SYNC_S;
+}
+
+stock Staff_SetJetpack(playerid, bool:on)
+{
+    g_Staff[playerid][sJetpack] = on;
+    g_Staff[playerid][sJetpackChangedAt] = gettime();
+    if (on)
+    {
+        SetPlayerSpecialAction(playerid, SPECIAL_ACTION_USEJETPACK);
+    }
+    else if (GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK)
+    {
+        SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
+    }
+}
+
+stock Staff_SetGod(playerid, bool:on)
+{
+    g_Staff[playerid][sGod] = on;
+    g_Staff[playerid][sGodChangedAt] = gettime();
+    SetPlayerHealth(playerid, on ? STAFF_GOD_HEALTH : 100.0);
+}
+
+stock Staff_EndPowers(playerid)
+{
+    if (g_Staff[playerid][sJetpack])
+    {
+        Staff_SetJetpack(playerid, false);
+    }
+    if (g_Staff[playerid][sGod])
+    {
+        Staff_SetGod(playerid, false);
+    }
+}
+
+// A jetpack the admin took off or lost (spectating, a vehicle) is not handed back later;
+// health that food, /vheal or a respawn set back to normal is raised again while god mode is on.
+stock Staff_CheckPowers(playerid)
+{
+    if (g_Staff[playerid][sJetpack] && gettime() - g_Staff[playerid][sJetpackChangedAt] >= STAFF_POWER_SYNC_S
+        && GetPlayerSpecialAction(playerid) != SPECIAL_ACTION_USEJETPACK)
+    {
+        g_Staff[playerid][sJetpack] = false;
+    }
+    if (g_Staff[playerid][sGod])
+    {
+        new Float:health;
+        GetPlayerHealth(playerid, health);
+        if (health < STAFF_GOD_RESTORE_BELOW)
+        {
+            SetPlayerHealth(playerid, STAFF_GOD_HEALTH);
+        }
+    }
+}

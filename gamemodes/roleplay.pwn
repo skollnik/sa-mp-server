@@ -113,6 +113,12 @@
 #include "modules/job/job.inc"
 #include "modules/job/mechanic.inc"
 #include "modules/house/house.inc"
+#include "modules/house/house_safe.inc"
+#include "modules/house/house_room.inc"
+#include "modules/house/house_view.inc"
+#include "modules/house/wardrobe.inc"
+#include "modules/inventory/clothes.inc"
+#include "modules/inventory/storage.inc"
 
 #include "modules/help/help_cmds.inc"
 
@@ -220,6 +226,7 @@ public OnPlayerConnect(playerid)
     Lic_OnPlayerConnect(playerid);
     Job_OnPlayerConnect(playerid);
     House_OnPlayerConnect(playerid);
+    Store_OnPlayerConnect(playerid);
     Respawn_OnPlayerConnect(playerid);
     Mech_OnPlayerConnect(playerid);
     Rent_OnPlayerConnect(playerid);
@@ -525,7 +532,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     {
         return 1;
     }
-    if (Trunk_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    if (Store_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
     {
         return 1;
     }
@@ -542,6 +549,22 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (House_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Safe_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Room_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Clothes_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Wardrobe_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
     {
         return 1;
     }

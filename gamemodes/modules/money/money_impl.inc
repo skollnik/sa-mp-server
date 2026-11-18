@@ -74,6 +74,29 @@ stock bool:Money_PayToBank(playerid, amount, const reason[])
     return false;
 }
 
+// Money_PayToBank for an account that may be offline. Returns the online player or INVALID_PLAYER_ID; to_account as Money_PayToBank.
+stock Money_PayAccount(account_id, amount, const reason[], &bool:to_account = false)
+{
+    new playerid = Account_FindOnlineByDbId(account_id);
+    if (playerid != INVALID_PLAYER_ID)
+    {
+        to_account = Money_PayToBank(playerid, amount, reason);
+        Account_Save(playerid);
+        return playerid;
+    }
+    new query[320];
+    mysql_format(g_SQL, query, sizeof(query),
+        "UPDATE `accounts` SET `bank` = `bank` + IF(`bank_account` = 1, %d, 0), `held_pay` = `held_pay` + IF(`bank_account` = 1, 0, %d) WHERE `id` = %d",
+        amount, amount, account_id);
+    mysql_tquery(g_SQL, query);
+    mysql_format(g_SQL, query, sizeof(query),
+        "INSERT INTO `money_logs` (`account_id`, `kind`, `amount`, `balance`, `reason`) " \
+        "SELECT `id`, 'bank', %d, IF(`bank_account` = 1, `bank`, `held_pay`), '%e' FROM `accounts` WHERE `id` = %d",
+        amount, reason, account_id);
+    mysql_tquery(g_SQL, query);
+    return INVALID_PLAYER_ID;
+}
+
 // Takes cash for a purchase; prints the error itself and returns false when the player cannot afford it.
 stock bool:Money_Take(playerid, amount, const reason[])
 {

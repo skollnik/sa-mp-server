@@ -40,7 +40,8 @@ enum E_ITEM
     ITEM_CANISTER_FULL,
     ITEM_HELMET_BLACK,
     ITEM_HELMET_RED,
-    ITEM_HELMET_WHITE
+    ITEM_HELMET_WHITE,
+    ITEM_CLOTHES
 }
 
 forward bool:Inv_Add(playerid, E_ITEM:item, amount);
@@ -50,6 +51,9 @@ forward bool:Item_IsWhole(E_ITEM:item);
 forward bool:Inv_Has(playerid, E_ITEM:item);
 forward bool:Inv_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Inv_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys);
+forward bool:Clothes_CanBag(skin);
+forward bool:Clothes_IsForGender(playerid, skin);
+forward bool:Clothes_CanChange(playerid);
 
 enum E_ITEM_INFO
 {
@@ -93,13 +97,25 @@ new const g_ItemInfo[E_ITEM][E_ITEM_INFO] =
     // Helmets are accessories as well (accessories.inc); /kaciga puts one on (safety.inc).
     { "Kaciga (crna)",      1,  0,   0,  18645, 0 },
     { "Kaciga (crvena)",    1,  0,   0,  18977, 0 },
-    { "Kaciga (bela)",      1,  0,   0,  18978, 0 }
+    { "Kaciga (bela)",      1,  0,   0,  18978, 0 },
+    // Clothes bought or taken out of a wardrobe; the amount is the skin inside (Item_IsWhole), the stack the highest skin.
+    { "Kesa sa odecom (skin)", 311, 0,  0,  2843,  0 }
 };
 
 enum E_INV_SLOT
 {
     E_ITEM:isItem,
     isAmount
+}
+
+// The places items are kept besides the inventory; one set of menus (storage.inc) serves them all.
+#define STORE_MAX_SLOTS         (30)
+
+enum E_STORE_KIND
+{
+    STORE_NONE,
+    STORE_TRUNK,
+    STORE_SAFE
 }
 
 new g_Inv[MAX_PLAYERS][INV_MAX_SLOTS][E_INV_SLOT];

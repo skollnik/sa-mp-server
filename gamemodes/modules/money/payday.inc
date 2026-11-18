@@ -134,6 +134,7 @@ stock Payday_Give(playerid)
         SendClientMessage(playerid, COLOR_WHITE, "Nemate racun: plata od " C_GREEN "$%d" C_WHITE " ceka na salteru banke (ukupno $%d, /banka).", total, g_Player[playerid][pHeldPay]);
     }
     SendClientMessage(playerid, COLOR_WHITE, "Respect: +%d (%d/%d do nivoa %d)", respect, g_Player[playerid][pRespect], Payday_RespectNeeded(playerid), g_Player[playerid][pLevel] + 1);
+    Room_ChargeRent(playerid);
     GameTextForPlayer(playerid, "~y~Payday", 3000, 1);
 
     Payday_CheckLevelUp(playerid);

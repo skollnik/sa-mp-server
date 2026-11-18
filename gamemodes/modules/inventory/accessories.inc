@@ -158,6 +158,8 @@ stock Acc_ShowShop(playerid)
 {
     new body[640], line[64];
     strcopy(body, "Predmet\tDeo tela\tCena\n");
+    format(line, sizeof(line), "Odeca (izbor skina)\tskin\t$%d\n", CLOTHES_PRICE);
+    strcat(body, line);
     for (new i = 0; i < sizeof(g_AccInfo); i++)
     {
         format(line, sizeof(line), "%s\t%s\t$%d\n", g_ItemInfo[g_AccInfo[i][aiItem]][itName], g_AccPartNames[g_AccInfo[i][aiPart]], g_AccInfo[i][aiPrice]);
@@ -214,9 +216,18 @@ stock bool:Acc_OnDialogResponse(playerid, dialogid, response, listitem)
     {
         case DIALOG_ACC_SHOP:
         {
-            if (response && listitem >= 0 && listitem < sizeof(g_AccInfo) && Point_Require(playerid, POINT_CLOTHES))
+            // The first row is clothes, the rest are the accessories in g_AccInfo order.
+            if (!response || listitem < 0 || listitem > sizeof(g_AccInfo) || !Point_Require(playerid, POINT_CLOTHES))
             {
-                Acc_Buy(playerid, listitem);
+                return true;
+            }
+            if (listitem == 0)
+            {
+                Clothes_ShowShop(playerid);
+            }
+            else
+            {
+                Acc_Buy(playerid, listitem - 1);
             }
         }
         case DIALOG_ACC_LIST:

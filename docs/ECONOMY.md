@@ -48,6 +48,7 @@
 | Naočare (3 vrste, prodavnica odeće) | $150 / $200 / $250 |
 | Zimska kapa / kačket / panama šešir / polucilindar | $150 / $200 / $300 / $350 |
 | Kaciga (crna, crvena, bela; prodavnica odeće) | $150 |
+| Odeća (skin; obuče se odmah ili ide u kesu u inventaru) | $500 |
 | Rent-a-car po satu (1–3 sata unapred): bicikl / Faggio / auto | $20 / $80 / $200 |
 | Popravka kod mehaničara na terenu (do 60%) | $20 po procentu |
 | Popravka kod mehaničara u radionici (do traženog procenta, karoserija srazmerno) | $15 po procentu |
@@ -113,6 +114,10 @@ Auto škola (`/skola`): cena se plaća pre teorije, a posle pada ponovo. Uslovi:
 | Velika kuća ili vila (nivo 8) | $300.000 i više |
 
 Tačnu cenu i nivo svake kuće admin određuje kad je pravi. Prodaja državi vraća **70%** cene. Ako vlasnik ne uđe na server **30 dana**, kuća se vraća na prodaju, a vlasnik dobija **50%** cene na račun u banci. Prodaja drugom igraču ide preko `/ponudi`, uz taksu od 5%.
+
+- **Sef** u kući: **$5.000** (kupuje se u `/kuca`). Novac bez ograničenja, predmeti 10 / 20 / 30 po veličini kuće. Kad se kuća oduzme, novac iz sefa ide vlasniku u banku, a predmeti propadaju.
+- **Izdavanje soba:** 1 / 2 / 3 sobe po veličini kuće, kirija od **$0 do $300** po plati (vlasnik bira; $0 je za porodicu i prijatelje). Prva kirija se plaća odmah, posle na svakoj plati koju stanar dobije: sa računa, pa iz džepa; bez novca stanar se iseljava. Kirija ide vlasniku na račun.
+- **Vozilo** čiji vlasnik ne uđe na server **30 dana** briše se, a vlasnik dobija **50%** plaćene cene na račun (cena sa pijace ili iz `/ponudi`; vozilo od admina $0). Posle 14 dana vozilo se samo ne prikazuje.
 
 | Mala firma (24/7, bar) | $250.000–500.000 |
 | Velika firma (benzinska, klub) | $750.000–1.500.000 |
@@ -199,6 +204,7 @@ Tačnu cenu i nivo svake kuće admin određuje kad je pravi. Prodaja državi vra
 | Glasses (3 kinds, clothing shop) | $150 / $200 / $250 |
 | Knit hat / cap / panama hat / bowler | $150 / $200 / $300 / $350 |
 | Helmet (black, red, white; clothing shop) | $150 |
+| Clothes (a skin; worn right away or put in a bag in the inventory) | $500 |
 | Rent-a-car per hour (1–3 hours ahead): bicycle / Faggio / car | $20 / $80 / $200 |
 | Field repair at the mechanic (up to 60%) | $20 per percent |
 | Workshop repair at the mechanic (up to the asked percent, body in proportion) | $15 per percent |
@@ -266,6 +272,12 @@ Driving school (`/skola`): the price is paid before the theory and again after a
 | Villa | $1,500,000–3,000,000 |
 | Small business (24/7, bar) | $250,000–500,000 |
 | Large business (gas station, club) | $750,000–1,500,000 |
+
+Each house's price and level are set by the admin who makes it. Selling to the state returns **70%**. An owner away **30 days** loses the house and gets **50%** of the price in the bank. Selling to a player goes through `/ponudi` with a 5% fee.
+
+- **Safe** in a house: **$5,000** (bought in `/kuca`). Unlimited money, 10 / 20 / 30 items by house size. When the house is taken, the safe's money goes to the owner's bank and the items are lost.
+- **Renting rooms:** 1 / 2 / 3 rooms by house size, rent **$0 to $300** per payday (the owner picks; $0 is for family and friends). The first rent is paid at once, then on every payday the tenant gets: from the bank, else from cash; without money the tenant moves out. The rent goes to the owner's bank.
+- A **vehicle** whose owner is away **30 days** is deleted, and the owner gets **50%** of the price paid in the bank (the market or `/ponudi` price; an admin-given vehicle $0). After 14 days the vehicle is only hidden.
 
 ### Taxes and upkeep (payday)
 - House: 0.02% of value (a $150,000 house pays $30).

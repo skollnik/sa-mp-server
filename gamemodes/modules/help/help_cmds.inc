@@ -71,8 +71,11 @@ static stock Help_ShowTopic(playerid, topic)
         }
         case 5:
         {
-            strcat(body, C_WHITE "/kupikucu - ispred kuce na prodaju (zelena kucica na mapi)\n");
-            strcat(body, "/kuca - meni kuce (informacije, zakljucavanje, GPS, pojavljivanje u kuci, prodaja drzavi)\n");
+            strcat(body, C_WHITE "/kupikucu - ispred kuce na prodaju (zelena kucica na mapi); kuca na prodaju se razgleda iznutra do 5 min\n");
+            strcat(body, "/kuca - meni kuce (informacije, zakljucavanje, GPS, pojavljivanje, sef, izdavanje soba, prodaja drzavi)\n");
+            strcat(body, "/sef ili F pored sefa - novac i predmeti (sef se kupuje u /kuca, otvara ga samo vlasnik)\n");
+            strcat(body, "/iznajmisobu - ispred kuce sa slobodnom sobom    /napustisobu - iseljenje    /kuca - meni sobe\n");
+            strcat(body, "/ormar - u svojoj kuci ili sobi: odeca iz kese (kesa se kupuje u prodavnici odece, /kupi)\n");
             strcat(body, "F ili /udji, /izadji - ulaz i izlaz    /kucaj - kucanje na vrata (cuju oni u kuci)\n");
             strcat(body, "/garaza - ispred garaze kuce: za volanom ostavlja vozilo, peske ga vadi\n");
             strcat(body, "/v parkiraj ispred garaze svoje kuce - parking u garazi (vozilo se tu vraca posle restarta i unistenja)\n");

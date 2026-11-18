@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 4 | Neaktivnost vozila: odobreno brisanje posle 30 dana uz 50% cene, čeka odgovor koja je cena (vozila je ne pamte). Posle toga 4.3: sef, ormar i iznajmljivanje (vlasnik ga je vratio 18.11.2026; odobreno, ormar se dorađuje: kupljena odeća ne sme sama da se stvori u ormaru), pregled enterijera kuće na prodaju; admin (nivo 5+) rocketman i god mode, predlog poslat |
+| 4 | Korak 4.4: nameštaj (PROP-4), predlog tek treba da se pošalje |
 | 4 | Kuće, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -65,6 +65,10 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Nalog neaktivan 6 meseci: brisanje naloga i sve imovine (kuće, vozila, firme, posao); broj telefona se gasi ranije, uz telefon sa SIM karticom |
 | Radio, frakcijski chat, megafon |
 | VIP: popust na oglase (10/20/30%) |
+| Sef: oružje i droga kao predmeti (kad oružje postane predmet, INV-3, i kad dođe droga) idu u isti meni sefa i gepeka (`storage.inc`) |
+| Provala u kuću i obijanje sefa (Faza 6, kriminal), uz alarm |
+| Skladište firme i frakcije: dodaje se kao novo mesto u `storage.inc` (meni je isti kao za gepek i sef) |
+| Uniforme frakcija: ne pakuju se u kesu i ne idu u ormar (`Clothes_CanBag` zna samo za svakodnevnu odeću) |
 
 **Posle povreda, smrti i policije (Faza 5)**
 | Stavka |
@@ -109,7 +113,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Iznajmljivanje bicikala i skutera | Punkt sa vozilima, plaća se po satu, vozilo nestaje kad istekne | Mapa sa 7 malih punktova (LS: Unity stanica, kod opštine, kod bolnice, Downtown, Conference Center; Dillimore) |
 | Stanovi i vikendice | Novi tipovi imovine pored kuće (PROP-1) | Stanovi #1161; vikend naselje #0318–#0328 |
 | Imanje | Kupi se parcela, sadi se voće i drveće, bere i prodaje firmama (PROP-8) | Farme #1248–#1257, #1451–#1456, #0897–#0899 |
-| Nadogradnje kuće: alarm, sef, ormar | Alarm javlja vlasniku i policiji kad neko provaljuje; sef (PROP-3); ormar čuva odeću | — |
+| Nadogradnje kuće: alarm | Alarm javlja vlasniku i policiji kad neko provaljuje (sef i ormar su urađeni 18.11.2026.) | — |
 | Garaže sa enterijerom i nadogradnjom | Garaža na više mesta, sa nadogradnjom broja mesta (PROP-5) | #1118–#1125, #1580, #1876, #0841 |
 | Prodavnica nameštaja sa pregledom | Pre kupovine kamera pokaže objekat (PROP-4) | Nema posebne mape |
 | Kamp prikolica | Prikolica se vuče autom, a parkirana ima enterijer u koji se ulazi | Enterijeri #1367–#1369, salon prikolica #1370 |
@@ -287,10 +291,11 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 06.11.2026. | Saksija sa parkinga auto škole uklonjena; ostaje samo nevidljiv sudar tankog stuba (deo GTA zgrade) |
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 | 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
+| 18.11.2026. | Korak 4.3: sef u kući ($5.000, novac i 10/20/30 predmeta, `/sef` ili F, logovan; prodaja tek kad je prazan), iznajmljivanje soba (`/iznajmisobu`, `/napustisobu`, kirija $0–300 po plati, stanari u `/kuca`), razgledanje kuće na prodaju 5 min, odeća u prodavnici ($500, kesa) i ormar (`/ormar`, 3/5/8); vozila neaktivnog vlasnika (30 dana) se brišu uz 50% plaćene cene; admin `/jetpack` (`/rocketman`) i `/god` za nivo 5+ na dužnosti; gepek i sef dele isti meni |
 | 18.11.2026. | Ikonica sopstvene kuće se uvek vidi (pravi se na prvom spawnu); `/respawnveh` i ostale admin komande nalaze i vozilo koje je posle uništenja vraćeno u garažu; iznajmljivanje soba otpada |
 | 18.11.2026. | Anti-cheat više ne prijavljuje popravku posle mehaničara (proverava samo HP i gume, prihvata zakasnelu potvrdu klijenta) |
 | 16.11.2026. | Na mapi samo kuće na prodaju i sopstvena kuća; `/gotoveh` za vozilo u garaži kaže gde je, a `/getveh` ga vadi iz garaže; neaktivna kuća ostaje na 50% (odluka vlasnika) |
-| 16.11.2026. | Ispravljena poruka kad je garaÅ¾a puna (`/garaza` i `/v parkiraj`): sada piÅ¡e zauzeto/ukupno |
+| 16.11.2026. | Ispravljena poruka kad je garaža puna (`/garaza` i `/v parkiraj`): sada piše zauzeto/ukupno |
 | 16.11.2026. | Dopune 4.1/4.2: enterijeri po oceni referentnog moda (27, migracija postojećih), pomeriv izlaz, `/gotokuca`, kraće poruke za `/izmenikucu` i `/napravikucu`; posle smrti bolnica sa 50 HP i bez zabrane vrata; kuća pri ulasku (10 min van servera) i posle zatvora; `Utils_FreeDbId` za sve module; parking u garaži; garaža se postavlja iz vozila; `/getveh` ne pravi parking; neon se odmah vidi u tjuningu; poruka o parkingu sa tačnim razmakom |
 | 16.11.2026. | Korak 4.1 i 4.2: kuće (pravljenje u igri, 18 enterijera iz igre, kupovina, meni `/kuca`, prodaja državi 70% i igraču preko `/ponudi`, `/kucaj`, pojavljivanje u kući, neaktivnost 30 dana uz 50%, ikonice na mapi) i garaže (`/garaza`, 1–3 mesta); parking 40 m (10 m od tuđe kuće); `/pomoc` kao lista tema |
 | 08.11.2026. | Neon u tjuningu (šest boja, $5.000, Gold VIP upola, `/v neon`); razmak za zabranu parkiranja 25 m |
@@ -310,7 +315,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 4 | Vehicle inactivity: deleting after 30 days with 50% of the price is approved, waiting for which price (vehicles do not store one). Then 4.3: safe, wardrobe and renting (the owner brought it back on 2026-11-18; approved, the wardrobe is being reworked: bought clothes must not appear in it by themselves), viewing the interior of a house for sale; admin (level 5+) rocketman and god mode, proposal sent |
+| 4 | Step 4.4: furniture (PROP-4), the proposal is still to be sent |
 | 4 | Houses, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
@@ -368,6 +373,10 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Account inactive for 6 months: delete the account and everything it owns (houses, vehicles, businesses, job); the phone number is freed earlier, with the SIM card phone |
 | Radio, faction chat, megaphone |
 | VIP: discount on ads (10/20/30%) |
+| Safe: weapons and drugs as items (once weapons become items, INV-3, and drugs exist) use the same safe and trunk menu (`storage.inc`) |
+| Breaking into a house and cracking a safe (Phase 6, crime), with the alarm |
+| Business and faction storage: added as a new place in `storage.inc` (the same menu as the trunk and safe) |
+| Faction uniforms: never packed into a bag or put in a wardrobe (`Clothes_CanBag` only knows everyday clothes) |
 
 **After injuries, death and police (Phase 5)**
 | Item |
@@ -412,7 +421,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Bike and scooter rental | A rental point with vehicles, paid per hour, the vehicle disappears when time runs out | Map with 7 small points (LS: Unity Station, city hall, hospital, Downtown, Conference Center; Dillimore) |
 | Apartments and cottages | New property types next to houses (PROP-1) | Apartments #1161; weekend settlement #0318–#0328 |
 | Farm land | Buy a plot, plant fruit and trees, harvest and sell to businesses (PROP-8) | Farms #1248–#1257, #1451–#1456, #0897–#0899 |
-| House upgrades: alarm, safe, wardrobe | The alarm alerts the owner and police on a break-in; safe (PROP-3); the wardrobe keeps clothes | — |
+| House upgrades: alarm | The alarm alerts the owner and police on a break-in (the safe and wardrobe were done on 2026-11-18) | — |
 | Garages with interiors and upgrades | Garages in several places, upgradable number of slots (PROP-5) | #1118–#1125, #1580, #1876, #0841 |
 | Furniture store with preview | The camera shows an object before buying (PROP-4) | No dedicated map |
 | Camper trailer | The trailer is towed by a car; when parked it has an interior to enter | Interiors #1367–#1369, trailer dealer #1370 |
@@ -590,6 +599,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-06 | The plant pot removed from the school lot; only the thin pole's invisible collision stays (part of the GTA building) |
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
 | 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |
+| 2026-11-18 | Step 4.3: a house safe ($5,000, money and 10/20/30 items, `/sef` or F, logged; sale only when empty), renting rooms (`/iznajmisobu`, `/napustisobu`, rent $0–300 per payday, tenants in `/kuca`), viewing a house for sale for 5 min, clothes in the shop ($500, bag) and a wardrobe (`/ormar`, 3/5/8); vehicles of an inactive owner (30 days) are deleted with 50% of the price paid; admin `/jetpack` (`/rocketman`) and `/god` for level 5+ on duty; trunk and safe share one menu |
 | 2026-11-18 | The own-house icon always shows (made on the first spawn); `/respawnveh` and the other admin commands find a vehicle put back into a garage after its destruction; renting rooms is dropped |
 | 2026-11-18 | Anti-cheat no longer flags a repair after a mechanic (checks only health and tyres, accepts a late client confirmation) |
 | 2026-11-16 | The map shows only houses for sale and your own house; `/gotoveh` for a garage vehicle says where it is and `/getveh` takes it out; an inactive house keeps the 50% (owner's decision) |

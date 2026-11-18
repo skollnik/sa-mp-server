@@ -197,6 +197,14 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 189 | 2026-11-18 | Nema iznajmljivanja soba (podstanara) | Pravilo vlasnika: ako ga većina modova nema, nemamo ni mi; ima ga oko trećine referentnih modova |
 | 190 | 2026-11-18 | Ikonica sopstvene kuće se pravi na prvom spawnu, ne pri učitavanju naloga | Klijent na ekranu za prijavu gubi ikonice, pa se kuća često nije videla |
 | 191 | 2026-11-18 | Anti-cheat za vozila proverava samo HP i pukle gume, a ne udubljenja, vrata i svetla; posle serverske popravke 30 s prihvata povratak do stanja koje je server postavio | Lažna prijava posle popravke kod mehaničara (HP 700 -> 700) |
+| 192 | 2026-11-18 | Iznajmljivanje soba ipak postoji (zamenjuje 189): 1/2/3 sobe, kirija $0–300 po plati, prva odmah, posle sa računa pa iz džepa, bez novca iseljenje | Vlasnik je tražio da se doda |
+| 193 | 2026-11-18 | Sef stoji u kući (ostaje novom vlasniku), otvara ga samo vlasnik; kuća se ne prodaje dok sef nije prazan; kad se kuća oduzme novac ide u banku, predmeti propadaju | Bez toga bi se predmeti ili novac "prodavali" sa kućom ili gubili bez znanja vlasnika |
+| 194 | 2026-11-18 | Gepek i sef dele isti meni (`storage.inc`); svako mesto samo kaže ko sme i gde su slotovi | Isti kod se ne kopira; sledeća mesta (firma, frakcija) samo se dodaju |
+| 195 | 2026-11-18 | Odeća je predmet "kesa" čija je količina broj skina (kao litri u kanisteru); VIP skinovi i uniforme nikad ne postaju kesa | Kesa odmah radi u inventaru, gepeku, sefu i davanju, bez nove tabele |
+| 196 | 2026-11-18 | Ormar pripada igraču, a ne kući; koliko staje zavisi od kuće u kojoj se koristi (3/5/8); bez kuće ili sobe ormar čeka | Gubitak kuće ili sobe ne briše odeću |
+| 197 | 2026-11-18 | Kuća na prodaju se razgleda iznutra 5 minuta, posle izbacivanja ista kuća 5 minuta čeka | Igrač vidi šta kupuje, a prazna kuća ne postaje skrovište |
+| 198 | 2026-11-18 | Vozila vlasnika koji nije ušao 30 dana se brišu uz 50% plaćene cene; cena se čuva od sada (pijaca, `/ponudi`, admin $0), stara vozila dobijaju današnju cenu sa pijace ili $0 | Mrtva vozila ne zauzimaju bazu i tablice, a vlasnik ne gubi sve |
+| 199 | 2026-11-18 | `/jetpack` i `/god` za nivo 5+, samo na admin dužnosti (vlasnik i van nje), gase se sa dužnošću; god ne štiti vozilo | Moći uprave ne smeju ostati upaljene van posla |
 
 ### Arhitektura koda (predlog)
 ```
@@ -415,6 +423,14 @@ This file records every important decision so it does not get re-discussed. Newe
 | 189 | 2026-11-18 | No renting of rooms (tenants) | The owner's rule: if most gamemodes do not have it, neither do we; about a third of the reference gamemodes have it |
 | 190 | 2026-11-18 | The own-house icon is made on the first spawn, not when the account loads | The client drops icons while on the login screen, so the house was often missing |
 | 191 | 2026-11-18 | Vehicle anti-cheat checks only health and popped tyres, not dents, doors and lights; for 30 s after a server repair it accepts a return to what the server set | A false alert after a mechanic repair (HP 700 -> 700) |
+| 192 | 2026-11-18 | Renting rooms exists after all (replaces 189): 1/2/3 rooms, rent $0–300 per payday, the first at once, then from the bank or cash, eviction without money | The owner asked for it |
+| 193 | 2026-11-18 | The safe stays in the house (the next owner keeps it) and only the owner opens it; a house is not sold while the safe is not empty; when a house is taken the money goes to the bank and the items are lost | Otherwise items or money would be "sold" with the house or lost without the owner knowing |
+| 194 | 2026-11-18 | Trunk and safe share one menu (`storage.inc`); each place only says who may use it and where its slots are | No copied code; later places (business, faction) are just added |
+| 195 | 2026-11-18 | Clothes are a "bag" item whose amount is the skin id (like litres in a jerry can); VIP skins and uniforms never become a bag | A bag works at once in the inventory, trunk, safe and giving, without a new table |
+| 196 | 2026-11-18 | The wardrobe belongs to the player, not the house; how much fits depends on the house it is used in (3/5/8); without a house or room it waits | Losing a house or room does not delete clothes |
+| 197 | 2026-11-18 | A house for sale can be viewed from inside for 5 minutes; after being put out, the same house waits 5 minutes | Players see what they buy, and an empty house is no hideout |
+| 198 | 2026-11-18 | Vehicles of owners away 30 days are deleted with 50% of the price paid; the price is kept from now on (market, `/ponudi`, admin $0), old vehicles get today's market price or $0 | Dead vehicles do not hold the database and plates, and the owner does not lose everything |
+| 199 | 2026-11-18 | `/jetpack` and `/god` for level 5+, only on admin duty (the owner also off duty), ending with duty; god does not protect the vehicle | Management powers must not stay on outside work |
 
 ### Code architecture (proposal)
 ```

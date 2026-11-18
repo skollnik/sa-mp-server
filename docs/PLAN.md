@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 4: koraci 4.1 (kuće) i 4.2 (garaže) napisani; čeka da vlasnik napravi kuće i testira, posle toga 4.3 (sef, ormar, iznajmljivanje) (ažurirano 2026-11-16)
+**Trenutni status:** Faza 4: koraci 4.1 (kuće), 4.2 (garaže) i 4.3 (sef, iznajmljivanje soba, razgledanje kuće, odeća i ormar) napisani; čeka test vlasnika, posle toga 4.4 (nameštaj) (ažurirano 2026-11-18)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -71,7 +71,8 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 
 ### Faza 4: Imovina
 - [x] Korak 4.1 i 4.2: PROP-1 kuće i PROP-5 garaže
-- [ ] PROP-3, PROP-4: sef, nameštaj (PROP-2 iznajmljivanje otpada)
+- [x] Korak 4.3: PROP-3 sef i ormar, PROP-2 iznajmljivanje soba, PROP-9 razgledanje kuće, INV-6 odeća; uz to brisanje vozila posle 30 dana neaktivnosti
+- [ ] Korak 4.4: PROP-4 nameštaj
 - [ ] PROP-6, PROP-7: firme
 - [ ] JOB-1, JOB-2: okvir za poslove i kamiondžija (PROP-8)
 - [ ] ADM-5: alati za kreiranje u igri
@@ -118,7 +119,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** Phase 4: steps 4.1 (houses) and 4.2 (garages) written; waiting for the owner to create houses and test, then 4.3 (safe, wardrobe, renting) (updated 2026-11-16)
+**Current status:** Phase 4: steps 4.1 (houses), 4.2 (garages) and 4.3 (safe, renting rooms, viewing a house, clothes and wardrobe) written; waiting for the owner's test, then 4.4 (furniture) (updated 2026-11-18)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -187,7 +188,8 @@ Goal: a player can register, create a character, play and quit, and everything i
 
 ### Phase 4: Property
 - [x] Steps 4.1 and 4.2: PROP-1 houses and PROP-5 garages
-- [ ] PROP-3, PROP-4: safe, furniture (PROP-2 renting dropped)
+- [x] Step 4.3: PROP-3 safe and wardrobe, PROP-2 renting rooms, PROP-9 viewing a house, INV-6 clothes; also deleting vehicles after 30 days of inactivity
+- [ ] Step 4.4: PROP-4 furniture
 - [ ] PROP-6, PROP-7: businesses
 - [ ] JOB-1, JOB-2: job framework and trucker (PROP-8)
 - [ ] ADM-5: in-game creation tools

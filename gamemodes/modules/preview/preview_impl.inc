@@ -201,6 +201,7 @@ stock bool:Preview_OnClickPlayerTextDraw(playerid, PlayerText:td)
         {
             case PREVIEW_VIP_SKIN: Vip_OnSkinSelected(playerid, index);
             case PREVIEW_DOOR_ARROW: Door_OnArrowSelected(playerid, index);
+            case PREVIEW_CLOTHES_SHOP: Clothes_OnSkinSelected(playerid, index);
             default: {}
         }
         return true;

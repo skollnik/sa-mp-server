@@ -55,6 +55,7 @@ stock Offer_Init()
         "`amount` INT NOT NULL, `tax` INT NOT NULL," \
         "`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicle_trades` MODIFY COLUMN `kind` ENUM('sale', 'trade', 'inactive') NOT NULL");
 }
 
 stock Offer_OnPlayerConnect(playerid)
@@ -128,7 +129,7 @@ static stock bool:Offer_IsValid(seller, bool:tell)
     {
         if (!House_IsSaleReady(g_Offer[seller][ofSlot], g_Offer[seller][ofDbId], seller))
         {
-            strcopy(message, "Kuca vise nije spremna (prodavac mora stajati kod kuce, garaza mora biti prazna).");
+            strcopy(message, "Kuca vise nije spremna (prodavac stoji kod kuce, garaza i sef su prazni).");
         }
         else if (g_Player[target][pLevel] < House_Level(g_Offer[seller][ofSlot]) || !House_HasFreeSlot(target))
         {
@@ -177,7 +178,7 @@ static stock Offer_Describe(seller, dest[], size = sizeof(dest))
     new slot = g_Offer[seller][ofSlot], registration[24], trunk[48];
     if (g_Offer[seller][ofKind] == OFFER_HOUSE)
     {
-        new house[160];
+        new house[224];
         House_SaleText(slot, house);
         format(dest, size, "%s vam prodaje kucu:\n\n%s\n\nCena: $%d (gotovinom)\n\nPonuda vazi %d sekundi.", Account_Name(seller), house, g_Offer[seller][ofAmount], OFFER_TIMEOUT_S);
         return;
@@ -286,6 +287,7 @@ static stock Offer_Complete(seller)
         }
         Offer_Log(OFFER_SALE, g_Veh[slot][vDbId], 0, g_Player[seller][pDbId], g_Player[target][pDbId], amount, tax);
         Veh_TransferTo(slot, target);
+        Veh_SetPaidPrice(slot, amount);
         Account_Save(seller);
         Account_Save(target);
         Chat_Action(seller, "predaje kljuceve od vozila.");

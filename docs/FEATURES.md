@@ -79,8 +79,9 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### PROP — Imovina
 - **PROP-1 Kuće (urađeno 4.1):** admin ih pravi u igri (`/napravikucu`, 27 enterijera iz igre u tri veličine po oceni referentnog moda, izlaz može da se pomeri); zelena kućica na prodaju, plava sa vlasnikom; na mapi kuće na prodaju i sopstvena kuća; `/kupikucu`, meni `/kuca` (informacije, zaključavanje, GPS, pojavljivanje u kući, prodaja državi za 70%), prodaja igraču preko `/ponudi`, `/kucaj`; posle 30 dana neaktivnosti kuća se vraća na prodaju uz 50% na račun. Prvobitni opis: kupovina, prodaja državi ili igraču, zaključavanje, enterijeri različite veličine.
-- **PROP-2 Iznajmljivanje:** otpada (odluka 189).
-- **PROP-3 Kućni sef i ormar:** novac, oružje, droga, predmeti.
+- **PROP-2 Iznajmljivanje soba (urađeno 4.3):** vlasnik u `/kuca` otvara sobe (1/2/3 po veličini) i bira kiriju $0–300 po plati; igrač `/iznajmisobu` ispred vrata (bez svoje kuće), prva kirija odmah, posle na plati (račun pa džep, bez novca iseljenje); stanar ulazi i kad je zaključano, pojavljuje se u kući, ima ikonu na mapi i ormar; `/napustisobu`; vlasnik vidi stanare i iseljava ih (i van servera); promena vlasnika i 30 dana neaktivnosti iseljavaju. Odluka 189 je zamenjena (odluka 192).
+- **PROP-3 Kućni sef i ormar (urađeno 4.3):** sef $5.000 (novac i 10/20/30 predmeta, samo vlasnik, `/sef` ili F, logovan); ormar `/ormar` (3/5/8 odeća po veličini kuće, vlasnik i stanar), odeća se nosi u kesi iz prodavnice odeće. Oružje i droga u sefu dolaze sa tim sistemima.
+- **PROP-9 Razgledanje kuće na prodaju (urađeno 4.3):** svako ulazi u kuću na prodaju do 5 minuta; ako je neko kupi, posetioci izlaze.
 - **PROP-4 Nameštaj:** postavljanje objekata u kući.
 - **PROP-5 Garaže** vezane za kuću (urađeno 4.2): admin postavi mesto ispred garažnih vrata; `/garaza` za volanom ostavlja vozilo (nestane iz sveta, bezbedno), peške ga vadi; mala kuća 1, srednja 2, velika 3 mesta; garaža može biti parking vozila (`/v parkiraj` ispred nje).
 - **PROP-6 Firme (biznisi):** 24/7, prodavnica oružja, benzinska, restoran/brza hrana, bar/klub, prodavnica odeće, mehaničarska radionica. Salona vozila nema (vidi ADM-8).
@@ -92,6 +93,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 - **INV-2 Predmeti:** telefon, radio, hrana, piće, cigarete, alat, kanister, maska, uže, povez za oči, droga, materijali.
 - **INV-3 Oružje kao predmet:** ima serijski broj i municiju, a može da se stavi u futrolu ili gepek.
 - **INV-4 Inventar kontejnera:** kuća, vozilo, firma i frakcija.
+- **INV-6 Odeća (urađeno 4.3):** prodavnica odeće prodaje svakodnevne skinove po polu ($500): obuče se odmah (stara odeća u kesu) ili se pakuje u kesu; kesa se oblači kod kuće ili u prodavnici, stoji u inventaru, gepeku i sefu.
 - **INV-5 Dodaci na telu:** naočare, kape, šeširi, ranac i torba iz prodavnice odeće; po jedan na glavi, licu i leđima/ruci; položaji su fiksni, stavljaju se i skidaju u `/dodaci`.
 
 ### PHONE — Telefon
@@ -249,8 +251,9 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### PROP — Property
 - **PROP-1 Houses (done in 4.1):** admins create them in game (`/napravikucu`, 27 in-game interiors in three sizes by a reference gamemode's rating, a movable exit); a green house for sale, a blue one with an owner; the map shows houses for sale and your own house; `/kupikucu`, the `/kuca` menu (info, lock, GPS, spawning at home, selling to the state for 70%), selling to a player through `/ponudi`, `/kucaj`; after 30 days of inactivity the house goes back on sale with 50% to the bank. Original description: buy, sell to the state or a player, lock, interiors of different sizes.
-- **PROP-2 Renting:** dropped (decision 189).
-- **PROP-3 House safe and wardrobe:** money, weapons, drugs, items.
+- **PROP-2 Renting rooms (done in 4.3):** the owner opens rooms in `/kuca` (1/2/3 by size) and sets the rent $0–300 per payday; a player uses `/iznajmisobu` at the door (without a house of their own), the first rent at once, then on payday (bank then cash, eviction without money); a tenant enters when locked, spawns in the house, has a map icon and a wardrobe; `/napustisobu`; the owner sees tenants and evicts them (offline too); a change of owner and 30 days of inactivity evict. Decision 189 is replaced (decision 192).
+- **PROP-3 House safe and wardrobe (done in 4.3):** a $5,000 safe (money and 10/20/30 items, owner only, `/sef` or F, logged); the `/ormar` wardrobe (3/5/8 outfits by house size, owner and tenant), clothes are carried in a bag from the clothing shop. Weapons and drugs in the safe come with those systems.
+- **PROP-9 Viewing a house for sale (done in 4.3):** anyone may enter a house for sale for up to 5 minutes; when someone buys it, visitors are put out.
 - **PROP-4 Furniture:** placing objects inside the house.
 - **PROP-5 Garages** tied to a house (done in 4.2): an admin places a spot in front of the garage door; `/garaza` at the wheel stores the vehicle (it leaves the world, safe), on foot takes it out; a small house holds 1, medium 2, large 3; the garage can be a vehicle's parking (`/v parkiraj` in front of it).
 - **PROP-6 Businesses:** 24/7, gun shop, gas station, restaurant/fast food, bar/club, clothing store, mechanic shop. There is no dealership (see ADM-8).
@@ -259,6 +262,7 @@ Every system has an ID (e.g. `ACC-1`), and `PLAN.md` sets the order in which the
 
 ### INV — Inventory and items
 - **INV-1 Player inventory:** slots and quantities, `/inv`, give, drop and pick up items from the ground.
+- **INV-6 Clothes (done in 4.3):** the clothing shop sells everyday skins by gender ($500): worn right away (the old clothes go into a bag) or packed in a bag; a bag is worn at home or in the shop and fits in the inventory, trunk and safe.
 - **INV-2 Items:** phone, radio, food, drinks, cigarettes, tools, jerry can, mask, rope, blindfold, drugs, materials.
 - **INV-3 Weapons as items:** they have a serial number and ammo, and can be holstered or put in a trunk.
 - **INV-4 Container inventories:** house, vehicle, business and faction.

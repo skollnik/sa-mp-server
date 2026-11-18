@@ -440,7 +440,7 @@ static stock Market_Buy(playerid, bool:from_bank)
         Market_UpdateLabel(slot);
     }
 
-    Veh_Insert(INVALID_PLAYER_ID, playerid, model, g_MarketExit[0], g_MarketExit[1], g_MarketExit[2], g_MarketExit[3], float(Fuel_TankSize(model)) / 2.0, false);
+    Veh_Insert(INVALID_PLAYER_ID, playerid, model, g_MarketExit[0], g_MarketExit[1], g_MarketExit[2], g_MarketExit[3], float(Fuel_TankSize(model)) / 2.0, false, price);
     Account_Save(playerid);
     Gps_StartAt(playerid, -1, "Vase novo vozilo", g_MarketExit[0], g_MarketExit[1], g_MarketExit[2]);
     Msg_Success(playerid, "Kupili ste %s za $%d. Ceka vas na izlazu sa pijace (GPS). Registracija: /registruj, tablice: /tablice.", Veh_ModelName(model), price);

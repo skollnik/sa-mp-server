@@ -106,3 +106,12 @@ new const g_VipInventorySlots[] = { 0, 2, 4, 6 };
 #define RENT_PRICE_BIKE             (20)
 #define RENT_PRICE_MOTO             (80)
 #define RENT_PRICE_CAR              (200)
+
+#define HOUSE_SAFE_PRICE            (5000)
+// Rent for a room in a house, per payday; the owner picks it, 0 is for family and friends.
+#define ROOM_PRICE_MAX              (300)
+// Clothes in the clothing shop, per piece (a skin).
+#define CLOTHES_PRICE               (500)
+// A vehicle whose owner is away this long is taken; the owner gets this share of what they paid for it.
+#define VEH_DELETE_DAYS             (30)
+#define VEH_DELETE_REFUND_PERCENT   (50)

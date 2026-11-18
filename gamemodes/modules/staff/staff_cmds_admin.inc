@@ -7,6 +7,10 @@ cmd:aduty(playerid, params[])
     }
 
     g_Staff[playerid][sAdminDuty] = !g_Staff[playerid][sAdminDuty];
+    if (!Staff_IsAdminOnDuty(playerid))
+    {
+        Staff_EndPowers(playerid);
+    }
     Staff_UpdateLook(playerid);
 
     new rank[24], message[128];
@@ -492,6 +496,51 @@ cmd:fixveh(playerid, params[])
     AC_RepairVehicle(vehicleid);
     Msg_Admin(playerid, "Vozilo je popravljeno.");
     Staff_Log(playerid, "fixveh", INVALID_PLAYER_ID, "");
+    return 1;
+}
+
+cmd:jetpack(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_MANAGEMENT))
+    {
+        return 1;
+    }
+    if (g_Staff[playerid][sJetpack])
+    {
+        Staff_SetJetpack(playerid, false);
+        Msg_Admin(playerid, "Jetpack je skinut.");
+        Staff_Log(playerid, "jetpack_off", INVALID_PLAYER_ID, "");
+        return 1;
+    }
+    if (IsPlayerInAnyVehicle(playerid))
+    {
+        Msg_Error(playerid, "Jetpack se uzima van vozila.");
+        return 1;
+    }
+    Staff_SetJetpack(playerid, true);
+    Msg_Admin(playerid, "Dobili ste jetpack. Ponovo /jetpack ga skida.");
+    Staff_Log(playerid, "jetpack_on", INVALID_PLAYER_ID, "");
+    return 1;
+}
+
+alias:jetpack("rocketman")
+
+cmd:god(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_MANAGEMENT))
+    {
+        return 1;
+    }
+    Staff_SetGod(playerid, !g_Staff[playerid][sGod]);
+    if (g_Staff[playerid][sGod])
+    {
+        Msg_Admin(playerid, "God mode je ukljucen: HP vam ne pada (vozilo nije zasticeno).");
+    }
+    else
+    {
+        Msg_Admin(playerid, "God mode je iskljucen, HP je 100.");
+    }
+    Staff_Log(playerid, g_Staff[playerid][sGod] ? ("god_on") : ("god_off"), INVALID_PLAYER_ID, "");
     return 1;
 }
 
@@ -1044,6 +1093,10 @@ cmd:makeadmin(playerid, params[])
     {
         g_Staff[targetid][sAdminDuty] = false;
     }
+    if (level < ADMIN_LEVEL_MANAGEMENT || !Staff_IsAdminOnDuty(targetid))
+    {
+        Staff_EndPowers(targetid);
+    }
     Staff_UpdateLook(targetid);
     Account_Save(targetid);
 
@@ -1167,7 +1220,7 @@ cmd:ahelp(playerid, params[])
     }
     if (level >= ADMIN_LEVEL_MANAGEMENT)
     {
-        strcat(body, C_ADMIN "5 - Menadzment\n" C_WHITE "/makeadmin /gmx /happyhour [broj plata]\n\n");
+        strcat(body, C_ADMIN "5 - Menadzment\n" C_WHITE "/makeadmin /gmx /happyhour [broj plata] /jetpack (ili /rocketman) /god\n\n");
     }
     if (level >= ADMIN_LEVEL_OWNER)
     {

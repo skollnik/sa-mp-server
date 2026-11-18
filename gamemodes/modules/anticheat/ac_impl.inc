@@ -160,7 +160,7 @@ stock AC_CheckHealthArmour(playerid)
     GetPlayerHealth(playerid, health);
     GetPlayerArmour(playerid, armour);
 
-    if (health > 100.5)
+    if (health > 100.5 && !Staff_AllowsHighHealth(playerid))
     {
         SetPlayerHealth(playerid, 100.0);
         format(details, sizeof(details), "HP %.0f", health);
@@ -297,7 +297,8 @@ public AC_Tick()
             GivePlayerMoney(i, g_Player[i][pCash]);
         }
 
-        if (GetPlayerSpecialAction(i) == SPECIAL_ACTION_USEJETPACK)
+        Staff_CheckPowers(i);
+        if (GetPlayerSpecialAction(i) == SPECIAL_ACTION_USEJETPACK && !Staff_AllowsJetpack(i))
         {
             SetPlayerSpecialAction(i, SPECIAL_ACTION_NONE);
             AC_KickForCheat(i, AC_TYPE_JETPACK, "jetpack");

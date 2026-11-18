@@ -23,6 +23,16 @@
 #define HOUSE_MAX_PRICE         (100000000)
 // Spawning at home on login only after this long away, so leaving and rejoining is no quicker than driving home.
 #define HOUSE_SPAWN_AWAY_S      (600)
+#define HOUSE_SAFE_RADIUS       (1.5)
+#define SAFE_MAX_SLOTS          (30)
+// A tenant away this long loses the room, so a room is not held for good by someone who stopped playing.
+#define ROOM_INACTIVE_DAYS      (30)
+#define ROOM_MIN_LEVEL          (1)
+// A house for sale can be looked at from inside for this long; after being put out, the same house waits the cooldown.
+#define HOUSE_VIEW_SECONDS      (300)
+#define HOUSE_VIEW_COOLDOWN_S   (300)
+#define HOUSE_VIEW_TICK_MS      (5000)
+#define WARDROBE_MAX_SLOTS      (8)
 
 enum E_HOUSE_SIZE
 {
@@ -107,10 +117,34 @@ enum E_HOUSE
     STREAMER_TAG_MAP_ICON:hIcon,
     STREAMER_TAG_PICKUP:hExitPickup,
     STREAMER_TAG_3D_TEXT_LABEL:hExitLabel,
-    STREAMER_TAG_3D_TEXT_LABEL:hGarageLabel
+    STREAMER_TAG_3D_TEXT_LABEL:hGarageLabel,
+    bool:hHasSafe,
+    Float:hSafeX,
+    Float:hSafeY,
+    Float:hSafeZ,
+    hSafeMoney,
+    STREAMER_TAG_3D_TEXT_LABEL:hSafeLabel,
+    bool:hRoomsOpen,
+    hRoomPrice,
+    // Counted from the accounts on start and kept up to date, so a full house is known without a query.
+    hTenants
 }
 
 new g_Houses[MAX_HOUSES][E_HOUSE];
+// Belongs to the house, like the trunk to the vehicle; only the owner opens it.
+new g_HouseSafe[MAX_HOUSES][SAFE_MAX_SLOTS][E_INV_SLOT];
+new bool:g_HouseSafesLoaded;
+// The house a player rents a room in (DB id or 0) and its map icon.
+new g_RoomHouse[MAX_PLAYERS];
+new STREAMER_TAG_MAP_ICON:g_RoomIcon[MAX_PLAYERS];
+// The house for sale a player is looking at (DB id or 0), until when, and the house they were last put out of.
+new g_HouseViewing[MAX_PLAYERS];
+new g_HouseViewEnd[MAX_PLAYERS];
+new g_HouseViewBlocked[MAX_PLAYERS];
+new g_HouseViewBlockedUntil[MAX_PLAYERS];
+// Skins kept in the player's wardrobe (0 is an empty place); it stays with the player, not with a house.
+new g_Wardrobe[MAX_PLAYERS][WARDROBE_MAX_SLOTS];
+new bool:g_WardrobeLoaded[MAX_PLAYERS];
 // The house a player is working with in a menu, by slot, and the account setting to spawn at home (house DB id or 0).
 new g_HouseSelected[MAX_PLAYERS];
 new g_HouseSpawn[MAX_PLAYERS];
@@ -126,3 +160,14 @@ forward bool:House_IsSaleReady(slot, dbid, seller);
 forward bool:House_HasFreeSlot(playerid);
 forward bool:House_GarageHasRoom(house_dbid);
 forward bool:House_MoveToSpawn(playerid);
+forward bool:House_CanLiveIn(playerid, slot);
+forward bool:Safe_CanUse(playerid, slot, bool:tell);
+forward bool:Safe_IsEmpty(slot);
+forward bool:Room_IsTenant(playerid, slot);
+forward bool:Room_ShowMenu(playerid);
+forward bool:HouseView_Start(playerid, slot);
+forward bool:Store_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Safe_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Room_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Clothes_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Wardrobe_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);

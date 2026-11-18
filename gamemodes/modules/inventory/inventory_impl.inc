@@ -102,7 +102,7 @@ stock bool:Inv_Has(playerid, E_ITEM:item)
 // and always moves as a whole, so two half-full cans stay two cans.
 stock bool:Item_IsWhole(E_ITEM:item)
 {
-    return item == ITEM_CANISTER_FULL;
+    return item == ITEM_CANISTER_FULL || item == ITEM_CLOTHES;
 }
 
 // Free room for an item in a set of slots (inventory or trunk); a new stack may only start in the first `capacity` slots.
@@ -358,6 +358,11 @@ stock bool:Inv_Use(playerid, slot)
         case ITEM_CANISTER:
         {
             Msg_Info(playerid, "Prazan kanister se puni na benzinskoj pumpi: /gorivo peske, pored pumpe.");
+            return false;
+        }
+        case ITEM_CLOTHES:
+        {
+            Clothes_WearBag(playerid, slot);
             return false;
         }
         default:

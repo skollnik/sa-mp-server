@@ -58,6 +58,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Ban IP-a zaključa sve na istoj mreži | 👁 | Namerno; `127.0.0.1` se nikad ne banuje. `/unban` skida ceo ban |
 | Ban po serijskom broju pogodi sve naloge na istom računaru | 👁 | Namerno (sprečava zaobilaženje bana). Vlasnik je izuzet |
 | Admin postavi respect veći od potrebnog, pa igrač na sledećem payday-u preskoči 20 nivoa | ✅ | `/setrespect` prima samo manje od potrebnog za sledeći nivo; `/setlevel` nuluje respect ako je preko potrebnog za novi nivo |
+| Admin ostavi jetpack ili god mode upaljen van dužnosti, ili ga anti-cheat prijavi | ✅ | Obe moći rade samo na dužnosti (vlasnik i van nje) i gase se sa dužnošću ili spuštanjem nivoa ispod 5; anti-cheat ih prepoznaje (i 3 s posle gašenja); HP 99999 se ne pamti pri odjavi |
 
 ### VIP
 | Rizik | Status | Kako je rešeno |
@@ -261,7 +262,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Prodaja kuće dok su vozila u garaži (kupac ih ne može izvaditi) | ✅ | Prodaja državi i preko `/ponudi` traži praznu garažu; kad kuću oduzme admin ili neaktivnost, vozila izlaze na svoje parking mesto |
 | Vozilo iz garaže prodato ili zamenjeno sa `/ponudi` | ✅ | Vozilo u garaži nije u svetu, pa ne može u ponudu |
 | Gomilanje vozila u garaži preko limita | ✅ | Vozilo u garaži se i dalje računa u limit vozila |
-| Skrivanje u praznoj kući | ✅ | U kuću na prodaju ulazi samo admin na dužnosti |
+| Skrivanje u praznoj kući (razgledanje kuće na prodaju) | ✅ | Razgledanje traje najviše 5 min, posle toga ista kuća čeka 5 min; ulaz ima ista pravila kao vrata (borba, zatvor, zamrzavanje); kad je neko kupi, posetioci izlaze odmah; ko je bio unutra kad je kuća vraćena na prodaju dobija istih 5 min |
 | Kuća kao bekstvo iz borbe ili zatvora | ✅ | Ista pravila kao vrata: posle štete 30 s nema ulaza, zatvor i zamrzavanje sprečavaju ulaz |
 | Kupovina više kuća preko VIP-a pa istek | ✅ | Kuće ostaju, nova ne može dok je igrač na limitu |
 | Neaktivan vlasnik drži kuću zauvek | ✅ | Posle 30 dana kuća ide na prodaju uz 50% na račun |
@@ -273,6 +274,20 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Obrisan ID ponovo dat, a neko je ostao u svetu obrisane kuće | ✅ | Pri brisanju se svi iz te kuće izbacuju ispred vrata |
 | Parking u garaži preko broja mesta | ✅ | Parking u garaži može imati najviše onoliko vozila koliko garaža prima; ako je garaža puna, vozilo staje ispred nje |
 | Prodaja kuće dok neko vozilo ima parking u garaži | ✅ | Prodaja se odbija dok se parking ne promeni |
+| Sef: dva igrača ili posetilac uzmu iste stvari, ili sef ostane otvoren posle izlaska | ✅ | Sef otvara samo vlasnik, peške, do 1,5 m od sefa; svaki odgovor u meniju ponovo proverava mesto, vlasnika i da je predmet još tu |
+| Sef: dupliranje novca ili predmeta (pad servera između dva upisa) | ✅ | Prvo se uzima iz jednog mesta, pa daje drugom, i oba se odmah upisuju; svaki pomak ide u `house_safe_log` |
+| Sef „prodat“ sa kućom ili izgubljen bez znanja vlasnika | ✅ | Kuća se ne prodaje (državi ni igraču) dok sef nije prazan; kad kuću oduzme admin ili neaktivnost, novac ide vlasniku na račun (i van servera), predmeti propadaju; admin `/izmenikucu` vidi i prazni sef (log) |
+| F kod sefa otvori sef umesto vrata | ✅ | Izlaz ima prednost; `/udji` i `/izadji` nikad ne otvaraju sef |
+| Kirija: soba besplatno do prve plate, ili kirija promenjena dok igrač potvrđuje | ✅ | Prva kirija se plaća odmah; ako se kirija promeni između pitanja i potvrde, traži se nova potvrda |
+| Kirija: igrač izbegava plaćanje (prazan račun, AFK) | ✅ | Kirija ide sa plate koju stanar dobije: račun, pa džep; bez novca se iseljava; bez plate (AFK) nema ni kirije, ali ni zarade |
+| Stanar zloupotrebi kuću (sef, garaža, zaključavanje, prodaja) | ✅ | Stanar samo ulazi (i kad je zaključano), pojavljuje se u kući i koristi svoj ormar; sve ostalo traži vlasnika |
+| Stanar ostane posle promene vlasnika ili kad prestane da igra | ✅ | Svaka promena vlasnika iseljava sve stanare (i van servera, u bazi); 30 dana bez ulaska na server iseljava; pojavljivanje u sobi se briše zajedno sa sobom |
+| Igrač ima kuću i sobu (dva besplatna spawna) | ✅ | Soba se ne iznajmljuje ako igrač ima kuću; kupovina ili prijem kuće iseljava iz sobe |
+| Odeća: dupliranje kese ili VIP skin kao kesa za prodaju | ✅ | Obučena odeća ide u istu kesu ili isto mesto u ormaru; VIP skinovi, uniforme, admin i posebni skinovi nikad ne postaju kesa (bacaju se uz poruku) |
+| Odeća: presvlačenje ispod uniforme ili admin skina, ili tuđeg pola | ✅ | Presvlači se samo bez smene i admin dužnosti, peške; oblači se samo odeća za pol igrača |
+| Ormar kao besplatno skladište bez kuće | ✅ | Ormar radi samo u svojoj kući ili iznajmljenoj sobi; bez nje odeća čeka; kapacitet zavisi od kuće (3/5/8) |
+| Vozilo neaktivnog vlasnika: novac za vozilo dobijeno od admina ili duplo | ✅ | Vraća se 50% cene koja je stvarno plaćena (pijaca, `/ponudi`); vozilo od admina $0; red se briše odmah, uz zapis u `vehicle_trades` |
+| Vozilo obrisano dok je još u svetu (server radi duže od 30 dana) | ✅ | Pre brisanja iz baze vozilo se skida sa mape |
 | Neon cevi ostanu da vise posle brisanja vozila | ✅ | Neon se skida pre svakog brisanja i ponovnog pravljenja ličnog vozila |
 | Besplatan neon probom u tjuningu | ✅ | Proba se vraća kao i ostali delovi; plaća se drugim izborom |
 | `/cw` kao skriveni chat van vozila | ✅ | Radi samo u vozilu i čuju ga samo oni u istom vozilu; važe mute i spam pravila |
@@ -374,6 +389,7 @@ Every new system or change goes through these questions, against all existing sy
 | An IP ban locks everyone on the same network | 👁 | By design; `127.0.0.1` is never banned. `/unban` lifts the whole ban |
 | A serial ban hits every account on the same computer | 👁 | By design (stops ban evasion). The owner is exempt |
 | An admin sets more respect than needed, so the player skips 20 levels on the next payday | ✅ | `/setrespect` only takes less than the next level needs; `/setlevel` clears respect when it is over the new level's need |
+| An admin leaves jetpack or god mode on off duty, or anti-cheat flags it | ✅ | Both powers work only on duty (the owner also off duty) and end with duty or when the level drops below 5; anti-cheat knows them (and for 3 s after they end); 99999 HP is never saved on logout |
 
 ### VIP
 | Risk | Status | How it is handled |
@@ -577,7 +593,7 @@ Every new system or change goes through these questions, against all existing sy
 | A house sold while vehicles are in its garage (the buyer could not take them out) | ✅ | Selling to the state and through `/ponudi` needs an empty garage; when an admin or inactivity takes the house, the vehicles go out to their parking spots |
 | A vehicle in a garage sold or traded with `/ponudi` | ✅ | A stored vehicle is not in the world, so it cannot be offered |
 | Piling vehicles into a garage beyond the limit | ✅ | A stored vehicle still counts towards the vehicle limit |
-| Hiding in an empty house | ✅ | Only admins on duty enter a house for sale |
+| Hiding in an empty house (viewing a house for sale) | ✅ | A view lasts at most 5 min, then the same house waits 5 min; entry follows the door rules (combat, jail, freeze); when someone buys it, visitors leave at once; whoever was inside when the house went back on sale gets the same 5 min |
 | A house as an escape from a fight or jail | ✅ | Same rules as doors: no entry for 30 s after damage, jail and freezing block it |
 | Buying more houses with VIP, then VIP ends | ✅ | The houses stay, no new one while at the limit |
 | An inactive owner keeps a house forever | ✅ | After 30 days it goes on sale with 50% to the bank |
@@ -589,6 +605,20 @@ Every new system or change goes through these questions, against all existing sy
 | A deleted id given out again while someone is still in the deleted house's world | ✅ | Deleting moves everyone inside out in front of the door |
 | Garage parking beyond the number of places | ✅ | A garage can be parking for at most as many vehicles as it holds; when it is full the vehicle stands in front of it |
 | Selling a house while a vehicle parks in its garage | ✅ | The sale is refused until the parking is changed |
+| Safe: two players or a visitor take the same things, or the safe stays open after leaving | ✅ | Only the owner opens it, on foot, within 1.5 m; every menu answer checks the place, the owner and that the item is still there |
+| Safe: copying money or items (a crash between two writes) | ✅ | Taken from one side before the other gets it, and both are written at once; every move goes to `house_safe_log` |
+| A safe "sold" with the house or lost without the owner knowing | ✅ | The house is not sold (to the state or a player) while the safe is not empty; when an admin or inactivity takes the house, the money goes to the owner's bank (offline too) and the items are lost; admins see and empty the safe in `/izmenikucu` (logged) |
+| F at the safe opens it instead of the door | ✅ | The exit comes first; `/udji` and `/izadji` never open the safe |
+| Rent: a room free until the first payday, or the rent changed while the player confirms | ✅ | The first rent is paid at once; if the rent changes between the question and the answer, a new confirmation is asked |
+| Rent: a tenant avoids paying (empty account, AFK) | ✅ | Rent comes with the payday the tenant gets: bank, then cash; without money the tenant moves out; no payday (AFK) means no rent, but no pay either |
+| A tenant abuses the house (safe, garage, lock, sale) | ✅ | A tenant only enters (also when locked), spawns there and uses their own wardrobe; everything else needs the owner |
+| A tenant stays after a change of owner or after quitting | ✅ | Every change of owner evicts all tenants (offline ones in the database); 30 days without logging in evicts; the room spawn goes with the room |
+| A player holds a house and a room (two free spawns) | ✅ | A room is not rented to a player with a house; buying or receiving a house ends the room |
+| Clothes: copying a bag or a VIP skin as a bag to sell | ✅ | The clothes taken off go into the same bag or the same wardrobe place; VIP skins, uniforms, admin and special skins never become a bag (dropped with a message) |
+| Clothes: changing under a uniform or the admin skin, or the other gender's clothes | ✅ | Only without a shift and admin duty, on foot; only clothes for the player's gender can be worn |
+| The wardrobe as free storage without a house | ✅ | It works only in one's own house or rented room; without one the clothes wait; the capacity depends on the house (3/5/8) |
+| Inactive owner's vehicle: money for an admin-given vehicle, or paid twice | ✅ | 50% of the price actually paid comes back (market, `/ponudi`); an admin-given vehicle $0; the row is deleted at once, with a `vehicle_trades` entry |
+| A vehicle deleted while still in the world (the server ran longer than 30 days) | ✅ | It is taken off the map before it leaves the database |
 | Neon tubes left hanging after a vehicle is removed | ✅ | The neon is taken off before every removal and rebuild of a personal vehicle |
 | Free neon through the tuning trial | ✅ | The trial is undone like other parts; it is paid with the second pick |
 | `/cw` as a hidden chat outside vehicles | ✅ | Works only in a vehicle and only those in it hear it; mute and spam rules apply |

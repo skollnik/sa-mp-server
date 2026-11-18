@@ -3,6 +3,7 @@
 // Vehicles of owners who have not logged in for this long are not spawned on startup, so the vehicle limit is not filled
 // by players who left; they come back as soon as the owner logs in.
 #define VEH_INACTIVE_DAYS       (14)
+#define VEH_INACTIVE_CHECK_MS   (3600000)
 #define VEH_PLATE_LENGTH        (12)
 #define VEH_KEY_RANGE           (5.0)
 // Extra vehicle slot for Silver and Gold VIP.

@@ -40,6 +40,9 @@ stock Veh_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `garage_house` INT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `park_garage` INT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD UNIQUE INDEX IF NOT EXISTS `vehicle_pending_plate` (`pending_plate`)");
+    // What the owner paid, for the refund when the vehicle is taken for inactivity; 0 for a vehicle an admin gave.
+    mysql_tquery(g_SQL, "ALTER TABLE `vehicles` ADD COLUMN IF NOT EXISTS `price` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "SELECT `value` FROM `server_vars` WHERE `name` = 'vehicle_price_v1'", "OnVehPricesChecked");
     // Vehicles that got a plate before registration existed count as freshly registered.
     new query[512];
     mysql_format(g_SQL, query, sizeof(query),
@@ -51,6 +54,20 @@ stock Veh_Init()
     mysql_tquery(g_SQL, query, "OnVehiclesLoaded", "ddd", INVALID_PLAYER_ID, 0, false);
 
     g_VehTimer = SetTimer("Veh_Tick", 1000, true);
+    SetTimer("Veh_CheckInactive", VEH_INACTIVE_CHECK_MS, true);
+}
+
+// Vehicles bought before the price was kept count as bought at today's market price of the model, or $0 when it is not on the market.
+forward OnVehPricesChecked();
+public OnVehPricesChecked()
+{
+    if (cache_num_rows() == 0)
+    {
+        mysql_tquery(g_SQL, "UPDATE `vehicles` v SET v.`price` = IFNULL((SELECT MAX(m.`price`) FROM `market_listings` m WHERE m.`model` = v.`model`), 0)");
+        mysql_tquery(g_SQL, "INSERT INTO `server_vars` (`name`, `value`) VALUES ('vehicle_price_v1', 1)");
+    }
+    Veh_CheckInactive();
+    return 1;
 }
 
 stock Veh_Exit()
@@ -1118,13 +1135,13 @@ stock bool:Veh_HasFreeSlot(playerid)
 
 // A new vehicle has no plates (they come with the first registration). adminid is INVALID_PLAYER_ID for a market purchase.
 // parked = false: the spot is only temporary (the market exit) until the owner leaves the vehicle somewhere else.
-stock Veh_Insert(adminid, targetid, model, Float:x, Float:y, Float:z, Float:angle, Float:fuel, bool:parked)
+stock Veh_Insert(adminid, targetid, model, Float:x, Float:y, Float:z, Float:angle, Float:fuel, bool:parked, price)
 {
     new query[640];
     mysql_format(g_SQL, query, sizeof(query),
-        "INSERT INTO `vehicles` (`id`, `owner_id`, `model`, `color1`, `color2`, `park_x`, `park_y`, `park_z`, `park_a`, `fuel`, `parked`) " \
-        "SELECT " DB_FREE_ID("vehicles") ", %d, %d, %d, %d, %f, %f, %f, %f, %f, %d",
-        g_Player[targetid][pDbId], model, random(127), random(127), x, y, z, angle, fuel, parked ? 1 : 0);
+        "INSERT INTO `vehicles` (`id`, `owner_id`, `model`, `color1`, `color2`, `park_x`, `park_y`, `park_z`, `park_a`, `fuel`, `parked`, `price`) " \
+        "SELECT " DB_FREE_ID("vehicles") ", %d, %d, %d, %d, %f, %f, %f, %f, %f, %d, %d",
+        g_Player[targetid][pDbId], model, random(127), random(127), x, y, z, angle, fuel, parked ? 1 : 0, price);
     mysql_tquery(g_SQL, query, "OnVehicleInserted", "ddd", adminid, targetid, g_AccountRace[targetid]);
 }
 
@@ -1135,7 +1152,7 @@ stock Veh_CreateFor(adminid, targetid, model)
     GetPlayerFacingAngle(targetid, angle);
     x += 4.0 * floatcos(angle, degrees);
     y += 4.0 * floatsin(angle, degrees);
-    Veh_Insert(adminid, targetid, model, x, y, z, angle, float(Fuel_TankSize(model)), true);
+    Veh_Insert(adminid, targetid, model, x, y, z, angle, float(Fuel_TankSize(model)), true, 0);
 }
 
 forward OnVehicleInserted(adminid, targetid, race);
@@ -1204,6 +1221,57 @@ stock Veh_TransferTo(slot, buyerid)
     mysql_tquery(g_SQL, query);
     Veh_SetParkingHere(slot);
     Veh_SaveState(slot);
+}
+
+// A sale between players: the price the buyer paid is what an inactivity refund is counted from.
+stock Veh_SetPaidPrice(slot, price)
+{
+    new query[96];
+    mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `price` = %d WHERE `id` = %d", price, g_Veh[slot][vDbId]);
+    mysql_tquery(g_SQL, query);
+}
+
+// Owners away VEH_DELETE_DAYS lose their vehicles for good, with part of the price back; until then the 14-day rule only keeps them off the map.
+forward Veh_CheckInactive();
+public Veh_CheckInactive()
+{
+    new query[256];
+    mysql_format(g_SQL, query, sizeof(query),
+        "SELECT v.`id`, v.`owner_id`, v.`price` FROM `vehicles` v JOIN `accounts` a ON a.`id` = v.`owner_id` WHERE a.`last_login` < NOW() - INTERVAL %d DAY",
+        VEH_DELETE_DAYS);
+    mysql_tquery(g_SQL, query, "OnVehiclesInactive");
+    return 1;
+}
+
+forward OnVehiclesInactive();
+public OnVehiclesInactive()
+{
+    new rows = cache_num_rows(), dbid, owner, price, query[256];
+    for (new row = 0; row < rows; row++)
+    {
+        cache_get_value_name_int(row, "id", dbid);
+        cache_get_value_name_int(row, "owner_id", owner);
+        cache_get_value_name_int(row, "price", price);
+        new refund = price * VEH_DELETE_REFUND_PERCENT / 100, slot = Veh_FindByDbId(dbid);
+        // A server that has run since before the owner left may still have the vehicle out.
+        if (slot != -1)
+        {
+            Veh_Despawn(slot, false);
+        }
+        mysql_format(g_SQL, query, sizeof(query), "DELETE FROM `vehicles` WHERE `id` = %d", dbid);
+        mysql_tquery(g_SQL, query);
+        mysql_format(g_SQL, query, sizeof(query), "DELETE FROM `vehicle_trunk` WHERE `vehicle_id` = %d", dbid);
+        mysql_tquery(g_SQL, query);
+        mysql_format(g_SQL, query, sizeof(query),
+            "INSERT INTO `vehicle_trades` (`kind`, `vehicle_id`, `seller_id`, `buyer_id`, `amount`, `tax`) VALUES ('inactive', %d, %d, 0, %d, 0)", dbid, owner, refund);
+        mysql_tquery(g_SQL, query);
+        if (refund > 0)
+        {
+            Money_PayAccount(owner, refund, "vozilo oduzeto zbog neaktivnosti");
+        }
+        printf("[VEHICLES] Vehicle %d taken from inactive account %d (%d refunded).", dbid, owner, refund);
+    }
+    return 1;
 }
 
 stock Veh_ShowList(playerid)
