@@ -71,7 +71,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 
 ### Faza 4: Imovina
 - [x] Korak 4.1 i 4.2: PROP-1 kuće i PROP-5 garaže
-- [ ] PROP-2 – PROP-4: iznajmljivanje, sef, nameštaj
+- [ ] PROP-3, PROP-4: sef, nameštaj (PROP-2 iznajmljivanje otpada)
 - [ ] PROP-6, PROP-7: firme
 - [ ] JOB-1, JOB-2: okvir za poslove i kamiondžija (PROP-8)
 - [ ] ADM-5: alati za kreiranje u igri
@@ -187,7 +187,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 
 ### Phase 4: Property
 - [x] Steps 4.1 and 4.2: PROP-1 houses and PROP-5 garages
-- [ ] PROP-2 – PROP-4: renting, safe, furniture
+- [ ] PROP-3, PROP-4: safe, furniture (PROP-2 renting dropped)
 - [ ] PROP-6, PROP-7: businesses
 - [ ] JOB-1, JOB-2: job framework and trucker (PROP-8)
 - [ ] ADM-5: in-game creation tools

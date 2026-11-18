@@ -115,6 +115,8 @@ new g_Houses[MAX_HOUSES][E_HOUSE];
 new g_HouseSelected[MAX_PLAYERS];
 new g_HouseSpawn[MAX_PLAYERS];
 new bool:g_HouseSpawnPending[MAX_PLAYERS];
+// Own-house icons wait for the first spawn: the client drops map icons sent while it is still on the login screen.
+new bool:g_HouseIconsShown[MAX_PLAYERS];
 new g_HouseGarageListed[MAX_PLAYERS][4];
 
 forward bool:House_GaragePos(house_dbid, &Float:x, &Float:y, &Float:z);

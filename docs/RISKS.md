@@ -268,7 +268,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Pojavljivanje u kući kao bekstvo iz zatvora | ✅ | Zatvor ima prednost; kuća mora i dalje biti igračeva |
 | Izlazak i ulazak na server kao teleport kući | ✅ | Kuća važi pri ulasku tek posle 10 min van servera |
 | Smrt kao teleport kući | ✅ | Posle smrti uvek bolnica |
-| Ikonica tuđe kuće ostane igraču koji dobije isti playerid | ✅ | Ikonica vlasnika se briše čim izađe sa servera |
+| Ikonica tuđe kuće ostane igraču koji dobije isti playerid | ✅ | Ikonica vlasnika se briše čim izađe sa servera, a pravi se tek posle prijave (ne vidi je neko ko samo ukuca ime vlasnika) |
 | ID vozila u garaži dobije drugo vozilo | ✅ | U svetu ID uvek pripada vozilu koje ga sada ima; od dva vozila u garaži ID pamti samo poslednje |
 | Obrisan ID ponovo dat, a neko je ostao u svetu obrisane kuće | ✅ | Pri brisanju se svi iz te kuće izbacuju ispred vrata |
 | Parking u garaži preko broja mesta | ✅ | Parking u garaži može imati najviše onoliko vozila koliko garaža prima; ako je garaža puna, vozilo staje ispred nje |
@@ -584,7 +584,7 @@ Every new system or change goes through these questions, against all existing sy
 | Spawning at home as an escape from jail | ✅ | Jail comes first; the house must still be the player's |
 | Leaving and rejoining as a teleport home | ✅ | The house applies on login only after 10 min away |
 | Death as a teleport home | ✅ | After death always the hospital |
-| The icon of someone's house stays for the next player with the same playerid | ✅ | The owner's icon is removed the moment they leave |
+| The icon of someone's house stays for the next player with the same playerid | ✅ | The owner's icon is removed the moment they leave and made only after the login (someone who only types the owner's name never sees it) |
 | A garage vehicle's ID is given to another vehicle | ✅ | In the world an ID always belongs to the vehicle that has it now; of two garage vehicles only the latest keeps it |
 | A deleted id given out again while someone is still in the deleted house's world | ✅ | Deleting moves everyone inside out in front of the door |
 | Garage parking beyond the number of places | ✅ | A garage can be parking for at most as many vehicles as it holds; when it is full the vehicle stands in front of it |

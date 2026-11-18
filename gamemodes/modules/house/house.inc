@@ -56,6 +56,7 @@ stock House_OnPlayerConnect(playerid)
     g_HouseSelected[playerid] = -1;
     g_HouseSpawn[playerid] = 0;
     g_HouseSpawnPending[playerid] = false;
+    g_HouseIconsShown[playerid] = false;
     g_HouseInteriorFor[playerid] = 0;
 }
 
@@ -81,6 +82,10 @@ static stock House_ShowOwnerIcons(playerid, bool:online)
         {
             House_ShowIcon(slot, online ? playerid : INVALID_PLAYER_ID);
         }
+    }
+    if (online)
+    {
+        Streamer_Update(playerid, STREAMER_TYPE_MAP_ICON);
     }
 }
 
@@ -467,7 +472,6 @@ stock House_OnLoadAccount(playerid)
     cache_get_value_name_int(0, "house_spawn", g_HouseSpawn[playerid]);
     cache_get_value_name_int(0, "logout_at", logout_at);
     g_HouseSpawnPending[playerid] = g_HouseSpawn[playerid] != 0 && gettime() - logout_at >= HOUSE_SPAWN_AWAY_S;
-    House_ShowOwnerIcons(playerid, true);
 }
 
 // Puts the player inside their spawn house when they chose one in /kuca; false when there is none.
@@ -485,6 +489,11 @@ stock bool:House_MoveToSpawn(playerid)
 // Only the first spawn after login; after death everyone goes to the hospital, and jail always wins.
 stock House_OnPlayerSpawn(playerid)
 {
+    if (!g_HouseIconsShown[playerid])
+    {
+        g_HouseIconsShown[playerid] = true;
+        House_ShowOwnerIcons(playerid, true);
+    }
     if (!g_HouseSpawnPending[playerid])
     {
         return;

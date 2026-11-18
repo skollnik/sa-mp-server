@@ -723,7 +723,7 @@ static stock Veh_RespawnAfterDeath(slot)
     {
         g_Veh[slot][vVehicleId] = INVALID_VEHICLE_ID;
         Veh_SaveState(slot);
-        Veh_SetGarage(slot, g_Veh[slot][vParkGarage]);
+        Veh_SetGarage(slot, g_Veh[slot][vParkGarage], vehicleid);
         if (ownerid != INVALID_PLAYER_ID)
         {
             Msg_Info(ownerid, "Vase vozilo %s je unisteno i vraceno u garazu kuce, osteceno.", Veh_Name(slot));
@@ -1475,18 +1475,13 @@ static stock bool:Veh_ParkingBlockedBy(playerid, vehicleid, dest[], &Float:range
 // The vehicle leaves the world; its data stays in the slot, so it still counts towards the owner's vehicle limit.
 stock Veh_StoreInGarage(slot, house_dbid)
 {
-    new vehicleid = g_Veh[slot][vVehicleId], other = Veh_FindInGarageById(vehicleid);
+    new vehicleid = g_Veh[slot][vVehicleId];
     Veh_SaveState(slot);
     Veh_ClearNeon(vehicleid);
     DestroyVehicle(vehicleid);
     g_VehSlotOf[vehicleid] = -1;
     g_Veh[slot][vVehicleId] = INVALID_VEHICLE_ID;
-    if (other != -1)
-    {
-        g_Veh[other][vLastVehicleId] = INVALID_VEHICLE_ID;
-    }
-    g_Veh[slot][vLastVehicleId] = vehicleid;
-    Veh_SetGarage(slot, house_dbid);
+    Veh_SetGarage(slot, house_dbid, vehicleid);
 }
 
 // The garage vehicle that last had this ID, or -1. A newer vehicle in a garage takes the ID over (see Veh_StoreInGarage).
@@ -1509,13 +1504,18 @@ stock bool:Veh_TakeFromGarage(slot, Float:x, Float:y, Float:z, Float:angle)
         return false;
     }
     Veh_SetGarage(slot, 0);
-    g_Veh[slot][vLastVehicleId] = INVALID_VEHICLE_ID;
     return true;
 }
 
-static stock Veh_SetGarage(slot, house_dbid)
+// last_id is the ID the vehicle had in the world; only one vehicle in a garage can answer to an ID at a time.
+static stock Veh_SetGarage(slot, house_dbid, last_id = INVALID_VEHICLE_ID)
 {
-    new query[96];
+    new query[96], other = last_id == INVALID_VEHICLE_ID ? -1 : Veh_FindInGarageById(last_id);
+    if (other != -1)
+    {
+        g_Veh[other][vLastVehicleId] = INVALID_VEHICLE_ID;
+    }
+    g_Veh[slot][vLastVehicleId] = house_dbid == 0 ? INVALID_VEHICLE_ID : last_id;
     g_Veh[slot][vGarage] = house_dbid;
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `vehicles` SET `garage_house` = %d WHERE `id` = %d", house_dbid, g_Veh[slot][vDbId]);
     mysql_tquery(g_SQL, query);

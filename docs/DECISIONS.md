@@ -194,6 +194,8 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 186 | 2026-11-16 | `/gotokucu` je sada `/gotokuca` | Zahtev vlasnika |
 | 187 | 2026-11-16 | Na mapi su kuće na prodaju (svima, u blizini) i sopstvena kuća (samo vlasniku, sa cele mape); tuđe kuće se ne vide | Odobrio vlasnik; mapa nije puna kad bude stotine kuća |
 | 188 | 2026-11-16 | Vozilo u garaži pamti ID koji je imalo: `/gotoveh` i ostale admin komande kažu da je u garaži, a `/getveh` ga vadi i dovodi adminu (dobija novi ID) | Zahtev vlasnika |
+| 189 | 2026-11-18 | Nema iznajmljivanja soba (podstanara) | Pravilo vlasnika: ako ga većina modova nema, nemamo ni mi; ima ga oko trećine referentnih modova |
+| 190 | 2026-11-18 | Ikonica sopstvene kuće se pravi na prvom spawnu, ne pri učitavanju naloga | Klijent na ekranu za prijavu gubi ikonice, pa se kuća često nije videla |
 
 ### Arhitektura koda (predlog)
 ```
@@ -409,6 +411,8 @@ This file records every important decision so it does not get re-discussed. Newe
 | 186 | 2026-11-16 | `/gotokucu` is now `/gotokuca` | Owner's request |
 | 187 | 2026-11-16 | The map shows houses for sale (to everyone, nearby) and your own house (only to the owner, from the whole map); other people's houses are hidden | Approved by the owner; the map does not fill up once there are hundreds of houses |
 | 188 | 2026-11-16 | A vehicle in a garage remembers the ID it had: `/gotoveh` and the other admin commands say it is in a garage, and `/getveh` takes it out to the admin (it gets a new ID) | Owner's request |
+| 189 | 2026-11-18 | No renting of rooms (tenants) | The owner's rule: if most gamemodes do not have it, neither do we; about a third of the reference gamemodes have it |
+| 190 | 2026-11-18 | The own-house icon is made on the first spawn, not when the account loads | The client drops icons while on the login screen, so the house was often missing |
 
 ### Code architecture (proposal)
 ```
