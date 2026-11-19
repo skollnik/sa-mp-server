@@ -170,6 +170,11 @@ stock bool:Rent_IsNearSpot(vehicleid, Float:range)
     return false;
 }
 
+stock bool:Rent_IsTaken(vehicleid)
+{
+    return Rent_IsRentVehicle(vehicleid) && g_Rent[g_RentOf[vehicleid]][rnRenter] != INVALID_PLAYER_ID;
+}
+
 stock bool:Rent_IsRenter(playerid, vehicleid)
 {
     return Rent_IsRentVehicle(vehicleid) && g_Rent[g_RentOf[vehicleid]][rnRenter] == playerid;

@@ -53,7 +53,6 @@ new g_TunePreviewOld[MAX_PLAYERS];
 new g_TunePreviewPaintjob[MAX_PLAYERS] = { -1, ... };
 new g_TunePreviewNeon[MAX_PLAYERS] = { -1, ... };
 new bool:g_TuneColourPreview[MAX_PLAYERS];
-new g_TuneOldColours[MAX_PLAYERS][2];
 new g_TuneVehicle[MAX_PLAYERS];
 
 // Admin vehicles are for any admin; a personal vehicle is someone's property, so free tuning on it is for senior admins.
@@ -181,11 +180,12 @@ static stock Tune_RevertPreview(playerid, vehicleid)
         }
         g_TunePreview[playerid] = 0;
     }
-    if (g_TunePreviewPaintjob[playerid] != -1)
+    new bool:look = g_TunePreviewPaintjob[playerid] != -1 || g_TuneColourPreview[playerid];
+    g_TunePreviewPaintjob[playerid] = -1;
+    g_TuneColourPreview[playerid] = false;
+    if (look)
     {
-        new slot = g_VehSlotOf[vehicleid];
-        ChangeVehiclePaintjob(vehicleid, slot == -1 ? VEH_PAINTJOB_NONE : g_Veh[slot][vPaintjob]);
-        g_TunePreviewPaintjob[playerid] = -1;
+        Tune_RestoreLook(vehicleid);
     }
     if (g_TunePreviewNeon[playerid] != -1)
     {
@@ -196,11 +196,25 @@ static stock Tune_RevertPreview(playerid, vehicleid)
         }
         g_TunePreviewNeon[playerid] = -1;
     }
-    if (g_TuneColourPreview[playerid])
+}
+
+// Paintjob and colours are put back together: the client keeps a removed paintjob, or the tried colour, until the colours
+// are sent again after it, so a declined preview stayed on the vehicle.
+static stock Tune_RestoreLook(vehicleid)
+{
+    new slot = g_VehSlotOf[vehicleid], colour1, colour2;
+    ChangeVehiclePaintjob(vehicleid, slot == -1 ? VEH_PAINTJOB_NONE : g_Veh[slot][vPaintjob]);
+    // Only a personal vehicle can have a colour on trial, so any other one keeps the colours it has.
+    if (slot != -1)
     {
-        ChangeVehicleColours(vehicleid, g_TuneOldColours[playerid][0], g_TuneOldColours[playerid][1]);
-        g_TuneColourPreview[playerid] = false;
+        colour1 = g_Veh[slot][vColor1];
+        colour2 = g_Veh[slot][vColor2];
     }
+    else
+    {
+        GetVehicleColours(vehicleid, colour1, colour2);
+    }
+    ChangeVehicleColours(vehicleid, colour1, colour2);
 }
 
 // Also called when the admin leaves the vehicle, dies or disconnects, so the camera and controls always come back.
@@ -762,10 +776,6 @@ stock bool:Tune_OnDialogResponse(playerid, dialogid, response, const inputtext[]
         else if (Tune_AtMechanic(playerid))
         {
             new text[96];
-            // The saved colours, not the game's, so "Vrati" always brings back what the owner paid for.
-            new slot = g_VehSlotOf[vehicleid];
-            g_TuneOldColours[playerid][0] = g_Veh[slot][vColor1];
-            g_TuneOldColours[playerid][1] = g_Veh[slot][vColor2];
             g_TuneColourPreview[playerid] = true;
             ChangeVehicleColours(vehicleid, colour1, colour2);
             format(text, sizeof(text), "Ovako izgleda boja %d %d.\n\nFarbanje kosta $%d.", colour1, colour2, TUNE_PRICE_PAINT);

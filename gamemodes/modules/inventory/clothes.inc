@@ -45,12 +45,12 @@ stock bool:Clothes_IsForGender(playerid, skin)
     return g_Player[playerid][pGender] == GENDER_FEMALE ? Clothes_IsFemale(skin) : Clothes_IsMale(skin);
 }
 
-// Not while a uniform or the staff skin is on, so the change is never hidden under it.
+// Not while a job uniform is on; on admin duty the clothes are kept and shown after /aduty, like a VIP skin.
 stock bool:Clothes_CanChange(playerid)
 {
-    if (g_Staff[playerid][sAdminDuty] || Job_Skin(playerid) != -1)
+    if (Job_Skin(playerid) != -1)
     {
-        Msg_Error(playerid, "Prvo skinite uniformu (kraj smene ili admin duznosti).");
+        Msg_Error(playerid, "Prvo skinite uniformu (kraj smene).");
         return false;
     }
     if (Inv_IsBusy(playerid))
@@ -69,6 +69,10 @@ stock Clothes_Wear(playerid, skin)
     Staff_UpdateLook(playerid);
     Account_Save(playerid);
     Chat_Action(playerid, "se presvlaci.");
+    if (g_Staff[playerid][sAdminDuty])
+    {
+        Msg_Info(playerid, "Garderoba je sacuvana; videcete je kad izadjete sa admin duznosti (/aduty).");
+    }
     return Clothes_CanBag(old) ? old : 0;
 }
 

@@ -1,4 +1,4 @@
-// Moving an object inside a house with the game's own mouse arrows; the safe and furniture only say what happens when it is put down.
+// Moving furniture inside a house with the game's own mouse arrows; furniture only says what happens when a piece is put down.
 static E_PLACE_KIND:g_PlaceKind[MAX_PLAYERS];
 static g_PlaceRef[MAX_PLAYERS];
 static g_PlaceHouse[MAX_PLAYERS];
@@ -19,12 +19,19 @@ stock bool:Place_IsInsideHouse(slot, Float:x, Float:y, Float:z)
     return VectorSize(x - ex, y - ey, 0.0) <= FURN_PLACE_RADIUS && z > ez - 6.0 && z < ez + 8.0;
 }
 
+stock bool:Place_BlocksExit(slot, Float:x, Float:y)
+{
+    new Float:ex, Float:ey, Float:ez, Float:ea;
+    House_ExitPos(slot, ex, ey, ez, ea);
+    return VectorSize(x - ex, y - ey, 0.0) < FURN_EXIT_CLEAR;
+}
+
 stock bool:Place_IsEditing(playerid)
 {
     return g_PlaceKind[playerid] != PLACE_NONE;
 }
 
-// The spot a meter in front of the player, on the floor, turned to face them.
+// The spot a little in front of the player, on the floor, turned to face them.
 stock Place_InFront(playerid, &Float:x, &Float:y, &Float:z, &Float:rz)
 {
     new Float:angle;
@@ -52,27 +59,21 @@ stock Place_Start(playerid, E_PLACE_KIND:kind, ref, slot, STREAMER_TAG_OBJECT:ob
     Msg_Info(playerid, "Pomerajte strelicama (mis). Disketa cuva, ESC vraca nazad. Drzite razmak da okrecete kameru.");
 }
 
-// The object may have been destroyed meanwhile (house sold, refreshed) and its id given to another object, which must not be moved.
-static stock bool:Place_StillThere(playerid, E_PLACE_KIND:kind)
+// The object may have been destroyed meanwhile (house sold) and its id given to another object, which must not be moved.
+static stock bool:Place_StillThere(playerid)
 {
-    if (kind == PLACE_SAFE)
-    {
-        new slot = House_FindSlotByDbId(g_PlaceHouse[playerid]);
-        return slot != -1 && g_Houses[slot][hHasSafe] && g_Houses[slot][hSafeObject] == g_PlaceObject[playerid];
-    }
     return Furn_IsObject(g_PlaceRef[playerid], g_PlaceHouse[playerid], g_PlaceObject[playerid]);
 }
 
 static stock Place_Undo(playerid)
 {
-    new E_PLACE_KIND:kind = g_PlaceKind[playerid];
     g_PlaceKind[playerid] = PLACE_NONE;
-    if (g_PlaceFresh[playerid] && kind == PLACE_FURNITURE)
+    if (g_PlaceFresh[playerid])
     {
         Furn_OnPlaceCancelled(g_PlaceRef[playerid], g_PlaceHouse[playerid]);
         return;
     }
-    if (Place_StillThere(playerid, kind))
+    if (Place_StillThere(playerid))
     {
         SetDynamicObjectPos(g_PlaceObject[playerid], g_PlaceFrom[playerid][0], g_PlaceFrom[playerid][1], g_PlaceFrom[playerid][2]);
         SetDynamicObjectRot(g_PlaceObject[playerid], g_PlaceFrom[playerid][3], g_PlaceFrom[playerid][4], g_PlaceFrom[playerid][5]);
@@ -107,10 +108,10 @@ stock Place_OnEditObject(playerid, STREAMER_TAG_OBJECT:objectid, response, Float
     }
     // Checked again on saving: the house may have been sold, or the player may have left it while moving.
     new slot = House_FindSlotByDbId(g_PlaceHouse[playerid]);
-    if (slot == -1 || !House_IsOwner(playerid, slot) || House_FindInsideAnywhere(playerid) != slot || !Place_StillThere(playerid, g_PlaceKind[playerid]))
+    if (slot == -1 || !House_IsOwner(playerid, slot) || House_FindInsideAnywhere(playerid) != slot || !Place_StillThere(playerid))
     {
         Place_Undo(playerid);
-        Msg_Error(playerid, "Postavljanje je prekinuto: nameste se samo u svojoj kuci, dok ste u njoj.");
+        Msg_Error(playerid, "Postavljanje je prekinuto: namesta se samo u svojoj kuci, dok ste u njoj.");
         return;
     }
     if (!Place_IsInsideHouse(slot, x, y, z) || GetPlayerDistanceFromPoint(playerid, x, y, z) > 10.0)
@@ -119,16 +120,14 @@ stock Place_OnEditObject(playerid, STREAMER_TAG_OBJECT:objectid, response, Float
         Msg_Error(playerid, "Predmet mora ostati u kuci, najvise 10 m od vas.");
         return;
     }
-    new E_PLACE_KIND:kind = g_PlaceKind[playerid];
+    if (Place_BlocksExit(slot, x, y))
+    {
+        Place_Undo(playerid);
+        Msg_Error(playerid, "Predmet ne sme stajati na izlazu (najmanje %.1f m od njega).", FURN_EXIT_CLEAR);
+        return;
+    }
     g_PlaceKind[playerid] = PLACE_NONE;
     SetDynamicObjectPos(objectid, x, y, z);
     SetDynamicObjectRot(objectid, rx, ry, rz);
-    if (kind == PLACE_SAFE)
-    {
-        Safe_OnPlaced(playerid, slot, x, y, z, rx, ry, rz);
-    }
-    else
-    {
-        Furn_OnPlaced(playerid, g_PlaceRef[playerid], slot, x, y, z, rx, ry, rz);
-    }
+    Furn_OnPlaced(playerid, g_PlaceRef[playerid], slot, x, y, z, rx, ry, rz);
 }

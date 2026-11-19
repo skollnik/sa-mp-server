@@ -262,55 +262,111 @@ static stock Safe_MoveMoney(playerid, slot, amount, bool:deposit)
     Store_Open(playerid, STORE_SAFE, slot);
 }
 
-// A new safe is saved in front of the owner right away, so cancelling the arrows still leaves it there, paid for.
-static stock Safe_Buy(playerid, slot)
+// The safe stands on the floor where the owner stands, so it can be pushed around in steps and turned, but never lifted
+// onto a ceiling or a wall the way free mouse placing allowed.
+static stock Safe_ShowMove(playerid, slot)
 {
-    if (!House_IsOwner(playerid, slot) || House_FindInsideAnywhere(playerid) != slot)
-    {
-        Msg_Error(playerid, "Sef se postavlja u kuci; udjite unutra.");
-        return;
-    }
-    if (!g_Houses[slot][hHasSafe])
-    {
-        new reason[32];
-        format(reason, sizeof(reason), "sef za kucu %d", g_Houses[slot][hDbId]);
-        if (!Money_Take(playerid, HOUSE_SAFE_PRICE, reason))
-        {
-            return;
-        }
-        Account_Save(playerid);
-        g_Houses[slot][hHasSafe] = true;
-        Place_InFront(playerid, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ], g_Houses[slot][hSafeRZ]);
-        g_Houses[slot][hSafeRX] = 0.0;
-        g_Houses[slot][hSafeRY] = 0.0;
-        House_Refresh(slot);
-        House_Save(slot);
-        Safe_Log(playerid, slot, "bought", ITEM_NONE, HOUSE_SAFE_PRICE);
-        Msg_Success(playerid, "Kupili ste sef za $%d. Postavite ga misem; otvara se sa /sef ili F pored njega.", HOUSE_SAFE_PRICE);
-    }
-    Place_Start(playerid, PLACE_SAFE, 0, slot, g_Houses[slot][hSafeObject], false);
+    g_HouseSelected[playerid] = slot;
+    ShowPlayerDialog(playerid, DIALOG_SAFE_MOVE, DIALOG_STYLE_LIST, "Pomeranje sefa (pravac je kuda gledate)",
+        "Dalje od vas (25 cm)\nBlize vama (25 cm)\nLevo (25 cm)\nDesno (25 cm)\nOkreni na levo (15 stepeni)\nOkreni na desno (15 stepeni)\nPostavi ispred sebe\nGotovo",
+        "Izaberi", "Gotovo");
 }
 
-stock Safe_OnPlaced(playerid, slot, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz)
+static stock bool:Safe_FitsAt(playerid, slot, Float:x, Float:y, Float:z)
 {
+    if (!Place_IsInsideHouse(slot, x, y, z) || GetPlayerDistanceFromPoint(playerid, x, y, z) > 4.0)
+    {
+        Msg_Error(playerid, "Sef mora ostati u kuci i blizu vas; pridjite mu ili ga postavite ispred sebe.");
+        return false;
+    }
+    if (Place_BlocksExit(slot, x, y))
+    {
+        Msg_Error(playerid, "Sef ne sme stajati na izlazu (najmanje %.1f m od njega).", FURN_EXIT_CLEAR);
+        return false;
+    }
+    return true;
+}
+
+static stock Safe_Step(playerid, slot, option)
+{
+    new Float:x = g_Houses[slot][hSafeX], Float:y = g_Houses[slot][hSafeY], Float:z = g_Houses[slot][hSafeZ], Float:rz = g_Houses[slot][hSafeRZ], Float:angle;
+    GetPlayerFacingAngle(playerid, angle);
+    switch (option)
+    {
+        case 0, 1:
+        {
+            new Float:step = option == 0 ? SAFE_STEP : -SAFE_STEP;
+            x += step * floatsin(-angle, degrees);
+            y += step * floatcos(-angle, degrees);
+        }
+        case 2, 3:
+        {
+            new Float:side = option == 2 ? angle + 90.0 : angle - 90.0;
+            x += SAFE_STEP * floatsin(-side, degrees);
+            y += SAFE_STEP * floatcos(-side, degrees);
+        }
+        case 4: rz += SAFE_TURN;
+        case 5: rz -= SAFE_TURN;
+        case 6: Place_InFront(playerid, x, y, z, rz);
+        default: return;
+    }
+    if (!Safe_FitsAt(playerid, slot, x, y, z))
+    {
+        Safe_ShowMove(playerid, slot);
+        return;
+    }
     g_Houses[slot][hSafeX] = x;
     g_Houses[slot][hSafeY] = y;
     g_Houses[slot][hSafeZ] = z;
-    g_Houses[slot][hSafeRX] = rx;
-    g_Houses[slot][hSafeRY] = ry;
+    g_Houses[slot][hSafeRX] = 0.0;
+    g_Houses[slot][hSafeRY] = 0.0;
     g_Houses[slot][hSafeRZ] = rz;
     House_Refresh(slot);
     House_Save(slot);
-    Safe_Log(playerid, slot, "moved", ITEM_NONE, 0);
-    Msg_Success(playerid, "Sef je postavljen.");
+    Safe_ShowMove(playerid, slot);
 }
 
-// After an admin gives the house another interior the old spot means nothing there, so the safe goes next to the exit.
+static stock Safe_Buy(playerid, slot)
+{
+    if (!House_IsOwner(playerid, slot) || House_FindInsideAnywhere(playerid) != slot || g_Houses[slot][hHasSafe])
+    {
+        Msg_Error(playerid, "Sef se kupuje u kuci; udjite unutra.");
+        return;
+    }
+    new Float:x, Float:y, Float:z, Float:rz;
+    Place_InFront(playerid, x, y, z, rz);
+    if (!Safe_FitsAt(playerid, slot, x, y, z))
+    {
+        return;
+    }
+    new reason[32];
+    format(reason, sizeof(reason), "sef za kucu %d", g_Houses[slot][hDbId]);
+    if (!Money_Take(playerid, HOUSE_SAFE_PRICE, reason))
+    {
+        return;
+    }
+    Account_Save(playerid);
+    g_Houses[slot][hHasSafe] = true;
+    g_Houses[slot][hSafeX] = x;
+    g_Houses[slot][hSafeY] = y;
+    g_Houses[slot][hSafeZ] = z;
+    g_Houses[slot][hSafeRX] = 0.0;
+    g_Houses[slot][hSafeRY] = 0.0;
+    g_Houses[slot][hSafeRZ] = rz;
+    House_Refresh(slot);
+    House_Save(slot);
+    Safe_Log(playerid, slot, "bought", ITEM_NONE, HOUSE_SAFE_PRICE);
+    Msg_Success(playerid, "Kupili ste sef za $%d. Pomerite ga gde zelite; otvara se sa /sef ili F pored njega.", HOUSE_SAFE_PRICE);
+    Safe_ShowMove(playerid, slot);
+}
+
+// After an admin gives the house another interior the old spot means nothing there, so the safe goes a few steps in from the exit.
 stock Safe_PutAtExit(slot)
 {
     new Float:angle;
     House_ExitPos(slot, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ], angle);
-    g_Houses[slot][hSafeX] += 1.0;
+    g_Houses[slot][hSafeX] += (FURN_EXIT_CLEAR + 0.5) * floatsin(-angle, degrees);
+    g_Houses[slot][hSafeY] += (FURN_EXIT_CLEAR + 0.5) * floatcos(-angle, degrees);
     g_Houses[slot][hSafeZ] -= 1.0;
     g_Houses[slot][hSafeRX] = 0.0;
     g_Houses[slot][hSafeRY] = 0.0;
@@ -322,21 +378,19 @@ stock Safe_OnMenu(playerid, slot)
 {
     if (House_FindInsideAnywhere(playerid) != slot)
     {
-        Msg_Error(playerid, "Udjite u kucu; sef se postavlja misem.");
+        Msg_Error(playerid, "Udjite u kucu; sef se postavlja unutra.");
+        return;
+    }
+    if (g_Houses[slot][hHasSafe])
+    {
+        Safe_ShowMove(playerid, slot);
         return;
     }
     g_HouseSelected[playerid] = slot;
     new text[192];
-    if (g_Houses[slot][hHasSafe])
-    {
-        strcopy(text, "Sef pomerate misem (strelice). Sadrzaj ostaje u njemu.");
-    }
-    else
-    {
-        format(text, sizeof(text), "Kupujete sef za $%d. Pojavljuje se ispred vas i postavljate ga misem; otvarate ga samo vi (/sef ili F).\n\nU sef staje novac i %d predmeta.",
-            HOUSE_SAFE_PRICE, Safe_Capacity(slot));
-    }
-    ShowPlayerDialog(playerid, DIALOG_SAFE_BUY, DIALOG_STYLE_MSGBOX, "Sef", text, "Potvrdi", "Odustani");
+    format(text, sizeof(text), "Kupujete sef za $%d. Pojavljuje se ispred vas, a posle ga pomerate u koracima; otvarate ga samo vi (/sef ili F).\n\nU sef staje novac i %d predmeta.",
+        HOUSE_SAFE_PRICE, Safe_Capacity(slot));
+    ShowPlayerDialog(playerid, DIALOG_SAFE_BUY, DIALOG_STYLE_MSGBOX, "Sef", text, "Kupi", "Odustani");
 }
 
 stock Safe_ShowToAdmin(playerid, slot)
@@ -381,6 +435,21 @@ stock bool:Safe_OnDialogResponse(playerid, dialogid, response, listitem, const i
             {
                 Safe_Buy(playerid, g_HouseSelected[playerid]);
             }
+        }
+        case DIALOG_SAFE_MOVE:
+        {
+            new slot = g_HouseSelected[playerid];
+            if (slot == -1 || !g_Houses[slot][hHasSafe] || !House_IsOwner(playerid, slot) || House_FindInsideAnywhere(playerid) != slot)
+            {
+                return true;
+            }
+            if (!response || listitem == 7)
+            {
+                Safe_Log(playerid, slot, "moved", ITEM_NONE, 0);
+                Msg_Success(playerid, "Sef je postavljen. Pomera se ponovo u /kuca.");
+                return true;
+            }
+            Safe_Step(playerid, slot, listitem);
         }
         case DIALOG_SAFE_MONEY, DIALOG_SAFE_DEPOSIT, DIALOG_SAFE_WITHDRAW:
         {

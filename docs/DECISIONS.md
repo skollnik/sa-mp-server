@@ -215,6 +215,12 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 207 | 2026-11-19 | Sef je predmet iz igre (2332) koji vlasnik postavlja mišem; isti alat (`placement.inc`) koristi i nameštaj | Vlasnik je tražio sef koji se vidi u kući |
 | 208 | 2026-11-19 | Nameštaj se kupuje u prodavnici nameštaja i čeka u kući dok ga vlasnik ne postavi (`/namestaj`); cena po kategoriji, prodaja 50%; limit 30/50/80 + admin; igraču ide uz kuću, državi i pri oduzimanju 50% na račun | Izbor vlasnika 19.11.2026. |
 | 209 | 2026-11-19 | Postavljen predmet mora biti do 35 m od izlaza, u visini enterijera i do 10 m od igrača | Da niko ne napravi izlaz iz enterijera ili stepenice van kuće |
+| 210 | 2026-11-19 | Sef se ne postavlja mišem: pojavi se ispred vlasnika i pomera se iz menija (25 cm, 15°), uvek na podu | Mišem je mogao na plafon |
+| 211 | 2026-11-19 | Ništa (nameštaj, sef) ne sme stajati bliže od 2,5 m izlazu kuće | Nameštajem se mogao zatvoriti izlaz |
+| 212 | 2026-11-19 | Kad država uzme kuću (prodaja, neaktivnost, admin), otkupljuje nameštaj i sef za 50% na račun; kuća ide na prodaju bez njih | Izbor vlasnika; ranije se sef davao besplatno sledećem kupcu |
+| 213 | 2026-11-19 | Admin podaci (`/vinfo`, `/kinfo`, `/check`) uvek u istom dijalogu „Podatak / Vrednost“ (`Staff_Info*`) | Jedan je bio u chatu, a drugi u dijalogu |
+| 214 | 2026-11-19 | Na admin dužnosti može se obući garderoba: čuva se i vidi posle `/aduty`, kao VIP skin; uniforma posla i dalje sprečava presvlačenje | Kupljena garderoba je delovala kao da nestaje |
+| 215 | 2026-11-19 | `/resetvozila` vraća i rent, vozila poslova i ostala vozila servera na njihovo mesto, osim iznajmljenog renta | Rent bicikl doveden sa `/getveh` nije se vraćao |
 
 ### Arhitektura koda (predlog)
 ```
@@ -451,6 +457,12 @@ This file records every important decision so it does not get re-discussed. Newe
 | 207 | 2026-11-19 | The safe is an in-game object (2332) the owner places with the mouse; furniture uses the same tool (`placement.inc`) | The owner asked for a safe that can be seen in the house |
 | 208 | 2026-11-19 | Furniture is bought in a furniture shop and waits in the house until the owner places it (`/namestaj`); one price per category, sold for 50%; limit 30/50/80 + admin; goes with the house to a player, 50% to the bank when sold to the state or taken | The owner's choice, 2026-11-19 |
 | 209 | 2026-11-19 | A placed object must stay within 35 m of the exit, at the interior's height and within 10 m of the player | So nobody builds a way out of the interior or stairs outside the house |
+| 210 | 2026-11-19 | The safe is not placed with the mouse: it appears in front of the owner and is moved from a menu (25 cm, 15°), always on the floor | With the mouse it could go onto the ceiling |
+| 211 | 2026-11-19 | Nothing (furniture, the safe) may stand closer than 2.5 m to the house exit | Furniture could close off the exit |
+| 212 | 2026-11-19 | When the state takes a house (sale, inactivity, an admin), it buys back the furniture and the safe for 50% to the bank; the house goes on sale without them | The owner's choice; before, the safe went to the next buyer for free |
+| 213 | 2026-11-19 | Admin data (`/vinfo`, `/kinfo`, `/check`) always in the same "Podatak / Vrednost" dialog (`Staff_Info*`) | One was in the chat and the other in a dialog |
+| 214 | 2026-11-19 | Clothes can be put on during admin duty: they are kept and shown after `/aduty`, like a VIP skin; a job uniform still prevents changing | Bought clothes looked as if they disappeared |
+| 215 | 2026-11-19 | `/resetvozila` also returns rentals, job vehicles and the server's other vehicles to their spawn, except a rental someone is renting | A rental bike brought with `/getveh` was not returned |
 
 ### Code architecture (proposal)
 ```

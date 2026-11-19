@@ -350,13 +350,43 @@ static stock House_SetOwner(slot, account_dbid, const name[])
     Wardrobe_StashOrphans();
 }
 
+// What the state pays for the furniture and the safe when it takes the house back.
+static stock House_BuybackValue(slot)
+{
+    new value = Furn_Value(g_Houses[slot][hDbId]);
+    if (g_Houses[slot][hHasSafe])
+    {
+        value += HOUSE_SAFE_PRICE;
+    }
+    return value * HOUSE_BUYBACK_PERCENT / 100;
+}
+
+// The furniture and the safe leave with the old owner as money in the bank; the house goes back on sale empty.
+static stock House_BuyBack(slot)
+{
+    new owner = g_Houses[slot][hOwnerDbId], amount = House_BuybackValue(slot);
+    Furn_DeleteHouse(slot);
+    g_Houses[slot][hHasSafe] = false;
+    if (owner == 0 || amount == 0)
+    {
+        return;
+    }
+    new reason[48];
+    format(reason, sizeof(reason), "otkup namestaja i sefa, kuca %d", g_Houses[slot][hDbId]);
+    new playerid = Money_PayAccount(owner, amount, reason);
+    if (playerid != INVALID_PLAYER_ID)
+    {
+        Msg_Info(playerid, "Drzava je otkupila namestaj i sef iz kuce za $%d (%d%% cene); novac je na racunu.", amount, HOUSE_BUYBACK_PERCENT);
+    }
+}
+
 // Taken from the owner without them (inactivity, an admin, a sale to the state): nobody spawns there any more, vehicles
 // parked in the garage get a temporary spot elsewhere, the garage lets its vehicles out, the safe's money goes to the owner's bank,
-// its items and the wardrobes to the stash, and the furniture is bought back.
+// its items and the wardrobes to the stash, and the furniture and the safe are bought back.
 static stock House_Release(slot)
 {
     Safe_ReturnToOwner(slot);
-    Furn_ReleaseHouse(slot);
+    House_BuyBack(slot);
     new query[128], dbid = g_Houses[slot][hDbId];
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `house_spawn` = 0 WHERE `house_spawn` = %d", dbid);
     mysql_tquery(g_SQL, query);
@@ -733,11 +763,11 @@ stock House_ShowMenu(playerid, slot)
     strcat(body, line);
     if (g_Houses[slot][hHasSafe])
     {
-        strcat(body, "Sef: pomeri ga misem\n");
+        strcat(body, "Sef: pomeri ga\n");
     }
     else
     {
-        format(line, sizeof(line), "Kupi sef ($%d, postavlja se misem)\n", HOUSE_SAFE_PRICE);
+        format(line, sizeof(line), "Kupi sef ($%d)\n", HOUSE_SAFE_PRICE);
         strcat(body, line);
     }
     format(line, sizeof(line), "Namestaj (%d/%d komada)\n", Furn_Count(g_Houses[slot][hDbId]), Furn_Limit(playerid, slot));
@@ -773,8 +803,8 @@ static stock House_ShowInfo(playerid, slot)
     new rules[384];
     format(rules, sizeof(rules), "Pojavljivanje u kuci vazi pri ulasku na server (ako niste bili na serveru bar %d min) i posle zatvora.\n" \
         "Kuca se vraca na prodaju ako ne udjete na server %d dana: dobijate %d%% na racun, novac iz sefa ide na racun,\n" \
-        "predmeti iz sefa i ormara u magacin (/ormar u sledecem domu), a namestaj se otkupljuje za %d%%.",
-        HOUSE_SPAWN_AWAY_S / 60, HOUSE_INACTIVE_DAYS, HOUSE_INACTIVE_PERCENT, FURN_SELL_PERCENT);
+        "predmeti iz sefa i ormara u magacin (/ormar u sledecem domu), a namestaj i sef se otkupljuju za %d%%.",
+        HOUSE_SPAWN_AWAY_S / 60, HOUSE_INACTIVE_DAYS, HOUSE_INACTIVE_PERCENT, HOUSE_BUYBACK_PERCENT);
     strcat(text, rules);
     ShowPlayerDialog(playerid, DIALOG_HOUSE_INFO, DIALOG_STYLE_MSGBOX, "Informacije o kuci", text, "Nazad", "");
 }
@@ -1420,7 +1450,7 @@ public OnHouseInfoTenants(playerid, race, house_dbid)
     {
         strcopy(tenants, "nema");
     }
-    new text[1024], address[48], owner[64], garage[48], safe[64];
+    new body[1536], value[96], address[48], owner[64], garage[48], safe[64];
     House_Address(slot, address);
     if (g_Houses[slot][hOwnerDbId] == 0)
     {
@@ -1447,14 +1477,29 @@ public OnHouseInfoTenants(playerid, race, house_dbid)
     {
         strcopy(safe, "nema");
     }
-    format(text, sizeof(text), "ID: %d\nAdresa: %s\nVlasnik: %s\nCena: $%d | Nivo: %d\nVelicina: %s (%s)\nVrata: %s\nGaraza: %s\nSef: %s\n" \
-        "Namestaj: %d komada\nOrmar vlasnika: %d garderoba\nSobe: %s, kirija $%d, %d/%d stanara\nStanari: %s",
-        house_dbid, address, owner, g_Houses[slot][hPrice], g_Houses[slot][hLevel], g_HouseSizeNames[House_Size(slot)], g_HouseInteriors[g_Houses[slot][hInterior]][hiName],
-        g_Houses[slot][hLocked] ? ("zakljucana") : ("otkljucana"), garage, safe, Furn_Count(house_dbid), g_Houses[slot][hOwnerWardrobe],
-        g_Houses[slot][hRoomsOpen] ? ("otvorene") : ("zatvorene"), g_Houses[slot][hRoomPrice], g_Houses[slot][hTenants], Room_Count(slot), tenants);
+    Staff_InfoBegin(body, sizeof(body));
+    valstr(value, house_dbid);
+    Staff_InfoRow(body, sizeof(body), "ID kuce", value);
+    Staff_InfoRow(body, sizeof(body), "Adresa", address);
+    Staff_InfoRow(body, sizeof(body), "Vlasnik", owner);
+    format(value, sizeof(value), "$%d / nivo %d", g_Houses[slot][hPrice], g_Houses[slot][hLevel]);
+    Staff_InfoRow(body, sizeof(body), "Cena / nivo", value);
+    format(value, sizeof(value), "%s (%s)", g_HouseSizeNames[House_Size(slot)], g_HouseInteriors[g_Houses[slot][hInterior]][hiName]);
+    Staff_InfoRow(body, sizeof(body), "Velicina", value);
+    Staff_InfoRow(body, sizeof(body), "Vrata", g_Houses[slot][hLocked] ? ("zakljucana") : ("otkljucana"));
+    Staff_InfoRow(body, sizeof(body), "Garaza", garage);
+    Staff_InfoRow(body, sizeof(body), "Sef", safe);
+    format(value, sizeof(value), "%d komada", Furn_Count(house_dbid));
+    Staff_InfoRow(body, sizeof(body), "Namestaj", value);
+    format(value, sizeof(value), "%d garderoba", g_Houses[slot][hOwnerWardrobe]);
+    Staff_InfoRow(body, sizeof(body), "Ormar vlasnika", value);
+    format(value, sizeof(value), "%s, kirija $%d, %d/%d stanara", g_Houses[slot][hRoomsOpen] ? ("otvorene") : ("zatvorene"), g_Houses[slot][hRoomPrice],
+        g_Houses[slot][hTenants], Room_Count(slot));
+    Staff_InfoRow(body, sizeof(body), "Sobe", value);
+    Staff_InfoRow(body, sizeof(body), "Stanari", tenants);
     new title[48];
     format(title, sizeof(title), "Kuca %d - podaci", house_dbid);
-    ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_MSGBOX, title, text, "Zatvori", "");
+    Staff_InfoShow(playerid, title, body);
     return 1;
 }
 
@@ -1594,9 +1639,10 @@ stock bool:House_OnDialogResponse(playerid, dialogid, response, listitem, const 
                 case 6: Room_ShowOwnerMenu(playerid, slot);
                 case 7:
                 {
-                    new text[384];
+                    new text[448];
                     format(text, sizeof(text), "Prodajete kucu drzavi za $%d (%d%% vrednosti).\n\nGaraza, sef i vas ormar moraju biti prazni i nijedno vozilo ne sme imati parking u garazi.\n" \
-                        "Stanari se iseljavaju, a namestaj drzava otkupljuje za %d%% cene (na racun).", g_Houses[slot][hPrice] * HOUSE_SELL_PERCENT / 100, HOUSE_SELL_PERCENT, FURN_SELL_PERCENT);
+                        "Stanari se iseljavaju.\n\nNamestaj i sef drzava otkupljuje za %d%% cene: $%d na racun. Kuca se posle prodaje bez njih.",
+                        g_Houses[slot][hPrice] * HOUSE_SELL_PERCENT / 100, HOUSE_SELL_PERCENT, HOUSE_BUYBACK_PERCENT, House_BuybackValue(slot));
                     ShowPlayerDialog(playerid, DIALOG_HOUSE_SELL, DIALOG_STYLE_MSGBOX, "Prodaja kuce", text, "Prodaj", "Odustani");
                 }
             }

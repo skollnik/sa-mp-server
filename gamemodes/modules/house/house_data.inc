@@ -49,6 +49,12 @@
 // A placed object must stay this close to the house exit, so nobody builds a way out of the interior.
 #define FURN_PLACE_RADIUS       (35.0)
 #define FURN_LIST_SIZE          (130)
+// Nothing may stand this close to the exit, so the way out of the house can never be walled off.
+#define FURN_EXIT_CLEAR         (2.5)
+#define SAFE_STEP               (0.25)
+#define SAFE_TURN               (15.0)
+// What the state pays back for the furniture and the safe when it takes the house (a sale to the state, inactivity, an admin).
+#define HOUSE_BUYBACK_PERCENT   (50)
 
 enum E_HOUSE_SIZE
 {
@@ -201,7 +207,6 @@ new g_HouseGarageListed[MAX_PLAYERS][4];
 enum E_PLACE_KIND
 {
     PLACE_NONE,
-    PLACE_SAFE,
     PLACE_FURNITURE
 }
 
@@ -227,4 +232,5 @@ forward bool:Stash_OnDialogResponse(playerid, dialogid, response, listitem, cons
 forward bool:Furn_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Place_IsInsideHouse(slot, Float:x, Float:y, Float:z);
 forward bool:Place_IsEditing(playerid);
+forward bool:Place_BlocksExit(slot, Float:x, Float:y);
 forward bool:Furn_IsObject(index, house_dbid, STREAMER_TAG_OBJECT:objectid);

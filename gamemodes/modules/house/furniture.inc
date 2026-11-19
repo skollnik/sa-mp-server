@@ -182,7 +182,7 @@ stock Furn_Count(house_dbid)
     return count;
 }
 
-static stock Furn_Value(house_dbid)
+stock Furn_Value(house_dbid)
 {
     new value;
     for (new i = 0; i < MAX_FURNITURE; i++)
@@ -519,28 +519,6 @@ static stock Furn_Sell(playerid)
     Account_Save(playerid);
     Msg_Success(playerid, "Prodali ste namestaj za $%d.", refund);
     Furn_ShowMenu(playerid);
-}
-
-// The house is taken (inactivity, an admin, a sale to the state): the furniture goes with the old owner as money.
-stock Furn_ReleaseHouse(slot)
-{
-    new house_dbid = g_Houses[slot][hDbId], owner = g_Houses[slot][hOwnerDbId], refund = Furn_Value(house_dbid) * FURN_SELL_PERCENT / 100;
-    if (Furn_Count(house_dbid) == 0)
-    {
-        return;
-    }
-    Furn_DeleteHouse(slot);
-    if (owner == 0 || refund == 0)
-    {
-        return;
-    }
-    new reason[48];
-    format(reason, sizeof(reason), "namestaj iz kuce %d", house_dbid);
-    new playerid = Money_PayAccount(owner, refund, reason);
-    if (playerid != INVALID_PLAYER_ID)
-    {
-        Msg_Info(playerid, "Namestaj iz kuce je otkupljen za $%d (%d%% cene), novac je na racunu.", refund, FURN_SELL_PERCENT);
-    }
 }
 
 stock Furn_DeleteHouse(slot)

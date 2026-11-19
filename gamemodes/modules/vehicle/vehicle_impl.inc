@@ -1752,6 +1752,22 @@ stock Veh_ReturnAllToParking()
     return count;
 }
 
+// Rentals, job vehicles and the rest of the server's own vehicles go back to their spawn; a rental someone is renting stays theirs.
+static stock Veh_RespawnOthers()
+{
+    new count;
+    for (new v = 1; v < MAX_VEHICLES; v++)
+    {
+        if (!IsValidVehicle(v) || g_VehSlotOf[v] != -1 || g_IsAdminVehicle[v] || IsVehicleOccupied(v) || Rent_IsTaken(v))
+        {
+            continue;
+        }
+        SetVehicleToRespawn(v);
+        count++;
+    }
+    return count;
+}
+
 // Everyone gets a warning first, so whoever wants to keep a vehicle where it is can sit in it.
 stock bool:Veh_StartReset(adminid, seconds)
 {
@@ -1767,8 +1783,8 @@ forward Veh_FinishReset(adminid, race);
 public Veh_FinishReset(adminid, race)
 {
     g_VehResetTimer = 0;
-    new count = Veh_ReturnAllToParking(), removed = Staff_DestroyAdminVehicles(true), message[144];
-    format(message, sizeof(message), "[ADMIN] Prazna vozila su vracena na parking (licnih: %d, obrisanih admin vozila: %d).", count, removed);
+    new count = Veh_ReturnAllToParking(), removed = Staff_DestroyAdminVehicles(true), others = Veh_RespawnOthers(), message[144];
+    format(message, sizeof(message), "[ADMIN] Prazna vozila su vracena (licnih: %d, ostalih: %d, obrisanih admin vozila: %d).", count, others, removed);
     Chat_SendToAll(COLOR_ADMIN, message);
     if (race == g_AccountRace[adminid] && Account_IsLoggedIn(adminid))
     {

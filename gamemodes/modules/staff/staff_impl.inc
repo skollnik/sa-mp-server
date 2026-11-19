@@ -517,6 +517,24 @@ stock Staff_CooldownLeft(playerid, last_used, base_seconds)
     return last_used + Vip_Cooldown(playerid, base_seconds) - gettime();
 }
 
+// Admin info windows (/check, /vinfo, /kinfo) share one look: a grey name and a white value on every row.
+stock Staff_InfoBegin(body[], size)
+{
+    strcopy(body, C_SERVER "Podatak\t" C_SERVER "Vrednost\n", size);
+}
+
+stock Staff_InfoRow(body[], size, const label[], const value[])
+{
+    new line[192];
+    format(line, sizeof(line), C_GREY "%s\t" C_WHITE "%s\n", label, value);
+    strcat(body, line, size);
+}
+
+stock Staff_InfoShow(playerid, const title[], const body[])
+{
+    ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_TABLIST_HEADERS, title, body, "Zatvori", "");
+}
+
 stock bool:Staff_HasGod(playerid)
 {
     return g_Staff[playerid][sGod];

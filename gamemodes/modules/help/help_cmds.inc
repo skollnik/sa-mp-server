@@ -73,7 +73,7 @@ static stock Help_ShowTopic(playerid, topic)
         {
             strcat(body, C_WHITE "/kupikucu - ispred kuce na prodaju (zelena kucica na mapi); kuca na prodaju se razgleda iznutra do 5 min\n");
             strcat(body, "/kuca - meni kuce (informacije, zakljucavanje, GPS, pojavljivanje, sef, namestaj, sobe, prodaja); van kuce: spisak mesta\n");
-            strcat(body, "/sef ili F pored sefa - novac i predmeti (sef se kupuje u /kuca i postavlja misem, otvara ga samo vlasnik)\n");
+            strcat(body, "/sef ili F pored sefa - novac i predmeti (sef se kupuje i pomera u /kuca, otvara ga samo vlasnik)\n");
             strcat(body, "/namestaj - u svojoj kuci: postavi, pomeri (misem) ili prodaj namestaj; kupuje se u prodavnici namestaja (/kupi)\n");
             strcat(body, "/iznajmisobu - ispred kuce sa slobodnom sobom    /napustisobu - iseljenje    /kuca - meni sobe\n");
             strcat(body, "/ormar - svaka kuca i soba ima svoj ormar za garderobu; tu je i magacin (stvari iz doma koji ste izgubili)\n");

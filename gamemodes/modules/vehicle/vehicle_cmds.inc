@@ -383,23 +383,48 @@ cmd:vinfo(playerid, params[])
         return 1;
     }
 
-    new Float:health, model = GetVehicleModel(vehicleid), slot = g_VehSlotOf[vehicleid];
+    new Float:health, model = GetVehicleModel(vehicleid), slot = g_VehSlotOf[vehicleid], body[1024], value[96];
     GetVehicleHealth(vehicleid, health);
-    Msg_Admin(playerid, "Vozilo ID %d: %s, HP %.0f (stanje %d%%), gorivo %.0f l, motor %s.", vehicleid, Veh_ModelName(model), health, Veh_Condition(vehicleid), g_VehFuel[vehicleid], Veh_IsEngineOn(vehicleid) ? ("radi") : ("ugasen"));
+    Staff_InfoBegin(body, sizeof(body));
+    valstr(value, vehicleid);
+    Staff_InfoRow(body, sizeof(body), "ID vozila", value);
+    Staff_InfoRow(body, sizeof(body), "Model", Veh_ModelName(model));
+    format(value, sizeof(value), "%.0f (stanje %d%%)", health, Veh_Condition(vehicleid));
+    Staff_InfoRow(body, sizeof(body), "HP", value);
+    format(value, sizeof(value), "%.0f l", g_VehFuel[vehicleid]);
+    Staff_InfoRow(body, sizeof(body), "Gorivo", value);
+    Staff_InfoRow(body, sizeof(body), "Motor", Veh_IsEngineOn(vehicleid) ? ("radi") : ("ugasen"));
     if (slot != -1)
     {
-        new registration[24], key[MAX_PLAYER_NAME + 1] = "nema";
+        new registration[24];
         Veh_RegistrationText(slot, registration);
+        format(value, sizeof(value), "licno (broj u bazi %d)", g_Veh[slot][vDbId]);
+        Staff_InfoRow(body, sizeof(body), "Vrsta", value);
+        Staff_InfoRow(body, sizeof(body), "Vlasnik", g_Veh[slot][vOwnerName]);
+        Staff_InfoRow(body, sizeof(body), "Naziv", Veh_Name(slot));
+        Staff_InfoRow(body, sizeof(body), "Registracija", registration);
+        new key[MAX_PLAYER_NAME + 1] = "nema";
         if (g_Veh[slot][vKeyDbId] != 0)
         {
             strcopy(key, g_Veh[slot][vKeyName]);
         }
-        Msg_Admin(playerid, "Licno vozilo %d u bazi: vlasnik %s, %s, registracija: %s, kopija kljuca: %s.", g_Veh[slot][vDbId], g_Veh[slot][vOwnerName], Veh_Name(slot), registration, key);
+        Staff_InfoRow(body, sizeof(body), "Kopija kljuca", key);
     }
     else if (g_IsAdminVehicle[vehicleid])
     {
-        Msg_Admin(playerid, "Admin vozilo (/veh).");
+        Staff_InfoRow(body, sizeof(body), "Vrsta", "admin vozilo (/veh)");
     }
+    else if (Rent_IsRentVehicle(vehicleid))
+    {
+        Staff_InfoRow(body, sizeof(body), "Vrsta", Rent_IsTaken(vehicleid) ? ("rent (iznajmljeno)") : ("rent (slobodno)"));
+    }
+    else if (g_JobVehicle[vehicleid] != JOB_NONE)
+    {
+        Staff_InfoRow(body, sizeof(body), "Vrsta", "vozilo posla");
+    }
+    new title[48];
+    format(title, sizeof(title), "Vozilo %d - podaci", vehicleid);
+    Staff_InfoShow(playerid, title, body);
     return 1;
 }
 

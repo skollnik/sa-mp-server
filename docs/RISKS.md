@@ -297,7 +297,12 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Previše objekata u kući (klijent ima limit) | ✅ | Limit 30/50/80 + admin do 50 (najviše 130); objekti se šalju samo do 60 m |
 | Novac za nameštaj dva puta (prodaja pa oduzimanje kuće) | ✅ | Prodat komad se briše odmah; pri oduzimanju se otkupljuje samo ono što je još u kući |
 | Admin promeni enterijer, a nameštaj i sef ostanu u vazduhu | ✅ | Nameštaj se skida i čeka ponovno postavljanje, sef ide pored izlaza |
-| Server sa starim kodom radi dok nova verzija menja bazu (ormar, visina sefa) | ⚠️ | Posle ažuriranja server se odmah restartuje; sef koji ostane metar iznad poda vlasnik spusti mišem |
+| Server sa starim kodom radi dok nova verzija menja bazu (ormar, visina sefa) | ⚠️ | Posle ažuriranja server se odmah restartuje; sef koji ostane metar iznad poda vlasnik postavi ponovo („Postavi ispred sebe“) |
+| Sef na plafonu ili u zidu | ✅ | Sef se pomera samo iz menija: koraci od 25 cm, okretanje po 15°, visina uvek pod gde vlasnik stoji, do 4 m od vlasnika i u kući |
+| Nameštaj ili sef zatvori izlaz iz kuće | ✅ | Ništa se ne čuva bliže od 2,5 m izlazu; posle promene enterijera sef ide nekoliko koraka od izlaza |
+| Besplatan sef za sledećeg kupca kuće od države | ✅ | Država otkupljuje sef i nameštaj za 50% prethodnom vlasniku, a kuća se prodaje bez njih |
+| Probna boja ili paintjob kod mehaničara ostane na vozilu bez plaćanja | ✅ | Posle odbijanja ili izlaska iz menija vraćaju se zajedno paintjob i boja iz baze, jer klijent inače zadrži probu |
+| `/resetvozila` vrati tuđ iznajmljen rent | ✅ | Iznajmljen rent se preskače; vraćaju se samo prazni i slobodni |
 | Vozilo neaktivnog vlasnika: novac za vozilo dobijeno od admina ili duplo | ✅ | Vraća se 50% cene koja je stvarno plaćena (pijaca, `/ponudi`); vozilo od admina $0; red se briše odmah, uz zapis u `vehicle_trades` |
 | Vozilo obrisano dok je još u svetu (server radi duže od 30 dana) | ✅ | Pre brisanja iz baze vozilo se skida sa mape |
 | Neon cevi ostanu da vise posle brisanja vozila | ✅ | Neon se skida pre svakog brisanja i ponovnog pravljenja ličnog vozila |
@@ -640,7 +645,12 @@ Every new system or change goes through these questions, against all existing sy
 | Too many objects in a house (the client has a limit) | ✅ | Limit 30/50/80 + admin up to 50 (130 at most); objects are sent only within 60 m |
 | Furniture money twice (sold, then the house taken) | ✅ | A sold piece is deleted at once; taking the house buys back only what is still in it |
 | An admin changes the interior and furniture and the safe hang in the air | ✅ | Furniture is taken down and waits to be placed again, the safe goes next to the exit |
-| A server with the old code runs while the new version changes the database (wardrobe, safe height) | ⚠️ | Restart the server right after updating; a safe left a metre above the floor is lowered by the owner with the mouse |
+| A server with the old code runs while the new version changes the database (wardrobe, safe height) | ⚠️ | Restart the server right after updating; a safe left a metre above the floor is placed again by the owner ("Postavi ispred sebe") |
+| The safe on the ceiling or in a wall | ✅ | The safe moves only from the menu: 25 cm steps, 15° turns, the height always the floor where the owner stands, within 4 m of the owner and inside the house |
+| Furniture or the safe closes the house exit | ✅ | Nothing is saved closer than 2.5 m to the exit; after an interior change the safe goes a few steps from the exit |
+| A free safe for the next buyer of a house from the state | ✅ | The state buys back the safe and furniture for 50% from the previous owner, and the house is sold without them |
+| A trial colour or paintjob at a mechanic stays on the vehicle unpaid | ✅ | After declining or leaving the menu the paintjob and colour from the database are put back together, since the client otherwise keeps the trial |
+| `/resetvozila` returns someone's rented rental | ✅ | A rented rental is skipped; only empty and free ones go back |
 | Inactive owner's vehicle: money for an admin-given vehicle, or paid twice | ✅ | 50% of the price actually paid comes back (market, `/ponudi`); an admin-given vehicle $0; the row is deleted at once, with a `vehicle_trades` entry |
 | A vehicle deleted while still in the world (the server ran longer than 30 days) | ✅ | It is taken off the map before it leaves the database |
 | Neon tubes left hanging after a vehicle is removed | ✅ | The neon is taken off before every removal and rebuild of a personal vehicle |
