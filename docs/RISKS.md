@@ -119,6 +119,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 |-------|--------|----------------|
 | GPS i posao koriste isti checkpoint, pa se posao završi bez vožnje | ✅ | Upravljač checkpoint-a: reaguje samo sistem koji je postavio checkpoint, a GPS nikad ne uzima tuđi (koristi ikonicu na mapi) |
 | Bežanje iz borbe kroz vrata | ✅ | Vrata ne rade 30 s posle primljene štete, samo peške, uz pauzu od 2 s |
+| Igrač koji uđe na server u kući ne može da izađe 30 s: dok se enterijer učitava padne malo, a igra to javi kao štetu | ✅ | Šteta od pada i davljenja (bez napadača) se ne računa kao borba; i dalje se računa šteta od drugog igrača, vozila i eksplozije |
 | Bekstvo iz admin zatvora ili zamrzavanja kroz vrata (učitavanje enterijera odmrzava igrača) | ✅ | Vrata, inventar i telefon ne rade u zatvoru ni dok je igrač zamrznut; admin teleport ne odmrzava zamrznutog |
 | Propadanje kroz pod custom enterijera pre nego što se objekti učitaju (vrata, login u enterijeru, admin teleport, kraj posmatranja) | ✅ | Objekti se učitaju pre pomeranja i igrač stoji 1,5 s (`Utils_MoveInto`) |
 | Lažni AC teleport pri prolasku kroz vrata | ✅ | Svako pomeranje ide preko `AC_ExpectTeleport` |
@@ -452,6 +453,7 @@ Every new system or change goes through these questions, against all existing sy
 |------|--------|-------------------|
 | GPS and a job share the checkpoint, so the job finishes without driving | ✅ | Checkpoint manager: only the system that set the checkpoint reacts, and GPS never takes someone else's (it uses a map icon) |
 | Escaping a fight through a door | ✅ | Doors do not work for 30 s after taking damage, only on foot, with a 2 s pause |
+| A player who joins inside a house cannot leave for 30 s: while the interior loads they drop a little and the game reports damage | ✅ | Fall and drowning damage with no attacker does not count as a fight; damage from another player, a vehicle or an explosion still does |
 | Escaping admin jail or a freeze through a door (loading an interior unfreezes the player) | ✅ | Doors, inventory and phone do not work in jail or while frozen; admin teleports do not unfreeze a frozen player |
 | Falling through a custom interior floor before its objects load (doors, login inside, admin teleport, end of spectating) | ✅ | Objects are loaded before the move and the player is held for 1.5 s (`Utils_MoveInto`) |
 | False AC teleport alert when using a door | ✅ | Every move goes through `AC_ExpectTeleport` |

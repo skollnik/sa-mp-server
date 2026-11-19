@@ -210,8 +210,13 @@ stock Account_OnPlayerSpawn(playerid)
     }
 }
 
-stock Account_OnPlayerTakeDamage(playerid)
+// A fall or drowning is no fight: spawning inside an interior drops the player a little before it loads.
+stock Account_OnPlayerTakeDamage(playerid, issuerid, WEAPON:weaponid)
 {
+    if (issuerid == INVALID_PLAYER_ID && (weaponid == WEAPON_COLLISION || weaponid == WEAPON_DROWN))
+    {
+        return;
+    }
     g_Player[playerid][pLastDamage] = gettime();
 }
 

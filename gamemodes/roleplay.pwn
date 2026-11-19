@@ -303,7 +303,7 @@ public OnPlayerEnterRaceCheckpoint(playerid)
 
 public OnPlayerTakeDamage(playerid, issuerid, Float:amount, WEAPON:weaponid, bodypart)
 {
-    Account_OnPlayerTakeDamage(playerid);
+    Account_OnPlayerTakeDamage(playerid, issuerid, weaponid);
     return 1;
 }
 
