@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 4 | Korak 4.4: nameštaj (PROP-4), predlog tek treba da se pošalje |
+| 4 | Test vlasnika za 4.3b i 4.4, pa predlog sledeće sekcije (firme PROP-6/7 ili poslovi JOB-1/2) |
 | 4 | Kuće, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -198,14 +198,16 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Taksi kao frakcija ili posao (staro pitanje) |
 | Gepek na Infernusu se vizuelno ne otvara (hauba se otvara, `/gepek` radi): verovatno Infernus u igri nema gepek koji se pomera; vlasnik proverava `/v gepek` na drugom vozilu (Sultan, Premier) (19.11.2026.) |
 | Vozila sama menjaju boju: vlasnik je primetio na ličnim vozilima pre poslednjih izmena i javiće ako se ponovi (koje vozilo, kada, iz koje u koju boju); admin `/veh` sada bira boju jednom pri pravljenju (19.11.2026.) |
-| Predlog čeka odobrenje: admin `/kinfo` (podaci o kući kao `/vinfo`), poseban ormar za svaku kuću (šta biva sa stvarima kad se kuća proda), sef kao pravi predmet u kući, admin dodatna mesta za kuće (i za buduće sisteme, npr. firme) sa prikazom popunjenih mesta, predlog sledeće sekcije (nameštaj, korak 4.4) (19.11.2026.) |
 | Presvlačenje iz `/inv` radi i pored mesta „odeca“, koje je postavljeno napolju (1521, -1710): da li ostaje tako, da li se mesto pomera unutra ili se kesa oblači samo kod kuće (18.11.2026.) |
 | Da li je „trafika“ naša prodavnica 24/7 ili posebno mesto (kockice i novčić su sada u 24/7) |
+| Da li VIP dobija više nameštaja po kući (sada samo admin `/setmesta namestaj`) (19.11.2026.) |
 
 ### Može bilo kada
 | Stavka |
 |--------|
 | Posle `/unjail` ili isteka kazne vratiti igrača na mesto gde je bio pre zatvora (sada ide na aerodrom) |
+| Ormar kao komad nameštaja koji se postavlja mišem (sada radi bilo gde u domu) |
+| Bojenje nameštaja teksturama iz igre |
 | Opis izgleda karaktera (`/examine`), akcenti (`/accent`) |
 | `/try` (nasumično „uspeo“ ili „nije uspeo“) i `/todo` (radnja i govor u jednoj poruci) |
 | Izbor skina pri registraciji iz ponuđene liste po polu, umesto nasumičnog |
@@ -295,6 +297,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 06.11.2026. | Saksija sa parkinga auto škole uklonjena; ostaje samo nevidljiv sudar tankog stuba (deo GTA zgrade) |
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 | 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
+| 19.11.2026. | Korak 4.3b i 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [igrac] [vozila|kuce|namestaj] [broj]` i spisak mesta u `/kuca`; ormar za svaku kuću i stanovnika, magacin („Stare stvari“ u `/ormar`) za stvari iz izgubljenog doma; sef kao predmet koji se postavlja mišem; nameštaj (prodavnica `namestaj`, `/namestaj`, 10 kategorija sa slikama, prodaja 50%, limit 30/50/80) |
 | 19.11.2026. | Pad pri učitavanju enterijera (ulazak na server u kući) više ne zaključava vrata kao da je igrač u borbi; pad i davljenje se ne računaju kao šteta iz borbe |
 | 19.11.2026. | Jetpack: skida se uz brisanje animacije (igra posle prima novi); ako jetpack ne stigne (u padu), admin dobija poruku umesto „dobili ste“; skidanje na F gasi jetpack, pa se onaj na zemlji ne može ponovo uzeti. Poruka o limitu kuća za VIP više ne nudi VIP mesto koje igrač već ima |
 | 18.11.2026. | Ispravke 4.3: admin nivoa 5+ više ne dobija kick za jetpack (u vazduhu ga server samo skine ako je ugašen, `/jetpack` ga daje ponovo kad ga admin nema); prodaja kuće kaže tačno šta ne valja (sef, garaža, parking, prodavac nije kod kuće); `/izmenikucu` u naslovu ima vlasnika; vlasnik koji iseli stanara vraća mu poslednju plaćenu kiriju; reč „skin“ izbačena (predmet je „Garderoba“, ormar bira garderobu preko slika) |
@@ -322,7 +325,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 4 | Step 4.4: furniture (PROP-4), the proposal is still to be sent |
+| 4 | The owner's test of 4.3b and 4.4, then a proposal for the next section (businesses PROP-6/7 or jobs JOB-1/2) |
 | 4 | Houses, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
@@ -513,14 +516,16 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Taxi as a faction or a job (older question) |
 | The Infernus trunk does not open visually (the bonnet does, `/gepek` works): most likely the game's Infernus has no moving boot; the owner tries `/v gepek` on another vehicle (Sultan, Premier) (2026-11-19) |
 | Vehicles change colour on their own: the owner saw it on personal vehicles before the last changes and will report if it happens again (which vehicle, when, from which colour to which); admin `/veh` now picks the colour once at creation (2026-11-19) |
-| Proposal awaiting approval: admin `/kinfo` (house data like `/vinfo`), a separate wardrobe per house (what happens to the items when a house is sold), the safe as a real object in the house, admin extra house slots (and for future systems, e.g. businesses) showing which slots are filled, a proposal for the next section (furniture, step 4.4) (2026-11-19) |
 | Changing clothes from `/inv` also works by the "odeca" point, which is placed outside (1521, -1710): keep it, move the point inside, or wear a bag only at home (2026-11-18) |
 | Is the "kiosk" our 24/7 shop or a separate place (dice and coin are now at the 24/7) |
+| Should VIP get more furniture per house (now only admin `/setmesta namestaj`) (2026-11-19) |
 
 ### Any time
 | Item |
 |------|
 | After `/unjail` or when the sentence ends, return the player to where they were before jail (now the airport) |
+| The wardrobe as a piece of furniture placed with the mouse (now it works anywhere in the home) |
+| Painting furniture with in-game textures |
 | Character appearance description (`/examine`), accents (`/accent`) |
 | `/try` (randomly "succeeded" or "failed") and `/todo` (action and speech in one message) |
 | Picking a skin at registration from a set list per gender instead of a random one |
@@ -610,6 +615,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-06 | The plant pot removed from the school lot; only the thin pole's invisible collision stays (part of the GTA building) |
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
 | 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |
+| 2026-11-19 | Steps 4.3b and 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [player] [vozila|kuce|namestaj] [number]` and the slot list in `/kuca`; a wardrobe per house and resident, the stash ("Stare stvari" in `/ormar`) for things from a lost home; the safe as an object placed with the mouse; furniture (the `namestaj` shop, `/namestaj`, 10 categories by picture, sold for 50%, limit 30/50/80) |
 | 2026-11-19 | Dropping a little while an interior loads (joining inside a house) no longer locks the doors as if in a fight; falls and drowning do not count as fight damage |
 | 2026-11-19 | Jetpack: taken off with the animation cleared (the game then accepts a new one); if a jetpack does not arrive (while falling) the admin is told so instead of "you got it"; taking it off with F ends the power, so the one left on the ground cannot be picked up again. The house limit message no longer offers VIP holders the VIP slot they already have |
 | 2026-11-18 | 4.3 fixes: level 5+ admins are no longer kicked for a jetpack (in the air the server only takes it if the power is off, `/jetpack` gives it again when the admin has none); a house sale says exactly what is wrong (safe, garage, parking, seller not at the house); `/izmenikucu` shows the owner in its title; an owner who evicts a tenant gives back the last rent paid; the word "skin" is gone (the item is "Garderoba", the wardrobe picks outfits by picture) |

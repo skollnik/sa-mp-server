@@ -4,15 +4,20 @@ static g_WardrobeRows[MAX_PLAYERS];
 static g_WardrobePick[MAX_PLAYERS];
 static g_WardrobePickSkin[MAX_PLAYERS];
 static g_WardrobePutSkin[MAX_PLAYERS][INV_MAX_SLOTS];
+// Stash rows counted when the menu opened; the stash row is shown only when there is something in it.
+static g_WardrobeStash[MAX_PLAYERS];
 
+// Every resident has their own wardrobe in each house they live in, so two houses or a room never share one.
 stock Wardrobe_Init()
 {
     mysql_tquery(g_SQL,
-        "CREATE TABLE IF NOT EXISTS `wardrobe` (" \
+        "CREATE TABLE IF NOT EXISTS `house_wardrobe` (" \
+        "`house_id` INT UNSIGNED NOT NULL," \
         "`account_id` INT UNSIGNED NOT NULL," \
         "`slot` TINYINT UNSIGNED NOT NULL," \
         "`skin` SMALLINT UNSIGNED NOT NULL," \
-        "PRIMARY KEY (`account_id`, `slot`)" \
+        "PRIMARY KEY (`house_id`, `account_id`, `slot`)," \
+        "INDEX `house_wardrobe_account` (`account_id`)" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 }
 
@@ -22,23 +27,68 @@ stock Wardrobe_Reset(playerid)
     {
         g_Wardrobe[playerid][i] = 0;
     }
-    g_WardrobeLoaded[playerid] = false;
+    g_WardrobeHouse[playerid] = 0;
 }
 
-stock Wardrobe_OnLogin(playerid)
+// Read once after the houses, so a sale can check the owner's wardrobe without asking the database.
+stock Wardrobe_CountOwners()
 {
-    new query[96];
-    mysql_format(g_SQL, query, sizeof(query), "SELECT `slot`, `skin` FROM `wardrobe` WHERE `account_id` = %d", g_Player[playerid][pDbId]);
-    mysql_tquery(g_SQL, query, "OnWardrobeLoaded", "dd", playerid, g_AccountRace[playerid]);
+    mysql_tquery(g_SQL, "SELECT w.`house_id`, COUNT(*) AS `outfits` FROM `house_wardrobe` w " \
+        "JOIN `houses` h ON h.`id` = w.`house_id` AND h.`owner_id` = w.`account_id` GROUP BY w.`house_id`", "OnOwnerWardrobesCounted");
 }
 
-forward OnWardrobeLoaded(playerid, race);
-public OnWardrobeLoaded(playerid, race)
+forward OnOwnerWardrobesCounted();
+public OnOwnerWardrobesCounted()
+{
+    new dbid, outfits;
+    for (new row = 0; row < cache_num_rows(); row++)
+    {
+        cache_get_value_name_int(row, "house_id", dbid);
+        cache_get_value_name_int(row, "outfits", outfits);
+        new slot = House_FindSlotByDbId(dbid);
+        if (slot != -1)
+        {
+            g_Houses[slot][hOwnerWardrobe] = outfits;
+        }
+    }
+    return 1;
+}
+
+// Rows of someone who no longer lives in that house (sold, taken, evicted, moved out) or of a deleted house.
+#define WARDROBE_ORPHANS "FROM `house_wardrobe` w LEFT JOIN `houses` h ON h.`id` = w.`house_id` LEFT JOIN `accounts` a ON a.`id` = w.`account_id` " \
+    "WHERE h.`id` IS NULL OR (h.`owner_id` <> w.`account_id` AND IFNULL(a.`room_house`, 0) <> w.`house_id`)"
+
+// Called after anyone stops living somewhere; their outfits wait in the stash instead of being lost or left in someone else's home.
+stock Wardrobe_StashOrphans()
+{
+    new query[512];
+    mysql_format(g_SQL, query, sizeof(query), "INSERT INTO `stash` (`account_id`, `item`, `amount`, `house_id`, `source`) " \
+        "SELECT w.`account_id`, %d, w.`skin`, w.`house_id`, 'ormar' " WARDROBE_ORPHANS, _:ITEM_CLOTHES);
+    mysql_tquery(g_SQL, query);
+    mysql_tquery(g_SQL, "DELETE w " WARDROBE_ORPHANS);
+    // A wardrobe still loaded could otherwise hand out outfits that were just moved to the stash.
+    for (new i = 0; i < MAX_PLAYERS; i++)
+    {
+        g_WardrobeHouse[i] = 0;
+    }
+}
+
+static stock Wardrobe_Load(playerid, slot)
+{
+    new query[128];
+    mysql_format(g_SQL, query, sizeof(query), "SELECT `slot`, `skin` FROM `house_wardrobe` WHERE `house_id` = %d AND `account_id` = %d",
+        g_Houses[slot][hDbId], g_Player[playerid][pDbId]);
+    mysql_tquery(g_SQL, query, "OnWardrobeLoaded", "ddd", playerid, g_AccountRace[playerid], g_Houses[slot][hDbId]);
+}
+
+forward OnWardrobeLoaded(playerid, race, house_dbid);
+public OnWardrobeLoaded(playerid, race, house_dbid)
 {
     if (race != g_AccountRace[playerid])
     {
         return 1;
     }
+    Wardrobe_Reset(playerid);
     new index, skin;
     for (new row = 0; row < cache_num_rows(); row++)
     {
@@ -49,30 +99,9 @@ public OnWardrobeLoaded(playerid, race)
             g_Wardrobe[playerid][index] = skin;
         }
     }
-    g_WardrobeLoaded[playerid] = true;
+    g_WardrobeHouse[playerid] = house_dbid;
+    Wardrobe_Show(playerid);
     return 1;
-}
-
-static stock Wardrobe_Set(playerid, index, skin)
-{
-    new query[128];
-    g_Wardrobe[playerid][index] = skin;
-    if (skin == 0)
-    {
-        mysql_format(g_SQL, query, sizeof(query), "DELETE FROM `wardrobe` WHERE `account_id` = %d AND `slot` = %d", g_Player[playerid][pDbId], index);
-    }
-    else
-    {
-        mysql_format(g_SQL, query, sizeof(query), "REPLACE INTO `wardrobe` (`account_id`, `slot`, `skin`) VALUES (%d, %d, %d)", g_Player[playerid][pDbId], index, skin);
-    }
-    mysql_tquery(g_SQL, query);
-}
-
-// The wardrobe is the player's, but how much fits depends on the house it stands in.
-static stock Wardrobe_Capacity(slot)
-{
-    static const capacity[E_HOUSE_SIZE] = { 3, 5, 8 };
-    return capacity[House_Size(slot)];
 }
 
 static stock Wardrobe_Count(playerid)
@@ -88,18 +117,40 @@ static stock Wardrobe_Count(playerid)
     return count;
 }
 
-// The house the player can use the wardrobe in right now, or -1 after saying why not.
+static stock Wardrobe_Set(playerid, slot, index, skin)
+{
+    new query[160], house_dbid = g_Houses[slot][hDbId];
+    g_Wardrobe[playerid][index] = skin;
+    if (skin == 0)
+    {
+        mysql_format(g_SQL, query, sizeof(query), "DELETE FROM `house_wardrobe` WHERE `house_id` = %d AND `account_id` = %d AND `slot` = %d",
+            house_dbid, g_Player[playerid][pDbId], index);
+    }
+    else
+    {
+        mysql_format(g_SQL, query, sizeof(query), "REPLACE INTO `house_wardrobe` (`house_id`, `account_id`, `slot`, `skin`) VALUES (%d, %d, %d, %d)",
+            house_dbid, g_Player[playerid][pDbId], index, skin);
+    }
+    mysql_tquery(g_SQL, query);
+    if (House_IsOwner(playerid, slot))
+    {
+        g_Houses[slot][hOwnerWardrobe] = Wardrobe_Count(playerid);
+    }
+}
+
+// How much fits depends on the house it stands in.
+static stock Wardrobe_Capacity(slot)
+{
+    static const capacity[E_HOUSE_SIZE] = { 3, 5, 8 };
+    return capacity[House_Size(slot)];
+}
+
+// The house whose wardrobe the player can use right now, or -1 after saying why not (or after starting to load it).
 static stock Wardrobe_HouseHere(playerid)
 {
-    new slot = House_FindInsideAnywhere(playerid);
-    if (slot == -1 || !House_CanLiveIn(playerid, slot))
+    new slot = House_LivingHere(playerid);
+    if (slot == -1)
     {
-        Msg_Error(playerid, "Ormar je u vasoj kuci ili iznajmljenoj sobi; udjite unutra.");
-        return -1;
-    }
-    if (!g_WardrobeLoaded[playerid] || !g_InvLoaded[playerid])
-    {
-        Msg_Error(playerid, "Ormar se jos ucitava, pokusajte ponovo.");
         return -1;
     }
     if (Inv_IsBusy(playerid))
@@ -107,20 +158,49 @@ static stock Wardrobe_HouseHere(playerid)
         Msg_Error(playerid, "Ormar se koristi peske.");
         return -1;
     }
+    if (g_WardrobeHouse[playerid] != g_Houses[slot][hDbId] || !g_InvLoaded[playerid])
+    {
+        Wardrobe_Load(playerid, slot);
+        return -1;
+    }
     return slot;
 }
 
-static stock Wardrobe_Show(playerid)
+stock Wardrobe_Show(playerid)
 {
-    new slot = Wardrobe_HouseHere(playerid);
-    if (slot == -1)
+    if (Wardrobe_HouseHere(playerid) == -1)
     {
         return;
     }
-    new body[128], title[48];
+    new query[96];
+    mysql_format(g_SQL, query, sizeof(query), "SELECT COUNT(*) AS `rows` FROM `stash` WHERE `account_id` = %d", g_Player[playerid][pDbId]);
+    mysql_tquery(g_SQL, query, "OnWardrobeStashCounted", "dd", playerid, g_AccountRace[playerid]);
+}
+
+forward OnWardrobeStashCounted(playerid, race);
+public OnWardrobeStashCounted(playerid, race)
+{
+    if (race != g_AccountRace[playerid])
+    {
+        return 1;
+    }
+    new slot = Wardrobe_HouseHere(playerid);
+    if (slot == -1)
+    {
+        return 1;
+    }
+    g_WardrobeStash[playerid] = 0;
+    cache_get_value_name_int(0, "rows", g_WardrobeStash[playerid]);
+    new body[192], line[64], title[48];
     format(body, sizeof(body), "Uzmi ili obuci garderobu (%d u ormaru)\nOstavi garderobu iz inventara", Wardrobe_Count(playerid));
+    if (g_WardrobeStash[playerid] > 0)
+    {
+        format(line, sizeof(line), "\nStare stvari iz magacina (%d)", g_WardrobeStash[playerid]);
+        strcat(body, line);
+    }
     format(title, sizeof(title), "Ormar (%d/%d mesta)", Wardrobe_Count(playerid), Wardrobe_Capacity(slot));
     ShowPlayerDialog(playerid, DIALOG_WARDROBE, DIALOG_STYLE_LIST, title, body, "Izaberi", "Zatvori");
+    return 1;
 }
 
 // The outfits are picked by their pictures, so no list has to name them.
@@ -191,7 +271,7 @@ static stock Wardrobe_Put(playerid, inv_slot, skin)
         {
             // Out of the inventory before into the wardrobe, so nothing is ever in both.
             Inv_SetSlot(playerid, inv_slot, ITEM_NONE, 0);
-            Wardrobe_Set(playerid, i, skin);
+            Wardrobe_Set(playerid, slot, i, skin);
             Chat_Action(playerid, "ostavlja garderobu u ormar.");
             break;
         }
@@ -223,7 +303,7 @@ static stock Wardrobe_Take(playerid, bool:wear)
             return;
         }
         // The clothes taken off go to the same place, so the wardrobe never needs room for them.
-        Wardrobe_Set(playerid, index, Clothes_Wear(playerid, skin));
+        Wardrobe_Set(playerid, slot, index, Clothes_Wear(playerid, skin));
         Msg_Success(playerid, "Obukli ste garderobu iz ormara.");
     }
     else
@@ -233,7 +313,7 @@ static stock Wardrobe_Take(playerid, bool:wear)
             Msg_Error(playerid, "Nemate mesta u inventaru za kesu sa garderobom.");
             return;
         }
-        Wardrobe_Set(playerid, index, 0);
+        Wardrobe_Set(playerid, slot, index, 0);
         Inv_Add(playerid, ITEM_CLOTHES, skin);
         Chat_Action(playerid, "pakuje garderobu iz ormara u kesu.");
     }
@@ -278,13 +358,11 @@ stock bool:Wardrobe_OnDialogResponse(playerid, dialogid, response, listitem, con
             {
                 return true;
             }
-            if (listitem == 0)
+            switch (listitem)
             {
-                Wardrobe_ShowTake(playerid);
-            }
-            else
-            {
-                Wardrobe_ShowPut(playerid);
+                case 0: Wardrobe_ShowTake(playerid);
+                case 1: Wardrobe_ShowPut(playerid);
+                case 2: Stash_Show(playerid);
             }
         }
         case DIALOG_WARDROBE_ITEM:

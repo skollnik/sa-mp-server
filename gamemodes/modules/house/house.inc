@@ -1,7 +1,7 @@
 new g_HouseInteriorFor[MAX_PLAYERS];
 new g_HouseCreatePrice[MAX_PLAYERS];
 new g_HouseCreateLevel[MAX_PLAYERS];
-new g_HousePicked[MAX_PLAYERS][HOUSE_MAX_PER_PLAYER + HOUSE_VIP_EXTRA];
+new g_HousePicked[MAX_PLAYERS][HOUSE_LIST_SIZE];
 
 stock House_Init()
 {
@@ -34,7 +34,9 @@ stock House_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `logout_at` INT UNSIGNED NOT NULL DEFAULT 0");
     Safe_Init();
     Room_Init();
+    Stash_Init();
     Wardrobe_Init();
+    Furn_Init();
     mysql_tquery(g_SQL, "SELECT `value` FROM `server_vars` WHERE `name` = 'house_interiors_v2'", "OnHouseInteriorsChecked");
     SetTimer("House_CheckInactive", HOUSE_INACTIVE_CHECK_MS, true);
     SetTimer("HouseView_Tick", HOUSE_VIEW_TICK_MS, true);
@@ -155,6 +157,8 @@ public OnHousesLoaded()
     }
     printf("[HOUSES] %d houses loaded.", min(rows, MAX_HOUSES));
     Safe_LoadAll();
+    Furn_LoadAll();
+    Wardrobe_CountOwners();
     Room_CountTenants();
     House_CheckInactive();
     return 1;
@@ -234,6 +238,8 @@ static stock House_DestroyVisuals(slot)
     if (IsValidDynamic3DTextLabel(g_Houses[slot][hExitLabel])) DestroyDynamic3DTextLabel(g_Houses[slot][hExitLabel]);
     if (IsValidDynamic3DTextLabel(g_Houses[slot][hGarageLabel])) DestroyDynamic3DTextLabel(g_Houses[slot][hGarageLabel]);
     if (IsValidDynamic3DTextLabel(g_Houses[slot][hSafeLabel])) DestroyDynamic3DTextLabel(g_Houses[slot][hSafeLabel]);
+    if (IsValidDynamicObject(g_Houses[slot][hSafeObject])) DestroyDynamicObject(g_Houses[slot][hSafeObject]);
+    g_Houses[slot][hSafeObject] = STREAMER_TAG_OBJECT:INVALID_STREAMER_ID;
     g_Houses[slot][hPickup] = STREAMER_TAG_PICKUP:INVALID_STREAMER_ID;
     g_Houses[slot][hLabel] = STREAMER_TAG_3D_TEXT_LABEL:INVALID_STREAMER_ID;
     g_Houses[slot][hIcon] = STREAMER_TAG_MAP_ICON:INVALID_STREAMER_ID;
@@ -281,8 +287,10 @@ stock House_Refresh(slot)
         INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, House_World(slot), interior);
     if (g_Houses[slot][hHasSafe])
     {
-        g_Houses[slot][hSafeLabel] = CreateDynamic3DTextLabel("Sef\n" C_GREY "F ili /sef", COLOR_WHITE, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ] + 0.3,
-            HOUSE_SAFE_RADIUS * 3.0, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, House_World(slot), interior);
+        g_Houses[slot][hSafeObject] = CreateDynamicObject(HOUSE_SAFE_MODEL, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ],
+            g_Houses[slot][hSafeRX], g_Houses[slot][hSafeRY], g_Houses[slot][hSafeRZ], House_World(slot), interior, -1, FURN_STREAM_DISTANCE, FURN_STREAM_DISTANCE);
+        g_Houses[slot][hSafeLabel] = CreateDynamic3DTextLabel("Sef\n" C_GREY "F ili /sef", COLOR_WHITE, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ] + 1.2,
+            HOUSE_SAFE_RADIUS * 2.5, INVALID_PLAYER_ID, INVALID_VEHICLE_ID, 1, House_World(slot), interior);
     }
     if (g_Houses[slot][hHasGarage])
     {
@@ -299,12 +307,14 @@ stock House_Save(slot)
         "UPDATE `houses` SET `owner_id` = %d, `owner_name` = '%e', `price` = %d, `level` = %d, `interior` = %d, `x` = %f, `y` = %f, `z` = %f, `a` = %f, " \
         "`exit_x` = %f, `exit_y` = %f, `exit_z` = %f, `exit_a` = %f, " \
         "`locked` = %d, `has_garage` = %d, `garage_x` = %f, `garage_y` = %f, `garage_z` = %f, `garage_a` = %f, " \
-        "`has_safe` = %d, `safe_x` = %f, `safe_y` = %f, `safe_z` = %f, `safe_money` = %d, `rooms_open` = %d, `room_price` = %d WHERE `id` = %d",
+        "`has_safe` = %d, `safe_x` = %f, `safe_y` = %f, `safe_z` = %f, `safe_rx` = %f, `safe_ry` = %f, `safe_rz` = %f, `safe_money` = %d, " \
+        "`rooms_open` = %d, `room_price` = %d WHERE `id` = %d",
         g_Houses[slot][hOwnerDbId], g_Houses[slot][hOwnerName], g_Houses[slot][hPrice], g_Houses[slot][hLevel], g_Houses[slot][hInterior],
         g_Houses[slot][hX], g_Houses[slot][hY], g_Houses[slot][hZ], g_Houses[slot][hA],
         g_Houses[slot][hExitX], g_Houses[slot][hExitY], g_Houses[slot][hExitZ], g_Houses[slot][hExitA], g_Houses[slot][hLocked] ? 1 : 0,
         g_Houses[slot][hHasGarage] ? 1 : 0, g_Houses[slot][hGarageX], g_Houses[slot][hGarageY], g_Houses[slot][hGarageZ], g_Houses[slot][hGarageA],
-        g_Houses[slot][hHasSafe] ? 1 : 0, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ], g_Houses[slot][hSafeMoney],
+        g_Houses[slot][hHasSafe] ? 1 : 0, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ],
+        g_Houses[slot][hSafeRX], g_Houses[slot][hSafeRY], g_Houses[slot][hSafeRZ], g_Houses[slot][hSafeMoney],
         g_Houses[slot][hRoomsOpen] ? 1 : 0, g_Houses[slot][hRoomPrice], g_Houses[slot][hDbId]);
     mysql_tquery(g_SQL, query);
 }
@@ -333,15 +343,20 @@ static stock House_SetOwner(slot, account_dbid, const name[])
     g_Houses[slot][hOwnerDbId] = account_dbid;
     strcopy(g_Houses[slot][hOwnerName], name, MAX_PLAYER_NAME + 1);
     g_Houses[slot][hLocked] = false;
+    g_Houses[slot][hOwnerWardrobe] = 0;
     House_Refresh(slot);
     House_Save(slot);
+    // After the save, so the old owner's and the tenants' wardrobes count as left behind.
+    Wardrobe_StashOrphans();
 }
 
 // Taken from the owner without them (inactivity, an admin, a sale to the state): nobody spawns there any more, vehicles
-// parked in the garage get a temporary spot elsewhere, the garage lets its vehicles out and the safe's money goes to the owner's bank.
+// parked in the garage get a temporary spot elsewhere, the garage lets its vehicles out, the safe's money goes to the owner's bank,
+// its items and the wardrobes to the stash, and the furniture is bought back.
 static stock House_Release(slot)
 {
     Safe_ReturnToOwner(slot);
+    Furn_ReleaseHouse(slot);
     new query[128], dbid = g_Houses[slot][hDbId];
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET `house_spawn` = 0 WHERE `house_spawn` = %d", dbid);
     mysql_tquery(g_SQL, query);
@@ -371,10 +386,11 @@ stock House_CountOwned(account_dbid)
     return count;
 }
 
-// Silver and Gold VIP get one more house; when VIP ends the houses stay, but no new one can be bought while over the limit.
+// Silver and Gold VIP get one more house and an admin can give more (/setmesta); when VIP ends or slots are taken back
+// the houses stay, but no new one can be bought while over the limit.
 stock House_MaxFor(playerid)
 {
-    return HOUSE_MAX_PER_PLAYER + (Vip_GetLevel(playerid) >= VIP_SILVER ? HOUSE_VIP_EXTRA : 0);
+    return HOUSE_MAX_PER_PLAYER + g_Player[playerid][pExtraHouseSlots] + (Vip_GetLevel(playerid) >= VIP_SILVER ? HOUSE_VIP_EXTRA : 0);
 }
 
 stock bool:House_HasFreeSlot(playerid)
@@ -468,6 +484,18 @@ stock House_MoveInside(playerid, slot)
 stock bool:House_CanLiveIn(playerid, slot)
 {
     return House_IsOwner(playerid, slot) || Room_IsTenant(playerid, slot);
+}
+
+// The home (own house or rented room) the player is inside, or -1 after saying so.
+stock House_LivingHere(playerid)
+{
+    new slot = House_FindInsideAnywhere(playerid);
+    if (slot == -1 || !House_CanLiveIn(playerid, slot))
+    {
+        Msg_Error(playerid, "Ormar je u vasoj kuci ili iznajmljenoj sobi; udjite unutra.");
+        return -1;
+    }
+    return slot;
 }
 
 static stock House_Enter(playerid, slot)
@@ -705,13 +733,15 @@ stock House_ShowMenu(playerid, slot)
     strcat(body, line);
     if (g_Houses[slot][hHasSafe])
     {
-        strcat(body, "Sef: pomeri ga ovde (gde stojite u kuci)\n");
+        strcat(body, "Sef: pomeri ga misem\n");
     }
     else
     {
-        format(line, sizeof(line), "Kupi sef ($%d, stoji gde vi stojite u kuci)\n", HOUSE_SAFE_PRICE);
+        format(line, sizeof(line), "Kupi sef ($%d, postavlja se misem)\n", HOUSE_SAFE_PRICE);
         strcat(body, line);
     }
+    format(line, sizeof(line), "Namestaj (%d/%d komada)\n", Furn_Count(g_Houses[slot][hDbId]), Furn_Limit(playerid, slot));
+    strcat(body, line);
     format(line, sizeof(line), "Izdavanje soba (%d/%d stanara)\n", g_Houses[slot][hTenants], Room_Count(slot));
     strcat(body, line);
     format(line, sizeof(line), "Prodaj drzavi ($%d)", g_Houses[slot][hPrice] * HOUSE_SELL_PERCENT / 100);
@@ -734,15 +764,17 @@ static stock House_ShowInfo(playerid, slot)
     {
         strcopy(garage, "nema");
     }
-    format(text, sizeof(text), "Adresa: %s\nVelicina: %s (%s)\nGaraza: %s\nVrata: %s\nSef: %s\nSobe: %d/%d stanara, kirija $%d po plati (%s)\n\n" \
-        "Vrednost: $%d\nProdaja drzavi: $%d (%d%%)\n\n",
+    format(text, sizeof(text), "Adresa: %s\nVelicina: %s (%s)\nGaraza: %s\nVrata: %s\nSef: %s\nNamestaj: %d/%d komada (/namestaj)\nVas ormar: %d garderoba\n" \
+        "Sobe: %d/%d stanara, kirija $%d po plati (%s)\n\nVrednost: $%d\nProdaja drzavi: $%d (%d%%)\n\n",
         address, g_HouseSizeNames[House_Size(slot)], g_HouseInteriors[g_Houses[slot][hInterior]][hiName], garage, g_Houses[slot][hLocked] ? ("zakljucana") : ("otkljucana"),
-        g_Houses[slot][hHasSafe] ? ("ima (/sef ili F pored njega)") : ("nema"), g_Houses[slot][hTenants], Room_Count(slot), g_Houses[slot][hRoomPrice],
+        g_Houses[slot][hHasSafe] ? ("ima (/sef ili F pored njega)") : ("nema"), Furn_Count(g_Houses[slot][hDbId]), Furn_Limit(playerid, slot), g_Houses[slot][hOwnerWardrobe],
+        g_Houses[slot][hTenants], Room_Count(slot), g_Houses[slot][hRoomPrice],
         g_Houses[slot][hRoomsOpen] ? ("otvorene") : ("zatvorene"), g_Houses[slot][hPrice], g_Houses[slot][hPrice] * HOUSE_SELL_PERCENT / 100, HOUSE_SELL_PERCENT);
-    new rules[320];
+    new rules[384];
     format(rules, sizeof(rules), "Pojavljivanje u kuci vazi pri ulasku na server (ako niste bili na serveru bar %d min) i posle zatvora.\n" \
-        "Kuca se vraca na prodaju ako ne udjete na server %d dana (dobijate %d%% na racun, a novac iz sefa ide na racun).",
-        HOUSE_SPAWN_AWAY_S / 60, HOUSE_INACTIVE_DAYS, HOUSE_INACTIVE_PERCENT);
+        "Kuca se vraca na prodaju ako ne udjete na server %d dana: dobijate %d%% na racun, novac iz sefa ide na racun,\n" \
+        "predmeti iz sefa i ormara u magacin (/ormar u sledecem domu), a namestaj se otkupljuje za %d%%.",
+        HOUSE_SPAWN_AWAY_S / 60, HOUSE_INACTIVE_DAYS, HOUSE_INACTIVE_PERCENT, FURN_SELL_PERCENT);
     strcat(text, rules);
     ShowPlayerDialog(playerid, DIALOG_HOUSE_INFO, DIALOG_STYLE_MSGBOX, "Informacije o kuci", text, "Nazad", "");
 }
@@ -781,6 +813,10 @@ static stock bool:House_FindLeftover(slot, problem[], size)
     if (!Safe_IsEmpty(slot))
     {
         strcopy(problem, "Prvo ispraznite sef (/sef): i novac i predmete.", size);
+    }
+    else if (g_Houses[slot][hOwnerWardrobe] > 0)
+    {
+        strcopy(problem, "Prvo ispraznite svoj ormar u toj kuci (/ormar).", size);
     }
     else if (Veh_GarageCount(dbid) > 0)
     {
@@ -853,8 +889,9 @@ stock House_SaleText(slot, dest[], size = sizeof(dest))
 {
     new address[48];
     House_Address(slot, address);
-    format(dest, size, "Adresa: %s\nVelicina: %s (%s)\nGaraza: %s | Sef: %s\nStanari: %d (iseljavaju se pri prodaji)", address, g_HouseSizeNames[House_Size(slot)],
-        g_HouseInteriors[g_Houses[slot][hInterior]][hiName], g_Houses[slot][hHasGarage] ? ("ima") : ("nema"), g_Houses[slot][hHasSafe] ? ("ima") : ("nema"), g_Houses[slot][hTenants]);
+    format(dest, size, "Adresa: %s\nVelicina: %s (%s)\nGaraza: %s | Sef: %s\nNamestaj: %d komada (ide uz kucu)\nStanari: %d (iseljavaju se pri prodaji)", address,
+        g_HouseSizeNames[House_Size(slot)], g_HouseInteriors[g_Houses[slot][hInterior]][hiName], g_Houses[slot][hHasGarage] ? ("ima") : ("nema"),
+        g_Houses[slot][hHasSafe] ? ("ima") : ("nema"), Furn_Count(g_Houses[slot][hDbId]), g_Houses[slot][hTenants]);
 }
 
 stock House_TransferTo(slot, seller, buyer, amount, tax)
@@ -961,11 +998,11 @@ cmd:kupikucu(playerid, params[])
     {
         if (Vip_GetLevel(playerid) >= VIP_SILVER)
         {
-            Msg_Error(playerid, "Vec imate najvise kuca (%d), zajedno sa VIP mestom.", House_MaxFor(playerid));
+            Msg_Error(playerid, "Vec imate najvise kuca (%d), zajedno sa VIP mestom. Mesta vidite u /kuca.", House_MaxFor(playerid));
         }
         else
         {
-            Msg_Error(playerid, "Vec imate najvise kuca (%d). Silver i Gold VIP mogu imati jos jednu.", House_MaxFor(playerid));
+            Msg_Error(playerid, "Vec imate najvise kuca (%d). Silver i Gold VIP mogu imati jos jednu. Mesta vidite u /kuca.", House_MaxFor(playerid));
         }
         return 1;
     }
@@ -991,35 +1028,51 @@ cmd:kuca(playerid, params[])
         House_ShowMenu(playerid, slot);
         return 1;
     }
-    new body[192], line[64], count, address[48];
-    for (new i = 0; i < MAX_HOUSES && count < sizeof(g_HousePicked[]); i++)
-    {
-        if (House_IsOwner(playerid, i))
-        {
-            House_Address(i, address);
-            format(line, sizeof(line), "%s\n", address);
-            strcat(body, line);
-            g_HousePicked[playerid][count++] = i;
-        }
-    }
-    if (count == 0)
+    if (House_CountOwned(g_Player[playerid][pDbId]) == 0)
     {
         if (!Room_ShowMenu(playerid))
         {
             Msg_Error(playerid, "Nemate kucu ni iznajmljenu sobu. Kuce na prodaju imaju zelenu kucicu na mapi.");
         }
+        return 1;
     }
-    else if (count == 1)
-    {
-        House_ShowMenu(playerid, g_HousePicked[playerid][0]);
-    }
-    else
-    {
-        ShowPlayerDialog(playerid, DIALOG_HOUSE_PICK, DIALOG_STYLE_LIST, "Vase kuce", body, "Izaberi", "Zatvori");
-    }
+    House_ShowList(playerid);
     return 1;
 }
 alias:kuca("house")
+
+// Free places are listed too, so the owner sees how many houses they can have and which place comes with VIP.
+static stock House_ShowList(playerid)
+{
+    new body[768], line[96], address[48], count, limit = House_MaxFor(playerid);
+    strcopy(body, "Kuca\tVelicina\tNamestaj\n");
+    for (new i = 0; i < MAX_HOUSES && count < HOUSE_LIST_SIZE; i++)
+    {
+        if (House_IsOwner(playerid, i))
+        {
+            House_Address(i, address);
+            format(line, sizeof(line), "%s\t%s\t%d/%d\n", address, g_HouseSizeNames[House_Size(i)], Furn_Count(g_Houses[i][hDbId]), Furn_Limit(playerid, i));
+            strcat(body, line);
+            g_HousePicked[playerid][count++] = i;
+        }
+    }
+    new owned = count;
+    for (new place = owned; place < HOUSE_MAX_PER_PLAYER + HOUSE_VIP_EXTRA + g_Player[playerid][pExtraHouseSlots] && count < HOUSE_LIST_SIZE; place++)
+    {
+        strcat(body, place < limit ? ("Slobodno mesto\t-\t-\n") : ("VIP mesto (Silver i Gold VIP)\t-\t-\n"));
+        g_HousePicked[playerid][count++] = -1;
+    }
+    new title[64];
+    if (owned > limit)
+    {
+        format(title, sizeof(title), "Vase kuce: %d od %d mesta (nova tek kad prodate jednu)", owned, limit);
+    }
+    else
+    {
+        format(title, sizeof(title), "Vase kuce: %d od %d mesta (klik za meni)", owned, limit);
+    }
+    ShowPlayerDialog(playerid, DIALOG_HOUSE_PICK, DIALOG_STYLE_TABLIST_HEADERS, title, body, "Izaberi", "Zatvori");
+}
 
 // Heard only by the people inside that house, not by an owner who is somewhere else.
 cmd:kucaj(playerid, params[])
@@ -1292,6 +1345,8 @@ cmd:obrisikucu(playerid, params[])
     mysql_format(g_SQL, query, sizeof(query), "DELETE FROM `houses` WHERE `id` = %d", g_Houses[slot][hDbId]);
     mysql_tquery(g_SQL, query);
     Safe_Clear(slot);
+    Furn_DeleteHouse(slot);
+    Wardrobe_StashOrphans();
     House_DestroyVisuals(slot);
     g_Houses[slot][hUsed] = false;
     Staff_Log(playerid, "house_delete", INVALID_PLAYER_ID, details);
@@ -1311,6 +1366,95 @@ cmd:gotokuca(playerid, params[])
         return 1;
     }
     House_PutOutside(playerid, slot);
+    return 1;
+}
+
+// Like /vinfo: the whole state of the house the admin stands at, or of the one with that ID.
+cmd:kinfo(playerid, params[])
+{
+    if (!Staff_CheckAdmin(playerid, ADMIN_LEVEL_TRIAL))
+    {
+        return 1;
+    }
+    new slot;
+    if (isnull(params))
+    {
+        slot = House_FindHere(playerid);
+        if (slot == -1)
+        {
+            Msg_Error(playerid, "Niste kod kuce (ispred vrata ili unutra). Sa ID-jem: /kinfo [id], spisak: /kuce");
+            return 1;
+        }
+    }
+    else if (!House_ParseSlot(playerid, params, "/kinfo [id kuce] (bez ID-ja: kuca kod koje stojite)", slot))
+    {
+        return 1;
+    }
+    // The tenants' names are only in the database, since they may be offline.
+    new query[128];
+    mysql_format(g_SQL, query, sizeof(query), "SELECT `name` FROM `accounts` WHERE `room_house` = %d LIMIT 3", g_Houses[slot][hDbId]);
+    mysql_tquery(g_SQL, query, "OnHouseInfoTenants", "ddd", playerid, g_AccountRace[playerid], g_Houses[slot][hDbId]);
+    return 1;
+}
+alias:kinfo("hinfo")
+
+forward OnHouseInfoTenants(playerid, race, house_dbid);
+public OnHouseInfoTenants(playerid, race, house_dbid)
+{
+    new slot = House_FindSlotByDbId(house_dbid);
+    if (race != g_AccountRace[playerid] || slot == -1)
+    {
+        return 1;
+    }
+    new tenants[96], name[MAX_PLAYER_NAME + 1];
+    for (new row = 0; row < cache_num_rows(); row++)
+    {
+        cache_get_value_name(row, "name", name);
+        if (row > 0)
+        {
+            strcat(tenants, ", ");
+        }
+        strcat(tenants, name);
+    }
+    if (tenants[0] == EOS)
+    {
+        strcopy(tenants, "nema");
+    }
+    new text[1024], address[48], owner[64], garage[48], safe[64];
+    House_Address(slot, address);
+    if (g_Houses[slot][hOwnerDbId] == 0)
+    {
+        strcopy(owner, "nema (na prodaju)");
+    }
+    else
+    {
+        format(owner, sizeof(owner), "%s (%s)", g_Houses[slot][hOwnerName],
+            Account_FindOnlineByDbId(g_Houses[slot][hOwnerDbId]) != INVALID_PLAYER_ID ? ("na serveru") : ("nije na serveru"));
+    }
+    if (g_Houses[slot][hHasGarage])
+    {
+        format(garage, sizeof(garage), "ima, %d/%d vozila", Veh_GarageCount(house_dbid), House_GarageCapacity(slot));
+    }
+    else
+    {
+        strcopy(garage, "nema");
+    }
+    if (g_Houses[slot][hHasSafe])
+    {
+        format(safe, sizeof(safe), "ima, $%d i %d/%d predmeta", g_Houses[slot][hSafeMoney], Store_Count(STORE_SAFE, slot), Safe_Capacity(slot));
+    }
+    else
+    {
+        strcopy(safe, "nema");
+    }
+    format(text, sizeof(text), "ID: %d\nAdresa: %s\nVlasnik: %s\nCena: $%d | Nivo: %d\nVelicina: %s (%s)\nVrata: %s\nGaraza: %s\nSef: %s\n" \
+        "Namestaj: %d komada\nOrmar vlasnika: %d garderoba\nSobe: %s, kirija $%d, %d/%d stanara\nStanari: %s",
+        house_dbid, address, owner, g_Houses[slot][hPrice], g_Houses[slot][hLevel], g_HouseSizeNames[House_Size(slot)], g_HouseInteriors[g_Houses[slot][hInterior]][hiName],
+        g_Houses[slot][hLocked] ? ("zakljucana") : ("otkljucana"), garage, safe, Furn_Count(house_dbid), g_Houses[slot][hOwnerWardrobe],
+        g_Houses[slot][hRoomsOpen] ? ("otvorene") : ("zatvorene"), g_Houses[slot][hRoomPrice], g_Houses[slot][hTenants], Room_Count(slot), tenants);
+    new title[48];
+    format(title, sizeof(title), "Kuca %d - podaci", house_dbid);
+    ShowPlayerDialog(playerid, DIALOG_ADMIN_INFO, DIALOG_STYLE_MSGBOX, title, text, "Zatvori", "");
     return 1;
 }
 
@@ -1374,16 +1518,29 @@ stock bool:House_OnDialogResponse(playerid, dialogid, response, listitem, const 
             g_Houses[slot][hExitY] = 0.0;
             g_Houses[slot][hExitZ] = 0.0;
             g_Houses[slot][hExitA] = 0.0;
+            if (g_Houses[slot][hHasSafe])
+            {
+                Safe_PutAtExit(slot);
+            }
+            Furn_UnplaceAll(slot);
             House_Refresh(slot);
             House_Save(slot);
             new details[64];
             format(details, sizeof(details), "kuca %d: enterijer %s", g_Houses[slot][hDbId], g_HouseInteriors[listitem][hiName]);
             Staff_Log(playerid, "house_edit", INVALID_PLAYER_ID, details);
-            Msg_Admin(playerid, "Izmenjena je %s.", details);
+            Msg_Admin(playerid, "Izmenjena je %s. Sef je kod izlaza, namestaj se postavlja ponovo (/namestaj).", details);
         }
         case DIALOG_HOUSE_PICK:
         {
-            if (response && listitem >= 0 && listitem < sizeof(g_HousePicked[]) && House_IsOwner(playerid, g_HousePicked[playerid][listitem]))
+            if (!response || listitem < 0 || listitem >= HOUSE_LIST_SIZE)
+            {
+                return true;
+            }
+            if (g_HousePicked[playerid][listitem] == -1)
+            {
+                Msg_Info(playerid, "Slobodno mesto. Kuce na prodaju imaju zelenu kucicu na mapi (/kupikucu ispred vrata).");
+            }
+            else if (House_IsOwner(playerid, g_HousePicked[playerid][listitem]))
             {
                 House_ShowMenu(playerid, g_HousePicked[playerid][listitem]);
             }
@@ -1433,12 +1590,13 @@ stock bool:House_OnDialogResponse(playerid, dialogid, response, listitem, const 
                     House_ShowMenu(playerid, slot);
                 }
                 case 4: Safe_OnMenu(playerid, slot);
-                case 5: Room_ShowOwnerMenu(playerid, slot);
-                case 6:
+                case 5: Furn_ShowMenu(playerid);
+                case 6: Room_ShowOwnerMenu(playerid, slot);
+                case 7:
                 {
-                    new text[256];
-                    format(text, sizeof(text), "Prodajete kucu drzavi za $%d (%d%% vrednosti).\n\nGaraza i sef moraju biti prazni i nijedno vozilo ne sme imati parking u garazi.\n" \
-                        "Stanari se iseljavaju.", g_Houses[slot][hPrice] * HOUSE_SELL_PERCENT / 100, HOUSE_SELL_PERCENT);
+                    new text[384];
+                    format(text, sizeof(text), "Prodajete kucu drzavi za $%d (%d%% vrednosti).\n\nGaraza, sef i vas ormar moraju biti prazni i nijedno vozilo ne sme imati parking u garazi.\n" \
+                        "Stanari se iseljavaju, a namestaj drzava otkupljuje za %d%% cene (na racun).", g_Houses[slot][hPrice] * HOUSE_SELL_PERCENT / 100, HOUSE_SELL_PERCENT, FURN_SELL_PERCENT);
                     ShowPlayerDialog(playerid, DIALOG_HOUSE_SELL, DIALOG_STYLE_MSGBOX, "Prodaja kuce", text, "Prodaj", "Odustani");
                 }
             }

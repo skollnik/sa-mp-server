@@ -23,7 +23,8 @@ enum E_POINT_TYPE
     POINT_DOCK,
     POINT_TUNING,
     POINT_INSPECTION_SERVICE,
-    POINT_SERVICE
+    POINT_SERVICE,
+    POINT_FURNITURE
 }
 
 enum E_POINT_INFO
@@ -53,7 +54,8 @@ new const g_PointInfo[E_POINT_TYPE][E_POINT_INFO] =
     { "tjuning",    "Tjuning i farbanje", "/tune (mehanicar)", 6.0, POINT_PICKUP_MODEL },
     // An inspection that is also a workshop bay, e.g. on a lift; a plain "pregled" is the inspection alone.
     { "pregledservis", "Tehnicki pregled i servis", "/registruj   /servis", 6.0, POINT_PICKUP_MODEL },
-    { "servis",     "Servis vozila", "/servis", 6.0, POINT_PICKUP_MODEL }
+    { "servis",     "Servis vozila", "/servis", 6.0, POINT_PICKUP_MODEL },
+    { "namestaj",   "Prodavnica namestaja", "/kupi", 2.0, POINT_PICKUP_MODEL }
 };
 
 enum E_POINT

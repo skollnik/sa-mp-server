@@ -117,6 +117,10 @@
 #include "modules/house/house_room.inc"
 #include "modules/house/house_view.inc"
 #include "modules/house/wardrobe.inc"
+#include "modules/house/stash.inc"
+#include "modules/house/placement.inc"
+#include "modules/house/furniture.inc"
+#include "modules/account/slots.inc"
 #include "modules/inventory/clothes.inc"
 #include "modules/inventory/storage.inc"
 
@@ -227,6 +231,7 @@ public OnPlayerConnect(playerid)
     Job_OnPlayerConnect(playerid);
     House_OnPlayerConnect(playerid);
     Store_OnPlayerConnect(playerid);
+    Place_OnPlayerConnect(playerid);
     Respawn_OnPlayerConnect(playerid);
     Mech_OnPlayerConnect(playerid);
     Rent_OnPlayerConnect(playerid);
@@ -245,6 +250,7 @@ public OnPlayerDisconnect(playerid, reason)
     Lic_OnPlayerDisconnect(playerid);
     Mech_OnPlayerDisconnect(playerid);
     House_OnPlayerDisconnect(playerid);
+    Place_Stop(playerid);
     Rent_OnPlayerDisconnect(playerid);
     Fuel_CancelCanister(playerid);
     Tune_Close(playerid);
@@ -407,6 +413,12 @@ public OnPlayerInteriorChange(playerid, newinteriorid, oldinteriorid)
     return 1;
 }
 
+public OnPlayerEditDynamicObject(playerid, STREAMER_TAG_OBJECT:objectid, response, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz)
+{
+    Place_OnEditObject(playerid, objectid, response, x, y, z, rx, ry, rz);
+    return 1;
+}
+
 public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
 {
     if (Account_IsLoggedIn(playerid))
@@ -566,6 +578,14 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Wardrobe_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Stash_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Furn_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
     {
         return 1;
     }

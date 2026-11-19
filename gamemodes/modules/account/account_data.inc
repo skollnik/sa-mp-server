@@ -51,8 +51,10 @@ enum E_PLAYER_DATA
     bool:pHasBankAccount,
     // Pay and prizes waiting at the bank counter for a player without an account.
     pHeldPay,
-    // Vehicle slots given by an admin on top of the usual and VIP ones; saved only by /setmesta.
+    // Slots given by an admin on top of the usual and VIP ones (vehicles, houses, furniture pieces per house); saved only by /setmesta.
     pExtraVehSlots,
+    pExtraHouseSlots,
+    pExtraFurnSlots,
     // One bit per E_LICENSE; saved only when it changes (school, /setdozvola).
     pLicenses,
     // E_JOB; saved only when it changes (/posao, /otkaz).

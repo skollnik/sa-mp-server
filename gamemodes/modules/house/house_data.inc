@@ -14,6 +14,10 @@
 #define HOUSE_ICON_OWNED        (32)
 #define HOUSE_MAX_PER_PLAYER    (1)
 #define HOUSE_VIP_EXTRA         (1)
+// Most extra house slots an admin can give (/setmesta), like for vehicles.
+#define HOUSE_ADMIN_EXTRA_MAX   (5)
+// Rows of a list of one owner's houses: every slot anyone can have, plus one for houses kept after VIP ended.
+#define HOUSE_LIST_SIZE         (HOUSE_MAX_PER_PLAYER + HOUSE_VIP_EXTRA + HOUSE_ADMIN_EXTRA_MAX + 1)
 #define HOUSE_SELL_PERCENT      (70)
 // An owner away this long loses the house; the money goes to the bank so it is waiting when they come back.
 #define HOUSE_INACTIVE_DAYS     (30)
@@ -23,7 +27,9 @@
 #define HOUSE_MAX_PRICE         (100000000)
 // Spawning at home on login only after this long away, so leaving and rejoining is no quicker than driving home.
 #define HOUSE_SPAWN_AWAY_S      (600)
-#define HOUSE_SAFE_RADIUS       (1.5)
+// Measured from the safe object, which stands on the floor about a metre below the player's middle.
+#define HOUSE_SAFE_RADIUS       (2.0)
+#define HOUSE_SAFE_MODEL        (2332)
 #define SAFE_MAX_SLOTS          (30)
 // A tenant away this long loses the room, so a room is not held for good by someone who stopped playing.
 #define ROOM_INACTIVE_DAYS      (30)
@@ -33,6 +39,16 @@
 #define HOUSE_VIEW_COOLDOWN_S   (300)
 #define HOUSE_VIEW_TICK_MS      (5000)
 #define WARDROBE_MAX_SLOTS      (8)
+// Rows shown at once from the stash; the rest come after these are taken.
+#define STASH_LIST_SIZE         (30)
+// Furniture of every house shares one pool, so the memory does not grow with the house limit.
+#define MAX_FURNITURE           (8000)
+#define FURN_ADMIN_EXTRA_MAX    (50)
+#define FURN_SELL_PERCENT       (50)
+#define FURN_STREAM_DISTANCE    (60.0)
+// A placed object must stay this close to the house exit, so nobody builds a way out of the interior.
+#define FURN_PLACE_RADIUS       (35.0)
+#define FURN_LIST_SIZE          (130)
 
 enum E_HOUSE_SIZE
 {
@@ -122,12 +138,18 @@ enum E_HOUSE
     Float:hSafeX,
     Float:hSafeY,
     Float:hSafeZ,
+    Float:hSafeRX,
+    Float:hSafeRY,
+    Float:hSafeRZ,
+    STREAMER_TAG_OBJECT:hSafeObject,
     hSafeMoney,
     STREAMER_TAG_3D_TEXT_LABEL:hSafeLabel,
     bool:hRoomsOpen,
     hRoomPrice,
     // Counted from the accounts on start and kept up to date, so a full house is known without a query.
-    hTenants
+    hTenants,
+    // Outfits in the owner's wardrobe in this house; the house is sold only with it empty, like the safe.
+    hOwnerWardrobe
 }
 
 new g_Houses[MAX_HOUSES][E_HOUSE];
@@ -144,9 +166,29 @@ new g_HouseViewing[MAX_PLAYERS];
 new g_HouseViewEnd[MAX_PLAYERS];
 new g_HouseViewBlocked[MAX_PLAYERS];
 new g_HouseViewBlockedUntil[MAX_PLAYERS];
-// Skins kept in the player's wardrobe (0 is an empty place); it stays with the player, not with a house.
+// Skins in the player's own wardrobe in one house (0 is an empty place) and that house's DB id; 0 means nothing is loaded.
 new g_Wardrobe[MAX_PLAYERS][WARDROBE_MAX_SLOTS];
-new bool:g_WardrobeLoaded[MAX_PLAYERS];
+new g_WardrobeHouse[MAX_PLAYERS];
+
+enum E_FURN
+{
+    bool:fUsed,
+    fDbId,
+    fHouseDbId,
+    fModel,
+    fPrice,
+    // Bought but not put anywhere yet; it has no object until it is placed.
+    bool:fPlaced,
+    Float:fX,
+    Float:fY,
+    Float:fZ,
+    Float:fRX,
+    Float:fRY,
+    Float:fRZ,
+    STREAMER_TAG_OBJECT:fObject
+}
+
+new g_Furn[MAX_FURNITURE][E_FURN];
 // The house a player is working with in a menu, by slot, and the account setting to spawn at home (house DB id or 0).
 new g_HouseSelected[MAX_PLAYERS];
 new g_HouseSpawn[MAX_PLAYERS];
@@ -154,6 +196,14 @@ new bool:g_HouseSpawnPending[MAX_PLAYERS];
 // Own-house icons wait for the first spawn: the client drops map icons sent while it is still on the login screen.
 new bool:g_HouseIconsShown[MAX_PLAYERS];
 new g_HouseGarageListed[MAX_PLAYERS][4];
+
+// Things that can be moved with the mouse inside a house.
+enum E_PLACE_KIND
+{
+    PLACE_NONE,
+    PLACE_SAFE,
+    PLACE_FURNITURE
+}
 
 forward bool:House_GaragePos(house_dbid, &Float:x, &Float:y, &Float:z);
 forward bool:House_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
@@ -173,3 +223,8 @@ forward bool:Safe_OnDialogResponse(playerid, dialogid, response, listitem, const
 forward bool:Room_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Clothes_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Wardrobe_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Stash_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Furn_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
+forward bool:Place_IsInsideHouse(slot, Float:x, Float:y, Float:z);
+forward bool:Place_IsEditing(playerid);
+forward bool:Furn_IsObject(index, house_dbid, STREAMER_TAG_OBJECT:objectid);

@@ -288,7 +288,16 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Igrač ima kuću i sobu (dva besplatna spawna) | ✅ | Soba se ne iznajmljuje ako igrač ima kuću; kupovina ili prijem kuće iseljava iz sobe |
 | Odeća: dupliranje kese ili VIP skin kao kesa za prodaju | ✅ | Obučena odeća ide u istu kesu ili isto mesto u ormaru; VIP skinovi, uniforme, admin i posebni skinovi nikad ne postaju kesa (bacaju se uz poruku) |
 | Odeća: presvlačenje ispod uniforme ili admin skina, ili tuđeg pola | ✅ | Presvlači se samo bez smene i admin dužnosti, peške; oblači se samo odeća za pol igrača |
-| Ormar kao besplatno skladište bez kuće | ✅ | Ormar radi samo u svojoj kući ili iznajmljenoj sobi; bez nje odeća čeka; kapacitet zavisi od kuće (3/5/8) |
+| Ormar kao besplatno skladište bez kuće | ✅ | Ormar radi samo u kući ili sobi gde igrač živi i svaka kuća ima svoj; kad igrač izgubi dom, garderoba ide u magacin, koji se otvara samo iz ormara u nekom domu; kapacitet 3/5/8 |
+| Dve kuće dele ormar, ili stvari prethodnog vlasnika i stanara ostanu novom vlasniku | ✅ | Ormar je vezan za kuću i stanovnika; kuća se prodaje tek kad je ormar vlasnika prazan; ormari onih koji više ne žive u kući idu u magacin |
+| Duplo uzimanje iz magacina (dupli klik, dva prozora) | ✅ | Red se prvo briše u bazi, a predmet se daje tek kad je brisanje uspelo; ako je inventar u međuvremenu pun, red se vraća |
+| Ormar ostane učitan posle iseljenja, pa se stara garderoba uzme još jednom | ✅ | Posle svakog premeštanja u magacin svi učitani ormari se brišu iz memorije i čitaju ponovo iz baze |
+| Nameštaj ili sef kao put van enterijera ili kao zid u kući | ✅ | Postavlja samo vlasnik u svojoj kući; predmet mora biti do 35 m od izlaza, u visini enterijera i do 10 m od igrača; sve se proverava ponovo pri čuvanju |
+| Kuća prodata ili oduzeta dok vlasnik pomera predmet | ✅ | Pri čuvanju se proveravaju vlasnik, kuća i da li je objekat isti; ako nije, ništa se ne čuva, a novi komad se vraća među nepostavljene |
+| Previše objekata u kući (klijent ima limit) | ✅ | Limit 30/50/80 + admin do 50 (najviše 130); objekti se šalju samo do 60 m |
+| Novac za nameštaj dva puta (prodaja pa oduzimanje kuće) | ✅ | Prodat komad se briše odmah; pri oduzimanju se otkupljuje samo ono što je još u kući |
+| Admin promeni enterijer, a nameštaj i sef ostanu u vazduhu | ✅ | Nameštaj se skida i čeka ponovno postavljanje, sef ide pored izlaza |
+| Server sa starim kodom radi dok nova verzija menja bazu (ormar, visina sefa) | ⚠️ | Posle ažuriranja server se odmah restartuje; sef koji ostane metar iznad poda vlasnik spusti mišem |
 | Vozilo neaktivnog vlasnika: novac za vozilo dobijeno od admina ili duplo | ✅ | Vraća se 50% cene koja je stvarno plaćena (pijaca, `/ponudi`); vozilo od admina $0; red se briše odmah, uz zapis u `vehicle_trades` |
 | Vozilo obrisano dok je još u svetu (server radi duže od 30 dana) | ✅ | Pre brisanja iz baze vozilo se skida sa mape |
 | Neon cevi ostanu da vise posle brisanja vozila | ✅ | Neon se skida pre svakog brisanja i ponovnog pravljenja ličnog vozila |
@@ -622,7 +631,16 @@ Every new system or change goes through these questions, against all existing sy
 | A player holds a house and a room (two free spawns) | ✅ | A room is not rented to a player with a house; buying or receiving a house ends the room |
 | Clothes: copying a bag or a VIP skin as a bag to sell | ✅ | The clothes taken off go into the same bag or the same wardrobe place; VIP skins, uniforms, admin and special skins never become a bag (dropped with a message) |
 | Clothes: changing under a uniform or the admin skin, or the other gender's clothes | ✅ | Only without a shift and admin duty, on foot; only clothes for the player's gender can be worn |
-| The wardrobe as free storage without a house | ✅ | It works only in one's own house or rented room; without one the clothes wait; the capacity depends on the house (3/5/8) |
+| The wardrobe as free storage without a house | ✅ | It works only in a house or room where the player lives, and each house has its own; when the player loses a home the outfits go to the stash, which opens only from the wardrobe of some home; capacity 3/5/8 |
+| Two houses share a wardrobe, or the previous owner's and tenants' things stay for the new owner | ✅ | The wardrobe belongs to the house and the resident; a house is sold only with the owner's wardrobe empty; wardrobes of people who no longer live there go to the stash |
+| Taking from the stash twice (double click, two windows) | ✅ | The row is deleted in the database first and the item is given only when the delete succeeded; if the inventory filled up meanwhile, the row is put back |
+| A wardrobe stays loaded after moving out, so old outfits are taken again | ✅ | After every move to the stash all loaded wardrobes are dropped from memory and read again from the database |
+| Furniture or the safe as a way out of the interior or as a wall in the house | ✅ | Only the owner places, in their own house; an object must stay within 35 m of the exit, at the interior's height and within 10 m of the player; everything is checked again on saving |
+| The house is sold or taken while the owner is moving an object | ✅ | Saving checks the owner, the house and that the object is the same; otherwise nothing is saved and a new piece goes back to the unplaced ones |
+| Too many objects in a house (the client has a limit) | ✅ | Limit 30/50/80 + admin up to 50 (130 at most); objects are sent only within 60 m |
+| Furniture money twice (sold, then the house taken) | ✅ | A sold piece is deleted at once; taking the house buys back only what is still in it |
+| An admin changes the interior and furniture and the safe hang in the air | ✅ | Furniture is taken down and waits to be placed again, the safe goes next to the exit |
+| A server with the old code runs while the new version changes the database (wardrobe, safe height) | ⚠️ | Restart the server right after updating; a safe left a metre above the floor is lowered by the owner with the mouse |
 | Inactive owner's vehicle: money for an admin-given vehicle, or paid twice | ✅ | 50% of the price actually paid comes back (market, `/ponudi`); an admin-given vehicle $0; the row is deleted at once, with a `vehicle_trades` entry |
 | A vehicle deleted while still in the world (the server ran longer than 30 days) | ✅ | It is taken off the map before it leaves the database |
 | Neon tubes left hanging after a vehicle is removed | ✅ | The neon is taken off before every removal and rebuild of a personal vehicle |

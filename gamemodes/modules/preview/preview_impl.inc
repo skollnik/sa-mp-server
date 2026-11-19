@@ -110,6 +110,8 @@ static stock Preview_ShowPage(playerid)
                 PlayerTextDrawSetPreviewRot(playerid, td, -10.0, 0.0, -40.0, 1.0);
                 PlayerTextDrawSetPreviewVehicleColours(playerid, td, 1, 1);
             }
+            // Turned and seen from above, so beds, tables and rugs show more than one side.
+            case PREVIEW_KIND_FURNITURE: PlayerTextDrawSetPreviewRot(playerid, td, -25.0, 0.0, -45.0, 1.0);
             default: PlayerTextDrawSetPreviewRot(playerid, td, 0.0, 0.0, 0.0, 1.0);
         }
         PlayerTextDrawShow(playerid, td);
@@ -204,6 +206,8 @@ stock bool:Preview_OnClickPlayerTextDraw(playerid, PlayerText:td)
             case PREVIEW_CLOTHES_SHOP: Clothes_OnSkinSelected(playerid, index);
             case PREVIEW_WARDROBE_TAKE: Wardrobe_OnTakeSelected(playerid, index);
             case PREVIEW_WARDROBE_PUT: Wardrobe_OnPutSelected(playerid, index);
+            case PREVIEW_FURN_SHOP: Furn_OnShopSelected(playerid, index);
+            case PREVIEW_FURN_PLACE, PREVIEW_FURN_MOVE, PREVIEW_FURN_SELL: Furn_OnListSelected(playerid, menu, index);
             default: {}
         }
         return true;

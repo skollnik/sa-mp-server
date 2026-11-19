@@ -131,6 +131,7 @@ stock Room_End(playerid, slot)
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET " ROOM_LEAVE_SET " WHERE `id` = %d", g_Player[playerid][pDbId]);
     mysql_tquery(g_SQL, query);
     Room_Forget(playerid);
+    Wardrobe_StashOrphans();
     if (slot != -1 && g_Houses[slot][hTenants] > 0)
     {
         g_Houses[slot][hTenants]--;
@@ -174,6 +175,7 @@ stock Room_CheckInactive()
     mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET " ROOM_LEAVE_SET " WHERE `room_house` <> 0 AND `last_login` < NOW() - INTERVAL %d DAY",
         ROOM_INACTIVE_DAYS);
     mysql_tquery(g_SQL, query);
+    Wardrobe_StashOrphans();
     Room_CountTenants();
 }
 
@@ -356,7 +358,7 @@ static stock Room_AskLeave(playerid)
         Msg_Error(playerid, "Ne iznajmljujete sobu.");
         return;
     }
-    ShowPlayerDialog(playerid, DIALOG_ROOM_LEAVE, DIALOG_STYLE_MSGBOX, "Napustanje sobe", "Iseljavate se iz sobe? Placena kirija se ne vraca.", "Iseli se", "Odustani");
+    ShowPlayerDialog(playerid, DIALOG_ROOM_LEAVE, DIALOG_STYLE_MSGBOX, "Napustanje sobe", "Iseljavate se iz sobe? Placena kirija se ne vraca.\n\nGarderoba iz vaseg ormara ide u magacin; uzimate je iz ormara u sledecem domu (/ormar).", "Iseli se", "Odustani");
 }
 
 cmd:napustisobu(playerid, params[])
@@ -528,6 +530,7 @@ static stock Room_Evict(playerid, slot, pick)
         new query[256];
         mysql_format(g_SQL, query, sizeof(query), "UPDATE `accounts` SET " ROOM_LEAVE_SET " WHERE `id` = %d AND `room_house` = %d", account_id, g_Houses[slot][hDbId]);
         mysql_tquery(g_SQL, query);
+        Wardrobe_StashOrphans();
         Room_CountTenants();
     }
     if (refund > 0)

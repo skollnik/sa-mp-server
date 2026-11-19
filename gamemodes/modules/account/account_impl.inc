@@ -69,6 +69,8 @@ stock Account_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `bank_account` TINYINT(1) NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `held_pay` INT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `extra_vehicle_slots` TINYINT UNSIGNED NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `extra_house_slots` TINYINT UNSIGNED NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `extra_furniture_slots` TINYINT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `licenses` INT NOT NULL DEFAULT 0");
 
     // The old per-chat toggle columns are folded into channel_bits (OOC = bit 0, PM = bit 1, newbie = bit 2) and cleared.
@@ -406,6 +408,8 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_bool(0, "bank_account", g_Player[playerid][pHasBankAccount]);
     cache_get_value_name_int(0, "held_pay", g_Player[playerid][pHeldPay]);
     cache_get_value_name_int(0, "extra_vehicle_slots", g_Player[playerid][pExtraVehSlots]);
+    cache_get_value_name_int(0, "extra_house_slots", g_Player[playerid][pExtraHouseSlots]);
+    cache_get_value_name_int(0, "extra_furniture_slots", g_Player[playerid][pExtraFurnSlots]);
     cache_get_value_name_int(0, "licenses", g_Player[playerid][pLicenses]);
     cache_get_value_name_int(0, "job", g_Player[playerid][pJob]);
 
@@ -889,7 +893,6 @@ stock Account_CompleteLogin(playerid, bool:is_new)
     }
 
     Inv_OnLogin(playerid);
-    Wardrobe_OnLogin(playerid);
     Phone_OnLogin(playerid);
     Veh_OnLogin(playerid);
     Fine_OnLogin(playerid);

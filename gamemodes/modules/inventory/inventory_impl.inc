@@ -669,6 +669,11 @@ cmd:kupi(playerid, params[])
         Acc_ShowShop(playerid);
         return 1;
     }
+    if (Point_IsNear(playerid, POINT_FURNITURE))
+    {
+        Furn_ShowShop(playerid);
+        return 1;
+    }
     if (!Point_Require(playerid, POINT_SHOP))
     {
         return 1;

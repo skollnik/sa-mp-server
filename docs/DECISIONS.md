@@ -208,6 +208,13 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 200 | 2026-11-18 | Kad vlasnik iseli stanara, vraća mu poslednju plaćenu kiriju (sa računa, pa iz džepa; bez novca iseljenje se odbija); stanar koji sam ode ili ne plati ne dobija ništa | Zahtev vlasnika: stanar je platio platu u kojoj više ne živi tu |
 | 201 | 2026-11-18 | Anti-cheat nikad ne izbacuje admina nivoa 5+ zbog jetpacka; ako mu je moć ugašena, jetpack se samo skida | U vazduhu klijent kasni sa uzimanjem i skidanjem jetpacka, pa je admin dobio kick |
 | 202 | 2026-11-19 | Jetpack skinut na F gasi moć; `/jetpack` skida jetpack uz `ClearAnimations` i proverava da li je dat jetpack stigao | Jetpack koji ostavi igra server ne može da obriše, a igra ne daje jetpack u padu |
+| 203 | 2026-11-19 | Pad i davljenje bez napadača se ne računaju kao šteta iz borbe | Ulazak na server u kući je zaključavao vrata na 30 s |
+| 204 | 2026-11-19 | Dodatna mesta za vozila, kuće i nameštaj daje jedna komanda `/setmesta [igrac] [vrsta] [broj]`; kuće kao vozila: VIP +1, admin do 5; nameštaj admin do 50 po kući | Vlasnik želi isti sistem mesta za sve, i za buduće sisteme |
+| 205 | 2026-11-19 | Ormar pripada kući: svaki stanovnik ima svoj u svakoj kući; kuća se prodaje tek kad je ormar vlasnika prazan | Dve kuće su delile isti ormar |
+| 206 | 2026-11-19 | Magacin: garderoba i predmeti iz sefa doma koji je igrač izgubio (oduzimanje, iseljenje, brisanje kuće) čekaju u magacinu i uzimaju se iz ormara u bilo kom domu; stari zajednički ormari su prebačeni u magacin | Ništa se ne gubi, a magacin ne služi kao skladište bez doma |
+| 207 | 2026-11-19 | Sef je predmet iz igre (2332) koji vlasnik postavlja mišem; isti alat (`placement.inc`) koristi i nameštaj | Vlasnik je tražio sef koji se vidi u kući |
+| 208 | 2026-11-19 | Nameštaj se kupuje u prodavnici nameštaja i čeka u kući dok ga vlasnik ne postavi (`/namestaj`); cena po kategoriji, prodaja 50%; limit 30/50/80 + admin; igraču ide uz kuću, državi i pri oduzimanju 50% na račun | Izbor vlasnika 19.11.2026. |
+| 209 | 2026-11-19 | Postavljen predmet mora biti do 35 m od izlaza, u visini enterijera i do 10 m od igrača | Da niko ne napravi izlaz iz enterijera ili stepenice van kuće |
 
 ### Arhitektura koda (predlog)
 ```
@@ -437,6 +444,13 @@ This file records every important decision so it does not get re-discussed. Newe
 | 200 | 2026-11-18 | When the owner evicts a tenant, the last rent paid goes back (from the bank, then cash; without money the eviction is refused); a tenant who leaves or does not pay gets nothing | The owner's request: the tenant paid for a payday they no longer live there |
 | 201 | 2026-11-18 | Anti-cheat never kicks a level 5+ admin for a jetpack; with the power off the jetpack is just taken away | In the air the client is late in giving and taking the jetpack, so an admin was kicked |
 | 202 | 2026-11-19 | A jetpack taken off with F ends the power; `/jetpack` takes it off with `ClearAnimations` and checks that a given jetpack arrived | The server cannot delete a jetpack the game leaves behind, and the game gives no jetpack while falling |
+| 203 | 2026-11-19 | Falls and drowning with no attacker do not count as fight damage | Joining inside a house locked the doors for 30 s |
+| 204 | 2026-11-19 | Extra slots for vehicles, houses and furniture come from one command, `/setmesta [player] [kind] [number]`; houses like vehicles: VIP +1, admin up to 5; furniture admin up to 50 per house | The owner wants one slot system for everything, including future systems |
+| 205 | 2026-11-19 | The wardrobe belongs to the house: every resident has their own in each house; a house is sold only with the owner's wardrobe empty | Two houses shared one wardrobe |
+| 206 | 2026-11-19 | The stash: outfits and safe items of a home the player lost (taken, evicted, house deleted) wait in the stash and are taken from the wardrobe of any home; the old shared wardrobes were moved to the stash | Nothing is lost, and the stash is no storage without a home |
+| 207 | 2026-11-19 | The safe is an in-game object (2332) the owner places with the mouse; furniture uses the same tool (`placement.inc`) | The owner asked for a safe that can be seen in the house |
+| 208 | 2026-11-19 | Furniture is bought in a furniture shop and waits in the house until the owner places it (`/namestaj`); one price per category, sold for 50%; limit 30/50/80 + admin; goes with the house to a player, 50% to the bank when sold to the state or taken | The owner's choice, 2026-11-19 |
+| 209 | 2026-11-19 | A placed object must stay within 35 m of the exit, at the interior's height and within 10 m of the player | So nobody builds a way out of the interior or stairs outside the house |
 
 ### Code architecture (proposal)
 ```

@@ -5,6 +5,10 @@ stock Safe_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `houses` ADD COLUMN IF NOT EXISTS `safe_y` FLOAT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `houses` ADD COLUMN IF NOT EXISTS `safe_z` FLOAT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `houses` ADD COLUMN IF NOT EXISTS `safe_money` INT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `houses` ADD COLUMN IF NOT EXISTS `safe_rx` FLOAT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `houses` ADD COLUMN IF NOT EXISTS `safe_ry` FLOAT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `houses` ADD COLUMN IF NOT EXISTS `safe_rz` FLOAT NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "SELECT `value` FROM `server_vars` WHERE `name` = 'safe_object_v1'", "OnSafeObjectsChecked");
     mysql_tquery(g_SQL,
         "CREATE TABLE IF NOT EXISTS `house_safe` (" \
         "`house_id` INT UNSIGNED NOT NULL," \
@@ -27,6 +31,19 @@ stock Safe_Init()
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 }
 
+// Safes bought before they became objects kept the player's position, a metre above the floor where the object now stands.
+// This runs before the houses are read, since its query was sent first.
+forward OnSafeObjectsChecked();
+public OnSafeObjectsChecked()
+{
+    if (cache_num_rows() == 0)
+    {
+        mysql_tquery(g_SQL, "UPDATE `houses` SET `safe_z` = `safe_z` - 1.0 WHERE `has_safe` = 1");
+        mysql_tquery(g_SQL, "INSERT INTO `server_vars` (`name`, `value`) VALUES ('safe_object_v1', 1)");
+    }
+    return 1;
+}
+
 stock Safe_OnHouseLoaded(slot)
 {
     new has_safe;
@@ -35,6 +52,9 @@ stock Safe_OnHouseLoaded(slot)
     cache_get_value_name_float(slot, "safe_x", g_Houses[slot][hSafeX]);
     cache_get_value_name_float(slot, "safe_y", g_Houses[slot][hSafeY]);
     cache_get_value_name_float(slot, "safe_z", g_Houses[slot][hSafeZ]);
+    cache_get_value_name_float(slot, "safe_rx", g_Houses[slot][hSafeRX]);
+    cache_get_value_name_float(slot, "safe_ry", g_Houses[slot][hSafeRY]);
+    cache_get_value_name_float(slot, "safe_rz", g_Houses[slot][hSafeRZ]);
     cache_get_value_name_int(slot, "safe_money", g_Houses[slot][hSafeMoney]);
 }
 
@@ -118,7 +138,7 @@ stock Safe_Clear(slot)
     mysql_tquery(g_SQL, query);
 }
 
-// When the house is taken (inactivity, an admin): the money goes to the owner's bank, the items are lost with the house.
+// When the house is taken (inactivity, an admin): the money goes to the owner's bank and the items to their stash.
 stock Safe_ReturnToOwner(slot)
 {
     new owner = g_Houses[slot][hOwnerDbId], money = g_Houses[slot][hSafeMoney];
@@ -135,6 +155,10 @@ stock Safe_ReturnToOwner(slot)
         {
             Msg_Info(playerid, "Novac iz sefa kuce ($%d) je prebacen u banku (/banka).", money);
         }
+    }
+    if (Store_Count(STORE_SAFE, slot) > 0)
+    {
+        Stash_AddSafe(slot, owner);
     }
     Safe_Log(INVALID_PLAYER_ID, slot, "returned", ITEM_NONE, money);
     Safe_Clear(slot);
@@ -238,15 +262,15 @@ static stock Safe_MoveMoney(playerid, slot, amount, bool:deposit)
     Store_Open(playerid, STORE_SAFE, slot);
 }
 
+// A new safe is saved in front of the owner right away, so cancelling the arrows still leaves it there, paid for.
 static stock Safe_Buy(playerid, slot)
 {
     if (!House_IsOwner(playerid, slot) || House_FindInsideAnywhere(playerid) != slot)
     {
-        Msg_Error(playerid, "Sef se postavlja u kuci, tamo gde stojite.");
+        Msg_Error(playerid, "Sef se postavlja u kuci; udjite unutra.");
         return;
     }
-    new bool:moving = g_Houses[slot][hHasSafe];
-    if (!moving)
+    if (!g_Houses[slot][hHasSafe])
     {
         new reason[32];
         format(reason, sizeof(reason), "sef za kucu %d", g_Houses[slot][hDbId]);
@@ -255,20 +279,42 @@ static stock Safe_Buy(playerid, slot)
             return;
         }
         Account_Save(playerid);
+        g_Houses[slot][hHasSafe] = true;
+        Place_InFront(playerid, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ], g_Houses[slot][hSafeRZ]);
+        g_Houses[slot][hSafeRX] = 0.0;
+        g_Houses[slot][hSafeRY] = 0.0;
+        House_Refresh(slot);
+        House_Save(slot);
+        Safe_Log(playerid, slot, "bought", ITEM_NONE, HOUSE_SAFE_PRICE);
+        Msg_Success(playerid, "Kupili ste sef za $%d. Postavite ga misem; otvara se sa /sef ili F pored njega.", HOUSE_SAFE_PRICE);
     }
-    g_Houses[slot][hHasSafe] = true;
-    GetPlayerPos(playerid, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ]);
+    Place_Start(playerid, PLACE_SAFE, 0, slot, g_Houses[slot][hSafeObject], false);
+}
+
+stock Safe_OnPlaced(playerid, slot, Float:x, Float:y, Float:z, Float:rx, Float:ry, Float:rz)
+{
+    g_Houses[slot][hSafeX] = x;
+    g_Houses[slot][hSafeY] = y;
+    g_Houses[slot][hSafeZ] = z;
+    g_Houses[slot][hSafeRX] = rx;
+    g_Houses[slot][hSafeRY] = ry;
+    g_Houses[slot][hSafeRZ] = rz;
     House_Refresh(slot);
     House_Save(slot);
-    Safe_Log(playerid, slot, moving ? ("moved") : ("bought"), ITEM_NONE, moving ? 0 : HOUSE_SAFE_PRICE);
-    if (moving)
-    {
-        Msg_Success(playerid, "Sef je pomeren ovde. Otvara se sa /sef ili F pored njega.");
-    }
-    else
-    {
-        Msg_Success(playerid, "Kupili ste sef za $%d. Otvara se sa /sef ili F pored njega.", HOUSE_SAFE_PRICE);
-    }
+    Safe_Log(playerid, slot, "moved", ITEM_NONE, 0);
+    Msg_Success(playerid, "Sef je postavljen.");
+}
+
+// After an admin gives the house another interior the old spot means nothing there, so the safe goes next to the exit.
+stock Safe_PutAtExit(slot)
+{
+    new Float:angle;
+    House_ExitPos(slot, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ], angle);
+    g_Houses[slot][hSafeX] += 1.0;
+    g_Houses[slot][hSafeZ] -= 1.0;
+    g_Houses[slot][hSafeRX] = 0.0;
+    g_Houses[slot][hSafeRY] = 0.0;
+    g_Houses[slot][hSafeRZ] = angle;
 }
 
 // The "safe" row of the owner's house menu.
@@ -276,18 +322,18 @@ stock Safe_OnMenu(playerid, slot)
 {
     if (House_FindInsideAnywhere(playerid) != slot)
     {
-        Msg_Error(playerid, "Udjite u kucu i stanite gde zelite sef.");
+        Msg_Error(playerid, "Udjite u kucu; sef se postavlja misem.");
         return;
     }
     g_HouseSelected[playerid] = slot;
     new text[192];
     if (g_Houses[slot][hHasSafe])
     {
-        strcopy(text, "Sef se pomera tamo gde stojite. Sadrzaj ostaje u njemu.");
+        strcopy(text, "Sef pomerate misem (strelice). Sadrzaj ostaje u njemu.");
     }
     else
     {
-        format(text, sizeof(text), "Kupujete sef za $%d. Stoji tamo gde stojite, a otvarate ga samo vi (/sef ili F pored njega).\n\nU sef staje novac i %d predmeta.",
+        format(text, sizeof(text), "Kupujete sef za $%d. Pojavljuje se ispred vas i postavljate ga misem; otvarate ga samo vi (/sef ili F).\n\nU sef staje novac i %d predmeta.",
             HOUSE_SAFE_PRICE, Safe_Capacity(slot));
     }
     ShowPlayerDialog(playerid, DIALOG_SAFE_BUY, DIALOG_STYLE_MSGBOX, "Sef", text, "Potvrdi", "Odustani");
