@@ -959,7 +959,14 @@ cmd:kupikucu(playerid, params[])
     }
     if (!House_HasFreeSlot(playerid))
     {
-        Msg_Error(playerid, "Vec imate najvise kuca (%d). Silver i Gold VIP mogu imati jos jednu.", House_MaxFor(playerid));
+        if (Vip_GetLevel(playerid) >= VIP_SILVER)
+        {
+            Msg_Error(playerid, "Vec imate najvise kuca (%d), zajedno sa VIP mestom.", House_MaxFor(playerid));
+        }
+        else
+        {
+            Msg_Error(playerid, "Vec imate najvise kuca (%d). Silver i Gold VIP mogu imati jos jednu.", House_MaxFor(playerid));
+        }
         return 1;
     }
     new reason[32];

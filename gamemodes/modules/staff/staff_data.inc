@@ -40,6 +40,7 @@ forward bool:Staff_CheckOutranks(playerid, targetid);
 #define STAFF_GOD_RESTORE_BELOW (200.0)
 // The client shows a jetpack or health change from the server a moment later.
 #define STAFF_POWER_SYNC_S      (3)
+#define STAFF_JETPACK_CHECK_MS  (1500)
 
 #define MAX_WARNINGS            (3)
 #define WARNING_BAN_DAYS        (3)

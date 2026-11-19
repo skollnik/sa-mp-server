@@ -196,8 +196,9 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 |--------|
 | Da li vlasnik automatski ima VIP pogodnosti (sada ih nema, `/vc` ima zbog moderacije) |
 | Taksi kao frakcija ili posao (staro pitanje) |
-| Gepek se otvara (`/v gepek` radi), ali se vizuelno ne otvori: koji model vozila, da li se hauba otvara, uvek ili ponekad (18.11.2026.) |
-| Vozila sama menjaju boju: koja vozila (lično, rent, admin `/veh`, pijaca), kada i iz koje u koju boju; admin `/veh` sada bira boju jednom pri pravljenju (18.11.2026.) |
+| Gepek na Infernusu se vizuelno ne otvara (hauba se otvara, `/gepek` radi): verovatno Infernus u igri nema gepek koji se pomera; vlasnik proverava `/v gepek` na drugom vozilu (Sultan, Premier) (19.11.2026.) |
+| Vozila sama menjaju boju: vlasnik je primetio na ličnim vozilima pre poslednjih izmena i javiće ako se ponovi (koje vozilo, kada, iz koje u koju boju); admin `/veh` sada bira boju jednom pri pravljenju (19.11.2026.) |
+| Predlog čeka odobrenje: admin `/kinfo` (podaci o kući kao `/vinfo`), poseban ormar za svaku kuću (šta biva sa stvarima kad se kuća proda), sef kao pravi predmet u kući, admin dodatna mesta za kuće (i za buduće sisteme, npr. firme) sa prikazom popunjenih mesta, predlog sledeće sekcije (nameštaj, korak 4.4) (19.11.2026.) |
 | Presvlačenje iz `/inv` radi i pored mesta „odeca“, koje je postavljeno napolju (1521, -1710): da li ostaje tako, da li se mesto pomera unutra ili se kesa oblači samo kod kuće (18.11.2026.) |
 | Da li je „trafika“ naša prodavnica 24/7 ili posebno mesto (kockice i novčić su sada u 24/7) |
 
@@ -294,6 +295,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 06.11.2026. | Saksija sa parkinga auto škole uklonjena; ostaje samo nevidljiv sudar tankog stuba (deo GTA zgrade) |
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 | 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
+| 19.11.2026. | Jetpack: skida se uz brisanje animacije (igra posle prima novi); ako jetpack ne stigne (u padu), admin dobija poruku umesto „dobili ste“; skidanje na F gasi jetpack, pa se onaj na zemlji ne može ponovo uzeti. Poruka o limitu kuća za VIP više ne nudi VIP mesto koje igrač već ima |
 | 18.11.2026. | Ispravke 4.3: admin nivoa 5+ više ne dobija kick za jetpack (u vazduhu ga server samo skine ako je ugašen, `/jetpack` ga daje ponovo kad ga admin nema); prodaja kuće kaže tačno šta ne valja (sef, garaža, parking, prodavac nije kod kuće); `/izmenikucu` u naslovu ima vlasnika; vlasnik koji iseli stanara vraća mu poslednju plaćenu kiriju; reč „skin“ izbačena (predmet je „Garderoba“, ormar bira garderobu preko slika) |
 | 18.11.2026. | Korak 4.3: sef u kući ($5.000, novac i 10/20/30 predmeta, `/sef` ili F, logovan; prodaja tek kad je prazan), iznajmljivanje soba (`/iznajmisobu`, `/napustisobu`, kirija $0–300 po plati, stanari u `/kuca`), razgledanje kuće na prodaju 5 min, odeća u prodavnici ($500, kesa) i ormar (`/ormar`, 3/5/8); vozila neaktivnog vlasnika (30 dana) se brišu uz 50% plaćene cene; admin `/jetpack` (`/rocketman`) i `/god` za nivo 5+ na dužnosti; gepek i sef dele isti meni |
 | 18.11.2026. | Ikonica sopstvene kuće se uvek vidi (pravi se na prvom spawnu); `/respawnveh` i ostale admin komande nalaze i vozilo koje je posle uništenja vraćeno u garažu; iznajmljivanje soba otpada |
@@ -508,8 +510,9 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 |------|
 | Whether the owner automatically gets VIP perks (now they don't; `/vc` works for moderation) |
 | Taxi as a faction or a job (older question) |
-| The trunk opens (`/v gepek` works) but does not open visually: which model, whether the bonnet opens, always or sometimes (2026-11-18) |
-| Vehicles change colour on their own: which vehicles (personal, rental, admin `/veh`, market), when and from which colour to which; admin `/veh` now picks the colour once at creation (2026-11-18) |
+| The Infernus trunk does not open visually (the bonnet does, `/gepek` works): most likely the game's Infernus has no moving boot; the owner tries `/v gepek` on another vehicle (Sultan, Premier) (2026-11-19) |
+| Vehicles change colour on their own: the owner saw it on personal vehicles before the last changes and will report if it happens again (which vehicle, when, from which colour to which); admin `/veh` now picks the colour once at creation (2026-11-19) |
+| Proposal awaiting approval: admin `/kinfo` (house data like `/vinfo`), a separate wardrobe per house (what happens to the items when a house is sold), the safe as a real object in the house, admin extra house slots (and for future systems, e.g. businesses) showing which slots are filled, a proposal for the next section (furniture, step 4.4) (2026-11-19) |
 | Changing clothes from `/inv` also works by the "odeca" point, which is placed outside (1521, -1710): keep it, move the point inside, or wear a bag only at home (2026-11-18) |
 | Is the "kiosk" our 24/7 shop or a separate place (dice and coin are now at the 24/7) |
 
@@ -606,6 +609,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-06 | The plant pot removed from the school lot; only the thin pole's invisible collision stays (part of the GTA building) |
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
 | 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |
+| 2026-11-19 | Jetpack: taken off with the animation cleared (the game then accepts a new one); if a jetpack does not arrive (while falling) the admin is told so instead of "you got it"; taking it off with F ends the power, so the one left on the ground cannot be picked up again. The house limit message no longer offers VIP holders the VIP slot they already have |
 | 2026-11-18 | 4.3 fixes: level 5+ admins are no longer kicked for a jetpack (in the air the server only takes it if the power is off, `/jetpack` gives it again when the admin has none); a house sale says exactly what is wrong (safe, garage, parking, seller not at the house); `/izmenikucu` shows the owner in its title; an owner who evicts a tenant gives back the last rent paid; the word "skin" is gone (the item is "Garderoba", the wardrobe picks outfits by picture) |
 | 2026-11-18 | Step 4.3: a house safe ($5,000, money and 10/20/30 items, `/sef` or F, logged; sale only when empty), renting rooms (`/iznajmisobu`, `/napustisobu`, rent $0–300 per payday, tenants in `/kuca`), viewing a house for sale for 5 min, clothes in the shop ($500, bag) and a wardrobe (`/ormar`, 3/5/8); vehicles of an inactive owner (30 days) are deleted with 50% of the price paid; admin `/jetpack` (`/rocketman`) and `/god` for level 5+ on duty; trunk and safe share one menu |
 | 2026-11-18 | The own-house icon always shows (made on the first spawn); `/respawnveh` and the other admin commands find a vehicle put back into a garage after its destruction; renting rooms is dropped |

@@ -542,10 +542,48 @@ stock Staff_SetJetpack(playerid, bool:on)
     if (on)
     {
         SetPlayerSpecialAction(playerid, SPECIAL_ACTION_USEJETPACK);
+        SetTimerEx("Staff_CheckJetpackGiven", STAFF_JETPACK_CHECK_MS, false, "ddd", playerid, g_AccountRace[playerid], g_Staff[playerid][sJetpackChangedAt]);
     }
-    else if (GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK)
+    else
     {
+        Staff_TakeJetpack(playerid);
+    }
+}
+
+static stock Staff_TakeJetpack(playerid)
+{
+    if (GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK)
+    {
+        // Without clearing the animation first the client keeps the jetpack's state and may refuse the next one.
+        ClearAnimations(playerid, SYNC_ALL);
         SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
+    }
+}
+
+// The game does not put a jetpack on someone who is falling, so the admin is told instead of being promised one.
+forward Staff_CheckJetpackGiven(playerid, race, changed_at);
+public Staff_CheckJetpackGiven(playerid, race, changed_at)
+{
+    if (race != g_AccountRace[playerid] || !g_Staff[playerid][sJetpack] || g_Staff[playerid][sJetpackChangedAt] != changed_at
+        || GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK)
+    {
+        return 1;
+    }
+    g_Staff[playerid][sJetpack] = false;
+    Msg_Error(playerid, "Jetpack nije stigao (u padu ga igra ne daje). Probajte ponovo kad stanete na zemlju.");
+    return 1;
+}
+
+// F drops the jetpack where the game itself puts it; the server cannot remove that one, so the power ends
+// and picking it up again only gets it taken away.
+stock Staff_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
+{
+    if (g_Staff[playerid][sJetpack] && (newkeys & KEY_SECONDARY_ATTACK) && !(oldkeys & KEY_SECONDARY_ATTACK)
+        && GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK)
+    {
+        Staff_SetJetpack(playerid, false);
+        Staff_Log(playerid, "jetpack_off", INVALID_PLAYER_ID, "F");
+        Msg_Admin(playerid, "Jetpack je skinut. Onaj na zemlji se ne moze ponovo uzeti; skidajte ga sa /jetpack da ne ostaje.");
     }
 }
 
@@ -572,10 +610,9 @@ stock Staff_EndPowers(playerid)
 // set back to normal is raised again while god mode is on.
 stock Staff_CheckPowers(playerid)
 {
-    if (!g_Staff[playerid][sJetpack] && GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK
-        && g_Player[playerid][pAdminLevel] >= ADMIN_LEVEL_MANAGEMENT)
+    if (!g_Staff[playerid][sJetpack] && g_Player[playerid][pAdminLevel] >= ADMIN_LEVEL_MANAGEMENT)
     {
-        SetPlayerSpecialAction(playerid, SPECIAL_ACTION_NONE);
+        Staff_TakeJetpack(playerid);
     }
     if (g_Staff[playerid][sGod])
     {

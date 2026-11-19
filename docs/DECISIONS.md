@@ -207,6 +207,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 199 | 2026-11-18 | `/jetpack` i `/god` za nivo 5+, samo na admin dužnosti (vlasnik i van nje), gase se sa dužnošću; god ne štiti vozilo | Moći uprave ne smeju ostati upaljene van posla |
 | 200 | 2026-11-18 | Kad vlasnik iseli stanara, vraća mu poslednju plaćenu kiriju (sa računa, pa iz džepa; bez novca iseljenje se odbija); stanar koji sam ode ili ne plati ne dobija ništa | Zahtev vlasnika: stanar je platio platu u kojoj više ne živi tu |
 | 201 | 2026-11-18 | Anti-cheat nikad ne izbacuje admina nivoa 5+ zbog jetpacka; ako mu je moć ugašena, jetpack se samo skida | U vazduhu klijent kasni sa uzimanjem i skidanjem jetpacka, pa je admin dobio kick |
+| 202 | 2026-11-19 | Jetpack skinut na F gasi moć; `/jetpack` skida jetpack uz `ClearAnimations` i proverava da li je dat jetpack stigao | Jetpack koji ostavi igra server ne može da obriše, a igra ne daje jetpack u padu |
 
 ### Arhitektura koda (predlog)
 ```
@@ -435,6 +436,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 199 | 2026-11-18 | `/jetpack` and `/god` for level 5+, only on admin duty (the owner also off duty), ending with duty; god does not protect the vehicle | Management powers must not stay on outside work |
 | 200 | 2026-11-18 | When the owner evicts a tenant, the last rent paid goes back (from the bank, then cash; without money the eviction is refused); a tenant who leaves or does not pay gets nothing | The owner's request: the tenant paid for a payday they no longer live there |
 | 201 | 2026-11-18 | Anti-cheat never kicks a level 5+ admin for a jetpack; with the power off the jetpack is just taken away | In the air the client is late in giving and taking the jetpack, so an admin was kicked |
+| 202 | 2026-11-19 | A jetpack taken off with F ends the power; `/jetpack` takes it off with `ClearAnimations` and checks that a given jetpack arrived | The server cannot delete a jetpack the game leaves behind, and the game gives no jetpack while falling |
 
 ### Code architecture (proposal)
 ```

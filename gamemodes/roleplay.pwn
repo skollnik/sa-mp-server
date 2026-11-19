@@ -412,6 +412,7 @@ public OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
     if (Account_IsLoggedIn(playerid))
     {
         Fuel_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
+        Staff_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);
         if (!Veh_OnPlayerKeyStateChange(playerid, newkeys, oldkeys) && !Inv_OnPlayerKeyStateChange(playerid, newkeys, oldkeys))
         {
             Door_OnPlayerKeyStateChange(playerid, newkeys, oldkeys);

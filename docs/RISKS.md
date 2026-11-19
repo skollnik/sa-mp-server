@@ -59,6 +59,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Ban po serijskom broju pogodi sve naloge na istom računaru | 👁 | Namerno (sprečava zaobilaženje bana). Vlasnik je izuzet |
 | Admin postavi respect veći od potrebnog, pa igrač na sledećem payday-u preskoči 20 nivoa | ✅ | `/setrespect` prima samo manje od potrebnog za sledeći nivo; `/setlevel` nuluje respect ako je preko potrebnog za novi nivo |
 | Admin ostavi jetpack ili god mode upaljen van dužnosti, ili ga anti-cheat prijavi | ✅ | Obe moći rade samo na dužnosti (vlasnik i van nje) i gase se sa dužnošću ili spuštanjem nivoa ispod 5; anti-cheat nikad ne izbacuje admina nivoa 5+ zbog jetpacka (u vazduhu klijent kasni), već mu jetpack samo skine ako je moć ugašena; HP 99999 se ne pamti pri odjavi |
+| Jetpack skinut na F ostaje na zemlji (ostavlja ga sama igra, server ne može da ga obriše), a admin ga posle podigne; `/jetpack` u padu kaže „dobili ste“, a jetpack ne stigne | ✅ | F gasi moć, pa se podignut jetpack odmah skida; skidanje sa `/jetpack` briše animaciju i ne ostavlja ništa na zemlji; 1,5 s posle davanja server proverava da li je jetpack stigao i, ako nije, gasi moć i kaže adminu da proba na zemlji |
 
 ### VIP
 | Rizik | Status | Kako je rešeno |
@@ -391,6 +392,7 @@ Every new system or change goes through these questions, against all existing sy
 | A serial ban hits every account on the same computer | 👁 | By design (stops ban evasion). The owner is exempt |
 | An admin sets more respect than needed, so the player skips 20 levels on the next payday | ✅ | `/setrespect` only takes less than the next level needs; `/setlevel` clears respect when it is over the new level's need |
 | An admin leaves jetpack or god mode on off duty, or anti-cheat flags it | ✅ | Both powers work only on duty (the owner also off duty) and end with duty or when the level drops below 5; anti-cheat never kicks a level 5+ admin for a jetpack (in the air the client is late), it only takes the jetpack when the power is off; 99999 HP is never saved on logout |
+| A jetpack taken off with F stays on the ground (the game itself leaves it, the server cannot delete it) and the admin picks it up later; `/jetpack` while falling says "you got it" but no jetpack arrives | ✅ | F ends the power, so a picked-up jetpack is taken at once; taking it off with `/jetpack` clears the animation and leaves nothing on the ground; 1.5 s after giving it the server checks that the jetpack arrived and, if not, ends the power and tells the admin to try on the ground |
 
 ### VIP
 | Risk | Status | How it is handled |
