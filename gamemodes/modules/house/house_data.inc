@@ -29,8 +29,8 @@
 #define HOUSE_SPAWN_AWAY_S      (600)
 // Measured from the safe object, which stands on the floor about a metre below the player's middle.
 #define HOUSE_SAFE_RADIUS       (2.0)
-// An upright safe with its door on the front.
-#define HOUSE_SAFE_MODEL        (1829)
+// A closed cube safe; its whole body has collision, so it sits on the floor exactly.
+#define HOUSE_SAFE_MODEL        (2332)
 #define SAFE_MAX_SLOTS          (30)
 // A tenant away this long loses the room, so a room is not held for good by someone who stopped playing.
 #define ROOM_INACTIVE_DAYS      (30)

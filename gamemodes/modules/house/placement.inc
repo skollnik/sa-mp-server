@@ -51,7 +51,8 @@ stock Place_InFront(playerid, model, &Float:x, &Float:y, &Float:z, &Float:rz)
     GetPlayerFacingAngle(playerid, angle);
     x += 1.2 * floatsin(-angle, degrees);
     y += 1.2 * floatcos(-angle, degrees);
-    rz = angle + 180.0;
+    // These models show their front on their -Y side, so turned like the player they face back at them (as the ATM does).
+    rz = angle;
     // Without the collision data the origin goes where the floor is under a standing player's middle.
     if (!Place_FloorZ(model, x, y, pz, z))
     {
@@ -132,7 +133,8 @@ stock bool:Place_Settle(playerid, slot, model, bool:hangs, ignore, &Float:x, &Fl
     Place_BoxCenter(box, x, y, z, rz, cx, cy, cz);
     if (!hangs || !Place_Hangs(box, x, y, z, rz))
     {
-        if (!Place_SupportBelow(slot, ignore, cx, cy, z + box[2] + PLACE_LIFT, support))
+        // Sunk deeper than the lift, the floor is only found from the piece's top.
+        if (!Place_SupportBelow(slot, ignore, cx, cy, z + box[2] + PLACE_LIFT, support) && !Place_SupportBelow(slot, ignore, cx, cy, z + box[5], support))
         {
             Msg_Error(playerid, "Ispod predmeta nema poda; postavite ga u prostoriju.");
             return false;
