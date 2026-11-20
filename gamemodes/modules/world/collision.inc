@@ -7,7 +7,8 @@ stock Collision_Init()
     g_CollisionReady = CA_Init() != 0;
     if (!g_CollisionReady)
     {
-        print("[COLLISION] scriptfiles/ColAndreas/ColAndreas.cadb is missing; placed objects are not checked against walls and floors.");
+        // The component reads the file only when the whole server starts, so a gamemode restart never picks up a file added later.
+        print("[COLLISION] No collision data: scriptfiles/ColAndreas/ColAndreas.cadb is missing or was added after the server started (restart the whole server). Placed objects are not checked against walls and floors.");
     }
 }
 

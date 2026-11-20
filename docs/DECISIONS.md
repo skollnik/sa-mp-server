@@ -225,6 +225,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 217 | 2026-11-20 | Kolizije iz igre na serveru: komponenta **ColAndreas** (open.mp verzija); fajl `scriptfiles/ColAndreas/ColAndreas.cadb` pravi se iz GTA SA programom ColAndreasWizard i ne ide na GitHub. Bez fajla postavljanje radi kao pre, bez provera | Server inače ne zna gde su zidovi i pod; uobičajena praksa za nameštaj |
 | 218 | 2026-11-20 | Nameštaj: ne sme iza zida (zrak od igrača do predmeta) ni više od 15 cm u zid; predmeti za pod uvek uspravni i padaju na pod ili nameštaj ispod (do 30 cm se podižu iz poda); police, svetla i dekoracija smeju da vise ako dodiruju zid ili plafon. Odbijeno mesto vraća predmet i ponovo otvara strelice | Nameštaj se gurao kroz spoljni zid i lebdeo |
 | 219 | 2026-11-20 | Nameštaj se ne dodaje u ColAndreas; vrh nameštaja ispod računa se iz kutije modela i spiska nameštaja te kuće | ColAndreas ne zna za virtuelne svetove, a iste kuće dele enterijer: tuđ nameštaj bi smetao |
+| 220 | 2026-11-20 | Sef nema „Okreni“: `/kuca` → Sef samo pita da li da ga pomeri ispred vlasnika, okrenutog ka njemu (menja deo 216) | Izbor vlasnika; okretanje ka igraču je dovoljno |
 
 ### Arhitektura koda (predlog)
 ```
@@ -471,6 +472,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 217 | 2026-11-20 | The game's collision on the server: the **ColAndreas** component (open.mp build); `scriptfiles/ColAndreas/ColAndreas.cadb` is made from GTA SA with ColAndreasWizard and is not pushed. Without the file placing works as before, unchecked | Otherwise the server does not know where walls and floors are; common practice for furniture |
 | 218 | 2026-11-20 | Furniture: not behind a wall (a ray from the player to the piece) nor more than 15 cm into one; standing pieces always upright and dropped onto the floor or a piece below (lifted up to 30 cm out of the floor); shelves, lights and decoration may hang when touching a wall or the ceiling. A refused spot puts the piece back and reopens the arrows | Furniture was pushed through the outer wall and floated |
 | 219 | 2026-11-20 | Furniture is not added to ColAndreas; the top of a piece below comes from the model's box and that house's furniture list | ColAndreas knows no virtual worlds, and houses share interiors: other houses' furniture would get in the way |
+| 220 | 2026-11-20 | The safe has no "Okreni": `/kuca` → Sef only asks whether to move it in front of the owner, facing them (changes part of 216) | The owner's choice; facing the player is enough |
 
 ### Code architecture (proposal)
 ```

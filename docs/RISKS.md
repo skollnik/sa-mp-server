@@ -302,7 +302,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Nameštaj kroz spoljni zid ili iza zida | ✅ | Zrak od igrača do sredine predmeta ne sme udariti u zid; zraci od sredine ka stranama ne smeju udariti zid pre 15 cm od ivice |
 | Nameštaj lebdi ili pravi stepenice | ✅ | Predmeti za pod uvek uspravni i padaju na pod ili nameštaj ispod; viseći (police, svetla, dekoracija) samo uz zid ili plafon |
 | Predmet ostane da lebdi kad se pomeri ili proda sto ispod njega | ⚠️ | Za sada se ne spušta sam; vlasnik ga pomeri ponovo (u BACKLOG-u) |
-| Nema fajla sa kolizijama (`ColAndreas.cadb`) | ⚠️ | Server piše upozorenje u log, a nameštaj i sef rade bez provera zida i poda. Ime mora biti tačno `ColAndreas.cadb` (sa pogrešnim imenom provere nisu radile) |
+| Nema fajla sa kolizijama (`ColAndreas.cadb`) | ⚠️ | Server piše upozorenje u log, a nameštaj i sef rade bez provera zida i poda. Ime mora biti tačno `ColAndreas.cadb` (sa pogrešnim imenom provere nisu radile), a fajl se čita samo pri paljenju celog servera: posle dodavanja fajla ne pomaže restart gamemode-a. Upozorenje u logu to kaže |
 | Tuđ nameštaj (isti enterijer, drugi svet) utiče na proveru | ✅ | Nameštaj se ne dodaje u ColAndreas; računa se samo nameštaj iste kuće |
 | Provera ne vidi ugrađen nameštaj enterijera kao smetnju pa odbije mesto | ⚠️ | Moguće kad je pult ili zid između igrača i predmeta; poruka kaže da se pomeri ili pridje |
 | Nameštaj ili sef zatvori izlaz iz kuće | ✅ | Ništa se ne čuva bliže od 2,5 m izlazu; posle promene enterijera sef ide nekoliko koraka od izlaza |
@@ -656,7 +656,7 @@ Every new system or change goes through these questions, against all existing sy
 | Furniture through the outer wall or behind a wall | ✅ | A ray from the player to the piece's middle must not hit a wall; rays from the middle to the sides must not hit one before 15 cm from the edge |
 | Furniture floats or builds stairs | ✅ | Standing pieces stay upright and drop onto the floor or a piece below; hanging ones (shelves, lights, decoration) only against a wall or the ceiling |
 | A piece is left floating when the table under it is moved or sold | ⚠️ | Not dropped by itself yet; the owner moves it again (in BACKLOG) |
-| No collision file (`ColAndreas.cadb`) | ⚠️ | The server logs a warning, and furniture and the safe work without wall and floor checks. The name must be exactly `ColAndreas.cadb` (with a wrong name the checks did not run) |
+| No collision file (`ColAndreas.cadb`) | ⚠️ | The server logs a warning, and furniture and the safe work without wall and floor checks. The name must be exactly `ColAndreas.cadb` (with a wrong name the checks did not run), and the file is read only when the whole server starts: a gamemode restart does not pick up a file added later. The log warning says so |
 | Other houses' furniture (same interior, other world) affects the check | ✅ | Furniture is not added to ColAndreas; only the same house's furniture counts |
 | The interior's built-in furniture blocks the check and a spot is refused | ⚠️ | Possible when a counter or wall stands between the player and the piece; the message says to move or come closer |
 | Furniture or the safe closes the house exit | ✅ | Nothing is saved closer than 2.5 m to the exit; after an interior change the safe goes a few steps from the exit |

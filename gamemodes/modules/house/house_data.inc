@@ -52,7 +52,6 @@
 #define FURN_LIST_SIZE          (130)
 // Nothing may stand this close to the exit, so the way out of the house can never be walled off.
 #define FURN_EXIT_CLEAR         (2.5)
-#define SAFE_TURN               (90.0)
 // How far a placed object may reach into a wall, so furniture still stands flush against one.
 #define PLACE_WALL_MARGIN       (0.15)
 // A piece let go up to this far inside the floor or a table is lifted onto it instead of sinking.

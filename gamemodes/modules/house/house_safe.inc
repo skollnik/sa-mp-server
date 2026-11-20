@@ -273,8 +273,8 @@ static stock Safe_MoveMoney(playerid, slot, amount, bool:deposit)
 static stock Safe_ShowMove(playerid, slot)
 {
     g_HouseSelected[playerid] = slot;
-    ShowPlayerDialog(playerid, DIALOG_SAFE_MOVE, DIALOG_STYLE_LIST, "Sef",
-        "Pomeri ovde (ispred sebe)\nOkreni (90 stepeni)", "Izaberi", "Zatvori");
+    ShowPlayerDialog(playerid, DIALOG_SAFE_MOVE, DIALOG_STYLE_MSGBOX, "Sef",
+        "Pomeriti sef ispred sebe, okrenut ka vama?", "Pomeri", "Zatvori");
 }
 
 static stock bool:Safe_FitsAt(playerid, slot, &Float:x, &Float:y, &Float:z, &Float:rz)
@@ -310,27 +310,17 @@ static stock Safe_PutAt(slot, Float:x, Float:y, Float:z, Float:rz)
     House_Save(slot);
 }
 
-static stock Safe_Move(playerid, slot, bool:turn)
+static stock Safe_Move(playerid, slot)
 {
     new Float:x, Float:y, Float:z, Float:rz;
-    if (turn)
-    {
-        x = g_Houses[slot][hSafeX];
-        y = g_Houses[slot][hSafeY];
-        z = g_Houses[slot][hSafeZ];
-        rz = g_Houses[slot][hSafeRZ] + SAFE_TURN;
-    }
-    else
-    {
-        Place_InFront(playerid, HOUSE_SAFE_MODEL, x, y, z, rz);
-    }
+    Place_InFront(playerid, HOUSE_SAFE_MODEL, x, y, z, rz);
     if (!Safe_FitsAt(playerid, slot, x, y, z, rz))
     {
         return;
     }
     Safe_PutAt(slot, x, y, z, rz);
     Safe_Log(playerid, slot, "moved", ITEM_NONE, 0);
-    Safe_ShowMove(playerid, slot);
+    Msg_Success(playerid, "Sef je pomeren ispred vas.");
 }
 
 static stock Safe_Buy(playerid, slot)
@@ -449,7 +439,7 @@ stock bool:Safe_OnDialogResponse(playerid, dialogid, response, listitem, const i
             }
             if (response)
             {
-                Safe_Move(playerid, slot, listitem == 1);
+                Safe_Move(playerid, slot);
             }
         }
         case DIALOG_SAFE_MONEY, DIALOG_SAFE_DEPOSIT, DIALOG_SAFE_WITHDRAW:
