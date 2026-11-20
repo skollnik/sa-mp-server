@@ -298,6 +298,9 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Novac za nameštaj dva puta (prodaja pa oduzimanje kuće) | ✅ | Prodat komad se briše odmah; pri oduzimanju se otkupljuje samo ono što je još u kući |
 | Admin promeni enterijer, a nameštaj i sef ostanu u vazduhu | ✅ | Nameštaj se skida i čeka ponovno postavljanje, sef ide pored izlaza |
 | Server sa starim kodom radi dok nova verzija menja bazu (ormar, visina sefa) | ⚠️ | Posle ažuriranja server se odmah restartuje; sef koji ostane metar iznad poda vlasnik postavi ponovo („Postavi ispred sebe“) |
+| Nove mape enterijera firmi preklapaju postojeće (svi custom enterijeri su u enterijeru 20, u svim svetovima) | ✅ | Proverene granice svih mapa u enterijeru 20: nove su najmanje 20 m od svih postojećih i jedna od druge; zalutali objekti daleko od prodavnica su sklonjeni |
+| Previše objekata u jednom enterijeru | ✅ | Najveća nova mapa ima 431 objekat, ispod granice od 1000 vidljivih |
+| Igrač koristi pregled enterijera firmi | ✅ | `/enterijerifirmi` radi samo glavnom adminu na dužnosti; posmatranje i vozilo rešava isti teleport kao `/tp` |
 | Sef na plafonu ili u zidu | ✅ | Sef stoji korak ispred vlasnika, uvek na površini ispod sebe (kolizije iz igre), ne sme iza zida ni u zid; postavlja se samo peške i u kući |
 | Nameštaj kroz spoljni zid ili iza zida | ✅ | Zrak od igrača do sredine predmeta ne sme udariti u zid; zraci od sredine ka stranama ne smeju udariti zid pre 15 cm od ivice |
 | Nameštaj lebdi ili pravi stepenice | ✅ | Predmeti za pod uvek uspravni i padaju na pod ili nameštaj ispod; viseći (police, svetla, dekoracija) samo uz zid ili plafon |
@@ -652,6 +655,9 @@ Every new system or change goes through these questions, against all existing sy
 | Furniture money twice (sold, then the house taken) | ✅ | A sold piece is deleted at once; taking the house buys back only what is still in it |
 | An admin changes the interior and furniture and the safe hang in the air | ✅ | Furniture is taken down and waits to be placed again, the safe goes next to the exit |
 | A server with the old code runs while the new version changes the database (wardrobe, safe height) | ⚠️ | Restart the server right after updating; a safe left a metre above the floor is placed again by the owner ("Postavi ispred sebe") |
+| The new business interior maps overlap existing ones (every custom interior is in interior 20, in all worlds) | ✅ | The bounds of every map in interior 20 were checked: the new ones are at least 20 m from every existing one and from each other; stray objects far from the shops were removed |
+| Too many objects in one interior | ✅ | The largest new map has 431 objects, under the limit of 1000 visible |
+| A player uses the business interior preview | ✅ | `/enterijerifirmi` works only for a head admin on duty; spectating and vehicles are handled by the same teleport as `/tp` |
 | The safe on the ceiling or in a wall | ✅ | The safe stands a step in front of the owner, always on the surface below it (the game's collision), never behind or in a wall; placed only on foot and inside the house |
 | Furniture through the outer wall or behind a wall | ✅ | A ray from the player to the piece's middle must not hit a wall; rays from the middle to the sides must not hit one before 15 cm from the edge |
 | Furniture floats or builds stairs | ✅ | Standing pieces stay upright and drop onto the floor or a piece below; hanging ones (shelves, lights, decoration) only against a wall or the ceiling |

@@ -39,6 +39,7 @@
 #include "modules/license/license_data.inc"
 #include "modules/job/job_data.inc"
 #include "modules/house/house_data.inc"
+#include "modules/business/business_data.inc"
 #include "modules/vehicle/vehicle_names.inc"
 #include "modules/health/hunger_data.inc"
 #include "modules/help/cmd_menu.inc"
@@ -124,6 +125,7 @@
 #include "modules/house/stash.inc"
 #include "modules/house/placement.inc"
 #include "modules/house/furniture.inc"
+#include "modules/business/business.inc"
 #include "modules/account/slots.inc"
 #include "modules/inventory/clothes.inc"
 #include "modules/inventory/storage.inc"
@@ -591,6 +593,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
         return 1;
     }
     if (Furn_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
+    {
+        return 1;
+    }
+    if (Biz_OnDialogResponse(playerid, dialogid, response, listitem))
     {
         return 1;
     }

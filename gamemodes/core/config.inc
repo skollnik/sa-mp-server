@@ -7,6 +7,10 @@
 #define SERVER_LOGO_BOTTOM  "SERVER"
 #define SERVER_MODE_TEXT    "Roleplay"
 
+// Custom interiors float high above the city in an interior ID that GTA itself never uses,
+// so they never show up in the open world and the city never shows through their walls.
+#define MAP_INTERIOR_ID     (20)
+
 // The owner always gets the highest admin level and may use a non Firstname_Lastname name.
 #define OWNER_NAME          "skollnik"
 #define ADMIN_LEVEL_OWNER   (6)
