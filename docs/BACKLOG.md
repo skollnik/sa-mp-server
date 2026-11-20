@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 4 | Test vlasnika za 4.3b i 4.4, pa predlog sledeće sekcije (firme PROP-6/7 ili poslovi JOB-1/2) |
+| 4 | Predlog sledeće sekcije: firme PROP-6/7 (korak 4.5), pa poslovi i kamiondžija JOB-1/2 |
 | 4 | Kuće, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -299,6 +299,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 | 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
 | 19.11.2026. | Ispravke 4.4: odbijena probna boja ili paintjob kod mehaničara se uvek vraća; `/resetvozila` vraća i rent i vozila poslova; `/vinfo` i `/kinfo` u dijalogu kao `/check`; garderoba se može obući na admin dužnosti; sef se pomera iz menija (25 cm, 15°, uvek na podu); nameštaj i sef ne smeju na izlaz; država otkupljuje i sef (50%) |
+| 20.11.2026. | Vlasnik testirao 4.3b i 4.4 (kuće, sef, nameštaj sa kolizijama): sve radi |
 | 20.11.2026. | Sef kao bankomat (ispred vlasnika, okrenut ka njemu, na podu, `/kuca` → Sef → „Pomeri“), novi model; ColAndreas: nameštaj ne može kroz zid ni da lebdi, predmeti za pod padaju na pod ili sto; čišćenje diska |
 | 19.11.2026. | Korak 4.3b i 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [igrac] [vozila|kuce|namestaj] [broj]` i spisak mesta u `/kuca`; ormar za svaku kuću i stanovnika, magacin („Stare stvari“ u `/ormar`) za stvari iz izgubljenog doma; sef kao predmet koji se postavlja mišem; nameštaj (prodavnica `namestaj`, `/namestaj`, 10 kategorija sa slikama, prodaja 50%, limit 30/50/80) |
 | 19.11.2026. | Pad pri učitavanju enterijera (ulazak na server u kući) više ne zaključava vrata kao da je igrač u borbi; pad i davljenje se ne računaju kao šteta iz borbe |
@@ -328,7 +329,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 4 | The owner's test of 4.3b and 4.4, then a proposal for the next section (businesses PROP-6/7 or jobs JOB-1/2) |
+| 4 | A proposal for the next section: businesses PROP-6/7 (step 4.5), then jobs and the trucker JOB-1/2 |
 | 4 | Houses, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
@@ -620,6 +621,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
 | 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |
 | 2026-11-19 | 4.4 fixes: a declined trial colour or paintjob at a mechanic is always put back; `/resetvozila` also returns rentals and job vehicles; `/vinfo` and `/kinfo` in a dialog like `/check`; clothes can be put on during admin duty; the safe moves from a menu (25 cm, 15°, always on the floor); furniture and the safe may not stand on the exit; the state also buys back the safe (50%) |
+| 2026-11-20 | The owner tested 4.3b and 4.4 (houses, the safe, furniture with collision): everything works |
 | 2026-11-20 | The safe like an ATM (in front of the owner, facing them, on the floor, `/kuca` → Sef → "Pomeri"), a new model; ColAndreas: furniture cannot go through walls or float, standing pieces drop onto the floor or a table; disk cleanup |
 | 2026-11-19 | Steps 4.3b and 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [player] [vozila|kuce|namestaj] [number]` and the slot list in `/kuca`; a wardrobe per house and resident, the stash ("Stare stvari" in `/ormar`) for things from a lost home; the safe as an object placed with the mouse; furniture (the `namestaj` shop, `/namestaj`, 10 categories by picture, sold for 50%, limit 30/50/80) |
 | 2026-11-19 | Dropping a little while an interior loads (joining inside a house) no longer locks the doors as if in a fight; falls and drowning do not count as fight damage |

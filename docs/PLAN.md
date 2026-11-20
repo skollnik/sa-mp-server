@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 4: koraci 4.1 (kuće), 4.2 (garaže), 4.3 (sef, sobe, razgledanje, odeća i ormar), 4.3b (`/kinfo`, mesta za kuće, ormar po kući i magacin, sef kao predmet) i 4.4 (nameštaj) napisani; čeka test vlasnika (ažurirano 2026-11-20)
+**Trenutni status:** Faza 4: koraci 4.1 (kuće), 4.2 (garaže), 4.3 (sef, sobe, razgledanje, odeća i ormar), 4.3b (`/kinfo`, mesta za kuće, ormar po kući i magacin, sef kao predmet) i 4.4 (nameštaj) napisani i testirani; sledi predlog za firme (PROP-6/7) (ažurirano 2026-11-20)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -121,7 +121,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** Phase 4: steps 4.1 (houses), 4.2 (garages), 4.3 (safe, rooms, viewing, clothes and wardrobe), 4.3b (`/kinfo`, house slots, a wardrobe per house and the stash, the safe as an object) and 4.4 (furniture) written; waiting for the owner's test (updated 2026-11-20)
+**Current status:** Phase 4: steps 4.1 (houses), 4.2 (garages), 4.3 (safe, rooms, viewing, clothes and wardrobe), 4.3b (`/kinfo`, house slots, a wardrobe per house and the stash, the safe as an object) and 4.4 (furniture) written and tested; next is the proposal for businesses (PROP-6/7) (updated 2026-11-20)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
