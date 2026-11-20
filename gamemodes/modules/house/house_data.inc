@@ -29,7 +29,8 @@
 #define HOUSE_SPAWN_AWAY_S      (600)
 // Measured from the safe object, which stands on the floor about a metre below the player's middle.
 #define HOUSE_SAFE_RADIUS       (2.0)
-#define HOUSE_SAFE_MODEL        (2332)
+// An upright safe with its door on the front.
+#define HOUSE_SAFE_MODEL        (1829)
 #define SAFE_MAX_SLOTS          (30)
 // A tenant away this long loses the room, so a room is not held for good by someone who stopped playing.
 #define ROOM_INACTIVE_DAYS      (30)
@@ -51,8 +52,13 @@
 #define FURN_LIST_SIZE          (130)
 // Nothing may stand this close to the exit, so the way out of the house can never be walled off.
 #define FURN_EXIT_CLEAR         (2.5)
-#define SAFE_STEP               (0.25)
-#define SAFE_TURN               (15.0)
+#define SAFE_TURN               (90.0)
+// How far a placed object may reach into a wall, so furniture still stands flush against one.
+#define PLACE_WALL_MARGIN       (0.15)
+// A piece let go up to this far inside the floor or a table is lifted onto it instead of sinking.
+#define PLACE_LIFT              (0.3)
+// A lamp, picture or shelf counts as hanging when a wall or the ceiling is this close to its side or top.
+#define PLACE_TOUCH             (0.25)
 // What the state pays back for the furniture and the safe when it takes the house (a sale to the state, inactivity, an admin).
 #define HOUSE_BUYBACK_PERCENT   (50)
 
@@ -234,3 +240,7 @@ forward bool:Place_IsInsideHouse(slot, Float:x, Float:y, Float:z);
 forward bool:Place_IsEditing(playerid);
 forward bool:Place_BlocksExit(slot, Float:x, Float:y);
 forward bool:Furn_IsObject(index, house_dbid, STREAMER_TAG_OBJECT:objectid);
+forward bool:Furn_CanHang(model);
+forward bool:Furn_TopBelow(house_dbid, ignore, Float:x, Float:y, Float:limit, &Float:top);
+forward bool:Place_Settle(playerid, slot, model, bool:hangs, ignore, &Float:x, &Float:y, &Float:z, &Float:rx, &Float:ry, &Float:rz);
+forward bool:Place_FloorZ(model, Float:x, Float:y, Float:from, &Float:z);

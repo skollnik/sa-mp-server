@@ -11,6 +11,9 @@
 #include <streamer>
 #include <samp_bcrypt>
 #include <Pawn.CMD>
+// Only the raw collision queries are used, not the include's own object list.
+#define MAX_CA_OBJECTS (1)
+#include <colandreas>
 
 #include "core/config.inc"
 #include "core/economy.inc"
@@ -42,6 +45,7 @@
 #include "modules/world/checkpoint.inc"
 #include "modules/world/zones.inc"
 #include "modules/world/gps.inc"
+#include "modules/world/collision.inc"
 
 #include "modules/account/account_impl.inc"
 #include "modules/account/account_cmds.inc"
@@ -147,6 +151,7 @@ public OnGameModeInit()
     ShowPlayerMarkers(PLAYER_MARKERS_MODE_OFF);
     ManualVehicleEngineAndLights();
 
+    Collision_Init();
     Account_Init();
     Staff_Init();
     Punish_Init();

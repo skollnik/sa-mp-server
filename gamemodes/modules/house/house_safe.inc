@@ -56,6 +56,13 @@ stock Safe_OnHouseLoaded(slot)
     cache_get_value_name_float(slot, "safe_ry", g_Houses[slot][hSafeRY]);
     cache_get_value_name_float(slot, "safe_rz", g_Houses[slot][hSafeRZ]);
     cache_get_value_name_int(slot, "safe_money", g_Houses[slot][hSafeMoney]);
+    // Older safes were put a metre under the player's middle, which sinks this model; they are stood back on the floor.
+    if (g_Houses[slot][hHasSafe])
+    {
+        Place_FloorZ(HOUSE_SAFE_MODEL, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ] + 1.0, g_Houses[slot][hSafeZ]);
+        g_Houses[slot][hSafeRX] = 0.0;
+        g_Houses[slot][hSafeRY] = 0.0;
+    }
 }
 
 // All safes at once after the houses: there are few rows, and a safe must never be opened before its items are in.
@@ -262,21 +269,24 @@ static stock Safe_MoveMoney(playerid, slot, amount, bool:deposit)
     Store_Open(playerid, STORE_SAFE, slot);
 }
 
-// The safe stands on the floor where the owner stands, so it can be pushed around in steps and turned, but never lifted
-// onto a ceiling or a wall the way free mouse placing allowed.
+// Placed like an ATM: it stands on the floor a step in front of the owner, facing them, and moves by standing elsewhere.
 static stock Safe_ShowMove(playerid, slot)
 {
     g_HouseSelected[playerid] = slot;
-    ShowPlayerDialog(playerid, DIALOG_SAFE_MOVE, DIALOG_STYLE_LIST, "Pomeranje sefa (pravac je kuda gledate)",
-        "Dalje od vas (25 cm)\nBlize vama (25 cm)\nLevo (25 cm)\nDesno (25 cm)\nOkreni na levo (15 stepeni)\nOkreni na desno (15 stepeni)\nPostavi ispred sebe\nGotovo",
-        "Izaberi", "Gotovo");
+    ShowPlayerDialog(playerid, DIALOG_SAFE_MOVE, DIALOG_STYLE_LIST, "Sef",
+        "Pomeri ovde (ispred sebe)\nOkreni (90 stepeni)", "Izaberi", "Zatvori");
 }
 
-static stock bool:Safe_FitsAt(playerid, slot, Float:x, Float:y, Float:z)
+static stock bool:Safe_FitsAt(playerid, slot, &Float:x, &Float:y, &Float:z, &Float:rz)
 {
-    if (!Place_IsInsideHouse(slot, x, y, z) || GetPlayerDistanceFromPoint(playerid, x, y, z) > 4.0)
+    if (GetPlayerState(playerid) != PLAYER_STATE_ONFOOT)
     {
-        Msg_Error(playerid, "Sef mora ostati u kuci i blizu vas; pridjite mu ili ga postavite ispred sebe.");
+        Msg_Error(playerid, "Sef se postavlja peske.");
+        return false;
+    }
+    if (!Place_IsInsideHouse(slot, x, y, z))
+    {
+        Msg_Error(playerid, "Sef mora biti u kuci.");
         return false;
     }
     if (Place_BlocksExit(slot, x, y))
@@ -284,37 +294,12 @@ static stock bool:Safe_FitsAt(playerid, slot, Float:x, Float:y, Float:z)
         Msg_Error(playerid, "Sef ne sme stajati na izlazu (najmanje %.1f m od njega).", FURN_EXIT_CLEAR);
         return false;
     }
-    return true;
+    new Float:rx, Float:ry;
+    return Place_Settle(playerid, slot, HOUSE_SAFE_MODEL, false, -1, x, y, z, rx, ry, rz);
 }
 
-static stock Safe_Step(playerid, slot, option)
+static stock Safe_PutAt(slot, Float:x, Float:y, Float:z, Float:rz)
 {
-    new Float:x = g_Houses[slot][hSafeX], Float:y = g_Houses[slot][hSafeY], Float:z = g_Houses[slot][hSafeZ], Float:rz = g_Houses[slot][hSafeRZ], Float:angle;
-    GetPlayerFacingAngle(playerid, angle);
-    switch (option)
-    {
-        case 0, 1:
-        {
-            new Float:step = option == 0 ? SAFE_STEP : -SAFE_STEP;
-            x += step * floatsin(-angle, degrees);
-            y += step * floatcos(-angle, degrees);
-        }
-        case 2, 3:
-        {
-            new Float:side = option == 2 ? angle + 90.0 : angle - 90.0;
-            x += SAFE_STEP * floatsin(-side, degrees);
-            y += SAFE_STEP * floatcos(-side, degrees);
-        }
-        case 4: rz += SAFE_TURN;
-        case 5: rz -= SAFE_TURN;
-        case 6: Place_InFront(playerid, x, y, z, rz);
-        default: return;
-    }
-    if (!Safe_FitsAt(playerid, slot, x, y, z))
-    {
-        Safe_ShowMove(playerid, slot);
-        return;
-    }
     g_Houses[slot][hSafeX] = x;
     g_Houses[slot][hSafeY] = y;
     g_Houses[slot][hSafeZ] = z;
@@ -323,6 +308,28 @@ static stock Safe_Step(playerid, slot, option)
     g_Houses[slot][hSafeRZ] = rz;
     House_Refresh(slot);
     House_Save(slot);
+}
+
+static stock Safe_Move(playerid, slot, bool:turn)
+{
+    new Float:x, Float:y, Float:z, Float:rz;
+    if (turn)
+    {
+        x = g_Houses[slot][hSafeX];
+        y = g_Houses[slot][hSafeY];
+        z = g_Houses[slot][hSafeZ];
+        rz = g_Houses[slot][hSafeRZ] + SAFE_TURN;
+    }
+    else
+    {
+        Place_InFront(playerid, HOUSE_SAFE_MODEL, x, y, z, rz);
+    }
+    if (!Safe_FitsAt(playerid, slot, x, y, z, rz))
+    {
+        return;
+    }
+    Safe_PutAt(slot, x, y, z, rz);
+    Safe_Log(playerid, slot, "moved", ITEM_NONE, 0);
     Safe_ShowMove(playerid, slot);
 }
 
@@ -334,8 +341,8 @@ static stock Safe_Buy(playerid, slot)
         return;
     }
     new Float:x, Float:y, Float:z, Float:rz;
-    Place_InFront(playerid, x, y, z, rz);
-    if (!Safe_FitsAt(playerid, slot, x, y, z))
+    Place_InFront(playerid, HOUSE_SAFE_MODEL, x, y, z, rz);
+    if (!Safe_FitsAt(playerid, slot, x, y, z, rz))
     {
         return;
     }
@@ -347,27 +354,24 @@ static stock Safe_Buy(playerid, slot)
     }
     Account_Save(playerid);
     g_Houses[slot][hHasSafe] = true;
-    g_Houses[slot][hSafeX] = x;
-    g_Houses[slot][hSafeY] = y;
-    g_Houses[slot][hSafeZ] = z;
-    g_Houses[slot][hSafeRX] = 0.0;
-    g_Houses[slot][hSafeRY] = 0.0;
-    g_Houses[slot][hSafeRZ] = rz;
-    House_Refresh(slot);
-    House_Save(slot);
+    Safe_PutAt(slot, x, y, z, rz);
     Safe_Log(playerid, slot, "bought", ITEM_NONE, HOUSE_SAFE_PRICE);
-    Msg_Success(playerid, "Kupili ste sef za $%d. Pomerite ga gde zelite; otvara se sa /sef ili F pored njega.", HOUSE_SAFE_PRICE);
-    Safe_ShowMove(playerid, slot);
+    Msg_Success(playerid, "Kupili ste sef za $%d; otvara se sa /sef ili F pored njega. Pomera se u /kuca.", HOUSE_SAFE_PRICE);
 }
 
 // After an admin gives the house another interior the old spot means nothing there, so the safe goes a few steps in from the exit.
 stock Safe_PutAtExit(slot)
 {
-    new Float:angle;
-    House_ExitPos(slot, g_Houses[slot][hSafeX], g_Houses[slot][hSafeY], g_Houses[slot][hSafeZ], angle);
-    g_Houses[slot][hSafeX] += (FURN_EXIT_CLEAR + 0.5) * floatsin(-angle, degrees);
-    g_Houses[slot][hSafeY] += (FURN_EXIT_CLEAR + 0.5) * floatcos(-angle, degrees);
-    g_Houses[slot][hSafeZ] -= 1.0;
+    new Float:angle, Float:x, Float:y, Float:z;
+    House_ExitPos(slot, x, y, z, angle);
+    x += (FURN_EXIT_CLEAR + 0.5) * floatsin(-angle, degrees);
+    y += (FURN_EXIT_CLEAR + 0.5) * floatcos(-angle, degrees);
+    g_Houses[slot][hSafeX] = x;
+    g_Houses[slot][hSafeY] = y;
+    if (!Place_FloorZ(HOUSE_SAFE_MODEL, x, y, z, g_Houses[slot][hSafeZ]))
+    {
+        g_Houses[slot][hSafeZ] = z - 1.0;
+    }
     g_Houses[slot][hSafeRX] = 0.0;
     g_Houses[slot][hSafeRY] = 0.0;
     g_Houses[slot][hSafeRZ] = angle;
@@ -388,7 +392,7 @@ stock Safe_OnMenu(playerid, slot)
     }
     g_HouseSelected[playerid] = slot;
     new text[192];
-    format(text, sizeof(text), "Kupujete sef za $%d. Pojavljuje se ispred vas, a posle ga pomerate u koracima; otvarate ga samo vi (/sef ili F).\n\nU sef staje novac i %d predmeta.",
+    format(text, sizeof(text), "Kupujete sef za $%d. Stoji na podu ispred vas; pomera se tako sto stanete gde ga zelite (/kuca). Otvarate ga samo vi (/sef ili F).\n\nU sef staje novac i %d predmeta.",
         HOUSE_SAFE_PRICE, Safe_Capacity(slot));
     ShowPlayerDialog(playerid, DIALOG_SAFE_BUY, DIALOG_STYLE_MSGBOX, "Sef", text, "Kupi", "Odustani");
 }
@@ -443,13 +447,10 @@ stock bool:Safe_OnDialogResponse(playerid, dialogid, response, listitem, const i
             {
                 return true;
             }
-            if (!response || listitem == 7)
+            if (response)
             {
-                Safe_Log(playerid, slot, "moved", ITEM_NONE, 0);
-                Msg_Success(playerid, "Sef je postavljen. Pomera se ponovo u /kuca.");
-                return true;
+                Safe_Move(playerid, slot, listitem == 1);
             }
-            Safe_Step(playerid, slot, listitem);
         }
         case DIALOG_SAFE_MONEY, DIALOG_SAFE_DEPOSIT, DIALOG_SAFE_WITHDRAW:
         {

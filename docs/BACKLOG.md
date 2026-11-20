@@ -208,6 +208,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Posle `/unjail` ili isteka kazne vratiti igrača na mesto gde je bio pre zatvora (sada ide na aerodrom) |
 | Ormar kao komad nameštaja koji se postavlja mišem (sada radi bilo gde u domu) |
 | Bojenje nameštaja teksturama iz igre |
+| Kad se pomeri ili proda nameštaj, spustiti predmete koji su stajali na njemu (TV na stolu) |
 | Opis izgleda karaktera (`/examine`), akcenti (`/accent`) |
 | `/try` (nasumično „uspeo“ ili „nije uspeo“) i `/todo` (radnja i govor u jednoj poruci) |
 | Izbor skina pri registraciji iz ponuđene liste po polu, umesto nasumičnog |
@@ -298,6 +299,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 06.11.2026. | Pojas i kaciga (`/pojas`, `/kaciga`): udes, izbacivanje kroz šoferšajbnu, kamere, ispit, kaciga u prodavnici odeće |
 | 06.11.2026. | Kaciga se stavlja i na motoru; tabla "AUTO SKOLA" na stubu na uglu parkinga vraćena |
 | 19.11.2026. | Ispravke 4.4: odbijena probna boja ili paintjob kod mehaničara se uvek vraća; `/resetvozila` vraća i rent i vozila poslova; `/vinfo` i `/kinfo` u dijalogu kao `/check`; garderoba se može obući na admin dužnosti; sef se pomera iz menija (25 cm, 15°, uvek na podu); nameštaj i sef ne smeju na izlaz; država otkupljuje i sef (50%) |
+| 20.11.2026. | Sef kao bankomat (ispred vlasnika, na podu, „Pomeri ovde“ i „Okreni“), novi model; ColAndreas: nameštaj ne može kroz zid ni da lebdi, predmeti za pod padaju na pod ili sto; čišćenje diska |
 | 19.11.2026. | Korak 4.3b i 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [igrac] [vozila|kuce|namestaj] [broj]` i spisak mesta u `/kuca`; ormar za svaku kuću i stanovnika, magacin („Stare stvari“ u `/ormar`) za stvari iz izgubljenog doma; sef kao predmet koji se postavlja mišem; nameštaj (prodavnica `namestaj`, `/namestaj`, 10 kategorija sa slikama, prodaja 50%, limit 30/50/80) |
 | 19.11.2026. | Pad pri učitavanju enterijera (ulazak na server u kući) više ne zaključava vrata kao da je igrač u borbi; pad i davljenje se ne računaju kao šteta iz borbe |
 | 19.11.2026. | Jetpack: skida se uz brisanje animacije (igra posle prima novi); ako jetpack ne stigne (u padu), admin dobija poruku umesto „dobili ste“; skidanje na F gasi jetpack, pa se onaj na zemlji ne može ponovo uzeti. Poruka o limitu kuća za VIP više ne nudi VIP mesto koje igrač već ima |
@@ -527,6 +529,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | After `/unjail` or when the sentence ends, return the player to where they were before jail (now the airport) |
 | The wardrobe as a piece of furniture placed with the mouse (now it works anywhere in the home) |
 | Painting furniture with in-game textures |
+| When a piece is moved or sold, drop the pieces that stood on it (a TV on a table) |
 | Character appearance description (`/examine`), accents (`/accent`) |
 | `/try` (randomly "succeeded" or "failed") and `/todo` (action and speech in one message) |
 | Picking a skin at registration from a set list per gender instead of a random one |
@@ -617,6 +620,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-06 | Seatbelt and helmet (`/pojas`, `/kaciga`): crashes, the windscreen ejection, cameras, the test, the helmet in the clothing shop |
 | 2026-11-06 | The helmet goes on while riding; the "AUTO SKOLA" pole sign at the corner of the lot is back |
 | 2026-11-19 | 4.4 fixes: a declined trial colour or paintjob at a mechanic is always put back; `/resetvozila` also returns rentals and job vehicles; `/vinfo` and `/kinfo` in a dialog like `/check`; clothes can be put on during admin duty; the safe moves from a menu (25 cm, 15°, always on the floor); furniture and the safe may not stand on the exit; the state also buys back the safe (50%) |
+| 2026-11-20 | The safe like an ATM (in front of the owner, on the floor, "Pomeri ovde" and "Okreni"), a new model; ColAndreas: furniture cannot go through walls or float, standing pieces drop onto the floor or a table; disk cleanup |
 | 2026-11-19 | Steps 4.3b and 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [player] [vozila|kuce|namestaj] [number]` and the slot list in `/kuca`; a wardrobe per house and resident, the stash ("Stare stvari" in `/ormar`) for things from a lost home; the safe as an object placed with the mouse; furniture (the `namestaj` shop, `/namestaj`, 10 categories by picture, sold for 50%, limit 30/50/80) |
 | 2026-11-19 | Dropping a little while an interior loads (joining inside a house) no longer locks the doors as if in a fight; falls and drowning do not count as fight damage |
 | 2026-11-19 | Jetpack: taken off with the animation cleared (the game then accepts a new one); if a jetpack does not arrive (while falling) the admin is told so instead of "you got it"; taking it off with F ends the power, so the one left on the ground cannot be picked up again. The house limit message no longer offers VIP holders the VIP slot they already have |

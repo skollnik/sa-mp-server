@@ -2,22 +2,24 @@ enum E_FURN_CATEGORY
 {
     fcName[24],
     fcItem[16],
-    fcPrice
+    fcPrice,
+    // Lamps, pictures and shelves may hang on a wall or from the ceiling; the rest has to stand on something.
+    bool:fcHangs
 }
 
 // One price per category keeps the shop readable; the pieces are picked by their pictures, so they need no names of their own.
 static const g_FurnCategories[][E_FURN_CATEGORY] =
 {
-    { "Kreveti",           "Krevet",      800 },
-    { "Kaucevi i fotelje", "Sedenje",     600 },
-    { "Stolice",           "Stolica",     200 },
-    { "Stolovi",           "Sto",         300 },
-    { "Elektronika",       "Elektronika", 500 },
-    { "Kuhinja",           "Kuhinja",     400 },
-    { "Kupatilo",          "Kupatilo",    450 },
-    { "Ormari i police",   "Ormaric",     350 },
-    { "Svetla",            "Lampa",       150 },
-    { "Dekoracija",        "Dekoracija",  100 }
+    { "Kreveti",           "Krevet",      800, false },
+    { "Kaucevi i fotelje", "Sedenje",     600, false },
+    { "Stolice",           "Stolica",     200, false },
+    { "Stolovi",           "Sto",         300, false },
+    { "Elektronika",       "Elektronika", 500, false },
+    { "Kuhinja",           "Kuhinja",     400, false },
+    { "Kupatilo",          "Kupatilo",    450, false },
+    { "Ormari i police",   "Ormaric",     350, true },
+    { "Svetla",            "Lampa",       150, true },
+    { "Dekoracija",        "Dekoracija",  100, true }
 };
 
 // GTA's own furniture objects, so every client (0.3.7 and 0.3.DL) has them; { category, model }.
@@ -464,7 +466,7 @@ stock Furn_OnListSelected(playerid, E_PREVIEW_MENU:menu, row)
     }
     if (menu == PREVIEW_FURN_PLACE)
     {
-        Place_InFront(playerid, g_Furn[index][fX], g_Furn[index][fY], g_Furn[index][fZ], g_Furn[index][fRZ]);
+        Place_InFront(playerid, g_Furn[index][fModel], g_Furn[index][fX], g_Furn[index][fY], g_Furn[index][fZ], g_Furn[index][fRZ]);
         g_Furn[index][fRX] = 0.0;
         g_Furn[index][fRY] = 0.0;
         Furn_MakeObject(index, slot);
@@ -496,6 +498,40 @@ stock Furn_OnPlaceCancelled(index, house_dbid)
     {
         Furn_Hide(index);
     }
+}
+
+stock bool:Furn_CanHang(model)
+{
+    for (new i = 0; i < sizeof(g_FurnCatalog); i++)
+    {
+        if (g_FurnCatalog[i][1] == model)
+        {
+            return g_FurnCategories[g_FurnCatalog[i][0]][fcHangs];
+        }
+    }
+    return false;
+}
+
+// The highest top of the house's pieces under the point, no higher than limit, so a TV can stand on a table.
+stock bool:Furn_TopBelow(house_dbid, ignore, Float:x, Float:y, Float:limit, &Float:top)
+{
+    new bool:found, Float:box[6], Float:lx, Float:ly, Float:t;
+    for (new i = 0; i < MAX_FURNITURE; i++)
+    {
+        if (i == ignore || !g_Furn[i][fUsed] || !g_Furn[i][fPlaced] || g_Furn[i][fHouseDbId] != house_dbid || !Collision_ModelBox(g_Furn[i][fModel], box))
+        {
+            continue;
+        }
+        Collision_WorldToLocal(g_Furn[i][fX], g_Furn[i][fY], g_Furn[i][fRZ], x, y, lx, ly);
+        t = g_Furn[i][fZ] + box[5];
+        if (lx < box[0] || lx > box[3] || ly < box[1] || ly > box[4] || t > limit || (found && t <= top))
+        {
+            continue;
+        }
+        top = t;
+        found = true;
+    }
+    return found;
 }
 
 stock bool:Furn_IsObject(index, house_dbid, STREAMER_TAG_OBJECT:objectid)

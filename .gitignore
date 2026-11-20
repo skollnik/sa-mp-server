@@ -26,3 +26,6 @@ logs/
 
 # Test server log
 log_test.txt
+
+# Collision database, generated from the game files with ColAndreasWizard
+scriptfiles/ColAndreas/
