@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 4 | Vlasnik bira enterijere firmi (`/enterijerifirmi`), pa predlog koraka 4.5 (firme PROP-6/7), pa poslovi i kamiondžija JOB-1/2 |
+| 4 | Vlasnik proverava restoran (`/enterijerifirmi`) i odobrava predlog koraka 4.5 (firme PROP-6/7), pa poslovi i kamiondžija JOB-1/2 |
 | 4 | Kuće, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -201,8 +201,8 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Presvlačenje iz `/inv` radi i pored mesta „odeca“, koje je postavljeno napolju (1521, -1710): da li ostaje tako, da li se mesto pomera unutra ili se kesa oblači samo kod kuće (18.11.2026.) |
 | Da li je „trafika“ naša prodavnica 24/7 ili posebno mesto (kockice i novčić su sada u 24/7) |
 | Da li VIP dobija više nameštaja po kući (sada samo admin `/setmesta namestaj`) (19.11.2026.) |
-| Koji enterijeri firmi ostaju (pregled `/enterijerifirmi`; ubačeno 6 mapiranih i 28 iz igre) (20.11.2026.) |
-| Spoljne mape za firme iz referentnih modova (izlozi marketa, dve picerije, kafić, butik, sređena benzinska u Idlewood-u, mehaničari kod postojeće radionice): da li ih ubaciti posle izbora enterijera; neke stoje na mestu postojećih pumpi i radionice (20.11.2026.) |
+| Spoljne mape za firme iz referentnih modova (izlozi marketa, dve picerije, kafić, butik, sređena benzinska u Idlewood-u, mehaničari kod postojeće radionice): da li ih ubaciti; neke stoje na mestu postojećih pumpi i radionice (20.11.2026.) |
+| Da li kineski restoran ostaje ili restoran koristi Cluckin' Bell (oba su u `/enterijerifirmi`) (21.11.2026.) |
 
 ### Može bilo kada
 | Stavka |
@@ -303,6 +303,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 19.11.2026. | Ispravke 4.4: odbijena probna boja ili paintjob kod mehaničara se uvek vraća; `/resetvozila` vraća i rent i vozila poslova; `/vinfo` i `/kinfo` u dijalogu kao `/check`; garderoba se može obući na admin dužnosti; sef se pomera iz menija (25 cm, 15°, uvek na podu); nameštaj i sef ne smeju na izlaz; država otkupljuje i sef (50%) |
 | 20.11.2026. | Mape za firme: 6 mapiranih enterijera (dva 24/7, supermarket, prodavnica na pumpi, restoran, prodavnica oružja) i lista enterijera firmi sa pregledom `/enterijerifirmi` |
 | 20.11.2026. | Vlasnik testirao 4.3b i 4.4 (kuće, sef, nameštaj sa kolizijama): sve radi |
+| 21.11.2026. | Izabrani enterijeri firmi: 24/7, oružje, Cluckin' Bell, Ten Green Bottles, Pig Pen, Binco iz igre i mapirani kineski restoran; ostali kandidati i 6 mapa obrisani; benzinska bez enterijera |
 | 20.11.2026. | Sef kao bankomat (ispred vlasnika, okrenut ka njemu, na podu, `/kuca` → Sef → „Pomeri“), novi model; ColAndreas: nameštaj ne može kroz zid ni da lebdi, predmeti za pod padaju na pod ili sto; čišćenje diska |
 | 19.11.2026. | Korak 4.3b i 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [igrac] [vozila|kuce|namestaj] [broj]` i spisak mesta u `/kuca`; ormar za svaku kuću i stanovnika, magacin („Stare stvari“ u `/ormar`) za stvari iz izgubljenog doma; sef kao predmet koji se postavlja mišem; nameštaj (prodavnica `namestaj`, `/namestaj`, 10 kategorija sa slikama, prodaja 50%, limit 30/50/80) |
 | 19.11.2026. | Pad pri učitavanju enterijera (ulazak na server u kući) više ne zaključava vrata kao da je igrač u borbi; pad i davljenje se ne računaju kao šteta iz borbe |
@@ -332,7 +333,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 4 | The owner picks the business interiors (`/enterijerifirmi`), then the proposal for step 4.5 (businesses PROP-6/7), then jobs and the trucker JOB-1/2 |
+| 4 | The owner checks the restaurant (`/enterijerifirmi`) and approves the proposal for step 4.5 (businesses PROP-6/7), then jobs and the trucker JOB-1/2 |
 | 4 | Houses, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
@@ -526,8 +527,8 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Changing clothes from `/inv` also works by the "odeca" point, which is placed outside (1521, -1710): keep it, move the point inside, or wear a bag only at home (2026-11-18) |
 | Is the "kiosk" our 24/7 shop or a separate place (dice and coin are now at the 24/7) |
 | Should VIP get more furniture per house (now only admin `/setmesta namestaj`) (2026-11-19) |
-| Which business interiors stay (preview `/enterijerifirmi`; 6 mapped and 28 from the game added) (2026-11-20) |
-| Exterior maps for businesses from the reference mods (shop fronts of markets, two pizzerias, a cafe, a boutique, a reworked Idlewood gas station, mechanics by the existing workshop): add them after the interiors are picked; some stand where the current pumps and workshop are (2026-11-20) |
+| Exterior maps for businesses from the reference mods (shop fronts of markets, two pizzerias, a cafe, a boutique, a reworked Idlewood gas station, mechanics by the existing workshop): whether to add them; some stand where the current pumps and workshop are (2026-11-20) |
+| Whether the Chinese restaurant stays or restaurants use Cluckin' Bell (both are in `/enterijerifirmi`) (2026-11-21) |
 
 ### Any time
 | Item |
@@ -628,6 +629,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-19 | 4.4 fixes: a declined trial colour or paintjob at a mechanic is always put back; `/resetvozila` also returns rentals and job vehicles; `/vinfo` and `/kinfo` in a dialog like `/check`; clothes can be put on during admin duty; the safe moves from a menu (25 cm, 15°, always on the floor); furniture and the safe may not stand on the exit; the state also buys back the safe (50%) |
 | 2026-11-20 | Business maps: 6 mapped interiors (two 24/7s, a supermarket, a gas station shop, a diner, a gun shop) and the business interior list with the `/enterijerifirmi` preview |
 | 2026-11-20 | The owner tested 4.3b and 4.4 (houses, the safe, furniture with collision): everything works |
+| 2026-11-21 | Business interiors picked: 24/7, guns, Cluckin' Bell, Ten Green Bottles, Pig Pen, Binco from the game and the mapped Chinese restaurant; the other candidates and 6 maps deleted; no gas station interior |
 | 2026-11-20 | The safe like an ATM (in front of the owner, facing them, on the floor, `/kuca` → Sef → "Pomeri"), a new model; ColAndreas: furniture cannot go through walls or float, standing pieces drop onto the floor or a table; disk cleanup |
 | 2026-11-19 | Steps 4.3b and 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [player] [vozila|kuce|namestaj] [number]` and the slot list in `/kuca`; a wardrobe per house and resident, the stash ("Stare stvari" in `/ormar`) for things from a lost home; the safe as an object placed with the mouse; furniture (the `namestaj` shop, `/namestaj`, 10 categories by picture, sold for 50%, limit 30/50/80) |
 | 2026-11-19 | Dropping a little while an interior loads (joining inside a house) no longer locks the doors as if in a fight; falls and drowning do not count as fight damage |

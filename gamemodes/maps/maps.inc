@@ -46,12 +46,7 @@ stock STREAMER_TAG_OBJECT:Map_Interior(modelid, Float:x, Float:y, Float:z, Float
 #include "maps/interiors/bank.inc"
 #include "maps/interiors/hospital.inc"
 #include "maps/interiors/driving_school_elcorona.inc"
-#include "maps/interiors/biz_market_a.inc"
-#include "maps/interiors/biz_market_b.inc"
-#include "maps/interiors/biz_market_c.inc"
-#include "maps/interiors/biz_gas_station.inc"
-#include "maps/interiors/biz_diner.inc"
-#include "maps/interiors/biz_gun_shop.inc"
+#include "maps/interiors/biz_restaurant.inc"
 
 stock Maps_Init()
 {
@@ -72,12 +67,7 @@ stock Maps_Init()
     Map_BankInterior();
     Map_HospitalInterior();
     Map_DrivingSchoolElCoronaInterior();
-    Map_BizMarketA();
-    Map_BizMarketB();
-    Map_BizMarketC();
-    Map_BizGasStation();
-    Map_BizDiner();
-    Map_BizGunShop();
+    Map_BizRestaurant();
 
     printf("[MAPS] %d objects created.", CountDynamicObjects());
 }

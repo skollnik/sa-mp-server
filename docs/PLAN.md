@@ -2,7 +2,7 @@
 
 ## 🇷🇸 Srpski
 
-**Trenutni status:** Faza 4: koraci 4.1 (kuće), 4.2 (garaže), 4.3 (sef, sobe, razgledanje, odeća i ormar), 4.3b (`/kinfo`, mesta za kuće, ormar po kući i magacin, sef kao predmet) i 4.4 (nameštaj) napisani i testirani; za firme (PROP-6/7) ubačeni kandidati za enterijere, čeka izbor vlasnika pa predlog koraka 4.5 (ažurirano 2026-11-20)
+**Trenutni status:** Faza 4: koraci 4.1 (kuće), 4.2 (garaže), 4.3 (sef, sobe, razgledanje, odeća i ormar), 4.3b (`/kinfo`, mesta za kuće, ormar po kući i magacin, sef kao predmet) i 4.4 (nameštaj) napisani i testirani; za firme (PROP-6/7) izabrani enterijeri, čeka se odobrenje predloga koraka 4.5 (ažurirano 2026-11-21)
 
 Oznake sistema (npr. `ACC-1`) objašnjene su u [FEATURES.md](FEATURES.md), odluke su u [DECISIONS.md](DECISIONS.md), a cene u [ECONOMY.md](ECONOMY.md).
 Redosled je postavljen tako da svaka faza stoji na prethodnoj. Ništa ne preskačemo dok prethodno ne radi i nije testirano u igri.
@@ -75,7 +75,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Korak 4.3b: `/kinfo`, dodatna mesta za kuće i nameštaj (`/setmesta`), ormar za svaku kuću i magacin, sef kao predmet koji se postavlja mišem
 - [x] Korak 4.4: PROP-4 nameštaj (prodavnica `namestaj`, `/namestaj`, postavljanje mišem, prodaja za 50%)
 - [x] Dorada 4.4: kolizije iz igre (ColAndreas): nameštaj ne ide kroz zid i ne lebdi; sef kao bankomat
-- [ ] PROP-6, PROP-7: firme (mape: kandidati za enterijere ubačeni, `/enterijerifirmi`; čeka izbor)
+- [ ] PROP-6, PROP-7: firme (enterijeri izabrani, `/enterijerifirmi`; predlog 4.5 čeka odobrenje)
 - [ ] JOB-1, JOB-2: okvir za poslove i kamiondžija (PROP-8)
 - [ ] ADM-5: alati za kreiranje u igri
 - [ ] ECO-3: porezi
@@ -121,7 +121,7 @@ Pitanja koja moraju da se reše pre faze kojoj pripadaju:
 
 ## 🇬🇧 English
 
-**Current status:** Phase 4: steps 4.1 (houses), 4.2 (garages), 4.3 (safe, rooms, viewing, clothes and wardrobe), 4.3b (`/kinfo`, house slots, a wardrobe per house and the stash, the safe as an object) and 4.4 (furniture) written and tested; for businesses (PROP-6/7) the candidate interiors are in, waiting for the owner's pick, then the proposal for step 4.5 (updated 2026-11-20)
+**Current status:** Phase 4: steps 4.1 (houses), 4.2 (garages), 4.3 (safe, rooms, viewing, clothes and wardrobe), 4.3b (`/kinfo`, house slots, a wardrobe per house and the stash, the safe as an object) and 4.4 (furniture) written and tested; for businesses (PROP-6/7) the interiors are picked, the proposal for step 4.5 waits for approval (updated 2026-11-21)
 
 System IDs (e.g. `ACC-1`) are explained in [FEATURES.md](FEATURES.md), decisions are in [DECISIONS.md](DECISIONS.md), and prices are in [ECONOMY.md](ECONOMY.md).
 The order is set so that each phase builds on the previous one. Nothing gets skipped until the previous part works and is tested in-game.
@@ -194,7 +194,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] Step 4.3b: `/kinfo`, extra house and furniture slots (`/setmesta`), a wardrobe per house and the stash, the safe as an object placed with the mouse
 - [x] Step 4.4: PROP-4 furniture (the `namestaj` shop, `/namestaj`, placing with the mouse, selling for 50%)
 - [x] 4.4 rework: the game's collision (ColAndreas): furniture does not go through walls or float; the safe like an ATM
-- [ ] PROP-6, PROP-7: businesses (maps: candidate interiors added, `/enterijerifirmi`; waiting for the pick)
+- [ ] PROP-6, PROP-7: businesses (interiors picked, `/enterijerifirmi`; the 4.5 proposal waits for approval)
 - [ ] JOB-1, JOB-2: job framework and trucker (PROP-8)
 - [ ] ADM-5: in-game creation tools
 - [ ] ECO-3: taxes
