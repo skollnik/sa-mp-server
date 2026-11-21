@@ -80,7 +80,7 @@ stock Clothes_Wear(playerid, skin)
 stock Clothes_WearBag(playerid, inv_slot)
 {
     new skin = g_Inv[playerid][inv_slot][isAmount], house = House_FindInsideAnywhere(playerid);
-    if ((house == -1 || !House_CanLiveIn(playerid, house)) && !Point_IsNear(playerid, POINT_CLOTHES))
+    if ((house == -1 || !House_CanLiveIn(playerid, house)) && !Biz_IsShopHere(playerid, POINT_CLOTHES, BIZ_CLOTHES))
     {
         Msg_Error(playerid, "Presvlaci se kod kuce (u svojoj kuci ili iznajmljenoj sobi) ili u prodavnici odece.");
         return;
@@ -110,7 +110,7 @@ stock Clothes_WearBag(playerid, inv_slot)
 stock Clothes_ShowShop(playerid)
 {
     new title[32];
-    format(title, sizeof(title), "Garderoba ($%d)", CLOTHES_PRICE);
+    format(title, sizeof(title), "Garderoba ($%d)", Biz_PriceFor(playerid, CLOTHES_PRICE));
     if (g_Player[playerid][pGender] == GENDER_FEMALE)
     {
         Preview_Show(playerid, PREVIEW_CLOTHES_SHOP, PREVIEW_KIND_SKIN, title, g_ShopSkinsFemale, sizeof(g_ShopSkinsFemale));
@@ -124,21 +124,21 @@ stock Clothes_ShowShop(playerid)
 stock Clothes_OnSkinSelected(playerid, index)
 {
     new bool:female = g_Player[playerid][pGender] == GENDER_FEMALE;
-    if (index < 0 || index >= (female ? sizeof(g_ShopSkinsFemale) : sizeof(g_ShopSkinsMale)) || !Point_Require(playerid, POINT_CLOTHES))
+    if (index < 0 || index >= (female ? sizeof(g_ShopSkinsFemale) : sizeof(g_ShopSkinsMale)) || !Biz_RequireShop(playerid, POINT_CLOTHES, BIZ_CLOTHES))
     {
         return;
     }
     g_ClothesPick[playerid] = female ? g_ShopSkinsFemale[index] : g_ShopSkinsMale[index];
     new body[128], title[32];
     format(body, sizeof(body), "Obuci odmah (stara garderoba ide u kesu u inventaru)\nSpakuj u kesu (u inventar)");
-    format(title, sizeof(title), "Garderoba za $%d", CLOTHES_PRICE);
+    format(title, sizeof(title), "Garderoba za $%d", Biz_PriceFor(playerid, CLOTHES_PRICE));
     ShowPlayerDialog(playerid, DIALOG_CLOTHES_BUY, DIALOG_STYLE_LIST, title, body, "Kupi", "Odustani");
 }
 
 static stock Clothes_Buy(playerid, bool:wear)
 {
     new skin = g_ClothesPick[playerid];
-    if (!Point_Require(playerid, POINT_CLOTHES) || !Clothes_IsForGender(playerid, skin))
+    if (!Biz_RequireShop(playerid, POINT_CLOTHES, BIZ_CLOTHES) || !Clothes_IsForGender(playerid, skin))
     {
         return;
     }
@@ -151,9 +151,8 @@ static stock Clothes_Buy(playerid, bool:wear)
         Msg_Error(playerid, "Nemate mesta u inventaru za kesu sa garderobom.");
         return;
     }
-    new reason[32];
-    strcopy(reason, "kupovina garderobe");
-    if (!Money_Take(playerid, CLOTHES_PRICE, reason))
+    new paid;
+    if (!Biz_Pay(playerid, CLOTHES_PRICE, "kupovina garderobe", paid))
     {
         return;
     }
@@ -161,7 +160,7 @@ static stock Clothes_Buy(playerid, bool:wear)
     {
         Inv_Add(playerid, ITEM_CLOTHES, skin);
         Account_Save(playerid);
-        Msg_Success(playerid, "Kupili ste garderobu za $%d. Kesa je u inventaru; oblaci se kod kuce ili ovde (/inv).", CLOTHES_PRICE);
+        Msg_Success(playerid, "Kupili ste garderobu za $%d. Kesa je u inventaru; oblaci se kod kuce ili ovde (/inv).", paid);
         return;
     }
     new old = Clothes_Wear(playerid, skin);

@@ -135,6 +135,7 @@ stock Payday_Give(playerid)
     }
     SendClientMessage(playerid, COLOR_WHITE, "Respect: +%d (%d/%d do nivoa %d)", respect, g_Player[playerid][pRespect], Payday_RespectNeeded(playerid), g_Player[playerid][pLevel] + 1);
     Room_ChargeRent(playerid);
+    Biz_ChargeTax(playerid);
     GameTextForPlayer(playerid, "~y~Payday", 3000, 1);
 
     Payday_CheckLevelUp(playerid);

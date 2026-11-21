@@ -337,5 +337,8 @@ stock Door_OnPlayerKeyStateChange(playerid, KEY:newkeys, KEY:oldkeys)
         Door_Exit(playerid, slot);
         return;
     }
-    House_TryUse(playerid, true, true);
+    if (!House_TryUse(playerid, true, true))
+    {
+        Biz_TryUse(playerid, true, true);
+    }
 }

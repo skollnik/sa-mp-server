@@ -123,10 +123,25 @@ Tačnu cenu i nivo svake kuće admin određuje kad je pravi. Prodaja državi vra
 | Mala firma (24/7, bar) | $250.000–500.000 |
 | Velika firma (benzinska, klub) | $750.000–1.500.000 |
 
+**Firme:** tačnu cenu svake firme određuje admin. Za firmu treba **nivo 6**, najviše 1 po igraču. Kupljena od države dolazi sa pola robe. Vlasnik postavlja jednu cenu za celu firmu, od **50% do 200%** državne cene. Svaka prodaja ide u kasu i troši robu: komad robe vredi $10 (24/7, restoran), $5 (bar, klub), $50 (odeća) ili 1 litar (benzinska), a prodaja troši onoliko komada koliko pokriva njena državna cena. Roba se naručuje iz kase po **35%** svoje vrednosti i stiže odmah. Firma bez vlasnika prodaje po državnoj ceni i nikad ne ostaje bez robe. Prodaja državi vraća **70%**; vlasnik koji ne uđe **30 dana** gubi firmu i dobija **50%** i novac iz kase na račun. Prodaja igraču ide preko `/ponudi`, uz taksu 5% (kasa prazna, bez duga za porez). Ulaznica u klub: **$0–500**, ide u kasu.
+
+| Restoran | Cena | Glad |
+|---|---|---|
+| Mali / srednji / veliki meni | $8 / $14 / $20 | +30 / +55 / +85 (i malo zdravlja) |
+| Sok, kafa | $3 | +5 |
+
+| Bar | Cena | | Klub | Cena |
+|---|---|---|---|---|
+| Pivo | $5 | | Pivo | $8 |
+| Vino | $8 | | Koktel | $15 |
+| Viski | $12 | | Viski | $15 |
+| Sok | $3 | | Energetsko piće | $6 |
+| Kikiriki | $4 | | Sok | $5 |
+
 ### Porezi i troškovi (payday)
 - Kuća: 0.02% vrednosti (kuća od $150.000 plaća $30).
 - Vozilo: 0.01% kupovne cene (Sultan plaća $35).
-- Firma: 0.05% vrednosti.
+- Firma: 0.05% vrednosti (firma od $500.000 plaća $250), na svaku platu vlasnika: iz kase, pa sa računa, a ostatak je dug. Dug veći od 10% vrednosti: država oduzima firmu, a vlasnik dobija 50% vrednosti umanjeno za dug.
 
 ### Šta to znači u praksi (uz ~$1.200 po satu)
 | Cilj | Potrebno vreme rada |
@@ -274,6 +289,21 @@ Driving school (`/skola`): the price is paid before the theory and again after a
 | Small business (24/7, bar) | $250,000–500,000 |
 | Large business (gas station, club) | $750,000–1,500,000 |
 
+**Businesses:** the admin sets each business's price. A business needs **level 6**, at most 1 per player. Bought from the state, it comes with half its stock. The owner sets one price for the whole business, from **50% to 200%** of the state price. Every sale goes into the till and uses stock: a unit is worth $10 (24/7, restaurant), $5 (bar, club), $50 (clothes) or 1 litre (gas station), and a sale uses as many units as its state price covers. Stock is ordered from the till at **35%** of its value and arrives at once. A business without an owner sells at the state price and never runs out. Selling to the state returns **70%**; an owner away **30 days** loses the business and gets **50%** and the till's money in the bank. Selling to a player goes through `/ponudi` with a 5% fee (empty till, no tax debt). The club entry fee: **$0–500**, into the till.
+
+| Restaurant | Price | Hunger |
+|---|---|---|
+| Small / medium / large meal | $8 / $14 / $20 | +30 / +55 / +85 (and a little health) |
+| Juice, coffee | $3 | +5 |
+
+| Bar | Price | | Club | Price |
+|---|---|---|---|---|
+| Beer | $5 | | Beer | $8 |
+| Wine | $8 | | Cocktail | $15 |
+| Whisky | $12 | | Whisky | $15 |
+| Juice | $3 | | Energy drink | $6 |
+| Peanuts | $4 | | Juice | $5 |
+
 Each house's price and level are set by the admin who makes it. Selling to the state returns **70%**. An owner away **30 days** loses the house and gets **50%** of the price in the bank. Selling to a player goes through `/ponudi` with a 5% fee.
 
 - **Safe** in a house: **$5,000** (bought in `/kuca`). Unlimited money, 10 / 20 / 30 items by house size. When the house is taken, the safe's money goes to the owner's bank and the items to the stash (taken from the wardrobe in the next home).
@@ -284,7 +314,7 @@ Each house's price and level are set by the admin who makes it. Selling to the s
 ### Taxes and upkeep (payday)
 - House: 0.02% of value (a $150,000 house pays $30).
 - Vehicle: 0.01% of purchase price (a Sultan pays $35).
-- Business: 0.05% of value.
+- Business: 0.05% of value (a $500,000 business pays $250), on each of the owner's paydays: from the till, then the bank, the rest is a debt. A debt over 10% of the value: the state takes the business and the owner gets 50% of the value less the debt.
 
 ### What that means in practice (at ~$1,200 per hour)
 | Goal | Work time needed |

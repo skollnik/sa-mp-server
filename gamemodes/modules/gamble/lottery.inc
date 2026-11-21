@@ -245,7 +245,7 @@ cmd:loto(playerid, params[])
         Msg_Usage(playerid, "/loto [broj 1-%d] (bez broja: fond i vas tiket)", LOTTERY_MAX_NUMBER);
         return 1;
     }
-    if (!Point_Require(playerid, POINT_SHOP))
+    if (!Biz_RequireShop(playerid, POINT_SHOP, BIZ_247))
     {
         return 1;
     }

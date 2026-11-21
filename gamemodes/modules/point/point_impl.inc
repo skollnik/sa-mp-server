@@ -118,6 +118,21 @@ stock Point_FindNearest(playerid, Float:radius)
     return -1;
 }
 
+// Points of a kind outside, around a spot; a gas station counts its pumps with it.
+stock Point_CountNear(E_POINT_TYPE:type, Float:x, Float:y, Float:z, Float:radius)
+{
+    new count;
+    for (new i = 0; i < MAX_POINTS; i++)
+    {
+        if (g_Points[i][ptUsed] && g_Points[i][ptType] == type && g_Points[i][ptInterior] == 0 && g_Points[i][ptWorld] == 0
+            && VectorSize(g_Points[i][ptX] - x, g_Points[i][ptY] - y, g_Points[i][ptZ] - z) <= radius)
+        {
+            count++;
+        }
+    }
+    return count;
+}
+
 stock bool:Point_IsNear(playerid, E_POINT_TYPE:type)
 {
     return Point_IsWithin(playerid, type, g_PointInfo[type][piRadius]);

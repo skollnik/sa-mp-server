@@ -664,6 +664,10 @@ static stock Shop_ItemCount()
 
 cmd:kupi(playerid, params[])
 {
+    if (Biz_ShowShop(playerid))
+    {
+        return 1;
+    }
     if (Point_IsNear(playerid, POINT_CLOTHES))
     {
         Acc_ShowShop(playerid);
@@ -678,21 +682,26 @@ cmd:kupi(playerid, params[])
     {
         return 1;
     }
+    Shop_Show247(playerid);
+    return 1;
+}
 
+stock Shop_Show247(playerid)
+{
     new body[1024], line[96];
     strcopy(body, "Predmet\tCena\n");
     for (new E_ITEM:item = ITEM_PHONE; item < E_ITEM; item++)
     {
         if (g_ItemInfo[item][itPrice] == 0) continue;
-        if (g_ItemInfo[item][itShopAmount] == 1) format(line, sizeof(line), "%s\t$%d\n", g_ItemInfo[item][itName], g_ItemInfo[item][itPrice]);
-        else format(line, sizeof(line), "%s (%d kom.)\t$%d\n", g_ItemInfo[item][itName], g_ItemInfo[item][itShopAmount], g_ItemInfo[item][itPrice]);
+        new price = Biz_PriceFor(playerid, g_ItemInfo[item][itPrice]);
+        if (g_ItemInfo[item][itShopAmount] == 1) format(line, sizeof(line), "%s\t$%d\n", g_ItemInfo[item][itName], price);
+        else format(line, sizeof(line), "%s (%d kom.)\t$%d\n", g_ItemInfo[item][itName], g_ItemInfo[item][itShopAmount], price);
         strcat(body, line);
     }
     // Services come after the items; the SIM card and credit belong to the account, not the inventory.
     format(line, sizeof(line), "SIM kartica (broj telefona)\t$%d\nDopuna kredita za telefon\t$%d - $%d\n", PHONE_SIM_PRICE, g_PhoneTopups[0], g_PhoneTopups[sizeof(g_PhoneTopups) - 1]);
     strcat(body, line);
     ShowPlayerDialog(playerid, DIALOG_SHOP, DIALOG_STYLE_TABLIST_HEADERS, "Prodavnica 24/7", body, "Kupi", "Zatvori");
-    return 1;
 }
 
 stock bool:Shop_OnDialogResponse(playerid, dialogid, response, listitem)
@@ -701,7 +710,7 @@ stock bool:Shop_OnDialogResponse(playerid, dialogid, response, listitem)
     {
         return false;
     }
-    if (!response || !Point_Require(playerid, POINT_SHOP) || listitem < 0)
+    if (!response || !Biz_RequireShop(playerid, POINT_SHOP, BIZ_247) || listitem < 0)
     {
         return true;
     }
@@ -723,15 +732,15 @@ stock bool:Shop_OnDialogResponse(playerid, dialogid, response, listitem)
         return true;
     }
 
-    new reason[48];
+    new reason[48], paid;
     format(reason, sizeof(reason), "kupovina: %s", g_ItemInfo[item][itName]);
-    if (!Money_Take(playerid, g_ItemInfo[item][itPrice], reason))
+    if (!Biz_Pay(playerid, g_ItemInfo[item][itPrice], reason, paid))
     {
         return true;
     }
     Inv_Add(playerid, item, amount);
     Account_Save(playerid);
-    Msg_Success(playerid, "Kupili ste: %s za $%d. Inventar: /inv", g_ItemInfo[item][itName], g_ItemInfo[item][itPrice]);
+    Msg_Success(playerid, "Kupili ste: %s za $%d. Inventar: /inv", g_ItemInfo[item][itName], paid);
 
     if (item == ITEM_PHONE)
     {

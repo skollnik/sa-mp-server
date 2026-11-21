@@ -183,6 +183,7 @@ public OnGameModeInit()
     Job_Init();
     Mech_Init();
     House_Init();
+    Biz_Init();
     Rent_Init();
     Speedo_Init();
     Safety_Init();
@@ -237,6 +238,7 @@ public OnPlayerConnect(playerid)
     Lic_OnPlayerConnect(playerid);
     Job_OnPlayerConnect(playerid);
     House_OnPlayerConnect(playerid);
+    Biz_OnPlayerConnect(playerid);
     Store_OnPlayerConnect(playerid);
     Place_OnPlayerConnect(playerid);
     Respawn_OnPlayerConnect(playerid);
@@ -596,7 +598,7 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
     {
         return 1;
     }
-    if (Biz_OnDialogResponse(playerid, dialogid, response, listitem))
+    if (Biz_OnDialogResponse(playerid, dialogid, response, listitem, inputtext))
     {
         return 1;
     }

@@ -158,11 +158,11 @@ stock Acc_ShowShop(playerid)
 {
     new body[640], line[64];
     strcopy(body, "Predmet\tDeo tela\tCena\n");
-    format(line, sizeof(line), "Garderoba (izbor sa slikama)\t-\t$%d\n", CLOTHES_PRICE);
+    format(line, sizeof(line), "Garderoba (izbor sa slikama)\t-\t$%d\n", Biz_PriceFor(playerid, CLOTHES_PRICE));
     strcat(body, line);
     for (new i = 0; i < sizeof(g_AccInfo); i++)
     {
-        format(line, sizeof(line), "%s\t%s\t$%d\n", g_ItemInfo[g_AccInfo[i][aiItem]][itName], g_AccPartNames[g_AccInfo[i][aiPart]], g_AccInfo[i][aiPrice]);
+        format(line, sizeof(line), "%s\t%s\t$%d\n", g_ItemInfo[g_AccInfo[i][aiItem]][itName], g_AccPartNames[g_AccInfo[i][aiPart]], Biz_PriceFor(playerid, g_AccInfo[i][aiPrice]));
         strcat(body, line);
     }
     ShowPlayerDialog(playerid, DIALOG_ACC_SHOP, DIALOG_STYLE_TABLIST_HEADERS, "Prodavnica odece", body, "Kupi", "Zatvori");
@@ -176,15 +176,15 @@ static stock Acc_Buy(playerid, index)
         Msg_Error(playerid, "Nemate mesta u inventaru.");
         return;
     }
-    new reason[48];
+    new reason[48], paid;
     format(reason, sizeof(reason), "kupovina: %s", g_ItemInfo[item][itName]);
-    if (!Money_Take(playerid, g_AccInfo[index][aiPrice], reason))
+    if (!Biz_Pay(playerid, g_AccInfo[index][aiPrice], reason, paid))
     {
         return;
     }
     Inv_Add(playerid, item, 1);
     Account_Save(playerid);
-    Msg_Success(playerid, "Kupili ste: %s za $%d. Stavlja se u /dodaci ili /inv.", g_ItemInfo[item][itName], g_AccInfo[index][aiPrice]);
+    Msg_Success(playerid, "Kupili ste: %s za $%d. Stavlja se u /dodaci ili /inv.", g_ItemInfo[item][itName], paid);
 }
 
 stock Acc_ShowList(playerid)
@@ -217,7 +217,7 @@ stock bool:Acc_OnDialogResponse(playerid, dialogid, response, listitem)
         case DIALOG_ACC_SHOP:
         {
             // The first row is clothes, the rest are the accessories in g_AccInfo order.
-            if (!response || listitem < 0 || listitem > sizeof(g_AccInfo) || !Point_Require(playerid, POINT_CLOTHES))
+            if (!response || listitem < 0 || listitem > sizeof(g_AccInfo) || !Biz_RequireShop(playerid, POINT_CLOTHES, BIZ_CLOTHES))
             {
                 return true;
             }

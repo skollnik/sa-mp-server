@@ -404,7 +404,7 @@ static stock Phone_Topup(playerid, amount)
         }
         Money_GiveBank(playerid, -amount, "dopuna kredita");
     }
-    else if (!Point_Require(playerid, POINT_SHOP) || !Money_Take(playerid, amount, "dopuna kredita"))
+    else if (!Biz_RequireShop(playerid, POINT_SHOP, BIZ_247) || !Money_Take(playerid, amount, "dopuna kredita"))
     {
         return;
     }
@@ -967,7 +967,7 @@ stock bool:Phone_OnDialogResponse(playerid, dialogid, response, listitem, const 
         }
         case DIALOG_PHONE_SIM:
         {
-            if (!response || !Point_Require(playerid, POINT_SHOP))
+            if (!response || !Biz_RequireShop(playerid, POINT_SHOP, BIZ_247))
             {
                 return true;
             }
@@ -990,7 +990,7 @@ stock bool:Phone_OnDialogResponse(playerid, dialogid, response, listitem, const 
                 return true;
             }
             // The SIM is bought at the counter, so the player must still be there; a number change works anywhere.
-            if (request == NUMBER_SIM_CHOSEN && !Point_Require(playerid, POINT_SHOP))
+            if (request == NUMBER_SIM_CHOSEN && !Biz_RequireShop(playerid, POINT_SHOP, BIZ_247))
             {
                 return true;
             }

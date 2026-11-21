@@ -298,8 +298,18 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Novac za nameštaj dva puta (prodaja pa oduzimanje kuće) | ✅ | Prodat komad se briše odmah; pri oduzimanju se otkupljuje samo ono što je još u kući |
 | Admin promeni enterijer, a nameštaj i sef ostanu u vazduhu | ✅ | Nameštaj se skida i čeka ponovno postavljanje, sef ide pored izlaza |
 | Server sa starim kodom radi dok nova verzija menja bazu (ormar, visina sefa) | ⚠️ | Posle ažuriranja server se odmah restartuje; sef koji ostane metar iznad poda vlasnik postavi ponovo („Postavi ispred sebe“) |
-| Mapa restorana preklapa postojeće (svi custom enterijeri su u enterijeru 20, u svim svetovima) | ✅ | Proverene granice svih mapa u enterijeru 20: restoran (pod zemljom, z -30 do -9) je najmanje 20 m od svih ostalih |
-| Previše objekata u jednom enterijeru | ✅ | Restoran ima 137 objekata, ispod granice od 1000 vidljivih |
+| Vlasnik menja cenu dok kupac ima otvoren meni | ✅ | Meni pamti cenu koju je pokazao; ako se promeni, kupovina se odbija i meni se otvara ponovo |
+| Vlasnik dere kupce ili prebacuje novac preko firme | ✅ | Jedna cena za celu firmu, od 50% do 200% državne; svaka prodaja troši robu koja košta 35% |
+| Firme bez robe ostave grad bez hrane ili goriva | ✅ | Firma bez vlasnika je državna i uvek ima robu; pumpe van benzinske su državne; vlasnik dobija poruku kad roba padne na 10% |
+| Igrač ostane zaključan u firmi | ✅ | Zaključavanje sprečava samo ulaz; izlaz uvek radi, a zatvorena firma ne prodaje nikome osim vlasniku |
+| Dve benzinske dele iste pumpe | ⚠️ | Pumpa pripada prvoj benzinskoj do 50 m; admin ne pravi dve benzinske bliže od 100 m (`/finfo` pokazuje broj pumpi) |
+| Firma se briše ili joj se menja tip dok su igrači unutra | ✅ | Svi iz njenog sveta se izbacuju napolje pre brisanja i promene tipa, jer se ID ponovo koristi |
+| Prodaja firme sa novcem u kasi ili sa dugom | ✅ | Kasa mora biti prazna i firma bez duga (kao sef kod kuće); pri oduzimanju novac iz kase ide vlasniku na račun |
+| Vlasnik izbegava porez | ✅ | Porez ide na svaku platu vlasnika (kasa, pa račun, pa dug); dug preko 10% vrednosti ili 30 dana neaktivnosti vraća firmu državi |
+| Ulaznica u klub naplaćena, a igrač nije ušao | ✅ | Plaća se tek posle potvrde, i to samo ako igrač još stoji na ulazu i klub je otvoren; vlasnik i admin na dužnosti ulaze besplatno |
+| Virtuelni svet firme se poklopi sa kućom ili zatvorom | ✅ | Firme su 6000 + ID (do 200), kuće 5000 + ID (do 500), zatvor 9999 |
+| Ime firme sa bojama ili znakom % | ✅ | Dozvoljeni su samo obični znakovi, bez { } % i ~, 3-32 znaka; admin može da promeni ime (`/izmenifirmu`) |
+| Igrač jede ili pije u restoranu u vozilu, zatvoru ili zamrznut | ✅ | Samo peške i kad nije zauzet; sit igrač ne može da jede (kao hrana iz inventara) |
 | Igrač koristi pregled enterijera firmi | ✅ | `/enterijerifirmi` radi samo glavnom adminu na dužnosti; posmatranje i vozilo rešava isti teleport kao `/tp` |
 | Sef na plafonu ili u zidu | ✅ | Sef stoji korak ispred vlasnika, uvek na površini ispod sebe (kolizije iz igre), ne sme iza zida ni u zid; postavlja se samo peške i u kući |
 | Nameštaj kroz spoljni zid ili iza zida | ✅ | Zrak od igrača do sredine predmeta ne sme udariti u zid; zraci od sredine ka stranama ne smeju udariti zid pre 15 cm od ivice |
@@ -655,8 +665,18 @@ Every new system or change goes through these questions, against all existing sy
 | Furniture money twice (sold, then the house taken) | ✅ | A sold piece is deleted at once; taking the house buys back only what is still in it |
 | An admin changes the interior and furniture and the safe hang in the air | ✅ | Furniture is taken down and waits to be placed again, the safe goes next to the exit |
 | A server with the old code runs while the new version changes the database (wardrobe, safe height) | ⚠️ | Restart the server right after updating; a safe left a metre above the floor is placed again by the owner ("Postavi ispred sebe") |
-| The restaurant map overlaps existing ones (every custom interior is in interior 20, in all worlds) | ✅ | The bounds of every map in interior 20 were checked: the restaurant (underground, z -30 to -9) is at least 20 m from all others |
-| Too many objects in one interior | ✅ | The restaurant has 137 objects, under the limit of 1000 visible |
+| The owner changes the price while a customer has the menu open | ✅ | The menu remembers the price it showed; if it changes, the purchase is refused and the menu is opened again |
+| An owner robs customers or moves money through a business | ✅ | One price for the whole business, from 50% to 200% of the state's; every sale uses stock that costs 35% |
+| Businesses without stock leave the city without food or fuel | ✅ | A business without an owner is the state's and always has stock; pumps outside a station are the state's; the owner is told when stock falls to 10% |
+| A player is locked inside a business | ✅ | Locking only stops entering; the exit always works, and a closed business sells to nobody but its owner |
+| Two gas stations share the same pumps | ⚠️ | A pump belongs to the first station within 50 m; admins do not place two stations closer than 100 m (`/finfo` shows the pump count) |
+| A business is deleted or its type changed while players are inside | ✅ | Everyone in its world is put outside before the delete and the type change, since the ID is reused |
+| Selling a business with money in the till or a debt | ✅ | The till must be empty and the business without debt (like the safe for a house); when it is taken, the till goes to the owner's bank |
+| The owner dodges the tax | ✅ | The tax comes on every payday of the owner (till, then bank, then debt); a debt over 10% of the value or 30 days away returns it to the state |
+| The club fee is charged but the player does not get in | ✅ | It is paid only after the confirmation, and only if the player still stands at the entrance and the club is open; the owner and admins on duty get in free |
+| A business's virtual world clashes with a house or the jail | ✅ | Businesses are 6000 + ID (up to 200), houses 5000 + ID (up to 500), the jail 9999 |
+| A business name with colours or a % sign | ✅ | Only plain characters, no { } % or ~, 3-32 characters; an admin can change the name (`/izmenifirmu`) |
+| A player eats or drinks in a restaurant in a vehicle, in jail or frozen | ✅ | Only on foot and when not busy; a full player cannot eat (like food from the inventory) |
 | A player uses the business interior preview | ✅ | `/enterijerifirmi` works only for a head admin on duty; spectating and vehicles are handled by the same teleport as `/tp` |
 | The safe on the ceiling or in a wall | ✅ | The safe stands a step in front of the owner, always on the surface below it (the game's collision), never behind or in a wall; placed only on foot and inside the house |
 | Furniture through the outer wall or behind a wall | ✅ | A ray from the player to the piece's middle must not hit a wall; rays from the middle to the sides must not hit one before 15 cm from the edge |

@@ -1,7 +1,7 @@
 // One window per topic: the whole text in one dialog ran past both the dialog limit and the compiler's line limit.
 static const g_HelpTopics[][] =
 {
-    "Razgovor i RP", "OOC i podesavanja", "Svet i novac", "Inventar i telefon", "Vozila", "Kuca", "Posao", "Pomoc, VIP i nalog"
+    "Razgovor i RP", "OOC i podesavanja", "Svet i novac", "Inventar i telefon", "Vozila", "Kuca i firma", "Posao", "Pomoc, VIP i nalog"
 };
 
 static stock Help_ShowTopics(playerid)
@@ -80,7 +80,10 @@ static stock Help_ShowTopic(playerid, topic)
             strcat(body, "F ili /udji, /izadji - ulaz i izlaz    /kucaj - kucanje na vrata (cuju oni u kuci)\n");
             strcat(body, "/garaza - ispred garaze kuce: za volanom ostavlja vozilo, peske ga vadi\n");
             strcat(body, "/v parkiraj ispred garaze svoje kuce - parking u garazi (vozilo se tu vraca posle restarta i unistenja)\n");
-            strcat(body, "/ponudi - prodaja kuce igracu pored vas (stojite kod kuce)");
+            strcat(body, "/ponudi - prodaja kuce igracu pored vas (stojite kod kuce)\n\n");
+            strcat(body, C_SERVER "Firma" C_WHITE " (nivo 6, jedna po igracu)\n/kupifirmu - ispred firme na prodaju (zeleni natpis)    /kupi - kupovina u firmi (24/7, restoran, bar, klub, odeca)\n");
+            strcat(body, "/firma - meni firme: kasa, cene, narudzbina robe, ime, ulaznica (klub), zatvaranje, prodaja drzavi\n");
+            strcat(body, "/gorivo - na pumpama benzinske (cena je na natpisu)    /ponudi - prodaja firme igracu (kasa prazna, bez duga za porez)");
         }
         case 6:
         {

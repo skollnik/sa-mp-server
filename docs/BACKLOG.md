@@ -7,7 +7,7 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 ### Sledeće po redu (plan)
 | Faza | Šta dolazi |
 |------|-----------|
-| 4 | Vlasnik proverava restoran (`/enterijerifirmi`) i odobrava predlog koraka 4.5 (firme PROP-6/7), pa poslovi i kamiondžija JOB-1/2 |
+| 4 | Vlasnik testira korak 4.5 (firme PROP-6/7) i postavlja firme po gradu, pa poslovi i kamiondžija JOB-1/2 |
 | 4 | Kuće, sef, nameštaj, garaže; firme sa zalihama; poslovi i kamiondžija; porezi |
 | 5 | Frakcije (rankovi, sedišta, plate); povrede i smrt; policija, saobraćajna, SWAT; hitna i vatrogasci; vlada; novinari; taksi; vojska |
 | 6 | Maska; bande i teritorije; mafije, materijali i oružje; droga; pljačke, otmice, krađa vozila, crno tržište |
@@ -68,6 +68,10 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Sef: oružje i droga kao predmeti (kad oružje postane predmet, INV-3, i kad dođe droga) idu u isti meni sefa i gepeka (`storage.inc`) |
 | Provala u kuću i obijanje sefa (Faza 6, kriminal), uz alarm |
 | Skladište firme i frakcije: dodaje se kao novo mesto u `storage.inc` (meni je isti kao za gepek i sef) |
+| Prodavnica oružja kao firma kad dođe dozvola za oružje (LIC-3, policija u Fazi 5); enterijer je izabran (Ammu-Nation, int 7) (21.11.2026.) |
+| Kamiondžija (JOB-2) dostavlja robu firmama jeftinije od narudžbine odmah, koja ostaje (21.11.2026.) |
+| Posle `/setname` natpis na kući i firmi i dalje pokazuje staro ime vlasnika: ažurirati `owner_name` u kućama i firmama (21.11.2026.) |
+| Pljačka firme (kasa) kad dođe kriminal (CRIME-2, rat za biznise) (21.11.2026.) |
 | Uniforme frakcija: ne pakuju se u kesu i ne idu u ormar (`Clothes_CanBag` zna samo za svakodnevnu odeću) |
 
 **Posle povreda, smrti i policije (Faza 5)**
@@ -202,7 +206,6 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Da li je „trafika“ naša prodavnica 24/7 ili posebno mesto (kockice i novčić su sada u 24/7) |
 | Da li VIP dobija više nameštaja po kući (sada samo admin `/setmesta namestaj`) (19.11.2026.) |
 | Spoljne mape za firme iz referentnih modova (izlozi marketa, dve picerije, kafić, butik, sređena benzinska u Idlewood-u, mehaničari kod postojeće radionice): da li ih ubaciti; neke stoje na mestu postojećih pumpi i radionice (20.11.2026.) |
-| Da li kineski restoran ostaje ili restoran koristi Cluckin' Bell (oba su u `/enterijerifirmi`) (21.11.2026.) |
 
 ### Može bilo kada
 | Stavka |
@@ -304,6 +307,8 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 20.11.2026. | Mape za firme: 6 mapiranih enterijera (dva 24/7, supermarket, prodavnica na pumpi, restoran, prodavnica oružja) i lista enterijera firmi sa pregledom `/enterijerifirmi` |
 | 20.11.2026. | Vlasnik testirao 4.3b i 4.4 (kuće, sef, nameštaj sa kolizijama): sve radi |
 | 21.11.2026. | Izabrani enterijeri firmi: 24/7, oružje, Cluckin' Bell, Ten Green Bottles, Pig Pen, Binco iz igre i mapirani kineski restoran; ostali kandidati i 6 mapa obrisani; benzinska bez enterijera |
+| 21.11.2026. | Kineski restoran izbačen; restoran je Cluckin' Bell |
+| 21.11.2026. | Korak 4.5, firme: 24/7, restoran, bar, klub, odeća, benzinska; `/kupifirmu`, `/firma` (kasa, cene, roba, ime, ulaznica, zatvaranje, prodaja), `/kupi` u firmi, porez po plati, neaktivnost, `/ponudi`, admin komande |
 | 20.11.2026. | Sef kao bankomat (ispred vlasnika, okrenut ka njemu, na podu, `/kuca` → Sef → „Pomeri“), novi model; ColAndreas: nameštaj ne može kroz zid ni da lebdi, predmeti za pod padaju na pod ili sto; čišćenje diska |
 | 19.11.2026. | Korak 4.3b i 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [igrac] [vozila|kuce|namestaj] [broj]` i spisak mesta u `/kuca`; ormar za svaku kuću i stanovnika, magacin („Stare stvari“ u `/ormar`) za stvari iz izgubljenog doma; sef kao predmet koji se postavlja mišem; nameštaj (prodavnica `namestaj`, `/namestaj`, 10 kategorija sa slikama, prodaja 50%, limit 30/50/80) |
 | 19.11.2026. | Pad pri učitavanju enterijera (ulazak na server u kući) više ne zaključava vrata kao da je igrač u borbi; pad i davljenje se ne računaju kao šteta iz borbe |
@@ -333,7 +338,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 ### Next up (plan)
 | Phase | What comes |
 |-------|-----------|
-| 4 | The owner checks the restaurant (`/enterijerifirmi`) and approves the proposal for step 4.5 (businesses PROP-6/7), then jobs and the trucker JOB-1/2 |
+| 4 | The owner tests step 4.5 (businesses PROP-6/7) and places businesses around the city, then jobs and the trucker JOB-1/2 |
 | 4 | Houses, safe, furniture, garages; businesses with stock; jobs and trucker; taxes |
 | 5 | Factions (ranks, HQs, salaries); injuries and death; police, traffic police, SWAT; EMS and fire; government; news; taxi; army |
 | 6 | Mask; gangs and turfs; mafias, materials and weapons; drugs; robberies, kidnapping, car theft, black market |
@@ -394,6 +399,10 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Safe: weapons and drugs as items (once weapons become items, INV-3, and drugs exist) use the same safe and trunk menu (`storage.inc`) |
 | Breaking into a house and cracking a safe (Phase 6, crime), with the alarm |
 | Business and faction storage: added as a new place in `storage.inc` (the same menu as the trunk and safe) |
+| The gun shop as a business once the weapon license exists (LIC-3, police in Phase 5); the interior is picked (Ammu-Nation, int 7) (2026-11-21) |
+| The trucker (JOB-2) delivers stock to businesses cheaper than ordering at once, which stays (2026-11-21) |
+| After `/setname` the house and business labels still show the old owner name: update `owner_name` in houses and businesses (2026-11-21) |
+| Robbing a business (the till) once crime exists (CRIME-2, business wars) (2026-11-21) |
 | Faction uniforms: never packed into a bag or put in a wardrobe (`Clothes_CanBag` only knows everyday clothes) |
 
 **After injuries, death and police (Phase 5)**
@@ -528,7 +537,6 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Is the "kiosk" our 24/7 shop or a separate place (dice and coin are now at the 24/7) |
 | Should VIP get more furniture per house (now only admin `/setmesta namestaj`) (2026-11-19) |
 | Exterior maps for businesses from the reference mods (shop fronts of markets, two pizzerias, a cafe, a boutique, a reworked Idlewood gas station, mechanics by the existing workshop): whether to add them; some stand where the current pumps and workshop are (2026-11-20) |
-| Whether the Chinese restaurant stays or restaurants use Cluckin' Bell (both are in `/enterijerifirmi`) (2026-11-21) |
 
 ### Any time
 | Item |
@@ -630,6 +638,8 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-20 | Business maps: 6 mapped interiors (two 24/7s, a supermarket, a gas station shop, a diner, a gun shop) and the business interior list with the `/enterijerifirmi` preview |
 | 2026-11-20 | The owner tested 4.3b and 4.4 (houses, the safe, furniture with collision): everything works |
 | 2026-11-21 | Business interiors picked: 24/7, guns, Cluckin' Bell, Ten Green Bottles, Pig Pen, Binco from the game and the mapped Chinese restaurant; the other candidates and 6 maps deleted; no gas station interior |
+| 2026-11-21 | The Chinese restaurant dropped; the restaurant is Cluckin' Bell |
+| 2026-11-21 | Step 4.5, businesses: 24/7, restaurant, bar, club, clothes, gas station; `/kupifirmu`, `/firma` (till, prices, stock, name, entry fee, closing, sale), `/kupi` in a business, tax per payday, inactivity, `/ponudi`, admin commands |
 | 2026-11-20 | The safe like an ATM (in front of the owner, facing them, on the floor, `/kuca` → Sef → "Pomeri"), a new model; ColAndreas: furniture cannot go through walls or float, standing pieces drop onto the floor or a table; disk cleanup |
 | 2026-11-19 | Steps 4.3b and 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [player] [vozila|kuce|namestaj] [number]` and the slot list in `/kuca`; a wardrobe per house and resident, the stash ("Stare stvari" in `/ormar`) for things from a lost home; the safe as an object placed with the mouse; furniture (the `namestaj` shop, `/namestaj`, 10 categories by picture, sold for 50%, limit 30/50/80) |
 | 2026-11-19 | Dropping a little while an interior loads (joining inside a house) no longer locks the doors as if in a fight; falls and drowning do not count as fight damage |

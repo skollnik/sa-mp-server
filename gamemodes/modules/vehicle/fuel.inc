@@ -137,8 +137,8 @@ static stock Fuel_FillCanisters(playerid, const params[])
     {
         return;
     }
-    new litres = min(wanted, room), price = litres * FUEL_PRICE_PER_LITRE;
-    if (!Money_Take(playerid, price, "gorivo: kanister"))
+    new litres = min(wanted, room), price;
+    if (!Biz_PayFuel(playerid, litres, "gorivo: kanister", price))
     {
         return;
     }
@@ -306,13 +306,14 @@ cmd:gorivo(playerid, params[])
 
     new reason[32];
     format(reason, sizeof(reason), "gorivo: %d l", litres);
-    if (!Money_Take(playerid, litres * FUEL_PRICE_PER_LITRE, reason))
+    new price;
+    if (!Biz_PayFuel(playerid, litres, reason, price))
     {
         return 1;
     }
     Fuel_Set(vehicleid, g_VehFuel[vehicleid] + poured);
     Chat_Action(playerid, "toci gorivo u vozilo.");
-    Msg_Success(playerid, "Natocili ste %d l za $%d. U rezervoaru: %.0f/%d l.", litres, litres * FUEL_PRICE_PER_LITRE, g_VehFuel[vehicleid], tank);
+    Msg_Success(playerid, "Natocili ste %d l za $%d. U rezervoaru: %.0f/%d l.", litres, price, g_VehFuel[vehicleid], tank);
     Veh_SaveIfPersonal(vehicleid);
     return 1;
 }

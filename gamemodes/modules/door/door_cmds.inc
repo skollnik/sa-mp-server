@@ -3,7 +3,7 @@ cmd:udji(playerid, params[])
     new slot = Door_FindOutside(playerid);
     if (slot == -1)
     {
-        if (!House_TryUse(playerid, true, false))
+        if (!House_TryUse(playerid, true, false) && !Biz_TryUse(playerid, true, false))
         {
             Msg_Error(playerid, "Niste ispred ulaza.");
         }
@@ -18,7 +18,7 @@ cmd:izadji(playerid, params[])
     new slot = Door_FindInside(playerid);
     if (slot == -1)
     {
-        if (!House_TryUse(playerid, false, true))
+        if (!House_TryUse(playerid, false, true) && !Biz_TryUse(playerid, false, true))
         {
             Msg_Error(playerid, "Niste kod izlaza.");
         }

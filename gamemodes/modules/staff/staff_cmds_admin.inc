@@ -1205,7 +1205,7 @@ cmd:ahelp(playerid, params[])
 
     new level = g_Player[playerid][pAdminLevel], body[4096];
 
-    strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns /aclog /kanali\nVozila: /vinfo /gotoveh /atune (admin vozila) /izmenivozilo [id] (meni)    Kuce: /kinfo [id] /kuce /gotokuca\n" C_SERVER "/aigrac [igrac]" C_WHITE " - sve opcije za igraca u jednom meniju\n\n");
+    strcat(body, C_ADMIN "1 - Admin pocetnik\n" C_WHITE "/aduty /a /reports /ar /rr /goto /gethere /spec /specoff /check /freeze /unfreeze /slap\n/kick /mute /unmute /ajail (do 30 min) /unjail /warns /aclog /kanali\nVozila: /vinfo /gotoveh /atune (admin vozila) /izmenivozilo [id] (meni)    Kuce: /kinfo [id] /kuce /gotokuca\nFirme: /finfo [id] /firme /gotofirma\n" C_SERVER "/aigrac [igrac]" C_WHITE " - sve opcije za igraca u jednom meniju\n\n");
     if (level >= ADMIN_LEVEL_ADMIN)
     {
         strcat(body, C_ADMIN "2 - Admin\n" C_WHITE "/sethp /setarmour /tp /gotoulaz /ooc /cc /ao /fixveh /flip /disarm\n/ban (do 7 dana) /warn /ajail (bez ogranicenja)\nVozila: /getveh /respawnveh /resettablice [id] [tablica] (nasumicne ili sopstvene)\nIgrac: /proveriinv (inventar) /proverigepek [id vozila] /kazne [igrac] /odblokirajpin\n\n");
@@ -1219,7 +1219,7 @@ cmd:ahelp(playerid, params[])
         strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setglad /setname /pmspy\n" \
             "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo /setmesta [vozila|kuce|namestaj]    Auto skola: /setdozvola /rutaskole (meni rute)\nKamere: /napravikameru /obrisikameru /kamere /izmenikameru [id]    Rent: /napravirent [cena] (u admin vozilu) /obrisirent\n" \
             "Kuce: /napravikucu [cena] [nivo] /izmenikucu [id] (meni: garaza, izlaz, enterijer, oduzmi...) /obrisikucu /kuce /gotokuca\n" \
-            "Firme: /enterijerifirmi (pregled enterijera)\n" \
+            "Firme: /napravifirmu [cena] /izmenifirmu [id] (meni: cena, tip, ime, roba, ulaz, oduzmi) /obrisifirmu /firme /enterijerifirmi\n" \
             "Izmene: /izmenivozilo (sve opcije) /izmenimesto [id] /izmenigps [id]    Auto pijaca: /pijaca (meni)\n" \
             "Igrac: /dajpredmet /uzmipredmet /setlicna /ponistikazne\n" C_GREY "/izmeniulaz [id], /dodajgps i /setvip [igrac] bez ostalih parametara otvaraju meni\n\n");
     }
