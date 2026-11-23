@@ -62,7 +62,9 @@ new const g_BizInteriors[][E_BIZ_INTERIOR] =
     { "Restoran (Cluckin' Bell)",       9,  365.6730,  -10.7132,  1001.8700, 0.0 },
     { "Bar (Ten Green Bottles)",        11, 501.9810,  -69.1502,  998.7578,  0.0 },
     { "Klub (Pig Pen)",                 2,  1204.8099, -11.5868,  1000.9219, 0.0 },
-    { "Odeca (Binco)",                  15, 207.7380,  -109.0200, 1005.1328, 0.0 }
+    { "Odeca (Binco)",                  15, 207.7380,  -109.0200, 1005.1328, 0.0 },
+    // Mapped in MAP_INTERIOR_ID; the inside of the Secondhand shop front in Downtown, entered just past its only door.
+    { "Odeca (Secondhand, mapa)",       MAP_INTERIOR_ID, 1529.6700, 1563.2000, 11.5000, 0.0 }
 };
 
 enum E_BIZ_TYPE
@@ -135,6 +137,8 @@ enum E_BIZ
     bOwnerDbId,
     bOwnerName[MAX_PLAYER_NAME + 1],
     E_BIZ_TYPE:bType,
+    // Index in g_BizInteriors an admin picked for this business, or -1 for its type's own one.
+    bInterior,
     bName[BIZ_NAME_MAX + 1],
     bPrice,
     Float:bX,

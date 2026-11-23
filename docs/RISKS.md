@@ -314,6 +314,8 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Jetpack admina se prijavljuje kao brzina pešaka | ✅ | Brzina pešaka se ne proverava dok igrač ima jetpack koji mu je server dao; jetpack koji server nije dao i dalje izbacuje sa servera |
 | Mapa stoji preko GTA zgrade koju je referentni mod uklanjao (treperenje, dupli objekti) | ✅ | Za svaku mapu proverena su uklanjanja iz referentnog moda i preneta u `_Remove` funkcije (kafić, Lidl, picerija) |
 | Benzinska stoji preko GTA zgrade (dvostruki objekti, treperenje) | ✅ | OMV u Temple-u uklanja GTA nadstrešnicu (5898, 5853) koju zamenjuje; pumpe stanice ostaju GTA, a mesta `pumpa` za nju pravi admin |
+| Admin promeni enterijer firme dok su igrači unutra | ✅ | Svi iz sveta firme se izbacuju napolje pre promene, kao kod promene tipa |
+| Enterijer SECONDHAND stoji na tlu aerodroma u LV (z 10-14) | ✅ | Tako je i na referentnom modu (njihov enterijer 30); kod nas je u enterijeru 20 i ne preklapa se ni sa jednom drugom mapom |
 | Prodaja artikla koga firma nema | ✅ | Svaki artikal ima svoje stanje; meni pokazuje "ima N" ili "nema", a kupovina bez stanja se odbija i vlasnik dobija poruku |
 | Igrač dobije više firmi nego što sme | ✅ | Kupovina i `/ponudi` proveravaju broj firmi prema 1 + dodatna mesta od admina; oduzimanje mesta ne oduzima firme |
 | Igrač koristi pregled enterijera firmi | ✅ | `/enterijerifirmi` radi samo glavnom adminu na dužnosti; posmatranje i vozilo rešava isti teleport kao `/tp` |
@@ -687,6 +689,8 @@ Every new system or change goes through these questions, against all existing sy
 | An admin's jetpack is reported as running speed | ✅ | Running speed is not checked while the player has a jetpack the server gave; a jetpack the server did not give still kicks |
 | A map stands over a GTA building the reference mod removed (flickering, doubled objects) | ✅ | Every map's removals from the reference mod were checked and moved into `_Remove` functions (cafe, Lidl, pizzeria) |
 | A gas station stands over a GTA building (doubled objects, flickering) | ✅ | The OMV in Temple removes the GTA canopy (5898, 5853) it replaces; the station's pumps stay the game's, and an admin makes its `pumpa` points |
+| An admin changes a business's interior while players are inside | ✅ | Everyone in the business's world is put outside before the change, as when the type changes |
+| The SECONDHAND interior stands on the LV airport ground (z 10-14) | ✅ | The same as in the reference mod (their interior 30); here it is in interior 20 and overlaps no other map |
 | Selling an item the business does not have | ✅ | Each item has its own stock; the menu shows "ima N" or "nema", a purchase without stock is refused and the owner is told |
 | A player gets more businesses than allowed | ✅ | Buying and `/ponudi` check the count against 1 + the admin's extra places; taking places back takes no business away |
 | A player uses the business interior preview | ✅ | `/enterijerifirmi` works only for a head admin on duty; spectating and vehicles are handled by the same teleport as `/tp` |

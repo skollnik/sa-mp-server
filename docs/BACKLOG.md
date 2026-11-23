@@ -69,7 +69,6 @@ Ovde je **sve**: šta je urađeno od početka projekta, šta dolazi po planu i �
 | Provala u kuću i obijanje sefa (Faza 6, kriminal), uz alarm |
 | Skladište firme i frakcije: dodaje se kao novo mesto u `storage.inc` (meni je isti kao za gepek i sef) |
 | Prodavnica oružja kao firma kad dođe dozvola za oružje (LIC-3, policija u Fazi 5); enterijer je izabran (Ammu-Nation, int 7) (21.11.2026.) |
-| Butik: unutrašnjost je mapirana na licu mesta; ako se u nju ulazi peške, firma bez enterijera (`/kupi` u samoj mapi, kao benzinska) — čeka proveru i odluku vlasnika (23.11.2026.) |
 | Kamiondžija (JOB-2) dostavlja robu firmama jeftinije od narudžbine odmah, koja ostaje (21.11.2026.) |
 | Posle `/setname` natpis na kući i firmi i dalje pokazuje staro ime vlasnika: ažurirati `owner_name` u kućama i firmama (21.11.2026.) |
 | Pljačka firme (kasa) kad dođe kriminal (CRIME-2, rat za biznise) (21.11.2026.) |
@@ -313,6 +312,7 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | 23.11.2026. | Mape posle pregleda: originalni natpisi, tabla TEMPO, uklanjanje GTA objekata (picerija više ne treperi), Eko benzinska; roba po artiklu (do 100), ulaznica za bar, `/setmesta firme` i spisak firmi u `/firma` |
 | 23.11.2026. | Porez: oduzimanje kad dug pređe 1%; ulaznica samo za klub; vraćeni butik, market, dve picerije i prva benzinska sa uklanjanjem GTA objekata; izbačeni Tempo, Billa, Konzum i Eko |
 | 23.11.2026. | Izbačeni market, obe picerije i prva benzinska (pod treperi zbog same mape); nova benzinska OMV u Temple-u |
+| 23.11.2026. | Benzinske kao u igri; butik zamenjen prodavnicom SECONDHAND sa njenim enterijerom; izbor enterijera po firmi (`/izmenifirmu`) |
 | 20.11.2026. | Sef kao bankomat (ispred vlasnika, okrenut ka njemu, na podu, `/kuca` → Sef → „Pomeri“), novi model; ColAndreas: nameštaj ne može kroz zid ni da lebdi, predmeti za pod padaju na pod ili sto; čišćenje diska |
 | 19.11.2026. | Korak 4.3b i 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [igrac] [vozila|kuce|namestaj] [broj]` i spisak mesta u `/kuca`; ormar za svaku kuću i stanovnika, magacin („Stare stvari“ u `/ormar`) za stvari iz izgubljenog doma; sef kao predmet koji se postavlja mišem; nameštaj (prodavnica `namestaj`, `/namestaj`, 10 kategorija sa slikama, prodaja 50%, limit 30/50/80) |
 | 19.11.2026. | Pad pri učitavanju enterijera (ulazak na server u kući) više ne zaključava vrata kao da je igrač u borbi; pad i davljenje se ne računaju kao šteta iz borbe |
@@ -404,7 +404,6 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Breaking into a house and cracking a safe (Phase 6, crime), with the alarm |
 | Business and faction storage: added as a new place in `storage.inc` (the same menu as the trunk and safe) |
 | The gun shop as a business once the weapon license exists (LIC-3, police in Phase 5); the interior is picked (Ammu-Nation, int 7) (2026-11-21) |
-| The boutique: its inside is mapped in place; if it can be walked into, a business without an interior (`/kupi` inside the map itself, like the gas station) — waiting for the owner's check and decision (2026-11-23) |
 | The trucker (JOB-2) delivers stock to businesses cheaper than ordering at once, which stays (2026-11-21) |
 | After `/setname` the house and business labels still show the old owner name: update `owner_name` in houses and businesses (2026-11-21) |
 | Robbing a business (the till) once crime exists (CRIME-2, business wars) (2026-11-21) |
@@ -648,6 +647,7 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | 2026-11-23 | Maps after the review: original signs, a TEMPO board, GTA objects removed (the pizzeria no longer flickers), the Eko gas station; stock per item (up to 100), a bar entry fee, `/setmesta firme` and the business list in `/firma` |
 | 2026-11-23 | Tax: taken once the debt passes 1%; the entry fee for the club only; the boutique, market, two pizzerias and the first gas station are back with the GTA objects removed; Tempo, Billa, Konzum and Eko dropped |
 | 2026-11-23 | The market, both pizzerias and the first gas station dropped (the floor flickers because of the map itself); the new gas station is the OMV in Temple |
+| 2026-11-23 | Gas stations as in the game; the boutique replaced with the SECONDHAND shop and its interior; picking an interior per business (`/izmenifirmu`) |
 | 2026-11-20 | The safe like an ATM (in front of the owner, facing them, on the floor, `/kuca` → Sef → "Pomeri"), a new model; ColAndreas: furniture cannot go through walls or float, standing pieces drop onto the floor or a table; disk cleanup |
 | 2026-11-19 | Steps 4.3b and 4.4: admin `/kinfo` (`/hinfo`); `/setmesta [player] [vozila|kuce|namestaj] [number]` and the slot list in `/kuca`; a wardrobe per house and resident, the stash ("Stare stvari" in `/ormar`) for things from a lost home; the safe as an object placed with the mouse; furniture (the `namestaj` shop, `/namestaj`, 10 categories by picture, sold for 50%, limit 30/50/80) |
 | 2026-11-19 | Dropping a little while an interior loads (joining inside a house) no longer locks the doors as if in a fight; falls and drowning do not count as fight damage |

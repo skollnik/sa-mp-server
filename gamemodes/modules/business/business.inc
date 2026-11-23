@@ -38,7 +38,7 @@ stock Biz_Init()
         "`type` TINYINT UNSIGNED NOT NULL, `name` VARCHAR(32) NOT NULL DEFAULT '', `price` INT NOT NULL," \
         "`x` FLOAT NOT NULL, `y` FLOAT NOT NULL, `z` FLOAT NOT NULL, `a` FLOAT NOT NULL," \
         "`locked` TINYINT(1) NOT NULL DEFAULT 0, `till` INT NOT NULL DEFAULT 0," \
-        "`percent` INT NOT NULL DEFAULT 100, `fee` INT NOT NULL DEFAULT 0, `tax_debt` INT NOT NULL DEFAULT 0," \
+        "`percent` INT NOT NULL DEFAULT 100, `fee` INT NOT NULL DEFAULT 0, `tax_debt` INT NOT NULL DEFAULT 0, `interior` INT NOT NULL DEFAULT -1," \
         "INDEX `business_owner` (`owner_id`)" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
     mysql_tquery(g_SQL,
@@ -51,6 +51,7 @@ stock Biz_Init()
         "`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
     mysql_tquery(g_SQL, "ALTER TABLE `businesses` DROP COLUMN IF EXISTS `stock`");
+    mysql_tquery(g_SQL, "ALTER TABLE `businesses` ADD COLUMN IF NOT EXISTS `interior` INT NOT NULL DEFAULT -1");
     mysql_tquery(g_SQL,
         "CREATE TABLE IF NOT EXISTS `business_stock` (" \
         "`business_id` INT UNSIGNED NOT NULL, `product` TINYINT UNSIGNED NOT NULL, `amount` INT NOT NULL DEFAULT 0," \
@@ -90,6 +91,11 @@ public OnBusinessesLoaded()
         cache_get_value_name_int(row, "percent", g_Biz[row][bPercent]);
         cache_get_value_name_int(row, "fee", g_Biz[row][bFee]);
         cache_get_value_name_int(row, "tax_debt", g_Biz[row][bTaxDebt]);
+        cache_get_value_name_int(row, "interior", g_Biz[row][bInterior]);
+        if (g_Biz[row][bInterior] >= sizeof(g_BizInteriors))
+        {
+            g_Biz[row][bInterior] = -1;
+        }
         g_Biz[row][bType] = (type >= 0 && type < _:E_BIZ_TYPE) ? (E_BIZ_TYPE:type) : BIZ_247;
         g_Biz[row][bLocked] = locked != 0;
         Biz_Refresh(row);
@@ -135,6 +141,11 @@ stock Biz_World(slot)
     return BIZ_WORLD_BASE + g_Biz[slot][bDbId];
 }
 
+static stock Biz_InteriorIndex(slot)
+{
+    return g_Biz[slot][bInterior] != -1 ? g_Biz[slot][bInterior] : g_BizTypes[g_Biz[slot][bType]][btInterior];
+}
+
 stock bool:Biz_HasInterior(slot)
 {
     return g_BizTypes[g_Biz[slot][bType]][btInterior] != -1;
@@ -142,12 +153,12 @@ stock bool:Biz_HasInterior(slot)
 
 static stock Biz_GameInterior(slot)
 {
-    return g_BizInteriors[g_BizTypes[g_Biz[slot][bType]][btInterior]][biInterior];
+    return g_BizInteriors[Biz_InteriorIndex(slot)][biInterior];
 }
 
 static stock Biz_ExitPos(slot, &Float:x, &Float:y, &Float:z, &Float:angle)
 {
-    new index = g_BizTypes[g_Biz[slot][bType]][btInterior];
+    new index = Biz_InteriorIndex(slot);
     x = g_BizInteriors[index][biX];
     y = g_BizInteriors[index][biY];
     z = g_BizInteriors[index][biZ];
@@ -371,10 +382,10 @@ stock Biz_Save(slot)
     new query[640];
     mysql_format(g_SQL, query, sizeof(query),
         "UPDATE `businesses` SET `owner_id` = %d, `owner_name` = '%e', `type` = %d, `name` = '%e', `price` = %d, `x` = %f, `y` = %f, `z` = %f, `a` = %f, " \
-        "`locked` = %d, `till` = %d, `percent` = %d, `fee` = %d, `tax_debt` = %d WHERE `id` = %d",
+        "`locked` = %d, `till` = %d, `percent` = %d, `fee` = %d, `tax_debt` = %d, `interior` = %d WHERE `id` = %d",
         g_Biz[slot][bOwnerDbId], g_Biz[slot][bOwnerName], _:g_Biz[slot][bType], g_Biz[slot][bName], g_Biz[slot][bPrice],
         g_Biz[slot][bX], g_Biz[slot][bY], g_Biz[slot][bZ], g_Biz[slot][bA], g_Biz[slot][bLocked] ? 1 : 0, g_Biz[slot][bTill],
-        g_Biz[slot][bPercent], g_Biz[slot][bFee], g_Biz[slot][bTaxDebt], g_Biz[slot][bDbId]);
+        g_Biz[slot][bPercent], g_Biz[slot][bFee], g_Biz[slot][bTaxDebt], g_Biz[slot][bInterior], g_Biz[slot][bDbId]);
     mysql_tquery(g_SQL, query);
 }
 
@@ -965,6 +976,7 @@ static stock Biz_Create(playerid, E_BIZ_TYPE:type)
     g_Biz[slot][bUsed] = true;
     g_Biz[slot][bDbId] = dbid;
     g_Biz[slot][bType] = type;
+    g_Biz[slot][bInterior] = -1;
     g_Biz[slot][bPrice] = g_BizCreatePrice[playerid];
     g_Biz[slot][bPercent] = 100;
     strcopy(g_Biz[slot][bName], g_BizTypes[type][btName], BIZ_NAME_MAX + 1);
@@ -985,6 +997,20 @@ static stock Biz_Create(playerid, E_BIZ_TYPE:type)
         new pumps = Point_CountNear(POINT_FUEL, g_Biz[slot][bX], g_Biz[slot][bY], g_Biz[slot][bZ], BIZ_PUMP_RADIUS);
         Msg_Admin(playerid, "Pumpe ove benzinske su mesta 'pumpa' do %.0f m odavde; sada ih ima %d.", BIZ_PUMP_RADIUS, pumps);
     }
+}
+
+// The first row puts the business back on its type's own interior.
+static stock Biz_ShowInteriors(playerid, for_dbid)
+{
+    new body[512];
+    g_BizTypeFor[playerid] = for_dbid;
+    strcopy(body, "Po tipu firme\n");
+    for (new i = 0; i < sizeof(g_BizInteriors); i++)
+    {
+        strcat(body, g_BizInteriors[i][biName]);
+        strcat(body, "\n");
+    }
+    ShowPlayerDialog(playerid, DIALOG_BIZ_INTERIOR, DIALOG_STYLE_LIST, "Enterijer firme", body, "Izaberi", "Odustani");
 }
 
 static stock Biz_ShowTypes(playerid, for_dbid)
@@ -1348,6 +1374,7 @@ static const g_BizEditMenu[][E_MENU_ITEM] =
 {
     { ADMIN_LEVEL_HEAD, "Cena", "izmenifirmu %s cena", "Nova cena:" },
     { ADMIN_LEVEL_HEAD, "Tip (lista, samo bez vlasnika)", "izmenifirmu %s tip", "" },
+    { ADMIN_LEVEL_HEAD, "Enterijer (lista)", "izmenifirmu %s enterijer", "" },
     { ADMIN_LEVEL_HEAD, "Ime", "izmenifirmu %s ime", "Novo ime (3-32 znaka):" },
     { ADMIN_LEVEL_HEAD, "Roba (isto za svaki artikal)", "izmenifirmu %s roba", "Komada svakog artikla (gorivo u litrima):" },
     { ADMIN_LEVEL_HEAD, "Pomeri ulaz ovde (napolju, gde stojite)", "izmenifirmu %s ovde", "" },
@@ -1407,6 +1434,16 @@ cmd:izmenifirmu(playerid, params[])
             return 1;
         }
         Biz_ShowTypes(playerid, dbid);
+        return 1;
+    }
+    else if (!strcmp(option, "enterijer", true))
+    {
+        if (g_BizTypes[g_Biz[slot][bType]][btInterior] == -1)
+        {
+            Msg_Error(playerid, "Benzinska nema enterijer.");
+            return 1;
+        }
+        Biz_ShowInteriors(playerid, dbid);
         return 1;
     }
     else if (!strcmp(option, "ime", true))
@@ -1565,6 +1602,10 @@ cmd:finfo(playerid, params[])
     Staff_InfoRow(body, sizeof(body), "ID firme", value);
     Staff_InfoRow(body, sizeof(body), "Ime", g_Biz[slot][bName]);
     Staff_InfoRow(body, sizeof(body), "Tip", g_BizTypes[g_Biz[slot][bType]][btName]);
+    if (Biz_HasInterior(slot))
+    {
+        Staff_InfoRow(body, sizeof(body), "Enterijer", g_BizInteriors[Biz_InteriorIndex(slot)][biName]);
+    }
     Staff_InfoRow(body, sizeof(body), "Adresa", address);
     if (g_Biz[slot][bOwnerDbId] == 0)
     {
@@ -1751,11 +1792,33 @@ stock bool:Biz_OnDialogResponse(playerid, dialogid, response, listitem, const in
             // The old type's interior is gone, so nobody may stay inside it.
             Biz_EmptyInside(slot);
             g_Biz[slot][bType] = E_BIZ_TYPE:listitem;
+            g_Biz[slot][bInterior] = -1;
             strcopy(g_Biz[slot][bName], g_BizTypes[g_Biz[slot][bType]][btName], BIZ_NAME_MAX + 1);
             Biz_Refresh(slot);
             Biz_Save(slot);
             new details[64];
             format(details, sizeof(details), "firma %d: tip %s", g_Biz[slot][bDbId], g_BizTypes[g_Biz[slot][bType]][btName]);
+            Staff_Log(playerid, "biz_edit", INVALID_PLAYER_ID, details);
+            Msg_Admin(playerid, "Izmenjena je %s.", details);
+        }
+        case DIALOG_BIZ_INTERIOR:
+        {
+            new slot = Biz_FindSlotByDbId(g_BizTypeFor[playerid]);
+            if (!response || slot == -1 || listitem < 0 || listitem > sizeof(g_BizInteriors) || !Staff_CheckAdmin(playerid, ADMIN_LEVEL_HEAD))
+            {
+                return true;
+            }
+            // The old inside is gone, so nobody may stay in it.
+            Biz_EmptyInside(slot);
+            g_Biz[slot][bInterior] = listitem - 1;
+            Biz_Refresh(slot);
+            Biz_Save(slot);
+            new details[80], name[40] = "po tipu";
+            if (listitem > 0)
+            {
+                strcopy(name, g_BizInteriors[listitem - 1][biName]);
+            }
+            format(details, sizeof(details), "firma %d: enterijer %s", g_Biz[slot][bDbId], name);
             Staff_Log(playerid, "biz_edit", INVALID_PLAYER_ID, details);
             Msg_Admin(playerid, "Izmenjena je %s.", details);
         }
