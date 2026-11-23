@@ -153,7 +153,7 @@ static stock bool:Offer_IsValid(seller, bool:tell)
             {
                 return true;
             }
-            format(message, sizeof(message), "Kupac mora biti nivo %d+ i ne sme vec imati firmu.", BIZ_MIN_LEVEL);
+            format(message, sizeof(message), "Kupac mora biti nivo %d+ i imati slobodno mesto za firmu.", BIZ_MIN_LEVEL);
         }
     }
     else if (!Offer_IsVehicleReady(g_Offer[seller][ofSlot], g_Offer[seller][ofDbId], seller, target))

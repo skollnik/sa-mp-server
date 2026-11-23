@@ -1217,7 +1217,7 @@ cmd:ahelp(playerid, params[])
     if (level >= ADMIN_LEVEL_HEAD)
     {
         strcat(body, C_ADMIN "4 - Glavni admin\n" C_WHITE "/makehelper /setlevel /setrespect /setglad /setname /pmspy\n" \
-            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo /setmesta [vozila|kuce|namestaj]    Auto skola: /setdozvola /rutaskole (meni rute)\nKamere: /napravikameru /obrisikameru /kamere /izmenikameru [id]    Rent: /napravirent [cena] (u admin vozilu) /obrisirent\n" \
+            "Ulazi: /napraviulaz /izmeniulaz (i strelica) /obrisiulaz /ulazi    Mesta: /napravimesto /obrisimesto /mesta\nGPS: /dodajgps /obrisigps    Vozila: /dajvozilo /obrisivozilo /setmesta [vozila|kuce|namestaj|firme]    Auto skola: /setdozvola /rutaskole (meni rute)\nKamere: /napravikameru /obrisikameru /kamere /izmenikameru [id]    Rent: /napravirent [cena] (u admin vozilu) /obrisirent\n" \
             "Kuce: /napravikucu [cena] [nivo] /izmenikucu [id] (meni: garaza, izlaz, enterijer, oduzmi...) /obrisikucu /kuce /gotokuca\n" \
             "Firme: /napravifirmu [cena] /izmenifirmu [id] (meni: cena, tip, ime, roba, ulaz, oduzmi) /obrisifirmu /firme /enterijerifirmi\n" \
             "Izmene: /izmenivozilo (sve opcije) /izmenimesto [id] /izmenigps [id]    Auto pijaca: /pijaca (meni)\n" \

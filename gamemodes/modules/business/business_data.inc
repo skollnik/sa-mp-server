@@ -11,6 +11,9 @@
 #define BIZ_PICKUP_OWNED        (1239)
 #define BIZ_MIN_LEVEL           (6)
 #define BIZ_MAX_PER_PLAYER      (1)
+// Most extra business places an admin can give (/setmesta firme), like for houses.
+#define BIZ_ADMIN_EXTRA_MAX     (5)
+#define BIZ_LIST_SIZE           (BIZ_MAX_PER_PLAYER + BIZ_ADMIN_EXTRA_MAX + 1)
 #define BIZ_MIN_PRICE           (1000)
 #define BIZ_MAX_PRICE           (100000000)
 #define BIZ_SELL_PERCENT        (70)
@@ -21,12 +24,17 @@
 // being a way to pass money between accounts or to rob the customers.
 #define BIZ_PERCENT_MIN         (50)
 #define BIZ_PERCENT_MAX         (200)
-// Stock costs the owner this share of what it sells for at the state's price, and arrives right away.
+// Each item costs the owner this share of its state price, and arrives right away.
 #define BIZ_STOCK_COST_PERCENT  (35)
-// A business bought from the state comes with this share of its stock, so it can sell from the first minute.
+// A business bought from the state comes with this share of every item, so it can sell from the first minute.
 #define BIZ_START_STOCK_PERCENT (50)
-// The owner is told when the stock falls to this share.
+// The owner is told when an item falls to this share.
 #define BIZ_LOW_STOCK_PERCENT   (10)
+// Stock is kept per item: up to 100 pieces of each, and the fuel in litres.
+#define BIZ_ITEM_MAX            (100)
+#define BIZ_FUEL_MAX            (10000)
+// The longest item list of any type (the clothing shop: clothes and twelve accessories).
+#define BIZ_MAX_PRODUCTS        (16)
 // Tax per payday the owner gets, in hundredths of a percent of the business value (5 is 0.05%).
 #define BIZ_TAX_PER_10000       (5)
 // Unpaid tax above this share of the value and the state takes the business.
@@ -73,21 +81,17 @@ enum E_BIZ_TYPE_INFO
     // Index in g_BizInteriors; -1 for the gas station, which is only its pumps outside.
     btInterior,
     btIcon,
-    // What one unit of stock is worth at the state's price: a sale uses as many units as its state price covers.
-    btUnitValue,
-    btMaxStock,
     bool:btHasFee
 }
 
 new const g_BizTypes[E_BIZ_TYPE][E_BIZ_TYPE_INFO] =
 {
-    { "24/7",       0,  17, 10, 1000,  false },
-    { "Restoran",   2,  50, 10, 1000,  false },
-    { "Bar",        3,  49, 5,  1000,  false },
-    { "Klub",       4,  48, 5,  1000,  true },
-    { "Odeca",      5,  45, 50, 500,   false },
-    // One unit is one litre.
-    { "Benzinska",  -1, 47, FUEL_PRICE_PER_LITRE, 10000, false }
+    { "24/7",       0,  17, false },
+    { "Restoran",   2,  50, false },
+    { "Bar",        3,  49, true },
+    { "Klub",       4,  48, true },
+    { "Odeca",      5,  45, false },
+    { "Benzinska",  -1, 47, false }
 };
 
 // Eaten or drunk on the spot in a restaurant, bar or club.
@@ -139,7 +143,6 @@ enum E_BIZ
     Float:bA,
     bool:bLocked,
     bTill,
-    bStock,
     bPercent,
     bFee,
     bTaxDebt,
@@ -151,6 +154,8 @@ enum E_BIZ
 }
 
 new g_Biz[MAX_BUSINESSES][E_BIZ];
+// Pieces of each item by its row in the type's list (the same row as in the shop menu); the fuel is row 0, in litres.
+new g_BizStock[MAX_BUSINESSES][BIZ_MAX_PRODUCTS];
 
 forward bool:Biz_OnDialogResponse(playerid, dialogid, response, listitem, const inputtext[]);
 forward bool:Biz_TryUse(playerid, bool:enter, bool:leave);
@@ -159,5 +164,5 @@ forward bool:Biz_HasFreeSlot(playerid);
 forward bool:Biz_RequireShop(playerid, E_POINT_TYPE:point, E_BIZ_TYPE:type);
 forward bool:Biz_IsShopHere(playerid, E_POINT_TYPE:point, E_BIZ_TYPE:type);
 forward bool:Biz_ShowShop(playerid);
-forward bool:Biz_Pay(playerid, base, const reason[], &paid = 0);
+forward bool:Biz_Pay(playerid, row, base, const reason[], &paid = 0);
 forward bool:Biz_PayFuel(playerid, litres, const reason[], &paid = 0);

@@ -6,8 +6,11 @@ new g_BizTypeFor[MAX_PLAYERS];
 new g_BizShownSlot[MAX_PLAYERS];
 new g_BizShownPercent[MAX_PLAYERS];
 new g_BizMealListed[MAX_PLAYERS][BIZ_MEALS_LISTED];
-// The club a player was asked to pay the entry fee for.
+// The club or bar a player was asked to pay the entry fee for.
 new g_BizEntryFor[MAX_PLAYERS];
+// The item row the owner is ordering, and the owner's businesses as listed in /firma.
+new g_BizOrderRow[MAX_PLAYERS];
+new g_BizPicked[MAX_PLAYERS][BIZ_LIST_SIZE];
 
 enum E_BIZ_ROW
 {
@@ -34,7 +37,7 @@ stock Biz_Init()
         "`owner_name` VARCHAR(24) NOT NULL DEFAULT ''," \
         "`type` TINYINT UNSIGNED NOT NULL, `name` VARCHAR(32) NOT NULL DEFAULT '', `price` INT NOT NULL," \
         "`x` FLOAT NOT NULL, `y` FLOAT NOT NULL, `z` FLOAT NOT NULL, `a` FLOAT NOT NULL," \
-        "`locked` TINYINT(1) NOT NULL DEFAULT 0, `till` INT NOT NULL DEFAULT 0, `stock` INT NOT NULL DEFAULT 0," \
+        "`locked` TINYINT(1) NOT NULL DEFAULT 0, `till` INT NOT NULL DEFAULT 0," \
         "`percent` INT NOT NULL DEFAULT 100, `fee` INT NOT NULL DEFAULT 0, `tax_debt` INT NOT NULL DEFAULT 0," \
         "INDEX `business_owner` (`owner_id`)" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
@@ -46,6 +49,12 @@ stock Biz_Init()
         "`seller_id` INT UNSIGNED NOT NULL DEFAULT 0, `buyer_id` INT UNSIGNED NOT NULL DEFAULT 0," \
         "`amount` INT NOT NULL DEFAULT 0, `tax` INT NOT NULL DEFAULT 0," \
         "`created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP" \
+        ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+    mysql_tquery(g_SQL, "ALTER TABLE `businesses` DROP COLUMN IF EXISTS `stock`");
+    mysql_tquery(g_SQL,
+        "CREATE TABLE IF NOT EXISTS `business_stock` (" \
+        "`business_id` INT UNSIGNED NOT NULL, `product` TINYINT UNSIGNED NOT NULL, `amount` INT NOT NULL DEFAULT 0," \
+        "PRIMARY KEY (`business_id`, `product`)" \
         ") ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
     mysql_tquery(g_SQL, "SELECT * FROM `businesses`", "OnBusinessesLoaded");
     SetTimer("Biz_CheckInactive", BIZ_INACTIVE_CHECK_MS, true);
@@ -78,7 +87,6 @@ public OnBusinessesLoaded()
         cache_get_value_name_float(row, "a", g_Biz[row][bA]);
         cache_get_value_name_int(row, "locked", locked);
         cache_get_value_name_int(row, "till", g_Biz[row][bTill]);
-        cache_get_value_name_int(row, "stock", g_Biz[row][bStock]);
         cache_get_value_name_int(row, "percent", g_Biz[row][bPercent]);
         cache_get_value_name_int(row, "fee", g_Biz[row][bFee]);
         cache_get_value_name_int(row, "tax_debt", g_Biz[row][bTaxDebt]);
@@ -87,7 +95,25 @@ public OnBusinessesLoaded()
         Biz_Refresh(row);
     }
     printf("[BUSINESSES] %d businesses loaded.", min(rows, MAX_BUSINESSES));
+    mysql_tquery(g_SQL, "SELECT * FROM `business_stock`", "OnBusinessStockLoaded");
     Biz_CheckInactive();
+    return 1;
+}
+
+forward OnBusinessStockLoaded();
+public OnBusinessStockLoaded()
+{
+    new dbid, product, amount, slot;
+    for (new row = 0; row < cache_num_rows(); row++)
+    {
+        cache_get_value_name_int(row, "business_id", dbid);
+        cache_get_value_name_int(row, "product", product);
+        cache_get_value_name_int(row, "amount", amount);
+        if ((slot = Biz_FindSlotByDbId(dbid)) != -1 && product >= 0 && product < BIZ_MAX_PRODUCTS)
+        {
+            g_BizStock[slot][product] = amount;
+        }
+    }
     return 1;
 }
 
@@ -135,9 +161,119 @@ stock Biz_Address(slot, dest[], size = sizeof(dest))
     format(dest, size, "%s %d", zone, g_Biz[slot][bDbId]);
 }
 
-stock Biz_MaxStock(slot)
+// The g_BizMeals index of the row-th meal of a type, the same order as its menu.
+static stock Biz_MealAt(E_BIZ_TYPE:type, row)
 {
-    return g_BizTypes[g_Biz[slot][bType]][btMaxStock];
+    for (new i = 0; i < sizeof(g_BizMeals); i++)
+    {
+        if (g_BizMeals[i][bmType] == type && row-- == 0)
+        {
+            return i;
+        }
+    }
+    return -1;
+}
+
+// The items a type sells, one row each, in the order its shop menu lists them.
+stock Biz_ProductCount(E_BIZ_TYPE:type)
+{
+    switch (type)
+    {
+        case BIZ_247: return Shop_ItemCount();
+        case BIZ_CLOTHES: return 1 + sizeof(g_AccInfo);
+        case BIZ_GAS: return 1;
+    }
+    new count;
+    while (Biz_MealAt(type, count) != -1)
+    {
+        count++;
+    }
+    return count;
+}
+
+stock Biz_ProductPrice(E_BIZ_TYPE:type, row)
+{
+    switch (type)
+    {
+        case BIZ_247: return g_ItemInfo[Shop_ItemAt(row)][itPrice];
+        case BIZ_CLOTHES: return row == 0 ? CLOTHES_PRICE : g_AccInfo[row - 1][aiPrice];
+        case BIZ_GAS: return FUEL_PRICE_PER_LITRE;
+    }
+    new meal = Biz_MealAt(type, row);
+    return meal == -1 ? 0 : g_BizMeals[meal][bmPrice];
+}
+
+stock Biz_ProductName(E_BIZ_TYPE:type, row, dest[], size = sizeof(dest))
+{
+    if (type == BIZ_247)
+    {
+        strcopy(dest, g_ItemInfo[Shop_ItemAt(row)][itName], size);
+    }
+    else if (type == BIZ_CLOTHES && row == 0)
+    {
+        strcopy(dest, "Garderoba", size);
+    }
+    else if (type == BIZ_CLOTHES)
+    {
+        strcopy(dest, g_ItemInfo[g_AccInfo[row - 1][aiItem]][itName], size);
+    }
+    else if (type == BIZ_GAS)
+    {
+        strcopy(dest, "Gorivo (litri)", size);
+    }
+    else
+    {
+        new meal = Biz_MealAt(type, row);
+        if (meal == -1)
+        {
+            strcopy(dest, "-", size);
+        }
+        else
+        {
+            strcopy(dest, g_BizMeals[meal][bmName], size);
+        }
+    }
+}
+
+stock Biz_ItemMax(slot)
+{
+    return g_Biz[slot][bType] == BIZ_GAS ? BIZ_FUEL_MAX : BIZ_ITEM_MAX;
+}
+
+stock Biz_StockTotal(slot)
+{
+    new total;
+    for (new row = Biz_ProductCount(g_Biz[slot][bType]) - 1; row >= 0; row--)
+    {
+        total += g_BizStock[slot][row];
+    }
+    return total;
+}
+
+static stock Biz_SaveStock(slot, row)
+{
+    new query[192];
+    mysql_format(g_SQL, query, sizeof(query),
+        "INSERT INTO `business_stock` (`business_id`, `product`, `amount`) VALUES (%d, %d, %d) ON DUPLICATE KEY UPDATE `amount` = VALUES(`amount`)",
+        g_Biz[slot][bDbId], row, g_BizStock[slot][row]);
+    mysql_tquery(g_SQL, query);
+}
+
+// Every item of the business to the same amount; 0 empties the store room, as when the state takes the business back.
+static stock Biz_SetAllStock(slot, amount)
+{
+    new query[96];
+    mysql_format(g_SQL, query, sizeof(query), "DELETE FROM `business_stock` WHERE `business_id` = %d", g_Biz[slot][bDbId]);
+    mysql_tquery(g_SQL, query);
+    new count = Biz_ProductCount(g_Biz[slot][bType]);
+    for (new row = 0; row < BIZ_MAX_PRODUCTS; row++)
+    {
+        g_BizStock[slot][row] = row < count ? amount : 0;
+        if (row < count && amount > 0)
+        {
+            Biz_SaveStock(slot, row);
+        }
+    }
 }
 
 // The share of the state's price customers pay here; a business without an owner is the state's own shop.
@@ -152,15 +288,9 @@ static stock Biz_Price(slot, base)
     return max(1, (base * Biz_PercentOf(slot) + 99) / 100);
 }
 
-static stock Biz_Units(slot, base)
+static stock Biz_StockCost(slot, row, amount)
 {
-    new value = g_BizTypes[g_Biz[slot][bType]][btUnitValue];
-    return max(1, (base + value - 1) / value);
-}
-
-static stock Biz_StockCost(slot, units)
-{
-    return (units * g_BizTypes[g_Biz[slot][bType]][btUnitValue] * BIZ_STOCK_COST_PERCENT + 99) / 100;
+    return (amount * Biz_ProductPrice(g_Biz[slot][bType], row) * BIZ_STOCK_COST_PERCENT + 99) / 100;
 }
 
 static stock Biz_Tax(slot)
@@ -241,9 +371,9 @@ stock Biz_Save(slot)
     new query[640];
     mysql_format(g_SQL, query, sizeof(query),
         "UPDATE `businesses` SET `owner_id` = %d, `owner_name` = '%e', `type` = %d, `name` = '%e', `price` = %d, `x` = %f, `y` = %f, `z` = %f, `a` = %f, " \
-        "`locked` = %d, `till` = %d, `stock` = %d, `percent` = %d, `fee` = %d, `tax_debt` = %d WHERE `id` = %d",
+        "`locked` = %d, `till` = %d, `percent` = %d, `fee` = %d, `tax_debt` = %d WHERE `id` = %d",
         g_Biz[slot][bOwnerDbId], g_Biz[slot][bOwnerName], _:g_Biz[slot][bType], g_Biz[slot][bName], g_Biz[slot][bPrice],
-        g_Biz[slot][bX], g_Biz[slot][bY], g_Biz[slot][bZ], g_Biz[slot][bA], g_Biz[slot][bLocked] ? 1 : 0, g_Biz[slot][bTill], g_Biz[slot][bStock],
+        g_Biz[slot][bX], g_Biz[slot][bY], g_Biz[slot][bZ], g_Biz[slot][bA], g_Biz[slot][bLocked] ? 1 : 0, g_Biz[slot][bTill],
         g_Biz[slot][bPercent], g_Biz[slot][bFee], g_Biz[slot][bTaxDebt], g_Biz[slot][bDbId]);
     mysql_tquery(g_SQL, query);
 }
@@ -279,8 +409,8 @@ static stock Biz_Release(slot)
         Money_PayAccount(g_Biz[slot][bOwnerDbId], g_Biz[slot][bTill], reason);
     }
     g_Biz[slot][bTill] = 0;
-    g_Biz[slot][bStock] = 0;
     g_Biz[slot][bTaxDebt] = 0;
+    Biz_SetAllStock(slot, 0);
     strcopy(g_Biz[slot][bName], g_BizTypes[g_Biz[slot][bType]][btName], BIZ_NAME_MAX + 1);
     Biz_SetOwner(slot, 0, "");
 }
@@ -298,9 +428,15 @@ stock Biz_CountOwned(account_dbid)
     return count;
 }
 
+// One business for everyone; an admin can give more (/setmesta firme). Taking places back takes no business away.
+stock Biz_MaxFor(playerid)
+{
+    return BIZ_MAX_PER_PLAYER + g_Player[playerid][pExtraBizSlots];
+}
+
 stock bool:Biz_HasFreeSlot(playerid)
 {
-    return Biz_CountOwned(g_Player[playerid][pDbId]) < BIZ_MAX_PER_PLAYER;
+    return Biz_CountOwned(g_Player[playerid][pDbId]) < Biz_MaxFor(playerid);
 }
 
 stock bool:Biz_IsOwner(playerid, slot)
@@ -522,27 +658,50 @@ stock Biz_PriceFor(playerid, base)
     return Biz_Price(slot, base);
 }
 
-static stock Biz_NotifyLowStock(slot, before)
+// A shop menu's price cell: the price, and in a business with an owner how many are left of that item.
+stock Biz_PriceText(playerid, row, base, dest[], size = sizeof(dest))
 {
-    new limit = Biz_MaxStock(slot) * BIZ_LOW_STOCK_PERCENT / 100, ownerid = Account_FindOnlineByDbId(g_Biz[slot][bOwnerDbId]);
-    if (ownerid != INVALID_PLAYER_ID && before > limit && g_Biz[slot][bStock] <= limit)
+    new price = Biz_PriceFor(playerid, base), slot = g_BizShownSlot[playerid];
+    if (slot == -1 || g_Biz[slot][bOwnerDbId] == 0)
     {
-        Msg_Info(ownerid, "Firmi %s ponestaje robe (%d/%d). Naruci se u /firma.", g_Biz[slot][bName], g_Biz[slot][bStock], Biz_MaxStock(slot));
+        format(dest, size, "$%d", price);
+    }
+    else if (g_BizStock[slot][row] > 0)
+    {
+        format(dest, size, "$%d (ima %d)", price, g_BizStock[slot][row]);
+    }
+    else
+    {
+        format(dest, size, "$%d " C_RED "(nema)", price);
+    }
+}
+
+static stock Biz_NotifyLowStock(slot, row, before)
+{
+    new limit = Biz_ItemMax(slot) * BIZ_LOW_STOCK_PERCENT / 100, ownerid = Account_FindOnlineByDbId(g_Biz[slot][bOwnerDbId]);
+    if (ownerid != INVALID_PLAYER_ID && before > limit && g_BizStock[slot][row] <= limit)
+    {
+        new name[32];
+        Biz_ProductName(g_Biz[slot][bType], row, name);
+        Msg_Info(ownerid, "Firmi %s ponestaje: %s (%d/%d). Narucuje se u /firma.", g_Biz[slot][bName], name, g_BizStock[slot][row], Biz_ItemMax(slot));
     }
 }
 
 // A sale in an owned business: the stock goes down and the money into the till. The state's businesses never run out.
-static stock bool:Biz_Sell(playerid, slot, base, units, const reason[], &paid)
+static stock bool:Biz_Sell(playerid, slot, row, base, units, const reason[], &paid)
 {
     if (g_Biz[slot][bOwnerDbId] == 0)
     {
         paid = base;
         return Money_Take(playerid, base, reason);
     }
-    if (g_Biz[slot][bStock] < units)
+    if (row < 0 || row >= BIZ_MAX_PRODUCTS || g_BizStock[slot][row] < units)
     {
-        Msg_Error(playerid, "Firma nema dovoljno robe za to.");
-        Biz_NotifyLowStock(slot, cellmax);
+        Msg_Error(playerid, "Firma trenutno nema toga dovoljno.");
+        if (row >= 0 && row < BIZ_MAX_PRODUCTS)
+        {
+            Biz_NotifyLowStock(slot, row, cellmax);
+        }
         return false;
     }
     paid = Biz_Price(slot, base);
@@ -550,16 +709,17 @@ static stock bool:Biz_Sell(playerid, slot, base, units, const reason[], &paid)
     {
         return false;
     }
-    new before = g_Biz[slot][bStock];
+    new before = g_BizStock[slot][row];
     g_Biz[slot][bTill] += paid;
-    g_Biz[slot][bStock] -= units;
-    Biz_NotifyLowStock(slot, before);
+    g_BizStock[slot][row] -= units;
+    Biz_NotifyLowStock(slot, row, before);
+    Biz_SaveStock(slot, row);
     Biz_Save(slot);
     return true;
 }
 
 // Pays for something from a shop menu at what the menu showed; outside a business it is the state's price.
-stock bool:Biz_Pay(playerid, base, const reason[], &paid = 0)
+stock bool:Biz_Pay(playerid, row, base, const reason[], &paid = 0)
 {
     new slot = Biz_FindInside(playerid);
     if (slot == -1)
@@ -576,7 +736,7 @@ stock bool:Biz_Pay(playerid, base, const reason[], &paid = 0)
         Msg_Error(playerid, "Cene su se u medjuvremenu promenile; otvorite meni ponovo (/kupi).");
         return false;
     }
-    return Biz_Sell(playerid, slot, base, Biz_Units(slot, base), reason, paid);
+    return Biz_Sell(playerid, slot, row, base, 1, reason, paid);
 }
 
 // Fuel at a gas station's pumps: one unit of stock per litre. Pumps that belong to no station are the state's.
@@ -592,12 +752,12 @@ stock bool:Biz_PayFuel(playerid, litres, const reason[], &paid = 0)
     {
         return false;
     }
-    return Biz_Sell(playerid, slot, base, litres, reason, paid);
+    return Biz_Sell(playerid, slot, 0, base, litres, reason, paid);
 }
 
 static stock Biz_ShowMeals(playerid, slot)
 {
-    new body[512], line[64], count, E_BIZ_TYPE:type = g_Biz[slot][bType];
+    new body[512], line[80], price[40], count, E_BIZ_TYPE:type = g_Biz[slot][bType];
     strcopy(body, "Ponuda\tCena\n");
     for (new i = 0; i < sizeof(g_BizMeals) && count < BIZ_MEALS_LISTED; i++)
     {
@@ -605,7 +765,8 @@ static stock Biz_ShowMeals(playerid, slot)
         {
             continue;
         }
-        format(line, sizeof(line), "%s\t$%d\n", g_BizMeals[i][bmName], Biz_PriceFor(playerid, g_BizMeals[i][bmPrice]));
+        Biz_PriceText(playerid, count, g_BizMeals[i][bmPrice], price);
+        format(line, sizeof(line), "%s\t%s\n", g_BizMeals[i][bmName], price);
         strcat(body, line);
         g_BizMealListed[playerid][count++] = i;
     }
@@ -616,7 +777,7 @@ static stock Biz_ShowMeals(playerid, slot)
     ShowPlayerDialog(playerid, DIALOG_BIZ_MEALS, DIALOG_STYLE_TABLIST_HEADERS, g_Biz[slot][bName], body, "Kupi", "Zatvori");
 }
 
-static stock Biz_BuyMeal(playerid, index)
+static stock Biz_BuyMeal(playerid, row, index)
 {
     new slot = Biz_FindInside(playerid);
     if (slot == -1 || g_Biz[slot][bType] != g_BizMeals[index][bmType])
@@ -635,7 +796,7 @@ static stock Biz_BuyMeal(playerid, index)
     }
     new reason[48], paid;
     format(reason, sizeof(reason), "%s: %s", g_BizTypes[g_Biz[slot][bType]][btName], g_BizMeals[index][bmName]);
-    if (!Biz_Pay(playerid, g_BizMeals[index][bmPrice], reason, paid))
+    if (!Biz_Pay(playerid, row, g_BizMeals[index][bmPrice], reason, paid))
     {
         return;
     }
@@ -857,8 +1018,7 @@ stock Biz_ShowMenu(playerid, slot)
     Biz_AddRow(playerid, count, BIZ_ROW_DEPOSIT, body, sizeof(body), "Ostavi novac u kasu");
     format(line, sizeof(line), "Cene: %d%% drzavne cene", g_Biz[slot][bPercent]);
     Biz_AddRow(playerid, count, BIZ_ROW_PERCENT, body, sizeof(body), line);
-    format(line, sizeof(line), "Naruci robu (%d/%d)", g_Biz[slot][bStock], Biz_MaxStock(slot));
-    Biz_AddRow(playerid, count, BIZ_ROW_ORDER, body, sizeof(body), line);
+    Biz_AddRow(playerid, count, BIZ_ROW_ORDER, body, sizeof(body), "Roba i narudzbina");
     Biz_AddRow(playerid, count, BIZ_ROW_NAME, body, sizeof(body), "Ime firme");
     if (g_BizTypes[g_Biz[slot][bType]][btHasFee])
     {
@@ -876,11 +1036,10 @@ static stock Biz_ShowInfo(playerid, slot)
     new text[1024], address[48], prices[40];
     Biz_Address(slot, address);
     Biz_PriceLine(slot, prices);
-    format(text, sizeof(text), "Ime: %s\nTip: %s\nAdresa: %s\nVrata: %s\n%s\nKasa: $%d\nRoba: %d/%d (jedan komad vredi $%d po drzavnoj ceni, nabavka $%.2f)\n" \
+    format(text, sizeof(text), "Ime: %s\nTip: %s\nAdresa: %s\nVrata: %s\n%s\nKasa: $%d\nRoba: %d komada (svaki artikal do %d; Roba i narudzbina)\nNabavka: %d%% drzavne cene artikla\n" \
         "Cene: %d%% drzavne cene\n\nVrednost: $%d\nPorez po plati: $%d (iz kase, pa sa racuna)\nDug za porez: $%d\nProdaja drzavi: $%d (%d%%)\n\n",
         g_Biz[slot][bName], g_BizTypes[g_Biz[slot][bType]][btName], address, g_Biz[slot][bLocked] ? ("zatvorena") : ("otvorena"), prices,
-        g_Biz[slot][bTill], g_Biz[slot][bStock], Biz_MaxStock(slot), g_BizTypes[g_Biz[slot][bType]][btUnitValue],
-        float(g_BizTypes[g_Biz[slot][bType]][btUnitValue] * BIZ_STOCK_COST_PERCENT) / 100.0, g_Biz[slot][bPercent],
+        g_Biz[slot][bTill], Biz_StockTotal(slot), Biz_ItemMax(slot), BIZ_STOCK_COST_PERCENT, g_Biz[slot][bPercent],
         g_Biz[slot][bPrice], Biz_Tax(slot), g_Biz[slot][bTaxDebt], g_Biz[slot][bPrice] * BIZ_SELL_PERCENT / 100, BIZ_SELL_PERCENT);
     new rules[320];
     format(rules, sizeof(rules), "Svaka prodaja trosi robu i ide u kasu; bez robe firma ne prodaje.\nDug za porez veci od %d%% vrednosti: drzava oduzima firmu.\n" \
@@ -905,39 +1064,66 @@ static stock Biz_ShowAmountInput(playerid, dialogid, const title[], const error[
     Money_ShowAmountInput(playerid, dialogid, title, text, error);
 }
 
-static stock Biz_ShowOrder(playerid, slot)
+// Every item with how many are left and what one costs to order; the owner picks one to order.
+static stock Biz_ShowStock(playerid, slot)
 {
-    new text[256];
-    format(text, sizeof(text), "Roba: %d/%d. Jedan komad kosta $%.2f i stize odmah; placa se iz kase ($%d).\n\nUpisite koliko komada narucujete (najvise %d):",
-        g_Biz[slot][bStock], Biz_MaxStock(slot), float(g_BizTypes[g_Biz[slot][bType]][btUnitValue] * BIZ_STOCK_COST_PERCENT) / 100.0,
-        g_Biz[slot][bTill], Biz_MaxStock(slot) - g_Biz[slot][bStock]);
-    ShowPlayerDialog(playerid, DIALOG_BIZ_ORDER, DIALOG_STYLE_INPUT, "Narudzbina robe", text, "Naruci", "Nazad");
+    new body[1536], line[96], name[32], E_BIZ_TYPE:type = g_Biz[slot][bType], count = Biz_ProductCount(type);
+    strcopy(body, "Artikal\tNa stanju\tNabavka (komad)\n");
+    for (new row = 0; row < count; row++)
+    {
+        Biz_ProductName(type, row, name);
+        format(line, sizeof(line), "%s\t%d/%d\t$%.2f\n", name, g_BizStock[slot][row], Biz_ItemMax(slot),
+            float(Biz_ProductPrice(type, row) * BIZ_STOCK_COST_PERCENT) / 100.0);
+        strcat(body, line);
+    }
+    new title[64];
+    format(title, sizeof(title), "Roba (kasa $%d) - izaberite sta narucujete", g_Biz[slot][bTill]);
+    ShowPlayerDialog(playerid, DIALOG_BIZ_STOCK, DIALOG_STYLE_TABLIST_HEADERS, title, body, "Naruci", "Nazad");
 }
 
-static stock Biz_Order(playerid, slot, units)
+static stock Biz_ShowOrder(playerid, slot, row)
 {
-    new room = Biz_MaxStock(slot) - g_Biz[slot][bStock];
+    new text[256], name[32];
+    g_BizOrderRow[playerid] = row;
+    Biz_ProductName(g_Biz[slot][bType], row, name);
+    format(text, sizeof(text), "%s: na stanju %d/%d. Komad kosta $%.2f i stize odmah; placa se iz kase ($%d).\n\nUpisite koliko narucujete (najvise %d):",
+        name, g_BizStock[slot][row], Biz_ItemMax(slot), float(Biz_ProductPrice(g_Biz[slot][bType], row) * BIZ_STOCK_COST_PERCENT) / 100.0,
+        g_Biz[slot][bTill], Biz_ItemMax(slot) - g_BizStock[slot][row]);
+    ShowPlayerDialog(playerid, DIALOG_BIZ_ORDER, DIALOG_STYLE_INPUT, "Narudzbina", text, "Naruci", "Nazad");
+}
+
+static stock Biz_Order(playerid, slot, row, units)
+{
+    if (row < 0 || row >= Biz_ProductCount(g_Biz[slot][bType]))
+    {
+        return;
+    }
+    new room = Biz_ItemMax(slot) - g_BizStock[slot][row];
     if (room <= 0)
     {
-        Msg_Error(playerid, "Magacin firme je pun (%d/%d).", g_Biz[slot][bStock], Biz_MaxStock(slot));
+        Msg_Error(playerid, "Tog artikla je vec pun magacin (%d/%d).", g_BizStock[slot][row], Biz_ItemMax(slot));
         return;
     }
     if (units < 1 || units > room)
     {
-        Msg_Error(playerid, "Mozete naruciti od 1 do %d komada.", room);
+        Msg_Error(playerid, "Mozete naruciti od 1 do %d.", room);
         return;
     }
-    new cost = Biz_StockCost(slot, units);
+    new cost = Biz_StockCost(slot, row, units);
     if (g_Biz[slot][bTill] < cost)
     {
         Msg_Error(playerid, "U kasi nema dovoljno novca (potrebno $%d, u kasi $%d). Novac se ostavlja u kasu iz /firma.", cost, g_Biz[slot][bTill]);
         return;
     }
     g_Biz[slot][bTill] -= cost;
-    g_Biz[slot][bStock] += units;
+    g_BizStock[slot][row] += units;
+    Biz_SaveStock(slot, row);
     Biz_Save(slot);
     Biz_LogTrade(slot, "stock", g_Player[playerid][pDbId], 0, cost);
-    Msg_Success(playerid, "Narucili ste %d komada robe za $%d iz kase. Na stanju: %d/%d.", units, cost, g_Biz[slot][bStock], Biz_MaxStock(slot));
+    new name[32];
+    Biz_ProductName(g_Biz[slot][bType], row, name);
+    Msg_Success(playerid, "Narucili ste %s: %d za $%d iz kase. Na stanju: %d/%d.", name, units, cost, g_BizStock[slot][row], Biz_ItemMax(slot));
+    Biz_ShowStock(playerid, slot);
 }
 
 static stock bool:Biz_IsValidName(const name[])
@@ -1022,8 +1208,8 @@ stock Biz_SaleText(slot, dest[], size = sizeof(dest))
 {
     new address[48];
     Biz_Address(slot, address);
-    format(dest, size, "Firma: %s (%s)\nAdresa: %s\nRoba: %d/%d (ide uz firmu)", g_Biz[slot][bName], g_BizTypes[g_Biz[slot][bType]][btName], address,
-        g_Biz[slot][bStock], Biz_MaxStock(slot));
+    format(dest, size, "Firma: %s (%s)\nAdresa: %s\nRoba: %d komada (ide uz firmu)", g_Biz[slot][bName], g_BizTypes[g_Biz[slot][bType]][btName], address,
+        Biz_StockTotal(slot));
 }
 
 stock Biz_TransferTo(slot, seller, buyer, amount, tax)
@@ -1052,7 +1238,7 @@ cmd:kupifirmu(playerid, params[])
     }
     if (!Biz_HasFreeSlot(playerid))
     {
-        Msg_Error(playerid, "Vec imate firmu (najvise %d po igracu).", BIZ_MAX_PER_PLAYER);
+        Msg_Error(playerid, "Vec imate najvise firmi (%d). Mesta vidite u /firma.", Biz_MaxFor(playerid));
         return 1;
     }
     new reason[32];
@@ -1062,10 +1248,10 @@ cmd:kupifirmu(playerid, params[])
         return 1;
     }
     Biz_LogTrade(slot, "buy", 0, g_Player[playerid][pDbId], g_Biz[slot][bPrice]);
-    g_Biz[slot][bStock] = Biz_MaxStock(slot) * BIZ_START_STOCK_PERCENT / 100;
+    Biz_SetAllStock(slot, Biz_ItemMax(slot) * BIZ_START_STOCK_PERCENT / 100);
     Biz_SetOwner(slot, g_Player[playerid][pDbId], g_Player[playerid][pName]);
     Account_Save(playerid);
-    Msg_Success(playerid, "Kupili ste firmu za $%d, sa %d komada robe. Meni firme: /firma (kasa, cene, roba, ime).", g_Biz[slot][bPrice], g_Biz[slot][bStock]);
+    Msg_Success(playerid, "Kupili ste firmu za $%d, sa po %d od svakog artikla. Meni firme: /firma (kasa, cene, roba, ime).", g_Biz[slot][bPrice], g_BizStock[slot][0]);
     return 1;
 }
 alias:kupifirmu("buybiz")
@@ -1073,17 +1259,44 @@ alias:kupifirmu("buybiz")
 cmd:firma(playerid, params[])
 {
     new slot = Biz_FindOwnedHere(playerid);
-    if (slot == -1)
+    if (slot != -1)
     {
-        slot = Biz_FindOwned(playerid);
+        Biz_ShowMenu(playerid, slot);
+        return 1;
     }
-    if (slot == -1)
+    if (Biz_CountOwned(g_Player[playerid][pDbId]) == 0)
     {
         Msg_Error(playerid, "Nemate firmu. Firma na prodaju ima zeleni natpis ispred ulaza (/kupifirmu).");
         return 1;
     }
-    Biz_ShowMenu(playerid, slot);
+    Biz_ShowList(playerid);
     return 1;
+}
+
+// Free places are listed too, so the owner sees how many businesses they can have.
+static stock Biz_ShowList(playerid)
+{
+    new body[768], line[96], address[48], count, limit = Biz_MaxFor(playerid);
+    strcopy(body, "Firma\tTip\tKasa\n");
+    for (new i = 0; i < MAX_BUSINESSES && count < BIZ_LIST_SIZE; i++)
+    {
+        if (Biz_IsOwner(playerid, i))
+        {
+            Biz_Address(i, address);
+            format(line, sizeof(line), "%s (%s)\t%s\t$%d\n", g_Biz[i][bName], address, g_BizTypes[g_Biz[i][bType]][btName], g_Biz[i][bTill]);
+            strcat(body, line);
+            g_BizPicked[playerid][count++] = i;
+        }
+    }
+    new owned = count;
+    for (new place = owned; place < limit && count < BIZ_LIST_SIZE; place++)
+    {
+        strcat(body, "Slobodno mesto\t-\t-\n");
+        g_BizPicked[playerid][count++] = -1;
+    }
+    new title[64];
+    format(title, sizeof(title), "Vase firme: %d od %d mesta (klik za meni)", owned, limit);
+    ShowPlayerDialog(playerid, DIALOG_BIZ_PICK, DIALOG_STYLE_TABLIST_HEADERS, title, body, "Izaberi", "Zatvori");
 }
 alias:firma("biz")
 
@@ -1136,7 +1349,7 @@ static const g_BizEditMenu[][E_MENU_ITEM] =
     { ADMIN_LEVEL_HEAD, "Cena", "izmenifirmu %s cena", "Nova cena:" },
     { ADMIN_LEVEL_HEAD, "Tip (lista, samo bez vlasnika)", "izmenifirmu %s tip", "" },
     { ADMIN_LEVEL_HEAD, "Ime", "izmenifirmu %s ime", "Novo ime (3-32 znaka):" },
-    { ADMIN_LEVEL_HEAD, "Roba (broj komada)", "izmenifirmu %s roba", "Komada robe:" },
+    { ADMIN_LEVEL_HEAD, "Roba (isto za svaki artikal)", "izmenifirmu %s roba", "Komada svakog artikla (gorivo u litrima):" },
     { ADMIN_LEVEL_HEAD, "Pomeri ulaz ovde (napolju, gde stojite)", "izmenifirmu %s ovde", "" },
     { ADMIN_LEVEL_HEAD, "Oduzmi vlasniku (vrati na prodaju)", "izmenifirmu %s oduzmi", "" },
     { ADMIN_LEVEL_HEAD, "Udji u firmu", "izmenifirmu %s udji", "" }
@@ -1208,12 +1421,12 @@ cmd:izmenifirmu(playerid, params[])
     }
     else if (!strcmp(option, "roba", true))
     {
-        if (isnull(value) || number < 0 || number > Biz_MaxStock(slot))
+        if (isnull(value) || number < 0 || number > Biz_ItemMax(slot))
         {
-            Msg_Error(playerid, "Roba je od 0 do %d komada.", Biz_MaxStock(slot));
+            Msg_Error(playerid, "Roba je od 0 do %d po artiklu.", Biz_ItemMax(slot));
             return 1;
         }
-        g_Biz[slot][bStock] = number;
+        Biz_SetAllStock(slot, number);
         format(details, sizeof(details), "firma %d: roba %d", dbid, number);
     }
     else if (!strcmp(option, "ovde", true))
@@ -1299,6 +1512,7 @@ cmd:obrisifirmu(playerid, params[])
     Biz_EmptyInside(slot);
     new query[64], details[32];
     format(details, sizeof(details), "firma %d", g_Biz[slot][bDbId]);
+    Biz_SetAllStock(slot, 0);
     mysql_format(g_SQL, query, sizeof(query), "DELETE FROM `businesses` WHERE `id` = %d", g_Biz[slot][bDbId]);
     mysql_tquery(g_SQL, query);
     Biz_DestroyVisuals(slot);
@@ -1367,8 +1581,14 @@ cmd:finfo(playerid, params[])
     Staff_InfoRow(body, sizeof(body), "Vrata", g_Biz[slot][bLocked] ? ("zatvorena") : ("otvorena"));
     format(value, sizeof(value), "$%d", g_Biz[slot][bTill]);
     Staff_InfoRow(body, sizeof(body), "Kasa", value);
-    format(value, sizeof(value), "%d/%d", g_Biz[slot][bStock], Biz_MaxStock(slot));
-    Staff_InfoRow(body, sizeof(body), "Roba", value);
+    new name[32], label[48], E_BIZ_TYPE:type = g_Biz[slot][bType];
+    for (new row = 0, count = Biz_ProductCount(type); row < count; row++)
+    {
+        Biz_ProductName(type, row, name);
+        format(label, sizeof(label), "Roba: %s", name);
+        format(value, sizeof(value), "%d/%d", g_BizStock[slot][row], Biz_ItemMax(slot));
+        Staff_InfoRow(body, sizeof(body), label, value);
+    }
     format(value, sizeof(value), "%d%%, ulaznica $%d", g_Biz[slot][bPercent], g_Biz[slot][bFee]);
     Staff_InfoRow(body, sizeof(body), "Cene", value);
     format(value, sizeof(value), "$%d po plati, dug $%d", Biz_Tax(slot), g_Biz[slot][bTaxDebt]);
@@ -1473,7 +1693,7 @@ static stock Biz_OnMenuRow(playerid, slot, E_BIZ_ROW:row)
                 g_Biz[slot][bPercent], BIZ_PERCENT_MIN, BIZ_PERCENT_MAX);
             ShowPlayerDialog(playerid, DIALOG_BIZ_PERCENT, DIALOG_STYLE_INPUT, "Cene", text, "Postavi", "Nazad");
         }
-        case BIZ_ROW_ORDER: Biz_ShowOrder(playerid, slot);
+        case BIZ_ROW_ORDER: Biz_ShowStock(playerid, slot);
         case BIZ_ROW_NAME:
         {
             new text[96];
@@ -1556,7 +1776,7 @@ stock bool:Biz_OnDialogResponse(playerid, dialogid, response, listitem, const in
             {
                 return true;
             }
-            Biz_BuyMeal(playerid, g_BizMealListed[playerid][listitem]);
+            Biz_BuyMeal(playerid, listitem, g_BizMealListed[playerid][listitem]);
         }
         case DIALOG_BIZ_MENU:
         {
@@ -1650,7 +1870,36 @@ stock bool:Biz_OnDialogResponse(playerid, dialogid, response, listitem, const in
             {
                 units = 0;
             }
-            Biz_Order(playerid, slot, units);
+            Biz_Order(playerid, slot, g_BizOrderRow[playerid], units);
+        }
+        case DIALOG_BIZ_STOCK:
+        {
+            new slot = g_BizSelected[playerid];
+            if (!Biz_IsOwner(playerid, slot))
+            {
+                return true;
+            }
+            if (!response || listitem < 0 || listitem >= Biz_ProductCount(g_Biz[slot][bType]))
+            {
+                Biz_ShowMenu(playerid, slot);
+                return true;
+            }
+            Biz_ShowOrder(playerid, slot, listitem);
+        }
+        case DIALOG_BIZ_PICK:
+        {
+            if (!response || listitem < 0 || listitem >= BIZ_LIST_SIZE)
+            {
+                return true;
+            }
+            if (g_BizPicked[playerid][listitem] == -1)
+            {
+                Msg_Info(playerid, "Slobodno mesto. Firma na prodaju ima zeleni natpis ispred ulaza (/kupifirmu).");
+            }
+            else if (Biz_IsOwner(playerid, g_BizPicked[playerid][listitem]))
+            {
+                Biz_ShowMenu(playerid, g_BizPicked[playerid][listitem]);
+            }
         }
         case DIALOG_BIZ_NAME:
         {

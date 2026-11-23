@@ -1,4 +1,4 @@
-// Business exterior (step 4.5): a market front.
+// Business exterior (step 4.5): the Tempo market front.
 stock Map_BizMarketB()
 {
     new STREAMER_TAG_OBJECT:o;
@@ -58,4 +58,7 @@ stock Map_BizMarketB()
     SetDynamicObjectMaterial(o, 0, 1975, "texttest", "kb_blue", 0);
     o = Map_Exterior(19133, 1515.881000, -1151.305000, 26.632000, 50.000000, 0.000000, 90.000000);
     SetDynamicObjectMaterial(o, 0, 14803, "bdupsnew", "Bdup2_wallpaperC", 0);
+    // The map has no sign of its own; the name goes over the door, just in front of the wall.
+    o = Map_Exterior(19353, 1518.500000, -1151.450000, 29.600000, 0.000000, 0.000000, 90.000000);
+    SetDynamicObjectMaterialText(o, 0, "TEMPO", 130, "Arial", 72, 1, 0xFFFFFFFF, 0x00000000, 1);
 }

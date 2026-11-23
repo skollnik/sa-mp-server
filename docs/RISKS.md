@@ -312,6 +312,9 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Igrač jede ili pije u restoranu u vozilu, zatvoru ili zamrznut | ✅ | Samo peške i kad nije zauzet; sit igrač ne može da jede (kao hrana iz inventara) |
 | Spoljne mape firmi preklapaju postojeće mape ili pumpe | ✅ | Market kod auto pijace, market kod bolnice i picerija kod banke su blizu postojećih mapa, ali nijedan objekat nije bliže od 8 m; nova benzinska u Idlewood-u dodaje aparate pored postojećih pumpi, a mesta `pumpa` ostaju slobodna |
 | Jetpack admina se prijavljuje kao brzina pešaka | ✅ | Brzina pešaka se ne proverava dok igrač ima jetpack koji mu je server dao; jetpack koji server nije dao i dalje izbacuje sa servera |
+| Mapa stoji preko GTA zgrade koju je referentni mod uklanjao (treperenje, dupli objekti) | ✅ | Za svaku mapu proverena su uklanjanja iz referentnog moda i preneta u `_Remove` funkcije (kafić, Lidl, picerija) |
+| Prodaja artikla koga firma nema | ✅ | Svaki artikal ima svoje stanje; meni pokazuje "ima N" ili "nema", a kupovina bez stanja se odbija i vlasnik dobija poruku |
+| Igrač dobije više firmi nego što sme | ✅ | Kupovina i `/ponudi` proveravaju broj firmi prema 1 + dodatna mesta od admina; oduzimanje mesta ne oduzima firme |
 | Igrač koristi pregled enterijera firmi | ✅ | `/enterijerifirmi` radi samo glavnom adminu na dužnosti; posmatranje i vozilo rešava isti teleport kao `/tp` |
 | Sef na plafonu ili u zidu | ✅ | Sef stoji korak ispred vlasnika, uvek na površini ispod sebe (kolizije iz igre), ne sme iza zida ni u zid; postavlja se samo peške i u kući |
 | Nameštaj kroz spoljni zid ili iza zida | ✅ | Zrak od igrača do sredine predmeta ne sme udariti u zid; zraci od sredine ka stranama ne smeju udariti zid pre 15 cm od ivice |
@@ -681,6 +684,9 @@ Every new system or change goes through these questions, against all existing sy
 | A player eats or drinks in a restaurant in a vehicle, in jail or frozen | ✅ | Only on foot and when not busy; a full player cannot eat (like food from the inventory) |
 | Business exterior maps overlap existing maps or pumps | ✅ | The market by the car market, the market by the hospital and the pizzeria by the bank are close to existing maps, but no object is within 8 m; the new Idlewood gas station adds pumps next to the existing ones, and the `pumpa` points stay clear |
 | An admin's jetpack is reported as running speed | ✅ | Running speed is not checked while the player has a jetpack the server gave; a jetpack the server did not give still kicks |
+| A map stands over a GTA building the reference mod removed (flickering, doubled objects) | ✅ | Every map's removals from the reference mod were checked and moved into `_Remove` functions (cafe, Lidl, pizzeria) |
+| Selling an item the business does not have | ✅ | Each item has its own stock; the menu shows "ima N" or "nema", a purchase without stock is refused and the owner is told |
+| A player gets more businesses than allowed | ✅ | Buying and `/ponudi` check the count against 1 + the admin's extra places; taking places back takes no business away |
 | A player uses the business interior preview | ✅ | `/enterijerifirmi` works only for a head admin on duty; spectating and vehicles are handled by the same teleport as `/tp` |
 | The safe on the ceiling or in a wall | ✅ | The safe stands a step in front of the owner, always on the surface below it (the game's collision), never behind or in a wall; placed only on foot and inside the house |
 | Furniture through the outer wall or behind a wall | ✅ | A ray from the player to the piece's middle must not hit a wall; rays from the middle to the sides must not hit one before 15 cm from the edge |

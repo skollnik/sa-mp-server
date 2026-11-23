@@ -85,3 +85,23 @@ stock Map_BizPizzaC()
     Map_Exterior(673, 2097.630130, -1776.327030, 12.437070, 0.000000, 0.000000, 0.000000);
     Map_Exterior(673, 2099.689940, -1768.141600, 12.437070, 0.000000, 0.000000, 0.000000);
 }
+
+stock Map_BizPizzaC_Remove(playerid)
+{
+    RemoveBuildingForPlayer(playerid, 5530, 2112.9375, -1797.0938, 19.3359, 0.25);
+    RemoveBuildingForPlayer(playerid, 1408, 2099.8516, -1813.9063, 13.1016, 0.25);
+    RemoveBuildingForPlayer(playerid, 1408, 2099.8594, -1819.3594, 13.1016, 0.25);
+    RemoveBuildingForPlayer(playerid, 1408, 2099.8594, -1799.4219, 13.1016, 0.25);
+    RemoveBuildingForPlayer(playerid, 1408, 2102.6016, -1822.0781, 13.1172, 0.25);
+    RemoveBuildingForPlayer(playerid, 1432, 2104.0156, -1812.4219, 12.6719, 0.25);
+    RemoveBuildingForPlayer(playerid, 1432, 2101.9922, -1814.7109, 12.5703, 0.25);
+    RemoveBuildingForPlayer(playerid, 1432, 2103.4063, -1817.3047, 12.6719, 0.25);
+    RemoveBuildingForPlayer(playerid, 1432, 2102.1250, -1819.9531, 12.6719, 0.25);
+    RemoveBuildingForPlayer(playerid, 1432, 2101.6328, -1798.1719, 12.6719, 0.25);
+    RemoveBuildingForPlayer(playerid, 1432, 2103.9609, -1800.5625, 12.6719, 0.25);
+    RemoveBuildingForPlayer(playerid, 5418, 2112.9375, -1797.0938, 19.3359, 0.25);
+    RemoveBuildingForPlayer(playerid, 1408, 2099.8516, -1793.9766, 13.1016, 0.25);
+    RemoveBuildingForPlayer(playerid, 1408, 2102.6641, -1791.3281, 13.1016, 0.25);
+    RemoveBuildingForPlayer(playerid, 1432, 2103.6875, -1795.9063, 12.6719, 0.25);
+    RemoveBuildingForPlayer(playerid, 1432, 2102.0625, -1793.1406, 12.6719, 0.25);
+}

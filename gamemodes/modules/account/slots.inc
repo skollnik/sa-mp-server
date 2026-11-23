@@ -3,7 +3,8 @@ enum E_SLOT_KIND
 {
     SLOT_VEHICLES,
     SLOT_HOUSES,
-    SLOT_FURNITURE
+    SLOT_FURNITURE,
+    SLOT_BUSINESSES
 }
 
 enum E_SLOT_INFO
@@ -18,7 +19,8 @@ static const g_SlotInfo[E_SLOT_KIND][E_SLOT_INFO] =
 {
     { "vozila",   "extra_vehicle_slots",   VEH_ADMIN_EXTRA_MAX,   "mesta za vozila (/v)" },
     { "kuce",     "extra_house_slots",     HOUSE_ADMIN_EXTRA_MAX, "mesta za kuce (/kuca)" },
-    { "namestaj", "extra_furniture_slots", FURN_ADMIN_EXTRA_MAX,  "komada namestaja po kuci" }
+    { "namestaj", "extra_furniture_slots", FURN_ADMIN_EXTRA_MAX,  "komada namestaja po kuci" },
+    { "firme",    "extra_business_slots",  BIZ_ADMIN_EXTRA_MAX,   "mesta za firme (/firma)" }
 };
 
 static stock Slots_SetExtra(playerid, E_SLOT_KIND:kind, extra)
@@ -27,6 +29,7 @@ static stock Slots_SetExtra(playerid, E_SLOT_KIND:kind, extra)
     {
         case SLOT_VEHICLES: g_Player[playerid][pExtraVehSlots] = extra;
         case SLOT_HOUSES: g_Player[playerid][pExtraHouseSlots] = extra;
+        case SLOT_BUSINESSES: g_Player[playerid][pExtraBizSlots] = extra;
         default: g_Player[playerid][pExtraFurnSlots] = extra;
     }
 }
@@ -54,7 +57,7 @@ cmd:setmesta(playerid, params[])
     new targetid, word[12], extra, E_SLOT_KIND:kind;
     if (sscanf(params, "us[12]d", targetid, word, extra) || !Slots_FindKind(word, kind))
     {
-        Msg_Usage(playerid, "/setmesta [id ili ime] [vozila|kuce|namestaj] [broj] (dodatna mesta, pored obicnih i VIP)");
+        Msg_Usage(playerid, "/setmesta [id ili ime] [vozila|kuce|namestaj|firme] [broj] (dodatna mesta, pored obicnih i VIP)");
         return 1;
     }
     if (extra < 0 || extra > g_SlotInfo[kind][slMax])

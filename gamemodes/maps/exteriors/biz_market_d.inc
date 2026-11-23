@@ -1,4 +1,4 @@
-// Business exterior (step 4.5): a market front with a sign.
+// Business exterior (step 4.5): the Konzum market front.
 stock Map_BizMarketD()
 {
     new STREAMER_TAG_OBJECT:o;
@@ -103,13 +103,13 @@ stock Map_BizMarketD()
     o = Map_Exterior(18766, 1294.367550, -1315.200320, 16.278500, 0.000000, 90.000000, 0.000000);
     SetDynamicObjectMaterial(o, 0, 13724, "docg01_lahills", "concpanel_la", 0xFFFFFFFF);
     o = Map_Exterior(4238, 1284.628500, -1320.570800, 16.324500, 0.000000, 0.000000, -59.567200);
-    SetDynamicObjectMaterialText(o, 0, "M", 130, "ARIAL BOLD", 250, 1, -1, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "K", 130, "ARIAL BOLD", 250, 1, -1, 0, 1);
     o = Map_Exterior(4238, 1284.634000, -1337.408300, 18.935900, 0.000000, 0.000000, -59.960800);
-    SetDynamicObjectMaterialText(o, 0, "MARKET", 130, "ARIAL BLACK", 100, 1, -2162431, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "KONZUM", 130, "ARIAL BLACK", 100, 1, -2162431, 0, 1);
     o = Map_Exterior(19353, 1283.951600, -1341.839900, 13.845500, 0.000000, 0.000000, 178.659200);
-    SetDynamicObjectMaterialText(o, 0, "M", 140, "ARIAL BLACK", 140, 1, -65536, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "K", 140, "ARIAL BLACK", 140, 1, -65536, 0, 1);
     o = Map_Exterior(19353, 1283.962100, -1343.270200, 13.828100, 0.000000, 0.000000, 179.872400);
-    SetDynamicObjectMaterialText(o, 0, "M", 140, "ARIAL BLACK", 140, 1, -65536, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "K", 140, "ARIAL BLACK", 140, 1, -65536, 0, 1);
     o = Map_Exterior(4238, 1284.669100, -1322.852400, 19.828300, 0.000000, -0.299900, -59.652600);
     SetDynamicObjectMaterialText(o, 0, ".", 130, "arial black", 250, 1, -16468988, 0, 1);
     o = Map_Exterior(4238, 1284.670600, -1331.696800, 20.765900, 0.000000, 0.000000, -59.866000);

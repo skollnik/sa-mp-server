@@ -637,7 +637,7 @@ cmd:podigni(playerid, params[])
 }
 
 // The 24/7 list holds only items with a price, so a dialog row maps back to an item by counting them again.
-static stock E_ITEM:Shop_ItemAt(row)
+stock E_ITEM:Shop_ItemAt(row)
 {
     for (new E_ITEM:item = ITEM_PHONE; item < E_ITEM; item++)
     {
@@ -649,7 +649,7 @@ static stock E_ITEM:Shop_ItemAt(row)
     return ITEM_NONE;
 }
 
-static stock Shop_ItemCount()
+stock Shop_ItemCount()
 {
     new count;
     for (new E_ITEM:item = ITEM_PHONE; item < E_ITEM; item++)
@@ -688,14 +688,14 @@ cmd:kupi(playerid, params[])
 
 stock Shop_Show247(playerid)
 {
-    new body[1024], line[96];
+    new body[1024], line[112], price[40], row;
     strcopy(body, "Predmet\tCena\n");
     for (new E_ITEM:item = ITEM_PHONE; item < E_ITEM; item++)
     {
         if (g_ItemInfo[item][itPrice] == 0) continue;
-        new price = Biz_PriceFor(playerid, g_ItemInfo[item][itPrice]);
-        if (g_ItemInfo[item][itShopAmount] == 1) format(line, sizeof(line), "%s\t$%d\n", g_ItemInfo[item][itName], price);
-        else format(line, sizeof(line), "%s (%d kom.)\t$%d\n", g_ItemInfo[item][itName], g_ItemInfo[item][itShopAmount], price);
+        Biz_PriceText(playerid, row++, g_ItemInfo[item][itPrice], price);
+        if (g_ItemInfo[item][itShopAmount] == 1) format(line, sizeof(line), "%s\t%s\n", g_ItemInfo[item][itName], price);
+        else format(line, sizeof(line), "%s (%d kom.)\t%s\n", g_ItemInfo[item][itName], g_ItemInfo[item][itShopAmount], price);
         strcat(body, line);
     }
     // Services come after the items; the SIM card and credit belong to the account, not the inventory.
@@ -734,7 +734,7 @@ stock bool:Shop_OnDialogResponse(playerid, dialogid, response, listitem)
 
     new reason[48], paid;
     format(reason, sizeof(reason), "kupovina: %s", g_ItemInfo[item][itName]);
-    if (!Biz_Pay(playerid, g_ItemInfo[item][itPrice], reason, paid))
+    if (!Biz_Pay(playerid, listitem, g_ItemInfo[item][itPrice], reason, paid))
     {
         return true;
     }

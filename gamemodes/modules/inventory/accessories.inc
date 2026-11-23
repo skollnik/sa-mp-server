@@ -156,13 +156,16 @@ stock Acc_OnItemGone(playerid, E_ITEM:item)
 
 stock Acc_ShowShop(playerid)
 {
-    new body[640], line[64];
+    new body[1024], line[112], price[40];
     strcopy(body, "Predmet\tDeo tela\tCena\n");
-    format(line, sizeof(line), "Garderoba (izbor sa slikama)\t-\t$%d\n", Biz_PriceFor(playerid, CLOTHES_PRICE));
+    Biz_PriceText(playerid, 0, CLOTHES_PRICE, price);
+    format(line, sizeof(line), "Garderoba (izbor sa slikama)\t-\t%s\n", price);
     strcat(body, line);
+    // In a clothing business the rows are its items: clothes first, then each accessory.
     for (new i = 0; i < sizeof(g_AccInfo); i++)
     {
-        format(line, sizeof(line), "%s\t%s\t$%d\n", g_ItemInfo[g_AccInfo[i][aiItem]][itName], g_AccPartNames[g_AccInfo[i][aiPart]], Biz_PriceFor(playerid, g_AccInfo[i][aiPrice]));
+        Biz_PriceText(playerid, i + 1, g_AccInfo[i][aiPrice], price);
+        format(line, sizeof(line), "%s\t%s\t%s\n", g_ItemInfo[g_AccInfo[i][aiItem]][itName], g_AccPartNames[g_AccInfo[i][aiPart]], price);
         strcat(body, line);
     }
     ShowPlayerDialog(playerid, DIALOG_ACC_SHOP, DIALOG_STYLE_TABLIST_HEADERS, "Prodavnica odece", body, "Kupi", "Zatvori");
@@ -178,7 +181,7 @@ static stock Acc_Buy(playerid, index)
     }
     new reason[48], paid;
     format(reason, sizeof(reason), "kupovina: %s", g_ItemInfo[item][itName]);
-    if (!Biz_Pay(playerid, g_AccInfo[index][aiPrice], reason, paid))
+    if (!Biz_Pay(playerid, index + 1, g_AccInfo[index][aiPrice], reason, paid))
     {
         return;
     }

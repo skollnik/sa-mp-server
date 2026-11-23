@@ -1,13 +1,13 @@
-// Business exterior (step 4.5): a market front with a sign.
+// Business exterior (step 4.5): the Billa market front.
 stock Map_BizMarketC()
 {
     new STREAMER_TAG_OBJECT:o;
     o = Map_Exterior(19353, 982.033100, -1296.448100, 14.476900, 9.399900, -0.799900, -89.986500);
-    SetDynamicObjectMaterialText(o, 0, "MARKET", 140, "Arial", 150, 1, -65536, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "BILLA", 140, "Arial", 150, 1, -65536, 0, 1);
     o = Map_Exterior(19353, 996.824000, -1296.447900, 15.518300, 0.000000, 0.000000, -89.466100);
-    SetDynamicObjectMaterialText(o, 0, "MARKET", 140, "Arial", 100, 1, -65536, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "BILLA", 140, "Arial", 100, 1, -65536, 0, 1);
     o = Map_Exterior(19353, 996.533900, -1294.529200, 21.508700, 0.000000, 0.000000, -89.965500);
-    SetDynamicObjectMaterialText(o, 0, "MARKET", 140, "Arial", 460, 1, -65536, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "BILLA", 140, "Arial", 460, 1, -65536, 0, 1);
     o = Map_Exterior(18762, 998.914000, -1296.025000, 14.538000, 0.000000, 0.000000, 0.000000);
     SetDynamicObjectMaterial(o, 0, 1975, "texttest", "kb_red", 0);
     o = Map_Exterior(18980, 995.855000, -1296.020000, 16.548000, 0.000000, 90.000000, 0.000000);

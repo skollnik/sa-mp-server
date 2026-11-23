@@ -1,4 +1,4 @@
-// Business exterior (step 4.5): a cafe with a terrace, for a bar.
+// Business exterior (step 4.5): Cafe Central, a cafe with a terrace, for a bar.
 stock Map_BizCafe()
 {
     new STREAMER_TAG_OBJECT:o;
@@ -67,9 +67,9 @@ stock Map_BizCafe()
     o = Map_Exterior(18766, 1653.374760, -1612.042850, 20.277500, -90.000000, 0.000000, 1.000000);
     SetDynamicObjectMaterial(o, 0, 2361, "shopping_freezers", "white", 0xFFF21010);
     o = Map_Exterior(7900, 1651.503170, -1609.931640, 20.254200, 0.000000, 0.000000, 181.014210);
-    SetDynamicObjectMaterialText(o, 0, "{FFFFFF} CENTAR", 130, "Calibri", 56, 1, -1, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "{FFFFFF} CENTRAL", 130, "Calibri", 56, 1, -1, 0, 1);
     o = Map_Exterior(7900, 1657.943240, -1609.861570, 20.184200, 0.000000, 0.000000, 181.014210);
-    SetDynamicObjectMaterialText(o, 0, "{FFFFFF}       KAFIC", 130, "Eras Light ITC", 56, 1, -1, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "{FFFFFF}        CAFE", 130, "Eras Light ITC", 56, 1, -1, 0, 1);
     Map_Exterior(14394, 1653.279660, -1599.947880, 13.390700, 0.000000, 0.000000, 270.329930);
     Map_Exterior(14394, 1661.232910, -1599.912720, 13.390700, 0.000000, 0.000000, 270.128910);
     Map_Exterior(19436, 1649.251340, -1601.218990, 12.374700, -36.000000, 0.000000, 1.840540);
@@ -115,4 +115,13 @@ stock Map_BizCafe()
     Map_Exterior(2027, 1637.447630, -1611.230350, 14.750200, 0.000000, 0.000000, 358.953800);
     Map_Exterior(14657, 1669.645510, -1616.247190, 14.687910, 0.000000, 0.000000, 270.684330);
     Map_Exterior(14657, 1669.570920, -1609.838990, 14.687910, 0.000000, 0.000000, 270.624330);
+}
+
+stock Map_BizCafe_Remove(playerid)
+{
+    RemoveBuildingForPlayer(playerid, 673, 1646.1172, -1604.7969, 12.5781, 0.25);
+    RemoveBuildingForPlayer(playerid, 673, 1655.4141, -1604.7969, 12.5781, 0.25);
+    RemoveBuildingForPlayer(playerid, 673, 1664.7031, -1604.7969, 12.5781, 0.25);
+    RemoveBuildingForPlayer(playerid, 673, 1674.0000, -1604.7969, 12.5781, 0.25);
+    RemoveBuildingForPlayer(playerid, 1283, 1664.9063, -1593.1250, 15.6250, 0.25);
 }

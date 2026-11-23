@@ -1,4 +1,4 @@
-// Business exterior (step 4.5): a mini market with a car park, for a 24/7.
+// Business exterior (step 4.5): the Lidl market with its car park.
 stock Map_BizMarketE()
 {
     new STREAMER_TAG_OBJECT:o;
@@ -98,17 +98,27 @@ stock Map_BizMarketE()
     o = Map_Exterior(19464, 1315.873410, -897.364320, 39.544620, 0.000000, 0.000000, 89.999990);
     SetDynamicObjectMaterial(o, 0, 13721, "mulhousclahills", "sanpednhus1r", 0xFFFFFFFF);
     o = Map_Exterior(19353, 1314.873050, -898.041500, 43.828600, 0.000000, 0.000000, -90.486800);
-    SetDynamicObjectMaterialText(o, 0, "M", 140, "Bodoni MT Black", 100, 1, -16776961, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "L", 140, "Bodoni MT Black", 100, 1, -16776961, 0, 1);
     o = Map_Exterior(19353, 1315.205080, -898.070620, 43.673470, 29.100000, -1.700000, -87.787700);
     SetDynamicObjectMaterialText(o, 0, "I", 140, "Bodoni MT Black", 100, 1, -3996154, 0, 1);
     o = Map_Exterior(19353, 1315.129880, -898.067260, 44.202470, 1.499900, 0.099900, -89.662200);
     SetDynamicObjectMaterialText(o, 0, ".", 140, "Bodoni MT Black", 150, 0, -3996154, 0, 1);
     o = Map_Exterior(19353, 1315.581910, -898.046630, 43.804350, 0.000000, 0.000000, -88.888800);
-    SetDynamicObjectMaterialText(o, 0, "N", 140, "Bodoni MT Black", 100, 0, -16776961, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "D", 140, "Bodoni MT Black", 100, 0, -16776961, 0, 1);
     o = Map_Exterior(19353, 1315.981810, -898.047000, 43.802700, 0.000000, 0.000000, -88.888800);
-    SetDynamicObjectMaterialText(o, 0, "I", 140, "Bodoni MT Black", 100, 1, -16776961, 0, 1);
+    SetDynamicObjectMaterialText(o, 0, "L", 140, "Bodoni MT Black", 100, 1, -16776961, 0, 1);
     o = Map_Exterior(19353, 1342.668000, -915.751400, 36.273200, 0.000000, 0.000000, 182.436800);
     SetDynamicObjectMaterialText(o, 0, "<<<<<<", 140, "Arial", 150, 0, -1, 0, 1);
     o = Map_Exterior(19353, 1342.651730, -915.760560, 37.115400, -0.099900, 0.100000, -177.523100);
     SetDynamicObjectMaterialText(o, 0, "PARKING", 140, "Arial", 120, 0, -1, 0, 1);
+}
+
+stock Map_BizMarketE_Remove(playerid)
+{
+    RemoveBuildingForPlayer(playerid, 5851, 1323.6641, -884.6328, 36.2500, 0.25);
+    RemoveBuildingForPlayer(playerid, 5852, 1315.3672, -887.4688, 41.7031, 0.25);
+    RemoveBuildingForPlayer(playerid, 1308, 1320.7734, -912.2344, 36.8438, 0.25);
+    RemoveBuildingForPlayer(playerid, 5847, 1295.8594, -895.0938, 41.7109, 0.25);
+    RemoveBuildingForPlayer(playerid, 5762, 1315.3672, -887.4688, 41.7031, 0.25);
+    RemoveBuildingForPlayer(playerid, 5845, 1323.6641, -884.6328, 36.2500, 0.25);
 }

@@ -70,6 +70,7 @@ stock Account_Init()
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `held_pay` INT NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `extra_vehicle_slots` TINYINT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `extra_house_slots` TINYINT UNSIGNED NOT NULL DEFAULT 0");
+    mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `extra_business_slots` TINYINT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `extra_furniture_slots` TINYINT UNSIGNED NOT NULL DEFAULT 0");
     mysql_tquery(g_SQL, "ALTER TABLE `accounts` ADD COLUMN IF NOT EXISTS `licenses` INT NOT NULL DEFAULT 0");
 
@@ -409,6 +410,7 @@ public OnAccountLookup(playerid, race)
     cache_get_value_name_int(0, "held_pay", g_Player[playerid][pHeldPay]);
     cache_get_value_name_int(0, "extra_vehicle_slots", g_Player[playerid][pExtraVehSlots]);
     cache_get_value_name_int(0, "extra_house_slots", g_Player[playerid][pExtraHouseSlots]);
+    cache_get_value_name_int(0, "extra_business_slots", g_Player[playerid][pExtraBizSlots]);
     cache_get_value_name_int(0, "extra_furniture_slots", g_Player[playerid][pExtraFurnSlots]);
     cache_get_value_name_int(0, "licenses", g_Player[playerid][pLicenses]);
     cache_get_value_name_int(0, "job", g_Player[playerid][pJob]);

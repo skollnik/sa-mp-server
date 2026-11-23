@@ -152,7 +152,7 @@ static stock Clothes_Buy(playerid, bool:wear)
         return;
     }
     new paid;
-    if (!Biz_Pay(playerid, CLOTHES_PRICE, "kupovina garderobe", paid))
+    if (!Biz_Pay(playerid, 0, CLOTHES_PRICE, "kupovina garderobe", paid))
     {
         return;
     }

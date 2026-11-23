@@ -54,6 +54,7 @@ enum E_PLAYER_DATA
     // Slots given by an admin on top of the usual and VIP ones (vehicles, houses, furniture pieces per house); saved only by /setmesta.
     pExtraVehSlots,
     pExtraHouseSlots,
+    pExtraBizSlots,
     pExtraFurnSlots,
     // One bit per E_LICENSE; saved only when it changes (school, /setdozvola).
     pLicenses,
