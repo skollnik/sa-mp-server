@@ -123,7 +123,7 @@ Tačnu cenu i nivo svake kuće admin određuje kad je pravi. Prodaja državi vra
 | Mala firma (24/7, bar) | $250.000–500.000 |
 | Velika firma (benzinska, klub) | $750.000–1.500.000 |
 
-**Firme:** tačnu cenu svake firme određuje admin. Za firmu treba **nivo 6**, najviše 1 po igraču (admin može dati još do 5, `/setmesta firme`). Kupljena od države dolazi sa pola od svakog artikla. Vlasnik postavlja jednu cenu za celu firmu, od **50% do 200%** državne cene. Roba se drži po artiklu: do **100 komada** svakog (gorivo do 10.000 l). Svaka prodaja ide u kasu i troši jedan komad tog artikla (gorivo: litar). Vlasnik bira artikal i količinu, a komad košta **35%** državne cene tog artikla (telefon $175, viski $4,20, hamburger $3,50) i stiže odmah, plaća se iz kase. Firma bez vlasnika prodaje po državnoj ceni i nikad ne ostaje bez robe. Prodaja državi vraća **70%**; vlasnik koji ne uđe **30 dana** gubi firmu i dobija **50%** i novac iz kase na račun. Prodaja igraču ide preko `/ponudi`, uz taksu 5% (kasa prazna, bez duga za porez). Ulaznica u bar i klub: **$0–500**, ide u kasu.
+**Firme:** tačnu cenu svake firme određuje admin. Za firmu treba **nivo 6**, najviše 1 po igraču (admin može dati još do 5, `/setmesta firme`). Kupljena od države dolazi sa pola od svakog artikla. Vlasnik postavlja jednu cenu za celu firmu, od **50% do 200%** državne cene. Roba se drži po artiklu: do **100 komada** svakog (gorivo do 10.000 l). Svaka prodaja ide u kasu i troši jedan komad tog artikla (gorivo: litar). Vlasnik bira artikal i količinu, a komad košta **35%** državne cene tog artikla (telefon $175, viski $4,20, hamburger $3,50) i stiže odmah, plaća se iz kase. Firma bez vlasnika prodaje po državnoj ceni i nikad ne ostaje bez robe. Prodaja državi vraća **70%**; vlasnik koji ne uđe **30 dana** gubi firmu i dobija **50%** i novac iz kase na račun. Prodaja igraču ide preko `/ponudi`, uz taksu 5% (kasa prazna, bez duga za porez). Ulaznica u klub: **$0–500**, ide u kasu.
 
 | Restoran | Cena | Glad |
 |---|---|---|
@@ -141,7 +141,7 @@ Tačnu cenu i nivo svake kuće admin određuje kad je pravi. Prodaja državi vra
 ### Porezi i troškovi (payday)
 - Kuća: 0.02% vrednosti (kuća od $150.000 plaća $30).
 - Vozilo: 0.01% kupovne cene (Sultan plaća $35).
-- Firma: 0.05% vrednosti (firma od $500.000 plaća $250), na svaku platu vlasnika: iz kase, pa sa računa, a ostatak je dug. Dug veći od 10% vrednosti: država oduzima firmu, a vlasnik dobija 50% vrednosti umanjeno za dug.
+- Firma: 0.05% vrednosti (firma od $500.000 plaća $250), na svaku platu vlasnika: iz kase, pa sa računa, a ostatak je dug. Dug veći od 1% vrednosti (kod firme od $500.000 to je $5.000, oko 20 neplaćenih plata): država oduzima firmu, a vlasnik dobija 50% vrednosti umanjeno za dug.
 
 ### Šta to znači u praksi (uz ~$1.200 po satu)
 | Cilj | Potrebno vreme rada |
@@ -289,7 +289,7 @@ Driving school (`/skola`): the price is paid before the theory and again after a
 | Small business (24/7, bar) | $250,000–500,000 |
 | Large business (gas station, club) | $750,000–1,500,000 |
 
-**Businesses:** the admin sets each business's price. A business needs **level 6**, at most 1 per player (an admin can give up to 5 more, `/setmesta firme`). Bought from the state, it comes with half of every item. The owner sets one price for the whole business, from **50% to 200%** of the state price. Stock is kept per item: up to **100 pieces** of each (fuel up to 10,000 l). Every sale goes into the till and uses one piece of that item (fuel: a litre). The owner picks the item and the amount, and a piece costs **35%** of that item's state price (a phone $175, whisky $4.20, a burger $3.50) and arrives at once, paid from the till. A business without an owner sells at the state price and never runs out. Selling to the state returns **70%**; an owner away **30 days** loses the business and gets **50%** and the till's money in the bank. Selling to a player goes through `/ponudi` with a 5% fee (empty till, no tax debt). The bar and club entry fee: **$0–500**, into the till.
+**Businesses:** the admin sets each business's price. A business needs **level 6**, at most 1 per player (an admin can give up to 5 more, `/setmesta firme`). Bought from the state, it comes with half of every item. The owner sets one price for the whole business, from **50% to 200%** of the state price. Stock is kept per item: up to **100 pieces** of each (fuel up to 10,000 l). Every sale goes into the till and uses one piece of that item (fuel: a litre). The owner picks the item and the amount, and a piece costs **35%** of that item's state price (a phone $175, whisky $4.20, a burger $3.50) and arrives at once, paid from the till. A business without an owner sells at the state price and never runs out. Selling to the state returns **70%**; an owner away **30 days** loses the business and gets **50%** and the till's money in the bank. Selling to a player goes through `/ponudi` with a 5% fee (empty till, no tax debt). The club entry fee: **$0–500**, into the till.
 
 | Restaurant | Price | Hunger |
 |---|---|---|
@@ -314,7 +314,7 @@ Each house's price and level are set by the admin who makes it. Selling to the s
 ### Taxes and upkeep (payday)
 - House: 0.02% of value (a $150,000 house pays $30).
 - Vehicle: 0.01% of purchase price (a Sultan pays $35).
-- Business: 0.05% of value (a $500,000 business pays $250), on each of the owner's paydays: from the till, then the bank, the rest is a debt. A debt over 10% of the value: the state takes the business and the owner gets 50% of the value less the debt.
+- Business: 0.05% of value (a $500,000 business pays $250), on each of the owner's paydays: from the till, then the bank, the rest is a debt. A debt over 1% of the value (for a $500,000 business that is $5,000, about 20 unpaid paydays): the state takes the business and the owner gets 50% of the value less the debt.
 
 ### What that means in practice (at ~$1,200 per hour)
 | Goal | Work time needed |

@@ -305,7 +305,7 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Dve benzinske dele iste pumpe | ⚠️ | Pumpa pripada prvoj benzinskoj do 50 m; admin ne pravi dve benzinske bliže od 100 m (`/finfo` pokazuje broj pumpi) |
 | Firma se briše ili joj se menja tip dok su igrači unutra | ✅ | Svi iz njenog sveta se izbacuju napolje pre brisanja i promene tipa, jer se ID ponovo koristi |
 | Prodaja firme sa novcem u kasi ili sa dugom | ✅ | Kasa mora biti prazna i firma bez duga (kao sef kod kuće); pri oduzimanju novac iz kase ide vlasniku na račun |
-| Vlasnik izbegava porez | ✅ | Porez ide na svaku platu vlasnika (kasa, pa račun, pa dug); dug preko 10% vrednosti ili 30 dana neaktivnosti vraća firmu državi |
+| Vlasnik izbegava porez | ✅ | Porez ide na svaku platu vlasnika (kasa, pa račun, pa dug); dug preko 1% vrednosti ili 30 dana neaktivnosti vraća firmu državi |
 | Ulaznica u klub naplaćena, a igrač nije ušao | ✅ | Plaća se tek posle potvrde, i to samo ako igrač još stoji na ulazu i klub je otvoren; vlasnik i admin na dužnosti ulaze besplatno |
 | Virtuelni svet firme se poklopi sa kućom ili zatvorom | ✅ | Firme su 6000 + ID (do 200), kuće 5000 + ID (do 500), zatvor 9999 |
 | Ime firme sa bojama ili znakom % | ✅ | Dozvoljeni su samo obični znakovi, bez { } % i ~, 3-32 znaka; admin može da promeni ime (`/izmenifirmu`) |
@@ -313,6 +313,8 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Spoljne mape firmi preklapaju postojeće mape ili pumpe | ✅ | Market kod auto pijace, market kod bolnice i picerija kod banke su blizu postojećih mapa, ali nijedan objekat nije bliže od 8 m; nova benzinska u Idlewood-u dodaje aparate pored postojećih pumpi, a mesta `pumpa` ostaju slobodna |
 | Jetpack admina se prijavljuje kao brzina pešaka | ✅ | Brzina pešaka se ne proverava dok igrač ima jetpack koji mu je server dao; jetpack koji server nije dao i dalje izbacuje sa servera |
 | Mapa stoji preko GTA zgrade koju je referentni mod uklanjao (treperenje, dupli objekti) | ✅ | Za svaku mapu proverena su uklanjanja iz referentnog moda i preneta u `_Remove` funkcije (kafić, Lidl, picerija) |
+| Nova benzinska u Idlewood-u uklanja GTA pumpe, a mesta `pumpa` ostanu tamo gde su bile | ⚠️ | Mapa ima svoje pumpe na x 1936.7 (y -1785 do -1771); mesto `pumpa` na 1939, -1773 ih pokriva, a ono na 1944, -1773 je na mestu uklonjene GTA pumpe i vlasnik ga premešta pored novih |
+| Picerija kod banke uklanja veliku GTA zgradu pored banke | ✅ | Naša mapa banke je ista ona sa kojom je picerija stajala na referentnom modu (ista uklanjanja); nijedan objekat dve mape nije bliži od 8 m |
 | Prodaja artikla koga firma nema | ✅ | Svaki artikal ima svoje stanje; meni pokazuje "ima N" ili "nema", a kupovina bez stanja se odbija i vlasnik dobija poruku |
 | Igrač dobije više firmi nego što sme | ✅ | Kupovina i `/ponudi` proveravaju broj firmi prema 1 + dodatna mesta od admina; oduzimanje mesta ne oduzima firme |
 | Igrač koristi pregled enterijera firmi | ✅ | `/enterijerifirmi` radi samo glavnom adminu na dužnosti; posmatranje i vozilo rešava isti teleport kao `/tp` |
@@ -677,7 +679,7 @@ Every new system or change goes through these questions, against all existing sy
 | Two gas stations share the same pumps | ⚠️ | A pump belongs to the first station within 50 m; admins do not place two stations closer than 100 m (`/finfo` shows the pump count) |
 | A business is deleted or its type changed while players are inside | ✅ | Everyone in its world is put outside before the delete and the type change, since the ID is reused |
 | Selling a business with money in the till or a debt | ✅ | The till must be empty and the business without debt (like the safe for a house); when it is taken, the till goes to the owner's bank |
-| The owner dodges the tax | ✅ | The tax comes on every payday of the owner (till, then bank, then debt); a debt over 10% of the value or 30 days away returns it to the state |
+| The owner dodges the tax | ✅ | The tax comes on every payday of the owner (till, then bank, then debt); a debt over 1% of the value or 30 days away returns it to the state |
 | The club fee is charged but the player does not get in | ✅ | It is paid only after the confirmation, and only if the player still stands at the entrance and the club is open; the owner and admins on duty get in free |
 | A business's virtual world clashes with a house or the jail | ✅ | Businesses are 6000 + ID (up to 200), houses 5000 + ID (up to 500), the jail 9999 |
 | A business name with colours or a % sign | ✅ | Only plain characters, no { } % or ~, 3-32 characters; an admin can change the name (`/izmenifirmu`) |
@@ -685,6 +687,8 @@ Every new system or change goes through these questions, against all existing sy
 | Business exterior maps overlap existing maps or pumps | ✅ | The market by the car market, the market by the hospital and the pizzeria by the bank are close to existing maps, but no object is within 8 m; the new Idlewood gas station adds pumps next to the existing ones, and the `pumpa` points stay clear |
 | An admin's jetpack is reported as running speed | ✅ | Running speed is not checked while the player has a jetpack the server gave; a jetpack the server did not give still kicks |
 | A map stands over a GTA building the reference mod removed (flickering, doubled objects) | ✅ | Every map's removals from the reference mod were checked and moved into `_Remove` functions (cafe, Lidl, pizzeria) |
+| The new Idlewood gas station removes the GTA pumps, and the `pumpa` points stay where they were | ⚠️ | The map has its own pumps at x 1936.7 (y -1785 to -1771); the `pumpa` point at 1939, -1773 covers them, the one at 1944, -1773 is where a removed GTA pump stood and the owner moves it next to the new ones |
+| The pizzeria by the bank removes a large GTA building next to the bank | ✅ | Our bank map is the same one the pizzeria stood with in the reference mod (same removals); no object of the two maps is within 8 m |
 | Selling an item the business does not have | ✅ | Each item has its own stock; the menu shows "ima N" or "nema", a purchase without stock is refused and the owner is told |
 | A player gets more businesses than allowed | ✅ | Buying and `/ponudi` check the count against 1 + the admin's extra places; taking places back takes no business away |
 | A player uses the business interior preview | ✅ | `/enterijerifirmi` works only for a head admin on duty; spectating and vehicles are handled by the same teleport as `/tp` |

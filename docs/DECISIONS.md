@@ -242,6 +242,8 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 234 | 2026-11-23 | Roba po artiklu: do 100 komada svakog artikla (gorivo do 10.000 l), narudžbina po artiklu po 35% njegove državne cene; prodajna cena ostaje jedan procenat za celu firmu; magacinskih slotova nema | Zahtev vlasnika |
 | 235 | 2026-11-23 | Dodatna mesta za firme po igraču daje admin (`/setmesta firme`, 0-5), kao za vozila i kuće; `/firma` daleko od firme pokazuje spisak firmi i slobodnih mesta | Zahtev vlasnika |
 | 236 | 2026-11-23 | Ulaznica se postavlja i za bar, ne samo za klub | Predlog odobren |
+| 237 | 2026-11-23 | Ulaznica ostaje samo za klub; država oduzima firmu kad dug za porez pređe 1% vrednosti | Izbor vlasnika |
+| 238 | 2026-11-23 | Spoljne mape: Tempo, Billa, Konzum i Eko su izbačeni; butik, prvi market, picerije kod banke i bolnice i prva benzinska u Idlewood-u su vraćeni sa originalnim natpisima i sa uklanjanjem GTA objekata kao na referentnim modovima (benzinska uklanja GTA nadstrešnicu, prodavnicu i pumpe) | Pregled vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -505,6 +507,8 @@ This file records every important decision so it does not get re-discussed. Newe
 | 234 | 2026-11-23 | Stock per item: up to 100 pieces of each item (fuel up to 10,000 l), ordered item by item at 35% of its state price; the selling price stays one share for the whole business; no store room slots | The owner's request |
 | 235 | 2026-11-23 | Admins give extra business places per player (`/setmesta firme`, 0-5), like vehicles and houses; `/firma` away from a business lists the businesses and free places | The owner's request |
 | 236 | 2026-11-23 | The entry fee can be set for the bar too, not only the club | Proposal approved |
+| 237 | 2026-11-23 | The entry fee stays for the club only; the state takes a business when the tax debt passes 1% of the value | The owner's pick |
+| 238 | 2026-11-23 | Exterior maps: Tempo, Billa, Konzum and Eko are dropped; the boutique, the first market, the pizzerias by the bank and the hospital and the first Idlewood gas station are back with their original signs and with the GTA objects removed as in the reference mods (the gas station removes the GTA canopy, shop and pumps) | The owner's review |
 
 ### Code architecture (proposal)
 ```

@@ -38,7 +38,7 @@
 // Tax per payday the owner gets, in hundredths of a percent of the business value (5 is 0.05%).
 #define BIZ_TAX_PER_10000       (5)
 // Unpaid tax above this share of the value and the state takes the business.
-#define BIZ_DEBT_PERCENT        (10)
+#define BIZ_DEBT_PERCENT        (1)
 #define BIZ_FEE_MAX             (500)
 #define BIZ_NAME_MIN            (3)
 #define BIZ_NAME_MAX            (32)
@@ -88,7 +88,7 @@ new const g_BizTypes[E_BIZ_TYPE][E_BIZ_TYPE_INFO] =
 {
     { "24/7",       0,  17, false },
     { "Restoran",   2,  50, false },
-    { "Bar",        3,  49, true },
+    { "Bar",        3,  49, false },
     { "Klub",       4,  48, true },
     { "Odeca",      5,  45, false },
     { "Benzinska",  -1, 47, false }
