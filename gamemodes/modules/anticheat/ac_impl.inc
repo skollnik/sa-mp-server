@@ -239,7 +239,9 @@ stock AC_CheckMovement(playerid, PLAYER_STATE:player_state)
             format(details, sizeof(details), "%.0f m za 1 s", distance);
             AC_Alert(playerid, AC_TYPE_TELEPORT, details);
         }
-        else if (distance > AC_MAX_FOOT_SPEED)
+        // A jetpack the server gave flies faster than anyone runs; one it did not give is kicked by the jetpack check.
+        else if (distance > AC_MAX_FOOT_SPEED
+            && !(GetPlayerSpecialAction(playerid) == SPECIAL_ACTION_USEJETPACK && Staff_AllowsJetpack(playerid)))
         {
             format(details, sizeof(details), "%.0f km/h peske", distance * 3.6);
             AC_Alert(playerid, AC_TYPE_FOOT_SPEED, details);

@@ -236,6 +236,8 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 228 | 2026-11-21 | Benzinska nema enterijer: njene pumpe su mesta `pumpa` do 50 m od firme; pumpe van svake benzinske ostaju državne | Gorivo se toči napolju; igrač nikad ne ostaje bez goriva |
 | 229 | 2026-11-21 | Prodavnica oružja čeka dozvolu za oružje (LIC-3, policija u Fazi 5); mehaničarska radionica ostaje posao | Odluka prepuštena; prodaja oružja bez dozvole nije RP |
 | 230 | 2026-11-21 | 24/7 i odeća u firmi rade isto kao do sada (isti meni, loto, SIM i dopuna kredita), a SIM, dopuna i loto su državne usluge i ne idu u kasu. Postojeća mesta `prodavnica` i `odeca` admin briše kad postavi firme | Sva kupovina ide kroz firme, usluge ostaju iste |
+| 231 | 2026-11-23 | Spoljne mape za firme: butik, kafić, sređena benzinska u Idlewood-u, pet marketa i tri picerije (11 mapa, 1003 objekta), samo sa modelima i teksturama iz igre. Imena pravih lanaca i brendova na natpisima su zamenjena srpskim rečima (MARKET, Picerija, Kafic Centar, Farmerke...). Kopija pravog lanca brze hrane je izbačena, jer su njeni logoi i slova sam brend. Mehaničari nisu ubačeni (to je posao, ne firma) | Zahtev vlasnika: dodati sve spoljne mape za firme |
+| 232 | 2026-11-23 | Ulaz u restoran (Cluckin' Bell) je kod vrata (365.67, -10.71), tačka koju referentni modovi najčešće koriste; jetpack koji je server dao ne prijavljuje se kao brzina pešaka | Prijava vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -493,6 +495,8 @@ This file records every important decision so it does not get re-discussed. Newe
 | 228 | 2026-11-21 | The gas station has no interior: its pumps are the `pumpa` points within 50 m of the business; pumps outside every station stay the state's | Fuel is pumped outside; a player never runs out of places to refuel |
 | 229 | 2026-11-21 | The gun shop waits for the weapon license (LIC-3, police in Phase 5); the mechanic shop stays a job | Left to me; selling guns without a license is not RP |
 | 230 | 2026-11-21 | 24/7 and clothes in a business work as before (same menu, lottery, SIM and credit top-up), and the SIM, top-up and lottery are state services that do not go into the till. Admins delete the existing `prodavnica` and `odeca` points once businesses are placed | All shopping goes through businesses, the services stay the same |
+| 231 | 2026-11-23 | Exterior maps for businesses: a boutique, a cafe, the Idlewood gas station rebuilt, five markets and three pizzerias (11 maps, 1003 objects), only with the game's models and textures. Real chain and brand names on signs are replaced with Serbian words (MARKET, Picerija, Kafic Centar, Farmerke...). A copy of a real fast food chain is left out, since its logos and letters are the brand itself. The mechanics are not added (a job, not a business) | The owner's request: add every exterior map for businesses |
+| 232 | 2026-11-23 | The restaurant (Cluckin' Bell) entry is at the door (365.67, -10.71), the spot reference mods use most; a jetpack the server gave is not reported as running speed | The owner's report |
 
 ### Code architecture (proposal)
 ```

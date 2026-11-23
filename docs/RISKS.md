@@ -310,6 +310,8 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Virtuelni svet firme se poklopi sa kućom ili zatvorom | ✅ | Firme su 6000 + ID (do 200), kuće 5000 + ID (do 500), zatvor 9999 |
 | Ime firme sa bojama ili znakom % | ✅ | Dozvoljeni su samo obični znakovi, bez { } % i ~, 3-32 znaka; admin može da promeni ime (`/izmenifirmu`) |
 | Igrač jede ili pije u restoranu u vozilu, zatvoru ili zamrznut | ✅ | Samo peške i kad nije zauzet; sit igrač ne može da jede (kao hrana iz inventara) |
+| Spoljne mape firmi preklapaju postojeće mape ili pumpe | ✅ | Market kod auto pijace, market kod bolnice i picerija kod banke su blizu postojećih mapa, ali nijedan objekat nije bliže od 8 m; nova benzinska u Idlewood-u dodaje aparate pored postojećih pumpi, a mesta `pumpa` ostaju slobodna |
+| Jetpack admina se prijavljuje kao brzina pešaka | ✅ | Brzina pešaka se ne proverava dok igrač ima jetpack koji mu je server dao; jetpack koji server nije dao i dalje izbacuje sa servera |
 | Igrač koristi pregled enterijera firmi | ✅ | `/enterijerifirmi` radi samo glavnom adminu na dužnosti; posmatranje i vozilo rešava isti teleport kao `/tp` |
 | Sef na plafonu ili u zidu | ✅ | Sef stoji korak ispred vlasnika, uvek na površini ispod sebe (kolizije iz igre), ne sme iza zida ni u zid; postavlja se samo peške i u kući |
 | Nameštaj kroz spoljni zid ili iza zida | ✅ | Zrak od igrača do sredine predmeta ne sme udariti u zid; zraci od sredine ka stranama ne smeju udariti zid pre 15 cm od ivice |
@@ -677,6 +679,8 @@ Every new system or change goes through these questions, against all existing sy
 | A business's virtual world clashes with a house or the jail | ✅ | Businesses are 6000 + ID (up to 200), houses 5000 + ID (up to 500), the jail 9999 |
 | A business name with colours or a % sign | ✅ | Only plain characters, no { } % or ~, 3-32 characters; an admin can change the name (`/izmenifirmu`) |
 | A player eats or drinks in a restaurant in a vehicle, in jail or frozen | ✅ | Only on foot and when not busy; a full player cannot eat (like food from the inventory) |
+| Business exterior maps overlap existing maps or pumps | ✅ | The market by the car market, the market by the hospital and the pizzeria by the bank are close to existing maps, but no object is within 8 m; the new Idlewood gas station adds pumps next to the existing ones, and the `pumpa` points stay clear |
+| An admin's jetpack is reported as running speed | ✅ | Running speed is not checked while the player has a jetpack the server gave; a jetpack the server did not give still kicks |
 | A player uses the business interior preview | ✅ | `/enterijerifirmi` works only for a head admin on duty; spectating and vehicles are handled by the same teleport as `/tp` |
 | The safe on the ceiling or in a wall | ✅ | The safe stands a step in front of the owner, always on the surface below it (the game's collision), never behind or in a wall; placed only on foot and inside the house |
 | Furniture through the outer wall or behind a wall | ✅ | A ray from the player to the piece's middle must not hit a wall; rays from the middle to the sides must not hit one before 15 cm from the edge |
