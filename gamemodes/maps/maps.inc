@@ -41,11 +41,8 @@ stock STREAMER_TAG_OBJECT:Map_Interior(modelid, Float:x, Float:y, Float:z, Float
 #include "maps/exteriors/driving_school_elcorona.inc"
 #include "maps/exteriors/biz_cafe.inc"
 #include "maps/exteriors/biz_boutique.inc"
-#include "maps/exteriors/biz_gas_idlewood.inc"
-#include "maps/exteriors/biz_market_a.inc"
+#include "maps/exteriors/biz_gas_omv.inc"
 #include "maps/exteriors/biz_market_e.inc"
-#include "maps/exteriors/biz_pizza_a.inc"
-#include "maps/exteriors/biz_pizza_b.inc"
 #include "maps/exteriors/biz_pizza_c.inc"
 
 #include "maps/interiors/cityhall_a.inc"
@@ -69,11 +66,8 @@ stock Maps_Init()
     Map_HospitalExterior();
     Map_BizCafe();
     Map_BizBoutique();
-    Map_BizGasIdlewood();
-    Map_BizMarketA();
+    Map_BizGasOmv();
     Map_BizMarketE();
-    Map_BizPizzaA();
-    Map_BizPizzaB();
     Map_BizPizzaC();
 
     Map_CityHallInteriorA();
@@ -95,10 +89,7 @@ stock Maps_OnPlayerConnect(playerid)
     Map_DrivingSchoolElCorona_Remove(playerid);
     Map_BizCafe_Remove(playerid);
     Map_BizBoutique_Remove(playerid);
-    Map_BizMarketA_Remove(playerid);
-    Map_BizPizzaA_Remove(playerid);
-    Map_BizPizzaB_Remove(playerid);
-    Map_BizGasIdlewood_Remove(playerid);
+    Map_BizGasOmv_Remove(playerid);
     Map_BizMarketE_Remove(playerid);
     Map_BizPizzaC_Remove(playerid);
 }

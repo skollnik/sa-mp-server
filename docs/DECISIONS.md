@@ -244,6 +244,7 @@ Ovde se beleži svaka važna odluka, da se ne bi ponovo raspravljalo o njoj. Nov
 | 236 | 2026-11-23 | Ulaznica se postavlja i za bar, ne samo za klub | Predlog odobren |
 | 237 | 2026-11-23 | Ulaznica ostaje samo za klub; država oduzima firmu kad dug za porez pređe 1% vrednosti | Izbor vlasnika |
 | 238 | 2026-11-23 | Spoljne mape: Tempo, Billa, Konzum i Eko su izbačeni; butik, prvi market, picerije kod banke i bolnice i prva benzinska u Idlewood-u su vraćeni sa originalnim natpisima i sa uklanjanjem GTA objekata kao na referentnim modovima (benzinska uklanja GTA nadstrešnicu, prodavnicu i pumpe) | Pregled vlasnika |
+| 239 | 2026-11-23 | Izbačeni su prvi market, obe picerije (kod banke i bolnice) i prva benzinska u Idlewood-u: pod te benzinske treperi jer su u samoj mapi dve ploče poda jedna preko druge (tako je i na referentnom modu, drugih uklanjanja nema). Nova benzinska je OMV u Temple-u (oko 1005, -937): uklanja GTA nadstrešnicu i stavlja istu obojenu. OMV u Idlewood-u nije uzet jer pravi kopiju GTA poda stanice bez uklanjanja originala. Butik nema poseban enterijer: unutrašnjost je mapirana na licu mesta (pod, police, lutke, kasa) | Pregled vlasnika |
 
 ### Arhitektura koda (predlog)
 ```
@@ -509,6 +510,7 @@ This file records every important decision so it does not get re-discussed. Newe
 | 236 | 2026-11-23 | The entry fee can be set for the bar too, not only the club | Proposal approved |
 | 237 | 2026-11-23 | The entry fee stays for the club only; the state takes a business when the tax debt passes 1% of the value | The owner's pick |
 | 238 | 2026-11-23 | Exterior maps: Tempo, Billa, Konzum and Eko are dropped; the boutique, the first market, the pizzerias by the bank and the hospital and the first Idlewood gas station are back with their original signs and with the GTA objects removed as in the reference mods (the gas station removes the GTA canopy, shop and pumps) | The owner's review |
+| 239 | 2026-11-23 | The first market, both pizzerias (by the bank and the hospital) and the first Idlewood gas station are dropped: that station's floor flickers because the map itself lays two floor plates on top of each other (the same in the reference mod, which removes nothing else). The new gas station is the OMV in Temple (around 1005, -937): it removes the GTA canopy and puts the same one recoloured. The Idlewood OMV is not taken since it copies the station's GTA floor without removing the original. The boutique has no separate interior: its inside is mapped in place (floor, racks, mannequins, a till) | The owner's review |
 
 ### Code architecture (proposal)
 ```
