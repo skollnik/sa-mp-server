@@ -1002,7 +1002,7 @@ static stock Biz_Create(playerid, E_BIZ_TYPE:type)
 // The first row puts the business back on its type's own interior.
 static stock Biz_ShowInteriors(playerid, for_dbid)
 {
-    new body[512];
+    new body[sizeof(g_BizInteriors) * 44 + 16];
     g_BizTypeFor[playerid] = for_dbid;
     strcopy(body, "Po tipu firme\n");
     for (new i = 0; i < sizeof(g_BizInteriors); i++)

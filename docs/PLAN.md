@@ -75,7 +75,7 @@ Cilj: igrač može da se registruje, napravi karakter, igra i izađe, a sve se �
 - [x] Korak 4.3b: `/kinfo`, dodatna mesta za kuće i nameštaj (`/setmesta`), ormar za svaku kuću i magacin, sef kao predmet koji se postavlja mišem
 - [x] Korak 4.4: PROP-4 nameštaj (prodavnica `namestaj`, `/namestaj`, postavljanje mišem, prodaja za 50%)
 - [x] Dorada 4.4: kolizije iz igre (ColAndreas): nameštaj ne ide kroz zid i ne lebdi; sef kao bankomat
-- [ ] PROP-6, PROP-7: firme (korak 4.5 napisan: 24/7, restoran, bar, klub, odeća, benzinska; čeka test; oružje sa LIC-3)
+- [ ] PROP-6, PROP-7: firme (korak 4.5 napisan: 24/7, restoran, bar, klub, odeća, benzinska; čeka test i izbor spoljnih mapa i enterijera; oružje sa LIC-3)
 - [ ] JOB-1, JOB-2: okvir za poslove i kamiondžija (PROP-8)
 - [ ] ADM-5: alati za kreiranje u igri
 - [ ] ECO-3: porezi
@@ -194,7 +194,7 @@ Goal: a player can register, create a character, play and quit, and everything i
 - [x] Step 4.3b: `/kinfo`, extra house and furniture slots (`/setmesta`), a wardrobe per house and the stash, the safe as an object placed with the mouse
 - [x] Step 4.4: PROP-4 furniture (the `namestaj` shop, `/namestaj`, placing with the mouse, selling for 50%)
 - [x] 4.4 rework: the game's collision (ColAndreas): furniture does not go through walls or float; the safe like an ATM
-- [ ] PROP-6, PROP-7: businesses (step 4.5 written: 24/7, restaurant, bar, club, clothes, gas station; waiting for the test; guns with LIC-3)
+- [ ] PROP-6, PROP-7: businesses (step 4.5 written: 24/7, restaurant, bar, club, clothes, gas station; waiting for the test and the pick of exteriors and interiors; guns with LIC-3)
 - [ ] JOB-1, JOB-2: job framework and trucker (PROP-8)
 - [ ] ADM-5: in-game creation tools
 - [ ] ECO-3: taxes

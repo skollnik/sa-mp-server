@@ -316,6 +316,9 @@ Za svaki novi sistem ili izmenu prolazi se kroz ova pitanja, za sve postojeće s
 | Benzinska stoji preko GTA zgrade (dvostruki objekti, treperenje) | ✅ | OMV u Temple-u uklanja GTA nadstrešnicu (5898, 5853) koju zamenjuje; pumpe stanice ostaju GTA, a mesta `pumpa` za nju pravi admin |
 | Admin promeni enterijer firme dok su igrači unutra | ✅ | Svi iz sveta firme se izbacuju napolje pre promene, kao kod promene tipa |
 | Enterijer SECONDHAND stoji na tlu aerodroma u LV (z 10-14) | ✅ | Tako je i na referentnom modu (njihov enterijer 30); kod nas je u enterijeru 20 i ne preklapa se ni sa jednom drugom mapom |
+| McDonald's uklanja ceo GTA Burger Shot u Vinewood-u (zgradu, LOD i vrata) | ✅ | Mapa gradi novu zgradu na istom mestu, a uklanjanja su preneta tačno kao u referentnom modu; ako mapa ne prođe izbor, briše se zajedno sa uklanjanjima |
+| Klijent pamti uklonjene GTA zgrade dok se igra ne ugasi | ⚠️ | Posle brisanja mape koja je uklanjala zgradu, rupa ostaje dok se igra potpuno ne zatvori; ponovno povezivanje na server je ne vraća |
+| Novi enterijeri u enterijeru 20 (aksesoari, Balkan Caffe) | ✅ | Proverene granice svih mapa u enterijeru 20: nijedan objekat nije bliži od 8 m drugoj mapi |
 | Prodaja artikla koga firma nema | ✅ | Svaki artikal ima svoje stanje; meni pokazuje "ima N" ili "nema", a kupovina bez stanja se odbija i vlasnik dobija poruku |
 | Igrač dobije više firmi nego što sme | ✅ | Kupovina i `/ponudi` proveravaju broj firmi prema 1 + dodatna mesta od admina; oduzimanje mesta ne oduzima firme |
 | Igrač koristi pregled enterijera firmi | ✅ | `/enterijerifirmi` radi samo glavnom adminu na dužnosti; posmatranje i vozilo rešava isti teleport kao `/tp` |
@@ -691,6 +694,9 @@ Every new system or change goes through these questions, against all existing sy
 | A gas station stands over a GTA building (doubled objects, flickering) | ✅ | The OMV in Temple removes the GTA canopy (5898, 5853) it replaces; the station's pumps stay the game's, and an admin makes its `pumpa` points |
 | An admin changes a business's interior while players are inside | ✅ | Everyone in the business's world is put outside before the change, as when the type changes |
 | The SECONDHAND interior stands on the LV airport ground (z 10-14) | ✅ | The same as in the reference mod (their interior 30); here it is in interior 20 and overlaps no other map |
+| The McDonald's removes the whole GTA Burger Shot in Vinewood (building, LOD and door) | ✅ | The map builds a new building in the same place and the removals are ported exactly as in the reference mod; if the map is not picked, it is deleted together with its removals |
+| The client keeps removed GTA buildings until the game is closed | ⚠️ | After a map that removed a building is deleted, the hole stays until the game is fully closed; reconnecting to the server does not bring it back |
+| New interiors in interior 20 (accessories, Balkan Caffe) | ✅ | The bounds of every interior-20 map are checked: no object is within 8 m of another map |
 | Selling an item the business does not have | ✅ | Each item has its own stock; the menu shows "ima N" or "nema", a purchase without stock is refused and the owner is told |
 | A player gets more businesses than allowed | ✅ | Buying and `/ponudi` check the count against 1 + the admin's extra places; taking places back takes no business away |
 | A player uses the business interior preview | ✅ | `/enterijerifirmi` works only for a head admin on duty; spectating and vehicles are handled by the same teleport as `/tp` |

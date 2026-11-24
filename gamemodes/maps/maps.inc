@@ -43,6 +43,10 @@ stock STREAMER_TAG_OBJECT:Map_Interior(modelid, Float:x, Float:y, Float:z, Float
 #include "maps/exteriors/biz_secondhand.inc"
 #include "maps/exteriors/biz_market_e.inc"
 #include "maps/exteriors/biz_pizza_c.inc"
+#include "maps/exteriors/biz_accessories.inc"
+#include "maps/exteriors/biz_seven_unity.inc"
+#include "maps/exteriors/biz_seven_commerce.inc"
+#include "maps/exteriors/biz_mcdonalds.inc"
 
 #include "maps/interiors/cityhall_a.inc"
 #include "maps/interiors/police_a.inc"
@@ -51,6 +55,8 @@ stock STREAMER_TAG_OBJECT:Map_Interior(modelid, Float:x, Float:y, Float:z, Float
 #include "maps/interiors/hospital.inc"
 #include "maps/interiors/driving_school_elcorona.inc"
 #include "maps/interiors/biz_secondhand.inc"
+#include "maps/interiors/biz_accessories.inc"
+#include "maps/interiors/biz_balkan_caffe.inc"
 
 stock Maps_Init()
 {
@@ -68,6 +74,10 @@ stock Maps_Init()
     Map_BizSecondhand();
     Map_BizMarketE();
     Map_BizPizzaC();
+    Map_BizAccessories();
+    Map_BizSevenUnity();
+    Map_BizSevenCommerce();
+    Map_BizMcDonalds();
 
     Map_CityHallInteriorA();
     Map_PoliceInteriorA();
@@ -76,6 +86,8 @@ stock Maps_Init()
     Map_HospitalInterior();
     Map_DrivingSchoolElCoronaInterior();
     Map_BizSecondhandInterior();
+    Map_BizAccessoriesInterior();
+    Map_BizBalkanCaffeInterior();
 
     printf("[MAPS] %d objects created.", CountDynamicObjects());
 }
@@ -90,4 +102,5 @@ stock Maps_OnPlayerConnect(playerid)
     Map_BizCafe_Remove(playerid);
     Map_BizMarketE_Remove(playerid);
     Map_BizPizzaC_Remove(playerid);
+    Map_BizMcDonalds_Remove(playerid);
 }

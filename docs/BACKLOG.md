@@ -205,6 +205,8 @@ Brojevi mapa (#) su iz atlasa mapa. Svaka stavka se pre izrade predlaže vlasnik
 | Presvlačenje iz `/inv` radi i pored mesta „odeca“, koje je postavljeno napolju (1521, -1710): da li ostaje tako, da li se mesto pomera unutra ili se kesa oblači samo kod kuće (18.11.2026.) |
 | Da li je „trafika“ naša prodavnica 24/7 ili posebno mesto (kockice i novčić su sada u 24/7) |
 | Da li VIP dobija više nameštaja po kući (sada samo admin `/setmesta namestaj`) (19.11.2026.) |
+| Izbor spoljnih mapa i enterijera za firme: ubačeni kandidati (aksesoari kod Unity-ja, McDonald's u Vinewood-u, SEVEN 24 kod Unity-ja i u Commerce-u, Balkan Caffe i GTA enterijeri odeće, hrane i Alhambra); nakon izbora vlasnika neizabrani se brišu (24.11.2026.) |
+| Rupa na mestu starog butika kod auto pijace (1686, -1186): u kodu nema uklanjanja tamo; čeka proveru vlasnika posle potpunog gašenja igre (24.11.2026.) |
 
 ### Može bilo kada
 | Stavka |
@@ -540,6 +542,8 @@ Map numbers (#) are from the map atlas. Every item is proposed to the owner befo
 | Changing clothes from `/inv` also works by the "odeca" point, which is placed outside (1521, -1710): keep it, move the point inside, or wear a bag only at home (2026-11-18) |
 | Is the "kiosk" our 24/7 shop or a separate place (dice and coin are now at the 24/7) |
 | Should VIP get more furniture per house (now only admin `/setmesta namestaj`) (2026-11-19) |
+| Picking business exteriors and interiors: candidates added (accessories by Unity, McDonald's in Vinewood, SEVEN 24 by Unity and in Commerce, Balkan Caffe and the game's clothes, food and Alhambra interiors); after the owner's pick the rest are deleted (2026-11-24) |
+| A hole where the old boutique by the car market stood (1686, -1186): the code removes nothing there; waiting for the owner's check after fully closing the game (2026-11-24) |
 
 ### Any time
 | Item |

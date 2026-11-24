@@ -53,8 +53,8 @@ enum E_BIZ_INTERIOR
     Float:biA
 }
 
-// The game's own interiors the owner picked for businesses. A business type points at one by index, so new ones
-// are only appended. The gun shop waits for the weapon license (LIC-3).
+// Business interiors: the game's own and mapped ones. A business type and an admin's pick point at one by index, so new
+// ones are only appended. The gun shop waits for the weapon license (LIC-3).
 new const g_BizInteriors[][E_BIZ_INTERIOR] =
 {
     { "24/7",                           17, -25.8845,  -185.8689, 1003.5469, 0.0 },
@@ -64,7 +64,19 @@ new const g_BizInteriors[][E_BIZ_INTERIOR] =
     { "Klub (Pig Pen)",                 2,  1204.8099, -11.5868,  1000.9219, 0.0 },
     { "Odeca (Binco)",                  15, 207.7380,  -109.0200, 1005.1328, 0.0 },
     // Mapped in MAP_INTERIOR_ID; the inside of the Secondhand shop front in Downtown, entered just past its only door.
-    { "Odeca (Secondhand, mapa)",       MAP_INTERIOR_ID, 1529.6700, 1563.2000, 11.5000, 0.0 }
+    { "Odeca (Secondhand, mapa)",       MAP_INTERIOR_ID, 1529.6700, 1563.2000, 11.5000, 0.0 },
+    // Candidates for the owner's pick: each matches a game shop front or a mapped one (docs/DECISIONS.md).
+    { "Odeca (ZIP)",                    18, 161.6730,  -95.5809,  1001.8047, 0.0 },
+    { "Odeca (Victim)",                 5,  225.2378,  -8.0487,   1002.2109, 90.0 },
+    { "Odeca (Pro-Laps)",               3,  207.0550,  -138.8050, 1003.5078, 0.0 },
+    { "Odeca (Didier Sachs)",           14, 204.3330,  -166.6950, 1000.5234, 0.0 },
+    { "Odeca (SubUrban)",               1,  203.7780,  -48.4924,  1001.8000, 0.0 },
+    { "Odeca (Aksesoari, mapa)",        MAP_INTERIOR_ID, -401.5960, 2227.4000, 1801.0900, 270.0 },
+    { "Restoran (Burger Shot)",         10, 363.4129,  -74.5786,  1001.5078, 315.0 },
+    { "Restoran (Well Stacked Pizza)",  5,  372.3107,  -133.2463, 1001.4922, 0.0 },
+    { "Restoran (krofne)",              17, 377.5237,  -191.6597, 1000.6328, 0.0 },
+    { "Klub (Alhambra)",                17, 493.3910,  -22.7228,  1000.6797, 0.0 },
+    { "Bar (Balkan Caffe, mapa)",       MAP_INTERIOR_ID, 1473.2437, -1350.3240, 151.2481, 90.0 }
 };
 
 enum E_BIZ_TYPE
